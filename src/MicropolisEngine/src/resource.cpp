@@ -85,7 +85,6 @@
 Resource *Micropolis::getResource(const char *name, Quad id)
 {
     Resource *r = resources;
-    char fname[4096];
 
     while (r != NULL) {
         if (r->id == id && strncmp(r->name, name, 4) == 0) {
@@ -110,8 +109,11 @@ Resource *Micropolis::getResource(const char *name, Quad id)
     // Load the file into memory
 
     /// @bug Not safe (overflow, non-printable chars)
-    sprintf(
+    int len = 500; // strlen(r->name[0]) + 6 + 20; // 20 is big enough for longest formatted int
+    char *fname = (char *)malloc(len);
+    snprintf(
         fname,
+        len,
         "%s/%c%c%c%c.%d",
         resourceDir.c_str(),
         r->name[0], r->name[1], r->name[2], r->name[3],
@@ -136,6 +138,7 @@ Resource *Micropolis::getResource(const char *name, Quad id)
 
     // XXX Opening in text-mode
     fp = fopen(fname, "r"); // Open file for reading
+
     if (fp == NULL) {
         goto loadFailed;
     }
@@ -154,13 +157,20 @@ Resource *Micropolis::getResource(const char *name, Quad id)
     r->next = resources;
     resources = r;
 
+    if (fname != NULL) {
+        free(fname);
+    }
+
     return r;
 
 loadFailed:
     // Load failed, print an error and quit
     r->buf = NULL;
     r->size = 0;
-    fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
+    if (fname != NULL) {
+        fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
+        free(fname);
+    }
     perror("getResource");
     return NULL;
 }

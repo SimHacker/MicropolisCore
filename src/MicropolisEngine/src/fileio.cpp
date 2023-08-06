@@ -208,8 +208,9 @@ bool Micropolis::loadFileDir(const char *filename, const char *dir)
 
     // If needed, construct a path to the file.
     if (dir != NULL) {
-        path = (char *)malloc(strlen(dir) + 1 + strlen(filename) + 1);
-        sprintf(path, "%s/%s", dir, filename);
+        int len = strlen(dir) + 1 + strlen(filename) + 1;
+        path = (char *)malloc(len);
+        snprintf(path, len, "%s/%s", dir, filename);
         filename = path;
     }
 
@@ -516,11 +517,11 @@ bool Micropolis::loadCity(const char *filename)
 
         cityFileName = filename;
 
-        unsigned int lastSlash = cityFileName.find_last_of('/');
-        unsigned int pos = (lastSlash == std::string::npos) ? 0 : lastSlash + 1;
+        size_t lastSlash = cityFileName.find_last_of('/');
+        size_t pos = (lastSlash == std::string::npos) ? 0 : lastSlash + 1;
 
-        unsigned int lastDot = cityFileName.find_last_of('.');
-        unsigned int last =
+        size_t lastDot = cityFileName.find_last_of('.');
+        size_t last =
             (lastDot == std::string::npos) ? cityFileName.length() : lastDot;
 
         std::string newCityName = cityFileName.substr(pos, last - pos);
@@ -618,14 +619,14 @@ void Micropolis::saveCityAs(const char *filename)
 
     if (saveFile(cityFileName.c_str())) {
 
-        unsigned int lastDot = cityFileName.find_last_of('.');
-        unsigned int lastSlash = cityFileName.find_last_of('/');
+        size_t lastDot = cityFileName.find_last_of('.');
+        size_t lastSlash = cityFileName.find_last_of('/');
 
-        unsigned int pos =
+        size_t pos =
             (lastSlash == std::string::npos) ? 0 : lastSlash + 1;
-        unsigned int last =
+        size_t last =
             (lastDot == std::string::npos) ? cityFileName.length() : lastDot;
-        unsigned int len =
+        size_t len =
             last - pos;
         std::string newCityName =
             cityFileName.substr(pos, len);
