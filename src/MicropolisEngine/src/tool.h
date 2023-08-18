@@ -165,6 +165,7 @@ inline MapValue ToolEffects::getMapTile(int x, int y) const
 {
     return this->getMapValue(Position(x, y)) & LOMASK;
 }
+
 /**
  * Get the total cost collected so far.
  * @return Total cost.
@@ -241,4 +242,3 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////
-

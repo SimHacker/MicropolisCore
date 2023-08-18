@@ -67,7 +67,6 @@
 
 #include "stdafx.h"
 #include "micropolis.h"
-#include "generate.h"
 #include "tool.h"
 
 

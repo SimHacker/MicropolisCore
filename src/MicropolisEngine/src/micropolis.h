@@ -228,6 +228,12 @@ static const int POWER_STACK_SIZE = (WORLD_W * WORLD_H) / 4;
 static const int NOWHERE = -1;
 
 
+/**
+ * The default radius of an island, used by the terrain generator.
+ */
+static const int ISLAND_RADIUS = 18;
+
+
 ///////////////////////////////////////////////////
 // Traffic
 
