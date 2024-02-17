@@ -62,9 +62,16 @@
 
 /** @file stubs.h */
 
+
+#ifndef _H_STUBS
+#define _H_STUBS
+
+
 ////////////////////////////////////////////////////////////////////////
 
+
 class Micropolis; // Forward declaration.
+
 
 /** A message to the GUI frontend. */
 class FrontendMessage {
@@ -116,3 +123,6 @@ public:
 
 
 ////////////////////////////////////////////////////////////////////////
+
+
+#endif

@@ -62,6 +62,11 @@
 
 /** @file tool.h */
 
+
+#ifndef _H_TOOL
+#define _H_TOOL
+
+
 ////////////////////////////////////////////////////////////////////////
 
 
@@ -74,13 +79,84 @@
 
 
 class Micropolis;
-class Position;
-class FrontendMessage;
+
 
 ////////////////////////////////////////////////////////////////////////
 
+
+/** Value of a tile in the map array incuding the #MapTileBits. */
+typedef unsigned short MapValue;
+
+
+/**
+ * Value of a tile in the map array excluding the #MapTileBits (that is, just
+ * a value from #MapCharacters).
+ */
+typedef unsigned short MapTile;
+
+
+/**
+ * Status bits of a map tile.
+ * @see MapTile MapCharacters MapTile MapValue
+ * @todo #ALLBITS should end with MASK.
+ * @todo Decide what to do with #ANIMBIT (since sim-backend may not be the
+ *       optimal place to do animation).
+ * @todo How many of these bits can be derived from the displayed tile?
+ */
+enum MapTileBits {
+    PWRBIT  = 0x8000, ///< bit 15, tile has power.
+    CONDBIT = 0x4000, ///< bit 14. tile can conduct electricity.
+    BURNBIT = 0x2000, ///< bit 13, tile can be lit.
+    BULLBIT = 0x1000, ///< bit 12, tile is bulldozable.
+    ANIMBIT = 0x0800, ///< bit 11, tile is animated.
+    ZONEBIT = 0x0400, ///< bit 10, tile is the center tile of the zone.
+
+    /// Mask for the bits-part of the tile
+    ALLBITS = ZONEBIT | ANIMBIT | BULLBIT | BURNBIT | CONDBIT | PWRBIT,
+    LOMASK = 0x03ff, ///< Mask for the #MapTileCharacters part of the tile
+
+    BLBNBIT   = BULLBIT | BURNBIT,
+    BLBNCNBIT = BULLBIT | BURNBIT | CONDBIT,
+    BNCNBIT   =           BURNBIT | CONDBIT,
+};
+
+
+/**
+ * Available tools.
+ *
+ * These describe the wand values, the object dragged around on the screen.
+ */
+enum EditingTool {
+    TOOL_RESIDENTIAL,
+    TOOL_COMMERCIAL,
+    TOOL_INDUSTRIAL,
+    TOOL_FIRESTATION,
+    TOOL_POLICESTATION,
+    TOOL_QUERY,
+    TOOL_WIRE,
+    TOOL_BULLDOZER,
+    TOOL_RAILROAD,
+    TOOL_ROAD,
+    TOOL_STADIUM,
+    TOOL_PARK,
+    TOOL_SEAPORT,
+    TOOL_COALPOWER,
+    TOOL_NUCLEARPOWER,
+    TOOL_AIRPORT,
+    TOOL_NETWORK,
+    TOOL_WATER,
+    TOOL_LAND,
+    TOOL_FOREST,
+
+    TOOL_COUNT,
+    TOOL_FIRST = TOOL_RESIDENTIAL,
+    TOOL_LAST = TOOL_FOREST,
+};
+
+
 /** Set of modifications in the world accessible by position. */
 typedef std::map<Position, MapValue> WorldModificationsMap;
+
 
 /** List of messages to send to the frontend. */
 typedef std::list<FrontendMessage *> FrontendMessages;
@@ -139,7 +215,9 @@ private:
     FrontendMessages frontendMessages; ///< Collected messages to send.
 };
 
+
 ////////////////////////////////////////////////////////////////////////
+
 
 /**
  * Get the tile of a map position.
@@ -152,6 +230,7 @@ inline MapTile ToolEffects::getMapTile(const Position& pos) const
 {
     return this->getMapValue(pos) & LOMASK;
 }
+
 
 /**
  * Get the tile of a map position.
@@ -166,6 +245,7 @@ inline MapValue ToolEffects::getMapTile(int x, int y) const
     return this->getMapValue(Position(x, y)) & LOMASK;
 }
 
+
 /**
  * Get the total cost collected so far.
  * @return Total cost.
@@ -175,6 +255,7 @@ inline int ToolEffects::getCost() const
     return this->cost;
 }
 
+
 /**
  * Add some amount to the total.
  */
@@ -183,6 +264,7 @@ inline void ToolEffects::addCost(int amount)
     assert(amount >= 0); // To be on the safe side.
     this->cost += amount;
 }
+
 
 /**
  * Get the value of a map position.
@@ -197,6 +279,7 @@ inline MapValue ToolEffects::getMapValue(int x, int y) const
     return this->getMapValue(Position(x, y));
 }
 
+
 /**
  * Set a new map value.
  * @param pos    Position to set.
@@ -209,6 +292,7 @@ inline void ToolEffects::setMapValue(int x, int y, MapValue mapVal)
     this->setMapValue(Position(x, y), mapVal);
 }
 
+
 /**
  * Add a #FrontendMessage to the queue to send.
  * @param msg Frontend message to send.
@@ -218,7 +302,9 @@ inline void ToolEffects::addFrontendMessage(FrontendMessage *msg)
     this->frontendMessages.push_back(msg);
 }
 
+
 ////////////////////////////////////////////////////////////////////////
+
 
 /** Properties of a building with respect to its construction. */
 class BuildingProperties
@@ -241,4 +327,8 @@ public:
     const bool buildingIsAnimated; ///< Building has animated tiles.
 };
 
+
 ////////////////////////////////////////////////////////////////////////
+
+
+#endif

@@ -68,8 +68,10 @@
 #include "micropolis.h"
 #include "stubs.h"
 
+
 ////////////////////////////////////////////////////////////////////////
 // Frontend message storage
+
 
 /** Base class constructor. */
 FrontendMessage::FrontendMessage()

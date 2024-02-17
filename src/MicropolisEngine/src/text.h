@@ -62,7 +62,13 @@
 
 /** @file text.h Identification numbers for texts. */
 
+
+#ifndef _H_TEXT
+#define _H_TEXT
+
+
 ////////////////////////////////////////////////////////////////////////
+
 
 /** String numbers of score card. */
 enum Stri202 {
@@ -154,3 +160,9 @@ enum MessageNumber {
 
     MESSAGE_LAST = 57, ///< Last valid message
 };
+
+
+////////////////////////////////////////////////////////////////////////
+
+
+#endif

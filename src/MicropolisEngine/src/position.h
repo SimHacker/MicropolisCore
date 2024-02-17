@@ -62,8 +62,10 @@
 
 /** @file position.h Position handling. */
 
+
 #ifndef H_POSITION
 #define H_POSITION
+
 
 /** Another direction enumeration class, with 8 possible directions.
  * @todo Eliminate #Direction.
@@ -179,5 +181,5 @@ inline bool operator<(const Position &pos1, const Position &pos2)
     return pos1.posY < pos2.posY;
 }
 
-#endif
 
+#endif

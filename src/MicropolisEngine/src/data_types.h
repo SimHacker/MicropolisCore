@@ -62,8 +62,10 @@
 
 /** @file data_types.h Commonly used data types. */
 
+
 #ifndef H_DATA_TYPES
 #define H_DATA_TYPES
+
 
 typedef unsigned char Byte;
 
@@ -72,5 +74,6 @@ typedef Byte *Ptr;
 typedef long Quad;
 
 typedef unsigned long UQuad;
+
 
 #endif

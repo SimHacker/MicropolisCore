@@ -67,7 +67,7 @@
 
 EMCC = em++
 EMCXXFLAGS = -std=c++11 -fPIC
-EMLDFLAGS = -s EXPORTED_FUNCTIONS='["_main"]' -s SIDE_MODULE=1 -s WASM=1
+EMLDFLAGS = -s SIDE_MODULE=1 -s WASM=1
 
 # ----------------------------------------------------------------------
 
@@ -75,15 +75,14 @@ SOURCES = \
 	src/allocate.cpp \
 	src/animate.cpp \
 	src/budget.cpp \
-	src/bindings.cpp \
 	src/connect.cpp \
 	src/disasters.cpp \
+	src/emscripten.cpp \
 	src/evaluate.cpp \
 	src/fileio.cpp \
 	src/generate.cpp \
 	src/graph.cpp \
 	src/initialize.cpp \
-	src/main.cpp \
 	src/map.cpp \
 	src/message.cpp \
 	src/micropolis.cpp \
@@ -101,13 +100,17 @@ SOURCES = \
 	src/utilities.cpp \
 	src/zone.cpp
 
-HEADERS = \
+SUBHEADERS = \
 	src/data_types.h \
-	src/generate.h \
 	src/map_type.h \
-	src/micropolis.h \
 	src/position.h \
-	src/text.h
+	src/stubs.h \
+	src/text.h \
+	src/tool.h
+
+HEADERS = \
+	$(SUBHEADERS) \
+	src/micropolis.h
 
 # ----------------------------------------------------------------------
 
@@ -119,8 +122,6 @@ all: $(LIBRARY)
 # Compilation rule for wasm
 $(LIBRARY): $(OBJECTS)
 	$(EMCC) $(EMLDFLAGS) -o $@ $^
-	$(EMCC) -lembind -o src/bindings.js src/bindings.cpp
-
 
 %.o: %.cpp $(HEADERS)
 	$(EMCC) $(EMCXXFLAGS) -c $< -o $@
@@ -131,35 +132,34 @@ clean:
 
 # ----------------------------------------------------------------------
 
-src/micropolis.h: src/map_type.h src/data_types.h src/position.h
+src/micropolis.h: $(SUBHEADERS)
 
 allocate.cpp:   micropolis.h
 animate.cpp:    micropolis.h
-bindings.cpp:   micropolis.h
-budget.cpp:     micropolis.h text.h
+budget.cpp:     micropolis.h
 connect.cpp:    micropolis.h
-disasters.cpp:  micropolis.h text.h
+disasters.cpp:  micropolis.h
+emscripten.cpp: micropolis.h
 evaluate.cpp:   micropolis.h
-evaluation.cpp: micropolis.h
 fileio.cpp:     micropolis.h
-generate.cpp:   micropolis.h generate.h
+generate.cpp:   micropolis.h
 graph.cpp:      micropolis.h
 initialize.cpp: micropolis.h
 main.cpp:       micropolis.h
 map.cpp:        micropolis.h
-message.cpp:    micropolis.h text.h
+message.cpp:    micropolis.h
 micropolis.cpp: micropolis.h
-power.cpp:      micropolis.h text.h
 position.cpp:   micropolis.h
+power.cpp:      micropolis.h
 random.cpp:     micropolis.h
 resource.cpp:   micropolis.h
 scan.cpp:       micropolis.h
-simulate.cpp:   micropolis.h text.h
-sprite.cpp:     micropolis.h text.h
+simulate.cpp:   micropolis.h
+sprite.cpp:     micropolis.h
 stubs.cpp:      micropolis.h
-tool.cpp:       micropolis.h text.h
+tool.cpp:       micropolis.h
 traffic.cpp:    micropolis.h
-update.cpp:     micropolis.h text.h
+update.cpp:     micropolis.h
 utilities.cpp:  micropolis.h
 zone.cpp:       micropolis.h
 

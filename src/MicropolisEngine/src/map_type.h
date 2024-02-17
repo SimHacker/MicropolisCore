@@ -63,6 +63,10 @@
 /** @file map_type.h Map data structures */
 
 
+#ifndef H_MAP_TYPE
+#define H_MAP_TYPE
+
+
 ////////////////////////////////////////////////////////////////////////
 // Constants
 
@@ -326,3 +330,6 @@ typedef Map<short, 8> MapShort8; ///< Map of ::short, with cluster size 8
 
 
 ////////////////////////////////////////////////////////////////////////
+
+
+#endif

@@ -64,6 +64,11 @@
  * Micropolis include file
  */
 
+
+#ifndef H_MICROPOLIS
+#define H_MICROPOLIS
+
+
 ////////////////////////////////////////////////////////////////////////
 // Includes
 
@@ -103,6 +108,10 @@
 #include "data_types.h"
 #include "map_type.h"
 #include "position.h"
+#include "stubs.h"
+#include "text.h"
+#include "tool.h"
+
 
 ////////////////////////////////////////////////////////////////////////
 // Definitions
@@ -338,41 +347,6 @@ enum SpriteType {
 
 ///////////////////////////////////////////////////
 // Tiles
-
-/** Value of a tile in the map array incuding the #MapTileBits. */
-typedef unsigned short MapValue;
-
-/**
- * Value of a tile in the map array excluding the #MapTileBits (that is, just
- * a value from #MapCharacters).
- */
-typedef unsigned short MapTile;
-
-/**
- * Status bits of a map tile.
- * @see MapTile MapCharacters MapTile MapValue
- * @todo #ALLBITS should end with MASK.
- * @todo Decide what to do with #ANIMBIT (since sim-backend may not be the
- *       optimal place to do animation).
- * @todo How many of these bits can be derived from the displayed tile?
- */
-enum MapTileBits {
-    PWRBIT  = 0x8000, ///< bit 15, tile has power.
-    CONDBIT = 0x4000, ///< bit 14. tile can conduct electricity.
-    BURNBIT = 0x2000, ///< bit 13, tile can be lit.
-    BULLBIT = 0x1000, ///< bit 12, tile is bulldozable.
-    ANIMBIT = 0x0800, ///< bit 11, tile is animated.
-    ZONEBIT = 0x0400, ///< bit 10, tile is the center tile of the zone.
-
-    /// Mask for the bits-part of the tile
-    ALLBITS = ZONEBIT | ANIMBIT | BULLBIT | BURNBIT | CONDBIT | PWRBIT,
-    LOMASK = 0x03ff, ///< Mask for the #MapTileCharacters part of the tile
-
-    BLBNBIT   = BULLBIT | BURNBIT,
-    BLBNCNBIT = BULLBIT | BURNBIT | CONDBIT,
-    BNCNBIT   =           BURNBIT | CONDBIT,
-};
-
 
 /**
  * Connect tile commands.
@@ -717,38 +691,6 @@ enum MapTileCharacters {
     TILE_COUNT     = 1024,
 
     TILE_INVALID   = -1, ///< Invalid tile (not used in the world map).
-};
-
-/**
- * Available tools.
- *
- * These describe the wand values, the object dragged around on the screen.
- */
-enum EditingTool {
-    TOOL_RESIDENTIAL,
-    TOOL_COMMERCIAL,
-    TOOL_INDUSTRIAL,
-    TOOL_FIRESTATION,
-    TOOL_POLICESTATION,
-    TOOL_QUERY,
-    TOOL_WIRE,
-    TOOL_BULLDOZER,
-    TOOL_RAILROAD,
-    TOOL_ROAD,
-    TOOL_STADIUM,
-    TOOL_PARK,
-    TOOL_SEAPORT,
-    TOOL_COALPOWER,
-    TOOL_NUCLEARPOWER,
-    TOOL_AIRPORT,
-    TOOL_NETWORK,
-    TOOL_WATER,
-    TOOL_LAND,
-    TOOL_FOREST,
-
-    TOOL_COUNT,
-    TOOL_FIRST = TOOL_RESIDENTIAL,
-    TOOL_LAST = TOOL_FOREST,
 };
 
 
@@ -3015,3 +2957,6 @@ private:
 
 
 ////////////////////////////////////////////////////////////////////////
+
+
+#endif

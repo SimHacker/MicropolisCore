@@ -62,17 +62,12 @@
 
 /** @file emscripten.cpp */
 
+
 ////////////////////////////////////////////////////////////////////////
 
 
 #include <emscripten/bind.h>
 #include "micropolis.h"
-#include "data_types.h"
-#include "map_type.h"
-#include "position.h"
-#include "stubs.h"
-#include "text.h"
-#include "tool.h"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -183,7 +178,7 @@ EMSCRIPTEN_BINDINGS(tool_module) {
     .function("getCost", &ToolEffects::getCost)
     .function("addCost", &ToolEffects::addCost)
     .function("setMapValue", select_overload<void(const Position&, MapValue)>(&ToolEffects::setMapValue))
-    .function("addFrontendMessage", &ToolEffects::addFrontendMessage);
+    /* .function("addFrontendMessage", &ToolEffects::addFrontendMessage) */;
 
 }
 
