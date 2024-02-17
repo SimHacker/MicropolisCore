@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# WebAssembly
+*.wasm
+
 # Mac
 .DS_Store
 

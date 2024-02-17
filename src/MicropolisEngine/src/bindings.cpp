@@ -1,4 +1,4 @@
-/* random.cpp
+/* bindings.cpp
  *
  * Micropolis, Unix Version.  This game was released for the Unix platform
  * in or about 1990 and has been modified for inclusion in the One Laptop
@@ -60,116 +60,36 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file random.cpp Random number generator functions. */
-
-/** @bug Code seems to assume that \c sizeof(short)==2 and \c sizeof(int)==4
- *       However, this depends on the compiler. We should introduce typedefs
- *       for them, and check correctness of our assumptions w.r.t. size of
- *       them (eg in Micropolis::randomlySeedRandom() or in
- *       Micropolis::Micropolis()).
- * @bug Code stores unsigned 16 bit numbers in \c short which is a signed type.
+/** @file bindings.cpp
+ * Emscripten bindings, for Unix Micropolis.
  */
 
 ////////////////////////////////////////////////////////////////////////
 
 
 #include "micropolis.h"
+#include <emscripten/bind.h>
 
 
 ////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Draw a random number (internal function).
- * @todo Use Wolfram's fast cellular automata pseudo random number generator.
- * @return Unsigned 16 bit random number.
- */
-int Micropolis::simRandom()
-{
-    nextRandom = nextRandom * 1103515245 + 12345;
-    return (nextRandom & 0xffff00) >> 8;
+using namespace emscripten;
+
+
+////////////////////////////////////////////////////////////////////////
+
+
+float lerp(float a, float b, float t) {
+    return (1 - t) * a + t * b;
 }
 
 
-/**
- * Draw a random number in a given range.
- * @param range Upper bound of the range (inclusive).
- * @return Random number between \c 0 and \a range (inclusive).
- */
-short Micropolis::getRandom(short range)
-{
-    int maxMultiple, rnum;
-
-    range++; /// @bug Increment may cause range overflow.
-    maxMultiple = 0xffff / range;
-    maxMultiple *= range;
-
-    do {
-        rnum = getRandom16();
-    } while (rnum >= maxMultiple);
-
-    return (rnum % range);
-}
+////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Get random 16 bit number.
- * @return Unsigned 16 bit random number.
- */
-int Micropolis::getRandom16()
-{
-    return simRandom() & 0x0000ffff;
-}
-
-
-/** Get signed 16 bit random number. */
-int Micropolis::getRandom16Signed()
-{
-    int i = getRandom16();
-
-    if (i > 0x7fff) {
-      i = 0x7fff - i;
-    }
-
-    return i;
-}
-
-
-/**
- * Get a random number within a given range, with a preference to smaller
- * values.
- * @param limit Upper bound of the range (inclusive).
- * @return Random number between \c 0 and \a limit (inclusive).
- */
-short Micropolis::getERandom(short limit)
-{
-    short z = getRandom(limit);
-    short x = getRandom(limit);
-
-    return min(z, x);
-}
-
-
-/** Initialize the random number generator with a 'random' seed. */
-void Micropolis::randomlySeedRandom()
-{
-#ifdef _WIN32
-    seedRandom(::GetTickCount());
-#else
-    struct timeval time;
-    gettimeofday(&time, NULL);
-    seedRandom(time.tv_usec ^ time.tv_sec);
-#endif
-}
-
-
-/**
- * Set seed of the random number generator.
- * @param seed New seed.
- */
-void Micropolis::seedRandom(int seed)
-{
-    nextRandom = seed;
+EMSCRIPTEN_BINDINGS(my_module) {
+    function("lerp", &lerp);
 }
 
 

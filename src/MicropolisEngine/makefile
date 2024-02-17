@@ -63,10 +63,11 @@
 
 
 # ----------------------------------------------------------------------
+# Emscripten settings
 
-CXX = g++
-CXXFLAGS = -std=c++11 -fPIC
-LDFLAGS = -shared
+EMCC = em++
+EMCXXFLAGS = -std=c++11 -fPIC
+EMLDFLAGS = -s EXPORTED_FUNCTIONS='["_main"]' -s SIDE_MODULE=1 -s WASM=1
 
 # ----------------------------------------------------------------------
 
@@ -74,6 +75,7 @@ SOURCES = \
 	src/allocate.cpp \
 	src/animate.cpp \
 	src/budget.cpp \
+	src/bindings.cpp \
 	src/connect.cpp \
 	src/disasters.cpp \
 	src/evaluate.cpp \
@@ -105,22 +107,25 @@ HEADERS = \
 	src/map_type.h \
 	src/micropolis.h \
 	src/position.h \
-	src/stdafx.h \
 	src/text.h
 
 # ----------------------------------------------------------------------
 
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = micropolisengine.dylib
+LIBRARY = micropolisengine.wasm
 
 all: $(LIBRARY)
 
+# Compilation rule for wasm
 $(LIBRARY): $(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+	$(EMCC) $(EMLDFLAGS) -o $@ $^
+	$(EMCC) -lembind -o src/bindings.js src/bindings.cpp
+
 
 %.o: %.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(EMCC) $(EMCXXFLAGS) -c $< -o $@
 
+# Clean rule
 clean:
 	rm -f $(OBJECTS) $(LIBRARY)
 
@@ -128,34 +133,35 @@ clean:
 
 src/micropolis.h: src/map_type.h src/data_types.h src/position.h
 
-allocate.cpp:   stdafx.h micropolis.h
-animate.cpp:    stdafx.h micropolis.h
-budget.cpp:     stdafx.h micropolis.h text.h
-connect.cpp:    stdafx.h micropolis.h
-disasters.cpp:  stdafx.h micropolis.h text.h
-evaluate.cpp:   stdafx.h micropolis.h
-evaluation.cpp: stdafx.h micropolis.h
-fileio.cpp:     stdafx.h micropolis.h
-generate.cpp:   stdafx.h micropolis.h generate.h
-graph.cpp:      stdafx.h micropolis.h
-initialize.cpp: stdafx.h micropolis.h
-main.cpp:       stdafx.h micropolis.h
-map.cpp:        stdafx.h micropolis.h
-message.cpp:    stdafx.h micropolis.h text.h
-micropolis.cpp: stdafx.h micropolis.h
-power.cpp:      stdafx.h micropolis.h text.h
-position.cpp:   stdafx.h micropolis.h
-random.cpp:     stdafx.h micropolis.h
-resource.cpp:   stdafx.h micropolis.h
-scan.cpp:       stdafx.h micropolis.h
-simulate.cpp:   stdafx.h micropolis.h text.h
-sprite.cpp:     stdafx.h micropolis.h text.h
-stubs.cpp:      stdafx.h micropolis.h
-tool.cpp:       stdafx.h micropolis.h text.h
-traffic.cpp:    stdafx.h micropolis.h
-update.cpp:     stdafx.h micropolis.h text.h
-utilities.cpp:  stdafx.h micropolis.h
-zone.cpp:       stdafx.h micropolis.h
+allocate.cpp:   micropolis.h
+animate.cpp:    micropolis.h
+bindings.cpp:   micropolis.h
+budget.cpp:     micropolis.h text.h
+connect.cpp:    micropolis.h
+disasters.cpp:  micropolis.h text.h
+evaluate.cpp:   micropolis.h
+evaluation.cpp: micropolis.h
+fileio.cpp:     micropolis.h
+generate.cpp:   micropolis.h generate.h
+graph.cpp:      micropolis.h
+initialize.cpp: micropolis.h
+main.cpp:       micropolis.h
+map.cpp:        micropolis.h
+message.cpp:    micropolis.h text.h
+micropolis.cpp: micropolis.h
+power.cpp:      micropolis.h text.h
+position.cpp:   micropolis.h
+random.cpp:     micropolis.h
+resource.cpp:   micropolis.h
+scan.cpp:       micropolis.h
+simulate.cpp:   micropolis.h text.h
+sprite.cpp:     micropolis.h text.h
+stubs.cpp:      micropolis.h
+tool.cpp:       micropolis.h text.h
+traffic.cpp:    micropolis.h
+update.cpp:     micropolis.h text.h
+utilities.cpp:  micropolis.h
+zone.cpp:       micropolis.h
 
 
 ########################################################################
