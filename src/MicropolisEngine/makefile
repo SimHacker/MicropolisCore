@@ -62,14 +62,18 @@
 ########################################################################
 
 
-# ----------------------------------------------------------------------
+########################################################################
 # Emscripten settings
+
 
 EMCC = em++
 EMCXXFLAGS = -std=c++11 -fPIC
-EMLDFLAGS = -s SIDE_MODULE=1 -s WASM=1
+EMLDFLAGS = -s WASM=1 --shell-file micropolisengine_template.html -lembind
 
-# ----------------------------------------------------------------------
+
+########################################################################
+# Sources and headers
+
 
 SOURCES = \
 	src/allocate.cpp \
@@ -112,16 +116,18 @@ HEADERS = \
 	$(SUBHEADERS) \
 	src/micropolis.h
 
-# ----------------------------------------------------------------------
+
+########################################################################
+
 
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = micropolisengine.wasm
+LIBRARY = micropolisengine
 
 all: $(LIBRARY)
 
 # Compilation rule for wasm
 $(LIBRARY): $(OBJECTS)
-	$(EMCC) $(EMLDFLAGS) -o $@ $^
+	$(EMCC) $(EMLDFLAGS) -o $(LIBRARY).html $^
 
 %.o: %.cpp $(HEADERS)
 	$(EMCC) $(EMCXXFLAGS) -c $< -o $@
@@ -130,7 +136,9 @@ $(LIBRARY): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(LIBRARY)
 
-# ----------------------------------------------------------------------
+
+########################################################################
+
 
 src/micropolis.h: $(SUBHEADERS)
 
