@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>About</title>
+	<title>About Micropolis</title>
 	<meta name="description" content="About Micropolis" />
 </svelte:head>
 

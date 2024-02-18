@@ -1,11 +1,10 @@
 <script>
-	import Counter from './Counter.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Micropolis Home</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
@@ -18,14 +17,9 @@
 			</picture>
 		</span>
 
-		to your new<br />SvelteKit app
+		to the <a href="https://kit.svelte.dev">SvelteKit</a> Micropolis app with the WASM based MicropolisEngine build with Emscripten and Embind.
 	</h1>
 
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
 </section>
 
 <style>
