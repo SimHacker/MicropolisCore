@@ -6,6 +6,8 @@ This is the source code for Micropolis (based on [SimCity](http://en.wikipedia.o
 
 The origin of this repo is the "MicropolisCore" directory of the full micropolis repo, https://github.com/SimHacker/micropolis , but it's been stripped down and simplified.
 
+I am now in the process of converting it to build for WebAssembly with enscripten and bind to JavaScript with embind.
+
 ## [GPL-3 License](LICENSE) ##
 The Micropolis GPL-3 license.
 
