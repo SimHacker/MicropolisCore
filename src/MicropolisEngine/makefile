@@ -88,6 +88,7 @@ SOURCES = \
 	src/graph.cpp \
 	src/initialize.cpp \
 	src/map.cpp \
+	src/frontendmessage.cpp \
 	src/message.cpp \
 	src/micropolis.cpp \
 	src/position.cpp \
@@ -97,7 +98,6 @@ SOURCES = \
 	src/scan.cpp \
 	src/simulate.cpp \
 	src/sprite.cpp \
-	src/stubs.cpp \
 	src/tool.cpp \
 	src/traffic.cpp \
 	src/update.cpp \
@@ -106,9 +106,9 @@ SOURCES = \
 
 SUBHEADERS = \
 	src/data_types.h \
+	src/frontendmessage.h \
 	src/map_type.h \
 	src/position.h \
-	src/stubs.h \
 	src/text.h \
 	src/tool.h
 
@@ -122,6 +122,7 @@ HEADERS = \
 
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARY = micropolisengine
+OUTPUTFILES = $(LIBRARY).wasm $(LIBRARY).js $(LIBRARY).html
 
 all: $(LIBRARY)
 
@@ -134,7 +135,7 @@ $(LIBRARY): $(OBJECTS)
 
 # Clean rule
 clean:
-	rm -f $(OBJECTS) $(LIBRARY)
+	rm -f $(OBJECTS) $(OUTPUTFILES)
 
 
 ########################################################################
@@ -142,34 +143,35 @@ clean:
 
 src/micropolis.h: $(SUBHEADERS)
 
-allocate.cpp:   micropolis.h
-animate.cpp:    micropolis.h
-budget.cpp:     micropolis.h
-connect.cpp:    micropolis.h
-disasters.cpp:  micropolis.h
+allocate.cpp: micropolis.h
+animate.cpp: micropolis.h
+budget.cpp: micropolis.h
+connect.cpp: micropolis.h
+disasters.cpp: micropolis.h
 emscripten.cpp: micropolis.h
-evaluate.cpp:   micropolis.h
-fileio.cpp:     micropolis.h
-generate.cpp:   micropolis.h
-graph.cpp:      micropolis.h
+evaluate.cpp: micropolis.h
+frontendmessage.cpp: micropolis.h
+fileio.cpp: micropolis.h
+generate.cpp: micropolis.h
+graph.cpp: micropolis.h
 initialize.cpp: micropolis.h
-main.cpp:       micropolis.h
-map.cpp:        micropolis.h
-message.cpp:    micropolis.h
+main.cpp: micropolis.h
+map.cpp: micropolis.h
+message.cpp: micropolis.h
 micropolis.cpp: micropolis.h
-position.cpp:   micropolis.h
-power.cpp:      micropolis.h
-random.cpp:     micropolis.h
-resource.cpp:   micropolis.h
-scan.cpp:       micropolis.h
-simulate.cpp:   micropolis.h
-sprite.cpp:     micropolis.h
-stubs.cpp:      micropolis.h
-tool.cpp:       micropolis.h
-traffic.cpp:    micropolis.h
-update.cpp:     micropolis.h
-utilities.cpp:  micropolis.h
-zone.cpp:       micropolis.h
+position.cpp: micropolis.h
+power.cpp: micropolis.h
+random.cpp: micropolis.h
+resource.cpp: micropolis.h
+scan.cpp: micropolis.h
+simulate.cpp: micropolis.h
+sprite.cpp: micropolis.h
+stubs.cpp: micropolis.h
+tool.cpp: micropolis.h
+traffic.cpp: micropolis.h
+update.cpp: micropolis.h
+utilities.cpp: micropolis.h
+zone.cpp: micropolis.h
 
 
 ########################################################################

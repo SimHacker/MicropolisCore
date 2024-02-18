@@ -66,9 +66,6 @@
 
 
 #include "micropolis.h"
-#include "text.h"
-#include "tool.h"
-#include "stubs.h"
 
 
 ////////////////////////////////////////////////////////////////////////

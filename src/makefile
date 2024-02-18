@@ -61,15 +61,11 @@
 
 ########################################################################
 
-PYTHONBUILDDIR=$(shell python -c 'from distutils import sysconfig, util ; \
-	print "lib.%s-%s" \
-		% (util.get_platform(), sysconfig.get_config_var("VERSION"))')
-
 .PHONY: all doxygen
 
 # ----------------------------------------------------------------------
 
-all: build_tileEngine build_cellEngine build_micropolisEngine
+all: build_micropolisEngine
 
 clean:
 	rm -rf *~ *.suo *.ncb *.pyc *.pyo build 
@@ -93,11 +89,10 @@ doxygen:
 # ----------------------------------------------------------------------
 # build/install micropolisEngine
 
-MICROPOLISENGINEDEST = pyMicropolis/micropolisEngine
+MICROPOLISENGINEDEST = wasmMicropolis/micropolisEngine
 
 build_micropolisEngine:
-	$(MAKE) -C MicropolisEngine build_python
-	cp MicropolisEngine/objs/micropolisengine.py $(MICROPOLISENGINEDEST)
-	cp MicropolisEngine/objs/$(PYTHONBUILDDIR)/_micropolisengine.so $(MICROPOLISENGINEDEST)
+	$(MAKE) -C MicropolisEngine
+	cp MicropolisEngine/objs/$(PYTHONBUILDDIR)/micropolisengine.{html,js,wasm} $(MICROPOLISENGINEDEST)
 
 ########################################################################

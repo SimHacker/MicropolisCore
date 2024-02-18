@@ -108,8 +108,8 @@
 #include "data_types.h"
 #include "map_type.h"
 #include "position.h"
-#include "stubs.h"
 #include "text.h"
+#include "frontendmessage.h"
 #include "tool.h"
 
 

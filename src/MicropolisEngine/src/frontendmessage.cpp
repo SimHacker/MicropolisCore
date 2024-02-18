@@ -1,4 +1,4 @@
-/* stubs.h
+/* frontendmessage.cpp
  *
  * Micropolis, Unix Version.  This game was released for the Unix platform
  * in or about 1990 and has been modified for inclusion in the One Laptop
@@ -60,69 +60,77 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file stubs.h */
-
-
-#ifndef _H_STUBS
-#define _H_STUBS
-
+/** @file frontendmessage.cpp */
 
 ////////////////////////////////////////////////////////////////////////
 
 
-class Micropolis; // Forward declaration.
-
-
-/** A message to the GUI frontend. */
-class FrontendMessage {
-
-public:
-
-    FrontendMessage();
-
-    virtual ~FrontendMessage();
-
-    virtual void sendMessage(Micropolis *sim) const = 0;
-
-};
-
-
-/** Store a 'didTool' message. */
-class FrontendMessageDidTool : public FrontendMessage {
-
-public:
-
-    const char *tool;
-    int x, y;
-
-    FrontendMessageDidTool(const char *tool, int x, int y);
-
-    virtual ~FrontendMessageDidTool();
-
-    virtual void sendMessage(Micropolis *sim) const;
-
-};
-
-
-/** Store a 'makeSound' message. */
-class FrontendMessageMakeSound : public FrontendMessage {
-
-public:
-
-    const char *channel;
-    const char *sound;
-    int x, y;
-
-    FrontendMessageMakeSound(const char *channel, const char *sound, int x, int y);
-
-    virtual ~FrontendMessageMakeSound();
-
-    virtual void sendMessage(Micropolis *sim) const;
-
-};
+#include "micropolis.h"
 
 
 ////////////////////////////////////////////////////////////////////////
+// Frontend message storage
 
 
-#endif
+/** Base class constructor. */
+FrontendMessage::FrontendMessage()
+{
+}
+
+
+/** Base class destructor. */
+FrontendMessage::~FrontendMessage()
+{
+}
+
+
+/**
+ * @fn void FrontendMessage::sendMessage(Micropolis *sim)
+ * @brief Send the message to the front-end.
+ * @param sim Simulator instance to use.
+ */
+
+
+
+FrontendMessageDidTool::FrontendMessageDidTool(const char *tool, int x, int y)
+{
+    this->tool = tool;
+    this->x = x;
+    this->y = y;
+}
+
+
+FrontendMessageDidTool::~FrontendMessageDidTool()
+{
+}
+
+
+void FrontendMessageDidTool::sendMessage(Micropolis *sim) const
+{
+    sim->didTool(this->tool, this->x, this->y);
+}
+
+
+FrontendMessageMakeSound::FrontendMessageMakeSound(
+                                const char *channel, const char *sound,
+                                int x, int y)
+{
+    this->channel = channel;
+    this->sound = sound;
+    this->x = x;
+    this->y = y;
+}
+
+
+FrontendMessageMakeSound::~FrontendMessageMakeSound()
+{
+}
+
+
+void FrontendMessageMakeSound::sendMessage(Micropolis *sim) const
+{
+    sim->makeSound(this->channel, this->sound, this->x, this->y);
+}
+
+
+////////////////////////////////////////////////////////////////////////

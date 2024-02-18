@@ -71,6 +71,10 @@
 
 
 ////////////////////////////////////////////////////////////////////////
+// This file uses emscripten's embind to bind C++ classes,
+// C structures, functions, enums, and contents into JavaScript,
+// so you can even subclass C++ classes in JavaScript,
+// for implementing plugins and user interfaces.
 
 
 using namespace emscripten;
@@ -178,7 +182,7 @@ EMSCRIPTEN_BINDINGS(tool_module) {
     .function("getCost", &ToolEffects::getCost)
     .function("addCost", &ToolEffects::addCost)
     .function("setMapValue", select_overload<void(const Position&, MapValue)>(&ToolEffects::setMapValue))
-    /* .function("addFrontendMessage", &ToolEffects::addFrontendMessage) */;
+    .function("addFrontendMessage", &ToolEffects::addFrontendMessage);
 
 }
 
