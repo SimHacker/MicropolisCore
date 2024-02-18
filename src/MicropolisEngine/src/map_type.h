@@ -122,10 +122,16 @@ public:
 
     DATA *getBase();
 
+    inline size_t getTotalByteSize() const {
+        return sizeof(DATA) * 
+               ((WORLD_W + BLKSIZE - 1) / BLKSIZE) *
+               ((WORLD_H + BLKSIZE - 1) / BLKSIZE);
+    }
+
 private:
     /** Data fields of the map in column-major mode. */
-    DATA _mapData[((WORLD_W + BLKSIZE - 1) / BLKSIZE)
-                 * ((WORLD_H + BLKSIZE -1) / BLKSIZE)];
+    DATA _mapData[((WORLD_W + BLKSIZE - 1) / BLKSIZE) *
+                  ((WORLD_H + BLKSIZE - 1) / BLKSIZE)];
 
     const DATA _MAP_DEFAULT_VALUE; ///< Default value of a cluster.
 };

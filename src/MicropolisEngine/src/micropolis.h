@@ -888,9 +888,8 @@ class BuildingProperties;
 typedef void (*CallbackFunction)(
     Micropolis *micropolis,
     void *data,
-    const char *name,
-    const char *params,
-    va_list arglist);
+    const std::string &name,
+    const std::string &json);
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -904,7 +903,7 @@ public:
 
     char *buf; ///< Pointer to loaded file data.
     Quad size; ///< Size of the loaded file data.
-    char name[4]; ///< Name of the resource (not zero-terminated).
+    std::string name; ///< Name of the resource.
     Quad id; ///< Identification of the resource.
     Resource *next; ///< Pointer to next #Resource.
 };
@@ -917,7 +916,7 @@ public:
 
     Quad id; ///< Identification of the string table.
     int lines; ///< Number of lines in the table.
-    char **strings; ///< Array of pointers to start of each line.
+    std::vector<std::string> strings; /// list of strings
     StringTable *next; ///< Pointer to next #StringTable.
 };
 
@@ -931,7 +930,7 @@ class SimSprite {
 public:
 
     SimSprite *next; ///< Pointer to next #SimSprite object in the list.
-    char *name; ///< Name of the sprite.
+    std::string name; ///< Name of the sprite.
     int type; ///< Type of the sprite (TRA -- BUS).
     int frame; ///< Frame (\c 0 means non-active sprite)
     int x; ///< X coordinate of the sprite in pixels?
@@ -1702,21 +1701,21 @@ private:
 public:
 
 
-    bool loadFileDir(const char *filename, const char *dir);
+    bool loadFileDir(const std::string &filename, const std::string &dir);
 
-    bool loadFile(const char *filename);
+    bool loadFile(const std::string &filename);
 
-    bool saveFile(const char *filename);
+    bool saveFile(const std::string &filename);
 
     void loadScenario(Scenario s);
 
     void didLoadScenario();
 
-    bool loadCity(const char *filename);
+    bool loadCity(const std::string &filename);
 
     void didLoadCity();
 
-    void didntLoadCity(const char *msg);
+    void didntLoadCity(const std::string &msg);
 
     void saveCity();
 
@@ -1724,9 +1723,9 @@ public:
 
     void didSaveCity();
 
-    void didntSaveCity(const char *msg);
+    void didntSaveCity(const std::string &msg);
 
-    void saveCityAs(const char *filename);
+    void saveCityAs(const std::string &filename);
 
 
     ////////////////////////////////////////////////////////////////////////
@@ -1779,7 +1778,7 @@ public:
     int generatedCitySeed;
 
 
-    void generateMap();
+    void generateSomeRandomCity();
 
     void clearMap();
 
@@ -1796,9 +1795,9 @@ public:
 
     void generateSomeCity(int seed);
 
-private:
-
     void generateMap(int seed);
+
+private:
 
     void makeNakedIsland();
 
@@ -1929,7 +1928,7 @@ public:
     bool doNotices; ///< @todo Not currently used, should hook it up.
 
 
-    const char *getMicropolisVersion();
+    std::string getMicropolisVersion();
 
     void simUpdate();
 
@@ -1947,8 +1946,6 @@ public:
      */
     std::string cityName;     ///< Name of the city
 
-private:
-
     int heatSteps;
 
     /**
@@ -1962,6 +1959,8 @@ private:
      * @todo Always 3, should this variable be moved or removed?
      */
     int heatWrap;
+
+private:
 
     short *cellSrc;
 
@@ -2078,7 +2077,7 @@ public:
 
     void doMakeSound(int mesgNum, int x, int y);
 
-    void doAutoGoto(short x, short y, char *msg);
+    void doAutoGoto(short x, short y, const std::string &msg);
 
     void doLoseGame();
     void doWinGame(); ///< @todo This may not be called. Call it when appropriate.
@@ -2115,18 +2114,16 @@ private:
     ////////////////////////////////////////////////////////////////////////
     // random.cpp
 
-private:
+public:
 
 
     UQuad nextRandom;
-
 
     int simRandom();
 
     short getRandom(short range);
 
     int getRandom16();
-
     int getRandom16Signed();
 
     short getERandom(short limit);
@@ -2152,10 +2149,11 @@ public:
     StringTable *stringTables; ///< Linked list of loaded string tables
 
 
-    Resource *getResource(const char *name, Quad id);
+    Resource *getResource(std::string name, Quad id);
 
-    void getIndString(char *str, int id, short num);
+    std::string getIndString(int id, short num);
 
+    StringTable *findOrLoadStringTable(int id);
 
     ////////////////////////////////////////////////////////////////////////
     // scan.cpp
@@ -2343,7 +2341,7 @@ public:
     SimSprite *spriteList; ///< List of active sprites.
 
 
-    SimSprite *newSprite(const char *name, int type, int x, int y);
+    SimSprite *newSprite(const std::string &name, int type, int x, int y);
 
     void initSprite(SimSprite *sprite, int x, int y);
 
@@ -2534,15 +2532,15 @@ public:
 
     void initGame();
 
-    void callback(const char *name, const char *params, ...);
+    void callback(const std::string &name, const std::string &json);
 
     void doEarthquake(int strength);
 
     void invalidateMaps();
 
     void makeSound(
-      const char *channel,
-      const char *sound,
+      const std::string &channel,
+      const std::string &sound,
       int x=-1,
       int y=-1);
 
@@ -2647,7 +2645,7 @@ public:
     void toolDrag(EditingTool tool, short fromX, short fromY,
                                     short toX, short toY);
 
-    void didTool(const char *name, short x, short y);
+    void didTool(std::string name, short x, short y);
 
 private:
 
@@ -2878,7 +2876,7 @@ public:
 
 private:
 
-    void makeDollarDecimalStr(char *numStr, char *dollarStr);
+    std::string makeDollarDecimalStr(const std::string &numStr);
 
 
     ////////////////////////////////////////////////////////////////////////

@@ -81,12 +81,13 @@
  * @bug File handling is not safe across platforms (text-mode may modify data).
  * @todo What is the point of a \c Quad \a id when we cast it to an \c int ?
  */
-Resource *Micropolis::getResource(const char *name, Quad id)
+Resource *Micropolis::getResource(std::string name, Quad id)
 {
     Resource *r = resources;
 
     while (r != NULL) {
-        if (r->id == id && strncmp(r->name, name, 4) == 0) {
+        if ((r->id == id) && 
+            (r->name == name)) {
             return r;
         }
         r = r->next;
@@ -98,30 +99,22 @@ Resource *Micropolis::getResource(const char *name, Quad id)
     r = (Resource *)newPtr(sizeof(Resource));
     assert(r != NULL);
 
-    /// @bug Not safe!
-    r->name[0] = name[0];
-    r->name[1] = name[1];
-    r->name[2] = name[2];
-    r->name[3] = name[3];
+    r->name = name;
     r->id = id;
 
     // Load the file into memory
 
-    /// @bug Not safe (overflow, non-printable chars)
-    int len = 500; // strlen(r->name[0]) + 6 + 20; // 20 is big enough for longest formatted int
-    char *fname = (char *)malloc(len);
-    snprintf(
-        fname,
-        len,
-        "%s/%c%c%c%c.%d",
-        resourceDir.c_str(),
-        r->name[0], r->name[1], r->name[2], r->name[3],
-        (int)r->id);
+    std::string fname;
+    fname += resourceDir;
+    fname += "/";
+    fname += r->name;
+    fname += ".";
+    fname += std::to_string(r->id);
 
     struct stat st;
     FILE *fp = NULL;
 
-    if (stat(fname, &st) < 0) {  // File cannot be found/loaded
+    if (stat(fname.c_str(), &st) < 0) {  // File cannot be found/loaded
         goto loadFailed;
     }
 
@@ -136,7 +129,7 @@ Resource *Micropolis::getResource(const char *name, Quad id)
     }
 
     // XXX Opening in text-mode
-    fp = fopen(fname, "r"); // Open file for reading
+    fp = fopen(fname.c_str(), "r"); // Open file for reading
 
     if (fp == NULL) {
         goto loadFailed;
@@ -156,91 +149,66 @@ Resource *Micropolis::getResource(const char *name, Quad id)
     r->next = resources;
     resources = r;
 
-    if (fname != NULL) {
-        free(fname);
-    }
-
     return r;
 
 loadFailed:
     // Load failed, print an error and quit
     r->buf = NULL;
     r->size = 0;
-    if (fname != NULL) {
-        fprintf(stderr, "Can't find resource file \"%s\"!\n", fname);
-        free(fname);
-    }
+    fprintf(stderr, "Can't find resource file \"%s\"!\n", fname.c_str());
     perror("getResource");
     return NULL;
 }
 
 /**
  * Get the text of a message.
- * @param str Destination of the text (usually 256 characters long).
  * @param id  Identification of the resource.
  * @param num Number of the string in the resource.
- * @bug Make the function safe (should never overwrite data outside \a str,
- *      handle case where last line of file is not terminated with new-line)
- * @bug Out of range \a num seems not correctly handled (\c strcpy(str,"Oops")
- *      is overwritten at least. Maybe use an \c assert() instead?).
- * @todo Why do we copy the text? Can we not return its address instead?
  */
-void Micropolis::getIndString(char *str, int id, short num)
+std::string Micropolis::getIndString(int id, short num)
 {
-    StringTable *tp, *st;
+    // Find or load the string table
+    StringTable *st = findOrLoadStringTable(id);
+    if (st != NULL && num < st->lines) {
+        return st->strings[num];
+    } else {
+        // Handle the case where the string is not found
+        return  std::string("");
+    }
+}
 
-    // Try to find requested string table in already loaded files.
-    tp = stringTables;
-    st = NULL;
-    while (tp != NULL) {
+
+StringTable *Micropolis::findOrLoadStringTable(int id)
+{
+    // Search for the string table in the already loaded list
+    for (StringTable* tp = stringTables; tp != NULL; tp = tp->next) {
         if (tp->id == id) {
-            st = tp;
-            break;
+            return tp;
         }
-        tp = tp->next;
     }
 
-    if (st == NULL) {
-        // String table is not loaded yet -> get it
-
-        // Create new string table
-        st = (StringTable *)newPtr(sizeof(StringTable));
-        assert(st != NULL);
-
-        st->id = id;
-        Resource *r = getResource("stri", id);
-        Quad size = r->size;
-        char *buf = r->buf;
-
-        // Count number of lines in loaded file, terminate each line
-        Quad lines = 0;
-        for (Quad i = 0; i < size; i++) {
-            if (buf[i] == '\n') {
-                buf[i] = '\0';
-                lines++;
-            }
-        }
-
-        // XXX What about termination of last line?
-
-        st->lines = lines;
-        st->strings = (char **)newPtr(size * sizeof(char *));
-        assert(st->strings != NULL);
-
-        // Store starting points of texts in st->strings array
-        for (Quad i = 0; i < lines; i++) {
-            st->strings[i] = buf;
-            buf += strlen(buf) + 1;
-        }
-
-        st->next = stringTables;
-        stringTables = st;
+    // Load the string table as it's not found
+    Resource *r = getResource("stri", id);
+    if (!r) {
+        return NULL; // Handle the case where the resource is not found
     }
 
-    // st points to the (possibly just loaded) string table
-    assert(num >= 1 && num <= st->lines); // Stay in range of the file
+    StringTable *st = new StringTable();
+    st->id = id;
+    char *buf = r->buf;
+    Quad lineStart = 0;
+    for (Quad i = 0; i < r->size; i++) {
+        if (buf[i] == '\n') {
+            st->strings.push_back(std::string(&buf[lineStart], i - lineStart));
+            lineStart = i + 1;
+        }
+    }
 
-    strcpy(str, st->strings[num - 1]);
+    st->lines = st->strings.size();
+    st->next = stringTables;
+    stringTables = st;
+
+    return st;
 }
 
 

@@ -378,12 +378,20 @@ void Micropolis::doScenarioScore(Scenario type)
  */
 void Micropolis::sendMessage(short mesgNum, short x, short y, bool picture, bool important)
 {
-    callback("update", "sdddbb", "message",
-        (int)mesgNum,
-        (int)x,
-        (int)y,
-        picture ? 1 : 0,
-        important ? 1 : 0);
+    std::string json;
+    json += "[";
+    json += std::to_string(mesgNum);
+    json += ",";
+    json += std::to_string(x);
+    json += ",";
+    json += std::to_string(y);
+    json += ",";
+    json += std::to_string(picture ? 1 : 0);
+    json += ",";
+    json += std::to_string(important ? 1 : 0);
+    json += "]";
+    
+    callback("update", json);
 }
 
 
@@ -449,9 +457,20 @@ void Micropolis::doMakeSound(int mesgNum, int x, int y)
  * @param msg Message
  * @todo \a msg parameter is not used!
  */
-void Micropolis::doAutoGoto(short x, short y, char *msg)
+void Micropolis::doAutoGoto(short x, short y, const std::string &msg)
 {
-    callback("autoGoto", "dd", (int)x, (int)y);
+    std::string json;
+    json += "[";
+    json += std::to_string(x);
+    json += ",";
+    json += std::to_string(y);
+    json += ",";
+    json += std::to_string(y);
+    json += ",\"";
+    json += msg; // TODO: escape json string
+    json += "\"]";
+
+    callback("autoGoto", json);
 }
 
 

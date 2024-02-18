@@ -178,37 +178,47 @@ void Micropolis::doHospitalChurch(const Position &pos)
 
             int churchNumber = 0;
 	    
-	    switch (tile) {
-	        case CHURCH0:
-		    churchNumber = 0;
-		    break;
-	        case CHURCH1:
-		    churchNumber = 1;
-		    break;
-	        case CHURCH2:
-		    churchNumber = 2;
-		    break;
-	        case CHURCH3:
-		    churchNumber = 3;
-		    break;
-	        case CHURCH4:
-		    churchNumber = 4;
-		    break;
-	        case CHURCH5:
-		    churchNumber = 5;
-		    break;
-	        case CHURCH6:
-		    churchNumber = 6;
-		    break;
-	        case CHURCH7:
-		    churchNumber = 7;
-		    break;
-                default:
-		    assert(0); // Unexpected church tile
-		    break;
-	    }
+            switch (tile) {
+                case CHURCH0:
+                churchNumber = 0;
+                break;
+                case CHURCH1:
+                churchNumber = 1;
+                break;
+                case CHURCH2:
+                churchNumber = 2;
+                break;
+                case CHURCH3:
+                churchNumber = 3;
+                break;
+                case CHURCH4:
+                churchNumber = 4;
+                break;
+                case CHURCH5:
+                churchNumber = 5;
+                break;
+                case CHURCH6:
+                churchNumber = 6;
+                break;
+                case CHURCH7:
+                churchNumber = 7;
+                break;
+                    default:
+                assert(0); // Unexpected church tile
+                break;
+            }
 
-            callback("simulateChurch", "ddd", pos.posX, pos.posY, churchNumber);
+            std::string json;
+            json += "[";
+            json += std::to_string(pos.posX);
+            json += ",";
+            json += std::to_string(pos.posY);
+            json += ",";
+            json += std::to_string(churchNumber);
+            json += "]";
+
+
+            callback("simulateChurch", json);
         }
 
     }

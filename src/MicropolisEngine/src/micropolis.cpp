@@ -515,10 +515,10 @@ void Micropolis::init()
     // resource.cpp
 
 
-    // char *HomeDir;
+    // string HomeDir;
     homeDir = "";
 
-    // char *ResourceDir;
+    // string ResourceDir;
     resourceDir = "";
 
     // Resource *resources;
@@ -771,9 +771,9 @@ void Micropolis::destroy()
  * @todo Use this function or eliminate it.
  * @return Textual version.
  */
-const char *Micropolis::getMicropolisVersion()
+std::string Micropolis::getMicropolisVersion()
 {
-    return MICROPOLIS_VERSION;
+    return std::string(MICROPOLIS_VERSION);
 }
 
 /**
@@ -783,7 +783,7 @@ const char *Micropolis::getMicropolisVersion()
  * @param envVar Environment variable controlling searchpath of the directory.
  * @return Directory has been found.
  */
-static bool testDirectory(const std::string& dir, const char *envVar)
+static bool testDirectory(const std::string& dir, const std::string &envVar)
 {
     struct stat statbuf;
 
@@ -795,7 +795,7 @@ static bool testDirectory(const std::string& dir, const char *envVar)
     fprintf(stderr, "Can't find the directory \"%s\"!\n", dir.c_str());
     fprintf(stderr,
             "The environment variable \"%s\" should name a directory.\n",
-            envVar);
+            envVar.c_str());
 
     return false;
 }
@@ -1235,7 +1235,7 @@ void Micropolis::doStartLoad()
  */
 void Micropolis::doStartScenario(int scenario)
 {
-    callback( "startScenario", "d", (int)scenario);
+    callback( "startScenario", std::to_string(scenario));
 }
 
 
@@ -1265,32 +1265,18 @@ void Micropolis::initGame()
  * runtime).
  *
  * The name is the name of a message to send.
- * The params is a string that specifies the number and
- * types of the following vararg parameters.
- * There is one character in the param string per vararg
- * parameter. The following parameter types are currently
- * supported:
- *  - i: integer
- *  - f: float
- *  - s: string
+ * The json is a string that specifies the parameters.
  *
- * See PythonCallbackHook defined in \c swig/micropolis-swig-python.i
- * for an example of a callback function.
  * @param name   Name of the callback.
- * @param params Parameters of the callback.
+ * @param json   json parameters of the callback.
  */
-void Micropolis::callback(const char *name, const char *params, ...)
+void Micropolis::callback(const std::string &name, const std::string &json)
 {
     if (callbackHook == NULL) {
         return;
     }
 
-    va_list arglist;
-    va_start(arglist, params); // beginning after last named argument: params
-
-    (*callbackHook)(this, callbackData, name, params, arglist);
-
-    va_end(arglist);
+    (*callbackHook)(this, callbackData, name, json);
 }
 
 
@@ -1302,7 +1288,7 @@ void Micropolis::doEarthquake(int strength)
 {
     makeSound("city", "ExplosionLow"); // Make the sound all over.
 
-    callback("startEarthquake", "d", strength);
+    callback("startEarthquake", std::to_string(strength));
 }
 
 
@@ -1310,7 +1296,7 @@ void Micropolis::doEarthquake(int strength)
 void Micropolis::invalidateMaps()
 {
     mapSerial++;
-    callback("update", "s", "map"); // new
+    callback("update", "map"); // new
 }
 
 
@@ -1324,11 +1310,23 @@ void Micropolis::invalidateMaps()
  * @param x       Tile X position of sound, 0 to WORLD_W, or -1 for everywhere.
  * @param y       Tile Y position of sound, 0 to WORLD_H, or -1 for everywhere.
  */
-void Micropolis::makeSound(const char *channel, const char *sound,
+void Micropolis::makeSound(const std::string &channel,
+                           const std::string &sound,
                            int x, int y)
 {
     if (enableSound) {
-        callback("makeSound", "ssdd", channel, sound, x, y);
+        std::string json;
+        json += "[\"";
+        json += channel; // TODO: escape json string
+        json += "\",\"";
+        json += sound;
+        json += "\",\"";
+        json += std::to_string(x);
+        json += ",";
+        json += std::to_string(y);
+        json += "]";
+
+        callback("makeSound", json);
     }
 }
 

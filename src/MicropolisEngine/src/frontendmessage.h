@@ -63,8 +63,8 @@
 /** @file frontendmessage.h */
 
 
-#ifndef _H_FRONTENDMESSAGES
-#define _H_FRONTENDMESSAGES
+#ifndef _H_FRONTENDMESSAGE
+#define _H_FRONTENDMESSAGE
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -92,10 +92,10 @@ class FrontendMessageDidTool : public FrontendMessage {
 
 public:
 
-    const char *tool;
+    std::string tool;
     int x, y;
 
-    FrontendMessageDidTool(const char *tool, int x, int y);
+    FrontendMessageDidTool(const std::string &tool, int x, int y);
 
     virtual ~FrontendMessageDidTool();
 
@@ -109,11 +109,11 @@ class FrontendMessageMakeSound : public FrontendMessage {
 
 public:
 
-    const char *channel;
-    const char *sound;
+    std::string channel;
+    std::string sound;
     int x, y;
 
-    FrontendMessageMakeSound(const char *channel, const char *sound, int x, int y);
+    FrontendMessageMakeSound(const std::string &channel, const std::string &sound, int x, int y);
 
     virtual ~FrontendMessageMakeSound();
 

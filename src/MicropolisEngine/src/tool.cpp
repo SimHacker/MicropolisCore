@@ -180,7 +180,7 @@ void ToolEffects::setMapValue(const Position &pos, MapValue mapVal)
 // BuildingProperties
 
 BuildingProperties::BuildingProperties(int xs, int ys, MapTile base,
-                                EditingTool tl, const char *tName, bool anim) :
+                                       EditingTool tl, std::string tName, bool anim) :
         sizeX(xs),
         sizeY(ys),
         baseTile(base),
@@ -893,7 +893,26 @@ void Micropolis::doShowZoneStatus(
     int s0, int s1, int s2, int s3, int s4,
     int x, int y)
 {
-    callback("showZoneStatus", "dddddddd", tileCategory, s0, s1, s2, s3, s4, x, y);
+    std::string json;
+    json += "[";
+    json += std::to_string(tileCategory);
+    json += ",";
+    json += std::to_string(s0);
+    json += ",";
+    json += std::to_string(s1);
+    json += ",";
+    json += std::to_string(s2);
+    json += ",";
+    json += std::to_string(s3);
+    json += ",";
+    json += std::to_string(s4);
+    json += ",";
+    json += std::to_string(x);
+    json += ",";
+    json += std::to_string(y);
+    json += "]";
+    
+    callback("showZoneStatus", json);
 }
 
 
@@ -927,9 +946,18 @@ void Micropolis::putRubble(int x, int y, int size, ToolEffects *effects)
  * @param x     X coordinate of where the tool was applied.
  * @param y     Y coordinate of where the tool was applied.
  */
-void Micropolis::didTool(const char *name, short x, short y)
+void Micropolis::didTool(std::string name, short x, short y)
 {
-    callback("didTool", "sdd", name, (int)x, (int)y);
+    std::string json;
+    json += "[";
+    json += name;
+    json += "\",";
+    json += std::to_string(x);
+    json += ",";
+    json += std::to_string(y);
+    json += "]";
+
+    callback("didTool", json);
 }
 
 

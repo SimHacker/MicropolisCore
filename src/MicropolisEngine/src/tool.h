@@ -311,7 +311,7 @@ class BuildingProperties
 {
 public:
     BuildingProperties(int xs, int ys, MapTile base, EditingTool tool,
-                        const char *tName, bool anim);
+                        std::string tName, bool anim);
     ~BuildingProperties();
 
     const int sizeX; ///< Number of tiles in horizontal direction.
@@ -322,7 +322,7 @@ public:
     const EditingTool tool; ///< Tool needed for making the building.
 
     /** Name of the tool needed for making the building. */
-    const char *toolName;
+    std::string toolName;
 
     const bool buildingIsAnimated; ///< Building has animated tiles.
 };

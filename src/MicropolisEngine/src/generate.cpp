@@ -76,7 +76,7 @@
  * @bug We use a random number generator to draw a seed for initializing the
  *      random number generator?
  */
-void Micropolis::generateMap()
+void Micropolis::generateSomeRandomCity()
 {
     generateSomeCity(getRandom16());
 }

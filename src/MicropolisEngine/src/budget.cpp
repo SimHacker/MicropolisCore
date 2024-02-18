@@ -320,7 +320,7 @@ void Micropolis::updateBudget()
     ///       them and pushing them out.
 
     if (mustDrawBudget) {
-        callback("update", "s", "budget");
+        callback("update", "budget");
         mustDrawBudget = 0;
     }
 }
@@ -335,7 +335,7 @@ void Micropolis::showBudgetWindowAndStartWaiting()
 void Micropolis::setCityTax(short tax)
 {
     cityTax = tax;
-    callback("update", "s", "taxRate");
+    callback("update", "taxRate");
 }
 
 

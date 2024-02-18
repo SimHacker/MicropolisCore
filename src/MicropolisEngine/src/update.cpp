@@ -128,7 +128,7 @@ void Micropolis::reallyUpdateFunds()
     if (totalFunds != totalFundsLast) {
         totalFundsLast = totalFunds;
 
-        callback("update", "s", "funds");
+        callback("update", "funds");
     }
 
 }
@@ -165,7 +165,7 @@ void Micropolis::updateDate()
         cityYearLast = cityYear;
         cityMonthLast = cityMonth;
 
-        callback("update", "s", "date");
+        callback("update", "date");
     }
 }
 
@@ -228,7 +228,7 @@ void Micropolis::drawValve()
 
 void Micropolis::setDemand(float r, float c, float i)
 {
-    callback("update", "s", "demand");
+    callback("update", "demand");
 }
 
 
@@ -236,7 +236,7 @@ void Micropolis::updateOptions()
 {
     if (mustUpdateOptions) {
         mustUpdateOptions = false;
-        callback("update", "s", "options");
+        callback("update", "options");
     }
 }
 

@@ -92,7 +92,7 @@ FrontendMessage::~FrontendMessage()
 
 
 
-FrontendMessageDidTool::FrontendMessageDidTool(const char *tool, int x, int y)
+FrontendMessageDidTool::FrontendMessageDidTool(const std::string &tool, int x, int y)
 {
     this->tool = tool;
     this->x = x;
@@ -112,7 +112,8 @@ void FrontendMessageDidTool::sendMessage(Micropolis *sim) const
 
 
 FrontendMessageMakeSound::FrontendMessageMakeSound(
-                                const char *channel, const char *sound,
+                                const std::string &channel,
+                                const std::string &sound,
                                 int x, int y)
 {
     this->channel = channel;

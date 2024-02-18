@@ -120,7 +120,7 @@ void Micropolis::changeCensus()
 void Micropolis::graphDoer()
 {
     if (censusChanged) {
-        callback("update", "s", "history");
+        callback("update", "history");
         censusChanged = false;
     }
 }

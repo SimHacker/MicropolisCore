@@ -73,7 +73,7 @@
 
 /* comefrom: drawTaxesCollected incBoxValue decBoxValue drawCurrentFunds
              drawActualBox updateFunds updateCurrentCost */
-void Micropolis::makeDollarDecimalStr(char *numStr, char *dollarStr)
+std::string Micropolis::makeDollarDecimalStr(const std::string &numStr)
 {
     short leftMostSet;
     short numOfDigits;
@@ -83,25 +83,23 @@ void Micropolis::makeDollarDecimalStr(char *numStr, char *dollarStr)
     short numIndex = 0;
     short x;
 
-    numOfDigits = (short)strlen(numStr);
+    numOfDigits = numStr.length();
 
+    std::string dollarStr;
+    
+    dollarStr += '$';
     if (numOfDigits == 1) {
-        dollarStr[0] = '$';
-        dollarStr[1] = numStr[ 0 ];
-        dollarStr[2] = 0;
-        return;
+        dollarStr += numStr[0];
+        return dollarStr;
     } else if (numOfDigits == 2) {
-        dollarStr[0] = '$';
-        dollarStr[1] = numStr[0];
-        dollarStr[2] = numStr[1];
-        dollarStr[3] = 0;
-        return;
+        dollarStr += numStr[0];
+        dollarStr += numStr[1];
+        return dollarStr;
     } else if (numOfDigits == 3) {
-        dollarStr[0] = '$';
-        dollarStr[1] = numStr[0];
-        dollarStr[2] = numStr[1];
-        dollarStr[3] = numStr[2];
-        dollarStr[4] = 0;
+        dollarStr += numStr[0];
+        dollarStr += numStr[1];
+        dollarStr += numStr[2];
+        return dollarStr;
     } else {
         leftMostSet = numOfDigits % 3;
 
@@ -114,22 +112,20 @@ void Micropolis::makeDollarDecimalStr(char *numStr, char *dollarStr)
         /* add 1 for the dollar sign */
         numOfChars = numOfDigits + numOfCommas + 1;
 
-        dollarStr[numOfChars] = 0;
-
-        dollarStr[dollarIndex++] = '$';
-
         for (x = 1; x <= leftMostSet; x++) {
-            dollarStr[dollarIndex++] = numStr[numIndex++];
+            dollarStr += numStr[numIndex++];
         }
 
         for (x = 1; x <= numOfCommas; x++) {
-            dollarStr[dollarIndex++] = ',';
-            dollarStr[dollarIndex++] = numStr[numIndex++];
-            dollarStr[dollarIndex++] = numStr[numIndex++];
-            dollarStr[dollarIndex++] = numStr[numIndex++];
+            dollarStr += ',';
+            dollarStr += numStr[numIndex++];
+            dollarStr += numStr[numIndex++];
+            dollarStr += numStr[numIndex++];
         }
 
     }
+
+    return dollarStr;
 }
 
 /**
@@ -145,7 +141,7 @@ void Micropolis::pause()
     }
 
     // Call back even if the state did not change.
-    callback("update", "s", "paused");
+    callback("update", "paused");
 }
 
 /**
@@ -160,7 +156,7 @@ void Micropolis::resume()
     }
 
     // Call back even if the state did not change.
-    callback("update", "s", "paused");
+    callback("update", "resumed");
 }
 
 
@@ -181,7 +177,7 @@ void Micropolis::setSpeed(short speed)
 
     simSpeed = speed;
 
-    callback("update", "s", "speed");
+    callback("update", "speed");
 }
 
 
@@ -189,7 +185,7 @@ void Micropolis::setPasses(int passes)
 {
     simPasses = passes;
     simPass = 0;
-    callback("update", "s", "passes");
+    callback("update", "passes");
 }
 
 /**
@@ -234,7 +230,7 @@ void Micropolis::setGameLevel(GameLevel level)
 /** Report to the front-end that a new game level has been set. */
 void Micropolis::updateGameLevel()
 {
-    callback("update", "s", "gameLevel");
+    callback("update", "gameLevel");
 }
 
 
@@ -264,7 +260,7 @@ void Micropolis::setCleanCityName(const std::string &name)
 {
     cityName = name;
 
-    callback("update", "s", "cityName");
+    callback("update", "cityName");
 }
 
 

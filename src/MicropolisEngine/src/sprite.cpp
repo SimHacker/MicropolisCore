@@ -89,7 +89,7 @@
  * @param y Y coordinate of the sprite (in pixels).
  * @return New sprite object.
  */
-SimSprite *Micropolis::newSprite(const char *name, int type, int x, int y)
+SimSprite *Micropolis::newSprite(const std::string &name, int type, int x, int y)
 {
     SimSprite *sprite;
 
@@ -102,8 +102,7 @@ SimSprite *Micropolis::newSprite(const char *name, int type, int x, int y)
         sprite = (SimSprite *)newPtr(sizeof (SimSprite));
     }
 
-    sprite->name = (char *)newPtr((int)strlen(name) + 1);
-    strcpy(sprite->name, name);
+    sprite->name = name;
     sprite->type = type;
 
     initSprite(sprite, x, y);
@@ -305,11 +304,6 @@ void Micropolis::destroySprite(SimSprite *sprite)
 
     if (globalSprites[sprite->type] == sprite) {
         globalSprites[sprite->type] = (SimSprite *)NULL;
-    }
-
-    if (sprite->name != NULL) {
-        freePtr(sprite->name);
-        sprite->name = NULL;
     }
 
     for (sp = &spriteList; *sp != NULL; sp = &((*sp)->next)) {

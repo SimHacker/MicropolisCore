@@ -199,22 +199,21 @@ static bool save_short(short *buf, int len, FILE *f)
  * @param dir      If not \c NULL, name of the directory containing the file.
  * @return Load was succesfull.
  */
-bool Micropolis::loadFileDir(const char *filename, const char *dir)
+bool Micropolis::loadFileDir(const std::string &filename, const std::string &dir)
 {
     char *path = NULL;
     FILE *f;
     Quad size;
 
+    std::string fn = filename;
+
     // If needed, construct a path to the file.
-    if (dir != NULL) {
-        int len = strlen(dir) + 1 + strlen(filename) + 1;
-        path = (char *)malloc(len);
-        snprintf(path, len, "%s/%s", dir, filename);
-        filename = path;
+    if (!dir.empty()) {
+        fn = dir + "/" + filename;
     }
 
     // Open the file.
-    f = fopen(filename, "rb");
+    f = fopen(fn.c_str(), "rb");
 
     // Before checking whether open() succeeded, first drop the path.
     if (path != NULL) {
@@ -251,11 +250,11 @@ bool Micropolis::loadFileDir(const char *filename, const char *dir)
  * @param filename Name of the file to load.
  * @return Load was succesfull.
  */
-bool Micropolis::loadFile(const char *filename)
+bool Micropolis::loadFile(const std::string &filename)
 {
     long n;
 
-    if (!loadFileDir(filename, NULL)) {
+    if (!loadFileDir(filename, "")) {
         return false;
     }
 
@@ -337,12 +336,12 @@ bool Micropolis::loadFile(const char *filename)
  * @param filename Name of the file to use for storing the game.
  * @return The game was saved successfully.
  */
-bool Micropolis::saveFile(const char *filename)
+bool Micropolis::saveFile(const std::string &filename)
 {
     long n;
     FILE *f;
 
-    if ((f = fopen(filename, "wb")) == NULL) {
+    if ((f = fopen(filename.c_str(), "wb")) == NULL) {
         /// @todo Report error saving file.
         return false;
     }
@@ -403,8 +402,8 @@ bool Micropolis::saveFile(const char *filename)
  */
 void Micropolis::loadScenario(Scenario s)
 {
-    const char *name = NULL;
-    const char *fname = NULL;
+    std::string name = NULL;
+    std::string fname = NULL;
 
     cityFileName = "";
 
@@ -482,7 +481,7 @@ void Micropolis::loadScenario(Scenario s)
 
     loadFileDir(
         fname,
-        resourceDir.c_str());
+        resourceDir);
 
     initWillStuff();
     initFundingLevel();
@@ -510,7 +509,7 @@ void Micropolis::didLoadScenario()
  *       Extract to a sub-function.
  * @bug Function fails if \c lastDot<lastSlash (ie with \c "x.y/bla" )
  */
-bool Micropolis::loadCity(const char *filename)
+bool Micropolis::loadCity(const std::string &filename)
 {
     if (loadFile(filename)) {
 
@@ -532,7 +531,7 @@ bool Micropolis::loadCity(const char *filename)
 
     } else {
 
-        didntLoadCity((filename && *filename) ? filename : "(null)");
+        didntLoadCity(filename.length() ? filename : "(null)");
 
         return false;
 
@@ -550,9 +549,9 @@ void Micropolis::didLoadCity()
  * Report to the frontend that the game failed to load.
  * @param msg File that attempted to load
  */
-void Micropolis::didntLoadCity(const char *msg)
+void Micropolis::didntLoadCity(const std::string &msg)
 {
-    callback("didntLoadCity", "s", msg);
+    callback("didntLoadCity", msg);
 }
 
 
@@ -568,13 +567,13 @@ void Micropolis::saveCity()
         doSaveCityAs();
 
     } else {
-        if (saveFile(cityFileName.c_str())) {
+        if (saveFile(cityFileName)) {
 
             didSaveCity();
 
         } else {
 
-            didntSaveCity(cityFileName.c_str());
+            didntSaveCity(cityFileName);
 
         }
     }
@@ -599,9 +598,9 @@ void Micropolis::didSaveCity()
  * Report to the frontend that the city could not be saved.
  * @param msg Name of the file used
  */
-void Micropolis::didntSaveCity(const char *msg)
+void Micropolis::didntSaveCity(const std::string &msg)
 {
-    callback("didntSaveCity", "s", msg);
+    callback("didntSaveCity", msg);
 }
 
 
@@ -612,11 +611,11 @@ void Micropolis::didntSaveCity(const char *msg)
  *       Extract to a sub-function.
  * @bug Function fails if \c lastDot<lastSlash (ie with \c "x.y/bla" )
  */
-void Micropolis::saveCityAs(const char *filename)
+void Micropolis::saveCityAs(const std::string &filename)
 {
     cityFileName = filename;
 
-    if (saveFile(cityFileName.c_str())) {
+    if (saveFile(cityFileName)) {
 
         size_t lastDot = cityFileName.find_last_of('.');
         size_t lastSlash = cityFileName.find_last_of('/');
@@ -636,7 +635,7 @@ void Micropolis::saveCityAs(const char *filename)
 
     } else {
 
-        didntSaveCity(cityFileName.c_str());
+        didntSaveCity(cityFileName);
 
     }
 }
