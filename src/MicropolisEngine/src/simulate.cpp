@@ -503,6 +503,11 @@ void Micropolis::simLoadInit()
 
     doNilPower();
 
+    roadEffect = MAX_ROAD_EFFECT;
+    policeEffect = MAX_POLICE_STATION_EFFECT;
+    fireEffect = MAX_FIRE_STATION_EFFECT;
+    initSimLoad = 0;
+
     if (scenario >= SC_COUNT) {
         scenario = SC_NONE;
     }
@@ -515,6 +520,8 @@ void Micropolis::simLoadInit()
         disasterWait = disasterWaitTable[disasterEvent];
         scoreType = disasterEvent;
         scoreWait = scoreWaitTable[disasterEvent];
+
+        doStartScenario(scenario);
     } else {
         disasterEvent = SC_NONE;
         disasterWait = 0;
@@ -522,10 +529,7 @@ void Micropolis::simLoadInit()
         scoreWait = 0;
     }
 
-    roadEffect = MAX_ROAD_EFFECT;
-    policeEffect = MAX_POLICE_STATION_EFFECT;
-    fireEffect = MAX_FIRE_STATION_EFFECT;
-    initSimLoad = 0;
+    doStartGame();
 }
 
 
@@ -915,9 +919,9 @@ void Micropolis::updateFundEffects()
 
 #if 0
     printf("========== updateFundEffects road %d %d %d fire %d %d %d police %d %d %d\n",
-	(int)roadEffect, (int)roadSpend, (int)roadFund,
-	(int)fireEffect, (int)fireSpend, (int)fireFund,
-	(int)policeEffect, (int)policeSpend, (int)policeFund);
+        (int)roadEffect, (int)roadSpend, (int)roadFund,
+        (int)fireEffect, (int)fireSpend, (int)fireFund,
+        (int)policeEffect, (int)policeSpend, (int)policeFund);
 #endif
 
     mustDrawBudget = 1;

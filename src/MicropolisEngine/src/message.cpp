@@ -253,7 +253,7 @@ void Micropolis::checkGrowth()
                 switch (newClass) {
 
                     case CC_VILLAGE:
-		        // Don't mention it.
+                        // Don't mention it.
                         break;
 
                     case CC_TOWN:
@@ -370,28 +370,15 @@ void Micropolis::doScenarioScore(Scenario type)
 /**
  * Send the user a message of an event that happens at a particular position
  * in the city.
- * @param mesgNum Message number of the message to display.
- * @param x          X coordinate of the position of the event.
- * @param y          Y coordinate of the position of the event.
- * @param picture    Flag that is true if a picture should be shown.
- * @param important  Flag that is true if the message is important.
+ * @param messageIndex  Message number of the message to display.
+ * @param x             X coordinate of the position of the event.
+ * @param y             Y coordinate of the position of the event.
+ * @param picture       Flag that is true if a picture should be shown.
+ * @param important     Flag that is true if the message is important.
  */
-void Micropolis::sendMessage(short mesgNum, short x, short y, bool picture, bool important)
+void Micropolis::sendMessage(short messageIndex, short x, short y, bool picture, bool important)
 {
-    std::string json;
-    json += "[";
-    json += std::to_string(mesgNum);
-    json += ",";
-    json += std::to_string(x);
-    json += ",";
-    json += std::to_string(y);
-    json += ",";
-    json += std::to_string(picture ? 1 : 0);
-    json += ",";
-    json += std::to_string(important ? 1 : 0);
-    json += "]";
-    
-    callback("update", json);
+    callback->sendMessage(this, callbackVal, messageIndex, x, y, picture, important);
 }
 
 
@@ -452,39 +439,27 @@ void Micropolis::doMakeSound(int mesgNum, int x, int y)
 
 /**
  * Tell the front-end that it should perform an auto-goto
- * @param x   X position at the map
- * @param y   Y position at the map
- * @param msg Message
- * @todo \a msg parameter is not used!
+ * @param x         X position at the map
+ * @param y         Y position at the map
+ * @param message   Message
  */
-void Micropolis::doAutoGoto(short x, short y, const std::string &msg)
+void Micropolis::doAutoGoto(short x, short y, const std::string &message)
 {
-    std::string json;
-    json += "[";
-    json += std::to_string(x);
-    json += ",";
-    json += std::to_string(y);
-    json += ",";
-    json += std::to_string(y);
-    json += ",\"";
-    json += msg; // TODO: escape json string
-    json += "\"]";
-
-    callback("autoGoto", json);
+    callback->autoGoto(this, callbackVal, x, y, message);
 }
 
 
 /** Tell the front-end that the player has lost the game */
 void Micropolis::doLoseGame()
 {
-    callback("loseGame", "");
+    callback->didLoseGame(this, callbackVal);
 }
 
 
 /** Tell the front-end that the player has won the game */
 void Micropolis::doWinGame()
 {
-    callback("winGame", "");
+    callback->didWinGame(this, callbackVal);
 }
 
 

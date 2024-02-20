@@ -465,8 +465,6 @@ void Micropolis::doVotes()
 /** Push new score to the user */
 void Micropolis::doScoreCard()
 {
-    callback("update", "evaluation");
-
     // The user interface should pull these raw values out and format
     // them. The simulator core used to format them and push them out,
     // but the user interface should pull them out and format them
@@ -488,6 +486,8 @@ void Micropolis::doScoreCard()
     //   Assessed Value: ${FormatMoney(cityAssessedValue))
     //   Category: ${cityClassStr[cityClass]}
     //   Game Level: ${cityLevelStr[gameLevel]}
+
+    callback->updateEvaluation(this, callbackVal);
 }
 
 /** Request that new score is displayed to the user. */

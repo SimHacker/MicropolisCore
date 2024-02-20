@@ -142,8 +142,8 @@ static short animatedTiles[TILE_COUNT] = {
     704, 705, 706, 707, 708,
     /* AirPort */
                                     // 832 was previous value of 711, to start radar
-				    // animation, but now we break the link and the
-				    // simulator switches the tiles.
+                                    // animation, but now we break the link and the
+                                    // simulator switches the tiles.
                              709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719,
     720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735,
     736, 737, 738, 739, 740, 741, 742, 743, 744,
@@ -188,7 +188,7 @@ static short animatedTiles[TILE_COUNT] = {
     /* Nuclear swirl */
                                             953, 954, 955, 952,
     /* Churches */
-								956, 957, 958, 959,
+                                                                956, 957, 958, 959,
     960, 961, 962, 963, 964, 965, 966, 967, 968, 969, 970, 971, 972, 973, 974, 975, 
     976, 977, 978, 979, 980, 981, 982, 983, 984, 985, 986, 987, 988, 989, 990, 991, 
     992, 993, 994, 995, 996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 

@@ -75,9 +75,9 @@ EMCXXFLAGS = \
 EMLDFLAGS = \
     -s WASM=1 \
 	-lembind \
-	--shell-file micropolisengine_template.html \
-	--js-library micropolisengine_lib.js \
 	--embind-emit-tsd micropolisengine.d.ts \
+	--shell-file src/micropolisengine_template.html \
+	--js-library src/micropolisengine_lib.js \
 	--preload-file ../../resources/cities@cities/
 
 
@@ -114,6 +114,7 @@ SOURCES = \
 	src/zone.cpp
 
 SUBHEADERS = \
+	src/callback.h \
 	src/data_types.h \
 	src/frontendmessage.h \
 	src/map_type.h \
@@ -130,7 +131,7 @@ HEADERS = \
 
 
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = micropolisengine
+LIBRARY = out/micropolisengine
 OUTPUTFILES = \
     $(LIBRARY).wasm \
 	$(LIBRARY).js \
@@ -148,6 +149,7 @@ $(LIBRARY): $(OBJECTS)
 		$^
 
 %.o: %.cpp $(HEADERS)
+	mkdir -p out
 	$(EMCC) \
 	    $(EMCXXFLAGS) \
 		-c $< \

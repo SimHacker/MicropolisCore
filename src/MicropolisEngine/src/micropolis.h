@@ -105,12 +105,15 @@
 #include <vector>
 #include <map>
 
+#include <emscripten/bind.h>
+
 #include "data_types.h"
 #include "map_type.h"
 #include "position.h"
 #include "text.h"
 #include "frontendmessage.h"
 #include "tool.h"
+#include "callback.h"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -123,11 +126,6 @@
  * @todo Determine byte order a better way.
  */
 #define IS_INTEL                        1
-
-/**
- * The version number of Micropolis.
- */
-#define MICROPOLIS_VERSION              "5.0"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -875,6 +873,7 @@ static inline void not_reached(int line, const char *fname)
 
 
 class Micropolis;
+class Callback;
 class ToolEffects;
 class BuildingProperties;
 
@@ -953,17 +952,25 @@ public:
 
     ~Micropolis();
 
+    void initCallback(Callback *callback, emscripten::val callbackVal);
+
 private:
 
-    void init();
-
     void destroy();
+
+    void init();
 
 
     ////////////////////////////////////////////////////////////////////////
     // allocate.cpp
 
 public:
+
+
+    /**
+     * Callback interface.
+     */
+    Callback *callback;
 
 
     /**
@@ -1684,19 +1691,19 @@ public:
 
     void loadScenario(Scenario s);
 
-    void didLoadScenario();
+    void didLoadScenario(int s, const std::string name, const std::string fname);
 
     bool loadCity(const std::string &filename);
 
-    void didLoadCity();
+    void didLoadCity(const std::string &filename);
 
     void didntLoadCity(const std::string &msg);
 
     void saveCity();
 
-    void doSaveCityAs();
+    void doSaveCityAs(const std::string &filename);
 
-    void didSaveCity();
+    void didSaveCity(const std::string &filename);
 
     void didntSaveCity(const std::string &msg);
 
@@ -1917,21 +1924,26 @@ public:
 
     /**
      * Name of the city.
-     * @todo Write-only variable, should it be removed?
      */
     std::string cityName;     ///< Name of the city
 
+    /**
+     * Heat steps.
+     */
     int heatSteps;
 
     /**
-     * @todo Always -7, should this variable be moved or removed?
+     * Heat flow.
      */
     int heatFlow;
 
+    /**
+     * Heat rule.
+     */
     int heatRule;
 
     /**
-     * @todo Always 3, should this variable be moved or removed?
+     * Heat wrap.
      */
     int heatWrap;
 
@@ -1947,76 +1959,6 @@ private:
     void simHeat();
 
     void simLoop(bool doSim);
-
-
-#if 0
-
-    ////////////////////////////////////////////////////////////////////////
-    // map.cpp
-    //
-    // Disabled this small map drawing, filtering and overlaying code.
-    // Going to re-implement it in the tile engine and Python.
-
-public:
-
-
-    int dynamicData[32]; // Read-only, it seems
-
-
-    void drawAll();
-
-    void drawRes();
-
-    void drawCom();
-
-    void drawInd();
-
-    void drawLilTransMap();
-
-    void drawPower();
-
-    bool dynamicFilter(int col, int row);
-
-    void drawDynamic();
-
-    short getCI(short x);
-
-    void drawPopulationDensity();
-
-    void drawRateOfGrowth();
-
-    void drawTrafficDensityMap();
-
-    void drawPollutionDensityMap();
-
-    void drawCrimeRateMap();
-
-    void drawLandValueMap();
-
-    void drawFireRadius();
-
-    void drawPoliceRadius();
-
-    void memDrawMap();
-
-    void ditherMap();
-
-    void maybeDrawRect(
-        int val,
-        int x,
-        int y,
-        int w,
-        int h);
-
-    void drawRect(
-        int pixel,
-        int solid,
-        int x,
-        int y,
-        int w,
-        int h);
-
-#endif
 
 
     ////////////////////////////////////////////////////////////////////////
@@ -2050,7 +1992,7 @@ public:
 
     void doMakeSound(int mesgNum, int x, int y);
 
-    void doAutoGoto(short x, short y, const std::string &msg);
+    void doAutoGoto(short x, short y, const std::string &message);
 
     void doLoseGame();
     void doWinGame(); ///< @todo This may not be called. Call it when appropriate.
@@ -2129,8 +2071,6 @@ private:
 
     /**
      * Integer with bits 0..2 that control smoothing.
-     * @todo Variable is always \c 0. Can we delete the variable?
-     * @todo Introduce constants for the bits and/or a bool array.
      */
     Quad donDither;
 
@@ -2433,11 +2373,7 @@ public:
      */
     short blinkFlag;
 
-    /**
-     * Hook into scripting language to send callbacks.
-     * (i.e. a function that calls back into the Python interpreter.)
-     */
-    CallbackFunction callbackHook;
+    emscripten::val callbackVal;
 
     /**
      * Hook for scripting language to store scripted callback function.
@@ -2473,17 +2409,11 @@ public:
 
     void freePtr(void *data);
 
-    void doPlayNewCity();
-
-    void doReallyStartGame();
-
-    void doStartLoad();
-
     void doStartScenario(int scenario);
 
-    void initGame();
+    void doStartGame();
 
-    void callback(const std::string &name, const std::string &json);
+    void initGame();
 
     void doEarthquake(int strength);
 
@@ -2639,9 +2569,14 @@ private:
     void doZoneStatus(short mapH, short mapV);
 
     void doShowZoneStatus(
-	int tileCategory,
-	int s0, int s1, int s2, int s3, int s4,
-	int x, int y);
+        int tileCategoryIndex,
+        int populationDensityIndex,
+        int landValueIndex,
+        int crimeRateIndex,
+        int pollutionIndex,
+        int growthRateIndex,
+        int x,
+        int y);
 
     void putBuilding(int leftX, int topY, int sizeX, int sizeY,
                      MapTile baseTile, bool aniFlag,

@@ -86,8 +86,8 @@ short Micropolis::makeTrafficAt(int x, int y, ZoneType dest)
     pos.posY = y;
 
     if (tryDrive(pos, dest)) { /* attempt to drive somewhere */
-	addToTrafficDensityMap(); /* if sucessful, inc trafdensity */
-	return 1;             /* traffic passed */
+        addToTrafficDensityMap(); /* if sucessful, inc trafdensity */
+        return 1;             /* traffic passed */
     }
 
     return 0;                 /* traffic failed */

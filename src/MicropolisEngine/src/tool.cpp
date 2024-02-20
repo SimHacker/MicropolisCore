@@ -879,40 +879,26 @@ void Micropolis::doZoneStatus(short mapH, short mapV)
 
 
 /** Tell front-end to report on status of a tile.
- * @param tileCategory  Category of the tile text index.
- * @param s0            Population density text index.
- * @param s1            Land value text index.
- * @param s2            Crime rate text index.
- * @param s3            Pollution text index.
- * @param s4            Grow rate text index.
- * @param x             X coordinate of the tile.
- * @param y             Y coordinate of the tile.
+ * @param tileCategoryIndex         Category of the tile text index.
+ * @param populationDensityIndex    Population density text index.
+ * @param landValueIndex            Land value text index.
+ * @param crimeRateIndex            Crime rate text index.
+ * @param pollutionIndex            Pollution text index.
+ * @param growthRateIndex           Grow rate text index.
+ * @param x                         X coordinate of the tile.
+ * @param y                         Y coordinate of the tile.
  */
 void Micropolis::doShowZoneStatus(
-    int tileCategory,
-    int s0, int s1, int s2, int s3, int s4,
-    int x, int y)
+    int tileCategoryIndex,
+    int populationDensityIndex,
+    int landValueIndex,
+    int crimeRateIndex,
+    int pollutionIndex,
+    int growthRateIndex,
+    int x,
+    int y)
 {
-    std::string json;
-    json += "[";
-    json += std::to_string(tileCategory);
-    json += ",";
-    json += std::to_string(s0);
-    json += ",";
-    json += std::to_string(s1);
-    json += ",";
-    json += std::to_string(s2);
-    json += ",";
-    json += std::to_string(s3);
-    json += ",";
-    json += std::to_string(s4);
-    json += ",";
-    json += std::to_string(x);
-    json += ",";
-    json += std::to_string(y);
-    json += "]";
-    
-    callback("showZoneStatus", json);
+    callback->showZoneStatus(this, callbackVal, tileCategoryIndex, populationDensityIndex, landValueIndex, crimeRateIndex, pollutionIndex, growthRateIndex, x, y);
 }
 
 
@@ -957,7 +943,7 @@ void Micropolis::didTool(std::string name, short x, short y)
     json += std::to_string(y);
     json += "]";
 
-    callback("didTool", json);
+    callback->didTool(this, callbackVal, name, x, y);
 }
 
 

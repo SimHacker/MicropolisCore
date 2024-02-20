@@ -1014,6 +1014,8 @@ function createTypedArrayFromMap(mapInstance) {
 
   class_<Micropolis>("Micropolis")
 
+    .constructor<>()
+
     // Simulation Control and Settings
     .function("simTick", &Micropolis::simTick)
     .function("setSpeed", &Micropolis::setSpeed)

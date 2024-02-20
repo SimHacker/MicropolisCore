@@ -105,7 +105,7 @@ void Micropolis::generateSomeCity(int seed)
 
     simUpdate();
 
-    callback("didGenerateMap", "");
+    callback->didGenerateMap(this, callbackVal, seed);
 }
 
 
@@ -552,7 +552,7 @@ Direction2 Micropolis::doSRiver(const Position &riverPos,
     Position pos(riverPos);
 
     while (testBounds(pos.posX + 3, pos.posY + 3)) {
-	//printf("doSRiver %d %d td %d rd %d\n", pos.posX, pos.posY, terrainDir, riverDir);
+        //printf("doSRiver %d %d td %d rd %d\n", pos.posX, pos.posY, terrainDir, riverDir);
         plopSRiver(pos);
         if (getRandom(rate1) < 10) {
             terrainDir = riverDir;
@@ -672,7 +672,7 @@ void Micropolis::smoothWater()
                 for (dir = DIR2_BEGIN; dir < DIR2_END; dir = increment90(dir)) {
 
                     /* If getting a tile off-map, condition below fails. */
-		    // @note I think this may have been a bug, since it always uses DIR2_WEST instead of dir.
+                    // @note I think this may have been a bug, since it always uses DIR2_WEST instead of dir.
                     //tile = getTileFromMap(pos, DIR2_WEST, WATER_LOW);
                     tile = getTileFromMap(pos, dir, WATER_LOW);
 
@@ -700,7 +700,7 @@ void Micropolis::smoothWater()
                 for (dir = DIR2_BEGIN; dir < DIR2_END; dir = increment90(dir)) {
 
                     /* If getting a tile off-map, condition below fails. */
-		    // @note I think this may have been a bug, since it always uses DIR2_WEST instead of dir.
+                    // @note I think this may have been a bug, since it always uses DIR2_WEST instead of dir.
                     //tile = getTileFromMap(pos, DIR2_WEST, WATER_LOW);
                     tile = getTileFromMap(pos, dir, WATER_LOW);
 
@@ -730,7 +730,7 @@ void Micropolis::smoothWater()
                 for (dir = DIR2_BEGIN; dir < DIR2_END; dir = increment90(dir)) {
 
                     /* If getting a tile off-map, condition below fails. */
-		    // @note I think this may have been a bug, since it always uses DIR2_WEST instead of dir.
+                    // @note I think this may have been a bug, since it always uses DIR2_WEST instead of dir.
                     //tile = getTileFromMap(pos, DIR2_WEST, WATER_LOW);
                     tile = getTileFromMap(pos, dir, TILE_INVALID);
 

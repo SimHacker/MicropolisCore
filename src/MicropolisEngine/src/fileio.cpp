@@ -475,14 +475,14 @@ void Micropolis::loadScenario(Scenario s)
     initSimLoad = 1;
     doInitialEval = false;
     doSimInit();
-    didLoadScenario();
+    didLoadScenario(s, name, fname);
 }
 
 
 /** Report to the front-end that the scenario was loaded. */
-void Micropolis::didLoadScenario()
+void Micropolis::didLoadScenario(int s, const std::string name, const std::string fname)
 {
-    callback("didLoadScenario", "");
+    callback->didLoadScenario(this, callbackVal, name, fname);
 }
 
 /**
@@ -510,13 +510,13 @@ bool Micropolis::loadCity(const std::string &filename)
         std::string newCityName = cityFileName.substr(pos, last - pos);
         setCityName(newCityName);
 
-        didLoadCity();
+        didLoadCity(filename);
 
         return true;
 
     } else {
 
-        didntLoadCity(filename.length() ? filename : "(null)");
+        didntLoadCity(filename);
 
         return false;
 
@@ -524,9 +524,9 @@ bool Micropolis::loadCity(const std::string &filename)
 }
 
 /** Report to the frontend that the game was successfully loaded. */
-void Micropolis::didLoadCity()
+void Micropolis::didLoadCity(const std::string &filename)
 {
-    callback("didLoadCity", "");
+    callback->didLoadCity(this, callbackVal, filename);
 }
 
 
@@ -534,9 +534,9 @@ void Micropolis::didLoadCity()
  * Report to the frontend that the game failed to load.
  * @param msg File that attempted to load
  */
-void Micropolis::didntLoadCity(const std::string &msg)
+void Micropolis::didntLoadCity(const std::string &filename)
 {
-    callback("didntLoadCity", msg);
+    callback->didntLoadCity(this, callbackVal, filename);
 }
 
 
@@ -549,12 +549,12 @@ void Micropolis::saveCity()
 {
     if (cityFileName.length() > 0) {
 
-        doSaveCityAs();
+        doSaveCityAs(cityFileName);
 
     } else {
         if (saveFile(cityFileName)) {
 
-            didSaveCity();
+            didSaveCity(cityFileName);
 
         } else {
 
@@ -565,27 +565,33 @@ void Micropolis::saveCity()
 }
 
 
-/** Report to the frontend that the city is being saved. */
-void Micropolis::doSaveCityAs()
+/**
+ * Report to the frontend that the city is being saved.
+ * @param filename Name of the file used
+ */
+void Micropolis::doSaveCityAs(const std::string &filename)
 {
-    callback("saveCityAs", "");
+    callback->saveCityAs(this, callbackVal, filename);
 }
 
 
-/** Report to the frontend that the city was saved successfully. */
-void Micropolis::didSaveCity()
+/**
+ * Report to the frontend that the city was saved successfully.
+ * @param filename Name of the file used
+ */
+void Micropolis::didSaveCity(const std::string &filename)
 {
-    callback("didSaveCity", "");
+    callback->didSaveCity(this, callbackVal, filename);
 }
 
 
 /**
  * Report to the frontend that the city could not be saved.
- * @param msg Name of the file used
+ * @param filename Name of the file used
  */
-void Micropolis::didntSaveCity(const std::string &msg)
+void Micropolis::didntSaveCity(const std::string &filename)
 {
-    callback("didntSaveCity", msg);
+    callback->didntSaveCity(this, callbackVal, filename);
 }
 
 
@@ -616,7 +622,7 @@ void Micropolis::saveCityAs(const std::string &filename)
 
         setCityName(newCityName);
 
-        didSaveCity();
+        didSaveCity(cityName);
 
     } else {
 

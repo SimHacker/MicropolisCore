@@ -92,7 +92,6 @@ Micropolis::Micropolis() :
         policeStationEffectMap(0),
         comRateMap(0)
 {
-    init();
 }
 
 
@@ -103,10 +102,18 @@ Micropolis::~Micropolis()
 }
 
 
+/** You MUST call this to set a non-null callback handler right after constructing, before doing anything else. */
+void Micropolis::initCallback(Callback *callback0, emscripten::val callbackVal0)
+{
+    callback = callback0;
+    callbackVal = callbackVal0;
+    init();
+}
+
+
 /** Initialize simulator variables to a sane default. */
 void Micropolis::init()
 {
-
 
     ////////////////////////////////////////////////////////////////////////
     // allocate.cpp
@@ -462,23 +469,6 @@ void Micropolis::init()
 
 
     ////////////////////////////////////////////////////////////////////////
-    // map.cpp
-
-
-#if 0
-
-    ////////////////////////////////////////////////////////////////////////
-    // Disabled this small map drawing, filtering and overlaying code.
-    // Going to re-implement it in the tile engine and Python.
-
-
-    // int dynamicData[32];
-    memset(dynamicData, 0, sizeof(int) * 32);
-
-#endif
-
-
-    ////////////////////////////////////////////////////////////////////////
     // message.cpp
 
 
@@ -663,19 +653,6 @@ void Micropolis::init()
     // short blinkFlag;
     blinkFlag = 0;
 
-    // CallbackFunction callbackHook;
-    callbackHook = NULL;
-
-    // void *callbackData;
-    callbackData = NULL;
-
-    // void *userData;
-    userData = NULL;
-
-
-    ////////////////////////////////////////////////////////////////////////
-    //  tool.cpp
-
 
     ////////////////////////////////////////////////////////////////////////
     // traffic.cpp
@@ -723,17 +700,6 @@ void Micropolis::init()
     // Quad indLast;
     indLast = 0;
 
-
-    ////////////////////////////////////////////////////////////////////////
-    // utilities.cpp
-
-
-    ////////////////////////////////////////////////////////////////////////
-    // zone.cpp
-
-
-    ////////////////////////////////////////////////////////////////////////
-
     simInit();
 
 }
@@ -748,16 +714,6 @@ void Micropolis::destroy()
 
 }
 
-
-/**
- * Get version of Micropolis program.
- * @todo Use this function or eliminate it.
- * @return Textual version.
- */
-std::string Micropolis::getMicropolisVersion()
-{
-    return std::string(MICROPOLIS_VERSION);
-}
 
 /**
  * Check whether \a dir points to a directory.
@@ -1098,7 +1054,7 @@ void Micropolis::simTick()
 
 void Micropolis::simRobots()
 {
-    callback("simRobots", "");
+    callback->simRobots(this, callbackVal);
 }
 
 
@@ -1165,36 +1121,23 @@ void Micropolis::freePtr(void *data)
 }
 
 
-/** @bug Function is never called. */
-void Micropolis::doPlayNewCity()
-{
-    callback("playNewCity", "");
-}
-
-
-/** @bug Function is never called. */
-void Micropolis::doReallyStartGame()
-{
-    callback("reallyStartGame", "");
-}
-
-
-/** @bug Function is never called. */
-void Micropolis::doStartLoad()
-{
-    callback("startLoad", "");
-}
-
-
 /**
  * Tell the front-end a scenario is started.
  * @param scenario The scenario being started.
  * @see Scenario.
- * @bug Function is never called.
  */
 void Micropolis::doStartScenario(int scenario)
 {
-    callback( "startScenario", std::to_string(scenario));
+    callback->startScenario(this, callbackVal, scenario);
+}
+
+
+/**
+ * Tell the front-end a game is started.
+ */
+void Micropolis::doStartGame()
+{
+    callback->startGame(this, callbackVal);
 }
 
 
@@ -1215,31 +1158,6 @@ void Micropolis::initGame()
 
 
 /**
- * Scripting language independent callback mechanism.
- *
- * This allows Micropolis to send callback messages with
- * a variable number of typed parameters back to the
- * scripting language, while maintining independence from
- * the particular scripting language (or user interface
- * runtime).
- *
- * The name is the name of a message to send.
- * The json is a string that specifies the parameters.
- *
- * @param name   Name of the callback.
- * @param json   json parameters of the callback.
- */
-void Micropolis::callback(const std::string &name, const std::string &json)
-{
-    if (callbackHook == NULL) {
-        return;
-    }
-
-    (*callbackHook)(this, callbackData, name, json);
-}
-
-
-/**
  * Tell the front-end to show an earthquake to the user (shaking the map for
  * some time).
  */
@@ -1247,7 +1165,7 @@ void Micropolis::doEarthquake(int strength)
 {
     makeSound("city", "ExplosionLow"); // Make the sound all over.
 
-    callback("startEarthquake", std::to_string(strength));
+    callback->startEarthquake(this, callbackVal, strength);
 }
 
 
@@ -1255,7 +1173,7 @@ void Micropolis::doEarthquake(int strength)
 void Micropolis::invalidateMaps()
 {
     mapSerial++;
-    callback("update", "map"); // new
+    callback->updateMap(this, callbackVal);
 }
 
 
@@ -1274,18 +1192,7 @@ void Micropolis::makeSound(const std::string &channel,
                            int x, int y)
 {
     if (enableSound) {
-        std::string json;
-        json += "[\"";
-        json += channel; // TODO: escape json string
-        json += "\",\"";
-        json += sound;
-        json += "\",\"";
-        json += std::to_string(x);
-        json += ",";
-        json += std::to_string(y);
-        json += "]";
-
-        callback("makeSound", json);
+        callback->makeSound(this, callbackVal, channel, sound, x, y);
     }
 }
 

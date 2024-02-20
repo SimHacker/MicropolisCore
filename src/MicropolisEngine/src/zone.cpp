@@ -148,13 +148,13 @@ void Micropolis::doHospitalChurch(const Position &pos)
         }
 
     } else if ((tile == CHURCH0) ||
-	       (tile == CHURCH1) ||
-	       (tile == CHURCH2) ||
-	       (tile == CHURCH3) ||
-	       (tile == CHURCH4) ||
-	       (tile == CHURCH5) ||
-	       (tile == CHURCH6) ||
-	       (tile == CHURCH7)) {
+               (tile == CHURCH1) ||
+               (tile == CHURCH2) ||
+               (tile == CHURCH3) ||
+               (tile == CHURCH4) ||
+               (tile == CHURCH5) ||
+               (tile == CHURCH6) ||
+               (tile == CHURCH7)) {
 
         churchPop++;
 
@@ -169,15 +169,15 @@ void Micropolis::doHospitalChurch(const Position &pos)
         if (needChurch == -1) { // Too many churches!
             if (!getRandom(20)) {
                 zonePlop(pos, RESBASE); // Remove church.
-	        simulate = false;
+                simulate = false;
             }
         }
 
         if (simulate) {
-	    //printf("SIM %d %d %d\n", pos.posX, pos.posY, tile);
+            //printf("SIM %d %d %d\n", pos.posX, pos.posY, tile);
 
             int churchNumber = 0;
-	    
+            
             switch (tile) {
                 case CHURCH0:
                 churchNumber = 0;
@@ -208,17 +208,7 @@ void Micropolis::doHospitalChurch(const Position &pos)
                 break;
             }
 
-            std::string json;
-            json += "[";
-            json += std::to_string(pos.posX);
-            json += ",";
-            json += std::to_string(pos.posY);
-            json += ",";
-            json += std::to_string(churchNumber);
-            json += "]";
-
-
-            callback("simulateChurch", json);
+            callback->simulateChurch(this, callbackVal, pos.posX, pos.posY, churchNumber);
         }
 
     }

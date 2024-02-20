@@ -315,12 +315,11 @@ noMoney:
 
 void Micropolis::updateBudget()
 {
-    /// @todo The scripting language should pull these raw values out
-    ///       and format them, instead of the simulator core formatting
-    ///       them and pushing them out.
+    /// The scripting language should pull these raw values out
+    /// and format them, instead of the callback pushing them out.
 
     if (mustDrawBudget) {
-        callback("update", "budget");
+        callback->updateBudget(this, callbackVal);
         mustDrawBudget = 0;
     }
 }
@@ -328,14 +327,14 @@ void Micropolis::updateBudget()
 
 void Micropolis::showBudgetWindowAndStartWaiting()
 {
-    callback("showBudgetAndWait", "");
+    callback->showBudgetAndWait(this, callbackVal);
 }
 
 
 void Micropolis::setCityTax(short tax)
 {
     cityTax = tax;
-    callback("update", "taxRate");
+    callback->updateTaxRate(this, callbackVal, cityTax);
 }
 
 
