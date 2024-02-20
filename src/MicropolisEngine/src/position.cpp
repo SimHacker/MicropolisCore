@@ -62,13 +62,14 @@
 
 /** 
  * @file position.cpp
- * @brief Defines the Position class for coordinate handling in Micropolis.
+ * @brief Defines the Position class for coordinate handling in
+ * Micropolis.
  *
- * This file provides the implementation of the Position class, which is
- * used throughout the Micropolis game engine for managing x and y coordinates.
- * It includes various constructors for different scenarios, a copy constructor,
- * an assignment operator, and a method for moving the position in a specified 
- * direction.
+ * This file provides the implementation of the Position class, which
+ * is used throughout the Micropolis game engine for managing x and y
+ * coordinates. It includes various constructors for different
+ * scenarios, a copy constructor, an assignment operator, and a method
+ * for moving the position in a specified direction.
  */
 
 

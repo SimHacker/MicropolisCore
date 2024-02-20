@@ -64,15 +64,16 @@
  * @file emscripten.cpp
  * @brief Emscripten bindings for Micropolis game engine.
  *
- * This file contains Emscripten bindings that allow the Micropolis 
+ * This file contains Emscripten bindings that allow the Micropolis
  * (open-source version of SimCity) game engine to be used in a web
- * environment. It utilizes Emscripten's Embind feature to expose C++ 
- * classes, functions, enums, and data structures to JavaScript, enabling
- * the Micropolis game engine to be controlled and interacted with through
- * a web interface. This includes key functionalities such as simulation 
- * control, game state management, map manipulation, and event handling.
- * The binding includes only essential elements for gameplay, omitting
- * low-level rendering and platform-specific code.
+ * environment. It utilizes Emscripten's Embind feature to expose C++
+ * classes, functions, enums, and data structures to JavaScript,
+ * enabling the Micropolis game engine to be controlled and interacted
+ * with through a web interface. This includes key functionalities
+ * such as simulation control, game state management, map
+ * manipulation, and event handling. The binding includes only
+ * essential elements for gameplay, omitting low-level rendering and
+ * platform-specific code.
  */
 
 

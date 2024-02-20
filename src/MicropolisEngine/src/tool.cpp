@@ -64,12 +64,13 @@
  * @file tool.cpp
  * @brief Implements tool actions and effects for Micropolis game.
  *
- * This file defines the behavior and effects of various tools (like bulldozer, 
- * road construction, zone creation) used in Micropolis. It includes functions 
- * for handling tool actions, applying their effects to the game world, and 
- * managing the cost and consequences of these actions. The file also contains 
- * logic for specific tools such as query, wire, park, land alteration, and 
- * various zone constructions (residential, commercial, industrial, etc.).
+ * This file defines the behavior and effects of various tools (like
+ * bulldozer, road construction, zone creation) used in Micropolis. It
+ * includes functions for handling tool actions, applying their
+ * effects to the game world, and managing the cost and consequences
+ * of these actions. The file also contains logic for specific tools
+ * such as query, wire, park, land alteration, and various zone
+ * constructions (residential, commercial, industrial, etc.).
  */
 
 

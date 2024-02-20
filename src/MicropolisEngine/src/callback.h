@@ -66,11 +66,11 @@
  *
  * This file defines the Callback class, which serves as an interface
  * for various callbacks used in the Micropolis game engine. These
- * callbacks cover a wide range of functionalities including UI updates,
- * game state changes, sound effects, simulation events, and more. The
- * methods in this class are virtual and intended to be implemented
- * by the game's frontend to interact with the user interface and
- * handle game events.
+ * callbacks cover a wide range of functionalities including UI
+ * updates, game state changes, sound effects, simulation events, and
+ * more. The methods in this class are virtual and intended to be
+ * implemented by the game's frontend to interact with the user
+ * interface and handle game events.
  */
 
 

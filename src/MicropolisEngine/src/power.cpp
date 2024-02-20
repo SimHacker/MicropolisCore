@@ -64,12 +64,12 @@
  * @file power.cpp
  * @brief Manages power distribution in the Micropolis game.
  *
- * This file contains functions for scanning the game map to distribute
- * power from power plants to other structures. It utilizes a power stack
- * to track and update the power status of tiles. The file includes constants
- * for the power strength of coal and nuclear power plants, and functions
- * to test for conductive tiles, scan the map for power distribution, and
- * manipulate the power stack.
+ * This file contains functions for scanning the game map to
+ * distribute power from power plants to other structures. It utilizes
+ * a power stack to track and update the power status of tiles. The
+ * file includes constants for the power strength of coal and nuclear
+ * power plants, and functions to test for conductive tiles, scan the
+ * map for power distribution, and manipulate the power stack.
  */
 
 

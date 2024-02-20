@@ -64,13 +64,14 @@
  * @file zone.cpp
  * @brief Manages zone processing in Micropolis.
  *
- * This file contains functions related to zone processing in the Micropolis
- * game. It includes routines for handling different types of zones such as
- * residential, commercial, and industrial. Functions in this file are
- * responsible for simulating zone growth, decline, and effects like
- * pollution, power supply, and traffic generation. It also includes utility
- * functions for evaluating zone conditions and performing zone transformations
- * such as building or demolishing structures in response to game conditions.
+ * This file contains functions related to zone processing in the
+ * Micropolis game. It includes routines for handling different types
+ * of zones such as residential, commercial, and industrial. Functions
+ * in this file are responsible for simulating zone growth, decline,
+ * and effects like pollution, power supply, and traffic generation.
+ * It also includes utility functions for evaluating zone conditions
+ * and performing zone transformations such as building or demolishing
+ * structures in response to game conditions.
  */
 
 

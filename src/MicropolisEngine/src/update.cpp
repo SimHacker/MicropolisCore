@@ -62,14 +62,16 @@
 
 /**
  * @file update.cpp
- * @brief Handles updates and refreshes in various aspects of Micropolis.
+ * @brief Handles updates and refreshes in various aspects of
+ * Micropolis.
  *
- * This file contains functions to update and refresh game elements such as 
- * maps, graphs, evaluation metrics, financial status, and other user interface 
- * components. It ensures that the game state is accurately reflected in the 
- * user interface, including changes in city time, budget, and city demand. The 
- * file plays a crucial role in syncing the game's backend calculations with 
- * frontend displays and interactions.
+ * This file contains functions to update and refresh game elements
+ * such as maps, graphs, evaluation metrics, financial status, and
+ * other user interface components. It ensures that the game state is
+ * accurately reflected in the user interface, including changes in
+ * city time, budget, and city demand. The file plays a crucial role
+ * in syncing the game's backend calculations with frontend displays
+ * and interactions.
  */
 
 

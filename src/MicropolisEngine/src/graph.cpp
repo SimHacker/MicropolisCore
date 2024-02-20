@@ -62,13 +62,15 @@
 
 /** 
  * @file graph.cpp
- * @brief Implements functionality for graph data management in Micropolis.
+ * @brief Implements functionality for graph data management in
+ * Micropolis.
  *
- * This file contains functions for managing historical data used in graphs,
- * such as population and pollution levels. It includes methods for 
- * initializing graphs, updating historical data, scaling data for graph 
- * display, and retrieving specific historical values. This file plays a key
- * role in visualizing the evolution of the city over time in various aspects.
+ * This file contains functions for managing historical data used in
+ * graphs, such as population and pollution levels. It includes
+ * methods for initializing graphs, updating historical data, scaling
+ * data for graph display, and retrieving specific historical values.
+ * This file plays a key role in visualizing the evolution of the city
+ * over time in various aspects.
  */
 
 

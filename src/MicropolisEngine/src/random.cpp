@@ -62,20 +62,23 @@
 
 /**
  * @file random.cpp
- * @brief Contains functions for generating random numbers in Micropolis.
+ * @brief Contains functions for generating random numbers in
+ * Micropolis.
  *
- * This file includes functions for generating random numbers used in various
- * aspects of the Micropolis game. It provides functions for generating random
- * numbers within specific ranges, signed and unsigned random numbers, and
- * a method to initialize the random number generator with a random seed.
+ * This file includes functions for generating random numbers used in
+ * various aspects of the Micropolis game. It provides functions for
+ * generating random numbers within specific ranges, signed and
+ * unsigned random numbers, and a method to initialize the random
+ * number generator with a random seed.
  *
- * @bug Code seems to assume that \c sizeof(short)==2 and \c sizeof(int)==4
- *      However, this depends on the compiler. We should introduce typedefs
- *      for them, and check correctness of our assumptions w.r.t. size of
- *      them (eg in Micropolis::randomlySeedRandom() or in
- *      Micropolis::Micropolis()).
+ * @bug Code seems to assume that \c sizeof(short)==2 and \c
+ * sizeof(int)==4 However, this depends on the compiler. We should
+ * introduce typedefs for them, and check correctness of our
+ * assumptions w.r.t. size of them (eg in
+ * Micropolis::randomlySeedRandom() or in Micropolis::Micropolis()).
  *
- * @bug Code stores unsigned 16 bit numbers in \c short which is a signed type.
+ * @bug Code stores unsigned 16 bit numbers in \c short which is a
+ * signed type.
  */
 
 ////////////////////////////////////////////////////////////////////////

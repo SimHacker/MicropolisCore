@@ -64,12 +64,13 @@
  * @file disasters.cpp
  * @brief Handles disaster events in the Micropolis game engine.
  *
- * This file includes functions to trigger and manage various disaster events
- * such as earthquakes, fires, floods, and other scenarios. It controls the
- * probability of disasters occurring based on the game level and executes
- * disaster-specific effects on the city, like damaging structures and changing
- * terrain. The file plays a critical role in adding challenge and dynamic
- * events to the gameplay experience.
+ * This file includes functions to trigger and manage various disaster
+ * events such as earthquakes, fires, floods, and other scenarios. It
+ * controls the probability of disasters occurring based on the game
+ * level and executes disaster-specific effects on the city, like
+ * damaging structures and changing terrain. The file plays a critical
+ * role in adding challenge and dynamic events to the gameplay
+ * experience.
  */
 
 

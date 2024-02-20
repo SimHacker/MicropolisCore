@@ -62,12 +62,13 @@
 
 /** 
  * @file map.cpp
- * @brief Handles drawing and managing various map overlays in Micropolis.
+ * @brief Handles drawing and managing various map overlays in
+ * Micropolis.
  *
- * This file includes functions for drawing different types of map overlays, 
- * such as residential, commercial, industrial areas, power grid, and various 
- * types of density maps. It also contains functions for applying dynamic 
- * filters to maps and managing map state.
+ * This file includes functions for drawing different types of map
+ * overlays, such as residential, commercial, industrial areas, power
+ * grid, and various types of density maps. It also contains functions
+ * for applying dynamic filters to maps and managing map state.
  */
 
 

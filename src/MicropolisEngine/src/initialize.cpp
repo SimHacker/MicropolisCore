@@ -62,13 +62,13 @@
 
 /** 
  * @file initialize.cpp
- * @brief Contains initialization functions for various game state components 
- * in Micropolis.
+ * @brief Contains initialization functions for various game state
+ * components in Micropolis.
  *
- * This file includes functions responsible for initializing and resetting 
- * game state variables, maps, and editor tools. It sets up initial values 
- * for game parameters and clears previous game data to prepare for a new 
- * game session or to reset the current state.
+ * This file includes functions responsible for initializing and
+ * resetting game state variables, maps, and editor tools. It sets up
+ * initial values for game parameters and clears previous game data to
+ * prepare for a new game session or to reset the current state.
  */
 
 

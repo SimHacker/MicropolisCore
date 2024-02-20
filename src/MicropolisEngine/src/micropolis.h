@@ -64,14 +64,15 @@
  * @file micropolis.h
  * @brief Header file for Micropolis game engine.
  *
- * This file contains class and method declarations, constant definitions, 
- * enumerations, and other essential elements for the Micropolis game engine. 
- * It serves as the central include file that brings together various 
- * components of the simulation, such as map handling, disaster events, 
- * budgeting, and zone management. It also defines key data structures, 
- * such as the SimSprite class for handling sprites within the game. This 
- * header file is crucial for providing the necessary declarations for 
- * different parts of the game engine to interact and function cohesively.
+ * This file contains class and method declarations, constant
+ * definitions, enumerations, and other essential elements for the
+ * Micropolis game engine. It serves as the central include file that
+ * brings together various components of the simulation, such as map
+ * handling, disaster events, budgeting, and zone management. It also
+ * defines key data structures, such as the SimSprite class for
+ * handling sprites within the game. This header file is crucial for
+ * providing the necessary declarations for different parts of the
+ * game engine to interact and function cohesively.
  */
 
 

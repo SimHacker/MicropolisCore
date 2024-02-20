@@ -62,12 +62,14 @@
 
 /**
  * @file scan.cpp
- * @brief Implements various scanning and analysis algorithms for Micropolis.
+ * @brief Implements various scanning and analysis algorithms for
+ * Micropolis.
  *
- * This file contains functions for scanning and analyzing different aspects
- * of the city in the Micropolis game, including fire and police station coverage,
- * population density, pollution, land value, crime rates, and terrain. It 
- * also includes utility functions for smoothing maps and calculating distances.
+ * This file contains functions for scanning and analyzing different
+ * aspects of the city in the Micropolis game, including fire and
+ * police station coverage, population density, pollution, land value,
+ * crime rates, and terrain. It also includes utility functions for
+ * smoothing maps and calculating distances.
  */
 
 

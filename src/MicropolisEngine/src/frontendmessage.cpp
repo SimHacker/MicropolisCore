@@ -62,14 +62,15 @@
 
 /** 
  * @file frontendmessage.cpp
- * @brief Implementation of frontend message handling in the Micropolis engine.
+ * @brief Implementation of frontend message handling in the
+ * Micropolis engine.
  *
- * This file is part of the Micropolis game engine. It defines the 
- * FrontendMessage class and its subclasses, which are used to handle 
- * communication between the game engine and the frontend. This includes 
- * sending messages about tool actions and sound effects. The design 
- * allows for a flexible way of notifying the frontend about various 
- * events happening within the game engine.
+ * This file is part of the Micropolis game engine. It defines the
+ * FrontendMessage class and its subclasses, which are used to handle
+ * communication between the game engine and the frontend. This
+ * includes sending messages about tool actions and sound effects. The
+ * design allows for a flexible way of notifying the frontend about
+ * various events happening within the game engine.
  */
 
 

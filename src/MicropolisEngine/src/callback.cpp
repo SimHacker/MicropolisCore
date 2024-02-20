@@ -62,14 +62,16 @@
 
 /** 
  * @file callback.cpp
- * @brief Implementation of the Callback interface for Micropolis game engine.
+ * @brief Implementation of the Callback interface for Micropolis game
+ * engine.
  *
- * This file provides the implementation of the Callback class defined in
- * callback.h. It includes a series of methods that are called by the Micropolis
- * game engine to interact with the user interface. These methods include
- * functionalities like logging actions, updating game states, and responding
- * to user actions. The use of EM_ASM macros indicates direct interaction with
- * JavaScript, typical in a web environment using Emscripten.
+ * This file provides the implementation of the Callback class defined
+ * in callback.h. It includes a series of methods that are called by
+ * the Micropolis game engine to interact with the user interface.
+ * These methods include functionalities like logging actions,
+ * updating game states, and responding to user actions. The use of
+ * EM_ASM macros indicates direct interaction with JavaScript, typical
+ * in a web environment using Emscripten.
  */
 
 

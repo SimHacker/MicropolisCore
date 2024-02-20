@@ -62,15 +62,17 @@
 
 /** 
  * @file tool.h
- * @brief Defines tools, building properties, and tool effects for the Micropolis game.
+ * @brief Defines tools, building properties, and tool effects for the
+ * Micropolis game.
  *
- * This header file includes definitions for various tools used in the game, 
- * along with the properties of buildings and the effects tools have on the 
- * game's world. It encompasses the core functionalities of tools, such as 
- * building, bulldozing, and querying, and their impact on the game's map and 
- * financial aspects. The classes and enumerations in this file form an integral
- * part of the game's interaction mechanics, allowing players to modify and 
- * interact with the game world.
+ * This header file includes definitions for various tools used in the
+ * game, along with the properties of buildings and the effects tools
+ * have on the game's world. It encompasses the core functionalities
+ * of tools, such as building, bulldozing, and querying, and their
+ * impact on the game's map and financial aspects. The classes and
+ * enumerations in this file form an integral part of the game's
+ * interaction mechanics, allowing players to modify and interact with
+ * the game world.
  */
 
 

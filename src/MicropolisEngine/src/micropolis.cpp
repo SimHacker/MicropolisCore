@@ -64,11 +64,12 @@
  * @file micropolis.cpp
  * @brief Primary implementation file for the Micropolis game engine.
  *
- * This file contains the core implementation of the Micropolis game engine.
- * It includes the main class constructor, destructor, initialization and
- * destruction functions, and other essential methods that underpin the
- * game's functionality. The file covers various aspects of the game such as
- * simulation control, disaster handling, sound effects, and map manipulation.
+ * This file contains the core implementation of the Micropolis game
+ * engine. It includes the main class constructor, destructor,
+ * initialization and destruction functions, and other essential
+ * methods that underpin the game's functionality. The file covers
+ * various aspects of the game such as simulation control, disaster
+ * handling, sound effects, and map manipulation.
  */
 
 

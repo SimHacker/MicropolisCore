@@ -62,14 +62,16 @@
 
 /** 
  * @file allocate.cpp
- * @brief Implementation of map array initialization and destruction in Micropolis.
+ * @brief Implementation of map array initialization and destruction
+ * in Micropolis.
  *
- * This source file contains functions for initializing and destroying map 
- * arrays in the Micropolis game engine. It includes the allocation of memory 
- * for various map-related data structures such as the main city map, history 
- * data, and various density maps. The functions handle the setup of necessary 
- * resources when the game starts and ensure proper cleanup of these resources 
- * upon termination, maintaining efficient memory management throughout the 
+ * This source file contains functions for initializing and destroying
+ * map arrays in the Micropolis game engine. It includes the
+ * allocation of memory for various map-related data structures such
+ * as the main city map, history data, and various density maps. The
+ * functions handle the setup of necessary resources when the game
+ * starts and ensure proper cleanup of these resources upon
+ * termination, maintaining efficient memory management throughout the
  * lifecycle of the game.
  */
 

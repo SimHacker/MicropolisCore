@@ -62,13 +62,16 @@
 
 /** 
  * @file position.h
- * @brief Defines position handling and direction enumeration for the Micropolis game engine.
+ * @brief Defines position handling and direction enumeration for the
+ * Micropolis game engine.
  *
- * This header file provides classes and functions for handling positions and directions
- * within the Micropolis game world. It includes the 'Position' class for representing 
- * X/Y coordinates and 'Direction2' enumeration for defining 8 cardinal directions. 
- * Functions for manipulating and querying these positions and directions are also provided, 
- * which are essential for navigating and interacting with the game world's grid.
+ * This header file provides classes and functions for handling
+ * positions and directions within the Micropolis game world. It
+ * includes the 'Position' class for representing X/Y coordinates and
+ * 'Direction2' enumeration for defining 8 cardinal directions.
+ * Functions for manipulating and querying these positions and
+ * directions are also provided, which are essential for navigating
+ * and interacting with the game world's grid.
  */
 
 

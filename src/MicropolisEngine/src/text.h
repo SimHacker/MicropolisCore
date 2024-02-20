@@ -62,11 +62,13 @@
 
 /** 
  * @file text.h
- * @brief Defines string identification numbers for texts used in the Micropolis game engine.
+ * @brief Defines string identification numbers for texts used in the
+ * Micropolis game engine.
  *
- * This file provides enumerations for identifying various strings and messages used within 
- * the game. It includes definitions for scoring metrics, in-game messages, and notifications.
- * These identifications facilitate the retrieval and display of context-specific text, 
+ * This file provides enumerations for identifying various strings and
+ * messages used within the game. It includes definitions for scoring
+ * metrics, in-game messages, and notifications. These identifications
+ * facilitate the retrieval and display of context-specific text,
  * contributing to the user interface and game interactions.
  */
 
