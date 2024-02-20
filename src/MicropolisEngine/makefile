@@ -134,8 +134,9 @@ LIBRARY = micropolisengine
 OUTPUTFILES = \
     $(LIBRARY).wasm \
 	$(LIBRARY).js \
-	$(LIBRARY).html \
-	$(LIBRARY).d.ts
+	$(LIBRARY).d.ts \
+	$(LIBRARY).data \
+	$(LIBRARY).html
 
 all: $(LIBRARY)
 
