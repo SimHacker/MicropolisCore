@@ -354,7 +354,7 @@ void Micropolis::incRateOfGrowth(const Position &pos, int amount)
 
 /**
  * Put down a 3x3 zone around the center tile at \a pos..
- * @param base Tile number of the top-left tile. @see MapTileCharacters
+ * @param base Tile number of the top-left tile. @see Tiles
  * @return Build was a success.
  * @bug This function allows partial on-map construction. Is that intentional? No!
  */

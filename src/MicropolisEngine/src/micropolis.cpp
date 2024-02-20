@@ -512,23 +512,6 @@ void Micropolis::init()
 
 
     ////////////////////////////////////////////////////////////////////////
-    // resource.cpp
-
-
-    // string HomeDir;
-    homeDir = "";
-
-    // string ResourceDir;
-    resourceDir = "";
-
-    // Resource *resources;
-    resources = NULL;
-
-    // StringTable *stringTables;
-    stringTables = NULL;
-
-
-    ////////////////////////////////////////////////////////////////////////
     // scan.cpp
 
     // short newMap;
@@ -798,30 +781,6 @@ static bool testDirectory(const std::string& dir, const std::string &envVar)
             envVar.c_str());
 
     return false;
-}
-
-/** Locate resource directory. */
-void Micropolis::environmentInit()
-{
-    const char *s = getenv("SIMHOME");
-    if (s == NULL) {
-        s = ".";
-    }
-    homeDir = s;
-
-    if (testDirectory(homeDir, "$SIMHOME")) {
-
-        resourceDir = homeDir + "/res/";
-        if (testDirectory(resourceDir, "$SIMHOME/res")) {
-
-            return; // All ok
-        }
-    }
-
-    // Failed on $SIMHOME, ".", or the 'res' directory.
-    fprintf(stderr,
-            "Please check the environment or reinstall Micropolis and try again! Sorry!\n");
-    exit(1);
 }
 
 

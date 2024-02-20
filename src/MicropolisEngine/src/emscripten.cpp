@@ -302,7 +302,7 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
   // tool.h
 
   class_<ToolEffects>("ToolEffects")
-    .constructor<Micropolis*>()
+    //.constructor<Micropolis*>() // TODO: wrap
     .function("clear", &ToolEffects::clear)
     .function("modifyWorld", &ToolEffects::modifyWorld)
     .function("modifyIfEnoughFunding", &ToolEffects::modifyIfEnoughFunding)
@@ -311,8 +311,7 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
     .function("getCost", &ToolEffects::getCost)
     .function("addCost", &ToolEffects::addCost)
     .function("setMapValue", select_overload<void(const Position&, MapValue)>(&ToolEffects::setMapValue))
-    //.function("addFrontendMessage", &ToolEffects::addFrontendMessage)
-    //.function("addFrontendMessage", &ToolEffects::addFrontendMessage, allow_raw_pointers())
+    //.function("addFrontendMessage", &ToolEffects::addFrontendMessage) // TODO: wrap
     ;
 
   enum_<MapTileBits>("MapTileBits")
@@ -355,19 +354,7 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
     .value("TOOL_LAST", TOOL_LAST);
     ;
 
-  class_<ToolEffects>("ToolEffects")
-    .constructor<Micropolis*>()
-    .function("clear", &ToolEffects::clear)
-    .function("modifyWorld", &ToolEffects::modifyWorld)
-    .function("modifyIfEnoughFunding", &ToolEffects::modifyIfEnoughFunding)
-    .function("getMapValue", select_overload<MapValue(const Position&) const>(&ToolEffects::getMapValue))
-    .function("getMapTile", select_overload<MapTile(const Position&) const>(&ToolEffects::getMapTile))
-    .function("getCost", &ToolEffects::getCost)
-    .function("addCost", &ToolEffects::addCost)
-    .function("setMapValue", select_overload<void(const Position&, MapValue)>(&ToolEffects::setMapValue));
-
   // map_type.h
-
   class_<Map<Byte, 1>>("MapByte1")
     .constructor<Byte>()
     .property("MAP_BLOCKSIZE", &Map<Byte, 1>::MAP_BLOCKSIZE)
@@ -381,8 +368,9 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
     .function("worldSet", &Map<Byte, 1>::worldSet)
     .function("worldGet", &Map<Byte, 1>::worldGet)
     .function("worldOnMap", &Map<Byte, 1>::worldOnMap)
-    .function("getBase", &Map<Byte, 1>::getBase, allow_raw_pointers())
-    .function("getTotalByteSize", &Map<Byte, 1>::getTotalByteSize);
+    //.function("getBase", &Map<Byte, 1>::getBase, allow_raw_pointers()) // TODO: wrap
+    .function("getTotalByteSize", &Map<Byte, 1>::getTotalByteSize)
+    ;
 
   class_<Map<Byte, 2>>("MapByte2")
     .constructor<Byte>()
@@ -397,8 +385,9 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
     .function("worldSet", &Map<Byte, 2>::worldSet)
     .function("worldGet", &Map<Byte, 2>::worldGet)
     .function("worldOnMap", &Map<Byte, 2>::worldOnMap)
-    .function("getBase", &Map<Byte, 2>::getBase, allow_raw_pointers())
-    .function("getTotalByteSize", &Map<Byte, 2>::getTotalByteSize);
+    //.function("getBase", &Map<Byte, 2>::getBase, allow_raw_pointers()) // TODO: wrap
+    .function("getTotalByteSize", &Map<Byte, 2>::getTotalByteSize)
+    ;
 
   class_<Map<Byte, 4>>("MapByte4")
     .constructor<Byte>()
@@ -413,8 +402,9 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
     .function("worldSet", &Map<Byte, 4>::worldSet)
     .function("worldGet", &Map<Byte, 4>::worldGet)
     .function("worldOnMap", &Map<Byte, 4>::worldOnMap)
-    .function("getBase", &Map<Byte, 4>::getBase, allow_raw_pointers())
-    .function("getTotalByteSize", &Map<Byte, 4>::getTotalByteSize);
+    //.function("getBase", &Map<Byte, 4>::getBase, allow_raw_pointers()) // TODO: wrap
+    .function("getTotalByteSize", &Map<Byte, 4>::getTotalByteSize)
+    ;
 
   class_<Map<short, 8>>("MapShort8")
     .constructor<short>()
@@ -429,8 +419,9 @@ EMSCRIPTEN_BINDINGS(MicropolisEngine) {
     .function("worldSet", &Map<short, 8>::worldSet)
     .function("worldGet", &Map<short, 8>::worldGet)
     .function("worldOnMap", &Map<short, 8>::worldOnMap)
-    .function("getBase", &Map<short, 8>::getBase, allow_raw_pointers())
-    .function("getTotalByteSize", &Map<short, 8>::getTotalByteSize);
+    //.function("getBase", &Map<short, 8>::getBase, allow_raw_pointers()) // TODO: wrap
+    .function("getTotalByteSize", &Map<short, 8>::getTotalByteSize)
+    ;
 
 /*
 
@@ -459,19 +450,90 @@ function createTypedArrayFromMap(mapInstance) {
   // text.h
 
   enum_<Stri202>("Stri202")
-    .value("STR202_POPULATIONDENSITY_LOW", STR202_POPULATIONDENSITY_LOW)
-    .value("STR202_POPULATIONDENSITY_MEDIUM", STR202_POPULATIONDENSITY_MEDIUM)
-    // ... other STR202 enum values ...
-    .value("STR202_GROWRATE_FASTGROWTH", STR202_GROWRATE_FASTGROWTH);
+    .value("STR202_POPULATIONDENSITY_LOW", STR202_POPULATIONDENSITY_LOW) // 0: Low
+    .value("STR202_POPULATIONDENSITY_MEDIUM", STR202_POPULATIONDENSITY_MEDIUM) // 1: Medium
+    .value("STR202_POPULATIONDENSITY_HIGH", STR202_POPULATIONDENSITY_HIGH) // 2: High
+    .value("STR202_POPULATIONDENSITY_VERYHIGH", STR202_POPULATIONDENSITY_VERYHIGH) // 3: Very High
+    .value("STR202_LANDVALUE_SLUM", STR202_LANDVALUE_SLUM) // 4: Slum
+    .value("STR202_LANDVALUE_LOWER_CLASS", STR202_LANDVALUE_LOWER_CLASS) // 5: Lower Class
+    .value("STR202_LANDVALUE_MIDDLE_CLASS", STR202_LANDVALUE_MIDDLE_CLASS) // 6: Middle Class
+    .value("STR202_LANDVALUE_HIGH_CLASS", STR202_LANDVALUE_HIGH_CLASS) // 7: High
+    .value("STR202_CRIME_NONE", STR202_CRIME_NONE) // 8: Safe
+    .value("STR202_CRIME_LIGHT", STR202_CRIME_LIGHT) // 9: Light
+    .value("STR202_CRIME_MODERATE", STR202_CRIME_MODERATE) // 10: Moderate
+    .value("STR202_CRIME_DANGEROUS", STR202_CRIME_DANGEROUS) // 11: Dangerous
+    .value("STR202_POLLUTION_NONE", STR202_POLLUTION_NONE) // 12: None
+    .value("STR202_POLLUTION_MODERATE", STR202_POLLUTION_MODERATE) // 13: Moderate
+    .value("STR202_POLLUTION_HEAVY", STR202_POLLUTION_HEAVY) // 14: Heavy
+    .value("STR202_POLLUTION_VERY_HEAVY", STR202_POLLUTION_VERY_HEAVY) // 15: Very Heavy
+    .value("STR202_GROWRATE_DECLINING", STR202_GROWRATE_DECLINING) // 16: Declining
+    .value("STR202_GROWRATE_STABLE", STR202_GROWRATE_STABLE) // 17: Stable
+    .value("STR202_GROWRATE_SLOWGROWTH", STR202_GROWRATE_SLOWGROWTH) // 18: Slow Growth
+    .value("STR202_GROWRATE_FASTGROWTH", STR202_GROWRATE_FASTGROWTH) // 19: Fast Growth
+    ;
 
   enum_<MessageNumber>("MessageNumber")
-    .value("MESSAGE_NEED_MORE_RESIDENTIAL", MESSAGE_NEED_MORE_RESIDENTIAL)
-    .value("MESSAGE_NEED_MORE_COMMERCIAL", MESSAGE_NEED_MORE_COMMERCIAL)
-    // ... other MessageNumber enum values ...
-    .value("MESSAGE_SCENARIO_RIO_DE_JANEIRO", MESSAGE_SCENARIO_RIO_DE_JANEIRO)
-    .value("MESSAGE_LAST", MESSAGE_LAST);
+    .value("MESSAGE_NEED_MORE_RESIDENTIAL", MESSAGE_NEED_MORE_RESIDENTIAL) // 1: More residential zones needed.
+    .value("MESSAGE_NEED_MORE_COMMERCIAL", MESSAGE_NEED_MORE_COMMERCIAL) // 2: More commercial zones needed.
+    .value("MESSAGE_NEED_MORE_INDUSTRIAL", MESSAGE_NEED_MORE_INDUSTRIAL) // 3: More industrial zones needed.
+    .value("MESSAGE_NEED_MORE_ROADS", MESSAGE_NEED_MORE_ROADS) // 4: More roads required.
+    .value("MESSAGE_NEED_MORE_RAILS", MESSAGE_NEED_MORE_RAILS) // 5: Inadequate rail system.
+    .value("MESSAGE_NEED_ELECTRICITY", MESSAGE_NEED_ELECTRICITY) // 6: Build a Power Plant.
+    .value("MESSAGE_NEED_STADIUM", MESSAGE_NEED_STADIUM) // 7: Residents demand a Stadium.
+    .value("MESSAGE_NEED_SEAPORT", MESSAGE_NEED_SEAPORT) // 8: Industry requires a Sea Port.
+    .value("MESSAGE_NEED_AIRPORT", MESSAGE_NEED_AIRPORT) // 9: Commerce requires an Airport.
+    .value("MESSAGE_HIGH_POLLUTION", MESSAGE_HIGH_POLLUTION) // 10: Pollution very high.
+    .value("MESSAGE_HIGH_CRIME", MESSAGE_HIGH_CRIME) // 11: Crime very high.
+    .value("MESSAGE_TRAFFIC_JAMS", MESSAGE_TRAFFIC_JAMS) // 12: Frequent traffic jams reported.
+    .value("MESSAGE_NEED_FIRE_STATION", MESSAGE_NEED_FIRE_STATION) // 13: Citizens demand a Fire Department.
+    .value("MESSAGE_NEED_POLICE_STATION", MESSAGE_NEED_POLICE_STATION) // 14: Citizens demand a Police Department.
+    .value("MESSAGE_BLACKOUTS_REPORTED", MESSAGE_BLACKOUTS_REPORTED) // 15: Blackouts reported. Check power map.
+    .value("MESSAGE_TAX_TOO_HIGH", MESSAGE_TAX_TOO_HIGH) // 16: Citizens upset. The tax rate is too high.
+    .value("MESSAGE_ROAD_NEEDS_FUNDING", MESSAGE_ROAD_NEEDS_FUNDING) // 17: Roads deteriorating, due to lack of funds.
+    .value("MESSAGE_FIRE_STATION_NEEDS_FUNDING", MESSAGE_FIRE_STATION_NEEDS_FUNDING) // 18: Fire departments need funding.
+    .value("MESSAGE_POLICE_NEEDS_FUNDING", MESSAGE_POLICE_NEEDS_FUNDING) // 19: Police departments need funding.
+    .value("MESSAGE_FIRE_REPORTED", MESSAGE_FIRE_REPORTED) // 20: Fire reported!
+    .value("MESSAGE_MONSTER_SIGHTED", MESSAGE_MONSTER_SIGHTED) // 21: A Monster has been sighted!!
+    .value("MESSAGE_TORNADO_SIGHTED", MESSAGE_TORNADO_SIGHTED) // 22: Tornado reported!!
+    .value("MESSAGE_EARTHQUAKE", MESSAGE_EARTHQUAKE) // 23: Major earthquake reported!!!
+    .value("MESSAGE_PLANE_CRASHED", MESSAGE_PLANE_CRASHED) // 24: A plane has crashed!
+    .value("MESSAGE_SHIP_CRASHED", MESSAGE_SHIP_CRASHED) // 25: Shipwreck reported!
+    .value("MESSAGE_TRAIN_CRASHED", MESSAGE_TRAIN_CRASHED) // 26: A train crashed!
+    .value("MESSAGE_HELICOPTER_CRASHED", MESSAGE_HELICOPTER_CRASHED) // 27: A helicopter crashed!
+    .value("MESSAGE_HIGH_UNEMPLOYMENT", MESSAGE_HIGH_UNEMPLOYMENT) // 28: Unemployment rate is high.
+    .value("MESSAGE_NO_MONEY", MESSAGE_NO_MONEY) // 29: YOUR CITY HAS GONE BROKE!
+    .value("MESSAGE_FIREBOMBING", MESSAGE_FIREBOMBING) // 30: Firebombing reported!
+    .value("MESSAGE_NEED_MORE_PARKS", MESSAGE_NEED_MORE_PARKS) // 31: Need more parks.
+    .value("MESSAGE_EXPLOSION_REPORTED", MESSAGE_EXPLOSION_REPORTED) // 32: Explosion detected!
+    .value("MESSAGE_NOT_ENOUGH_FUNDS", MESSAGE_NOT_ENOUGH_FUNDS) // 33: Insufficient funds to build that.
+    .value("MESSAGE_BULLDOZE_AREA_FIRST", MESSAGE_BULLDOZE_AREA_FIRST) // 34: Area must be bulldozed first.
+    .value("MESSAGE_REACHED_TOWN", MESSAGE_REACHED_TOWN) // 35: Population has reached 2,000.
+    .value("MESSAGE_REACHED_CITY", MESSAGE_REACHED_CITY) // 36: Population has reached 10,000.
+    .value("MESSAGE_REACHED_CAPITAL", MESSAGE_REACHED_CAPITAL) // 37: Population has reached 50,000.
+    .value("MESSAGE_REACHED_METROPOLIS", MESSAGE_REACHED_METROPOLIS) // 38: Population has reached 100,000.
+    .value("MESSAGE_REACHED_MEGALOPOLIS", MESSAGE_REACHED_MEGALOPOLIS) // 39: Population has reached 500,000.
+    .value("MESSAGE_NOT_ENOUGH_POWER", MESSAGE_NOT_ENOUGH_POWER) // 40: Brownouts, build another Power Plant.
+    .value("MESSAGE_HEAVY_TRAFFIC", MESSAGE_HEAVY_TRAFFIC) // 41: Heavy Traffic reported.
+    .value("MESSAGE_FLOODING_REPORTED", MESSAGE_FLOODING_REPORTED) // 42: Flooding reported!!
+    .value("MESSAGE_NUCLEAR_MELTDOWN", MESSAGE_NUCLEAR_MELTDOWN) // 43: A Nuclear Meltdown has occurred!!!
+    .value("MESSAGE_RIOTS_REPORTED", MESSAGE_RIOTS_REPORTED) // 44: They're rioting in the streets!!
+    .value("MESSAGE_STARTED_NEW_CITY", MESSAGE_STARTED_NEW_CITY) // 45: Started a New City.
+    .value("MESSAGE_LOADED_SAVED_CITY", MESSAGE_LOADED_SAVED_CITY) // 46: Restored a Saved City.
+    .value("MESSAGE_SCENARIO_WON", MESSAGE_SCENARIO_WON) // 47: You won the scenario.
+    .value("MESSAGE_SCENARIO_LOST", MESSAGE_SCENARIO_LOST) // 48: You lose the scenario.
+    .value("MESSAGE_ABOUT_MICROPOLIS", MESSAGE_ABOUT_MICROPOLIS) // 49: About Micropolis.
+    .value("MESSAGE_SCENARIO_DULLSVILLE", MESSAGE_SCENARIO_DULLSVILLE) // 50: Dullsville scenario.
+    .value("MESSAGE_SCENARIO_SAN_FRANCISCO", MESSAGE_SCENARIO_SAN_FRANCISCO) // 51: San Francisco scenario.
+    .value("MESSAGE_SCENARIO_HAMBURG", MESSAGE_SCENARIO_HAMBURG) // 52: Hamburg scenario.
+    .value("MESSAGE_SCENARIO_BERN", MESSAGE_SCENARIO_BERN) // 53: Bern scenario.
+    .value("MESSAGE_SCENARIO_TOKYO", MESSAGE_SCENARIO_TOKYO) // 54: Tokyo scenario.
+    .value("MESSAGE_SCENARIO_DETROIT", MESSAGE_SCENARIO_DETROIT) // 55: Detroit scenario.
+    .value("MESSAGE_SCENARIO_BOSTON", MESSAGE_SCENARIO_BOSTON) // 56: Boston scenario.
+    .value("MESSAGE_SCENARIO_RIO_DE_JANEIRO", MESSAGE_SCENARIO_RIO_DE_JANEIRO) // 57: Rio de Janeiro scenario.
+    .value("MESSAGE_LAST", MESSAGE_LAST) // 57: Last valid message
+    ;
 
-  // frontendmessage.h
+  // frontendmessage.h TODO
 
   // The FrontendMessage class is defined as an abstract base class with pure_virtual() 
   // for the sendMessage method.
@@ -485,20 +547,23 @@ function createTypedArrayFromMap(mapInstance) {
     .smart_ptr<std::shared_ptr<FrontendMessage>>("shared_ptr<FrontendMessage>")
     .allow_subclass<FrontendMessageDidTool>("FrontendMessageDidTool")
     .allow_subclass<FrontendMessageMakeSound>("FrontendMessageMakeSound")
-    .function("sendMessage", &FrontendMessage::sendMessage, pure_virtual());
+    .function("sendMessage", &FrontendMessage::sendMessage, pure_virtual())
+    ;
 
   class_<FrontendMessageDidTool, base<FrontendMessage>>("FrontendMessageDidTool")
     .constructor<const char*, int, int>()
     .property("tool", &FrontendMessageDidTool::tool)
     .property("x", &FrontendMessageDidTool::x)
-    .property("y", &FrontendMessageDidTool::y);
+    .property("y", &FrontendMessageDidTool::y)
+    ;
 
   class_<FrontendMessageMakeSound, base<FrontendMessage>>("FrontendMessageMakeSound")
     .constructor<const char*, const char*, int, int>()
     .property("channel", &FrontendMessageMakeSound::channel)
     .property("sound", &FrontendMessageMakeSound::sound)
     .property("x", &FrontendMessageMakeSound::x)
-    .property("y", &FrontendMessageMakeSound::y);
+    .property("y", &FrontendMessageMakeSound::y)
+    ;
 */
 
   // micropolis.h
@@ -538,13 +603,15 @@ function createTypedArrayFromMap(mapInstance) {
     .value("HISTORY_TYPE_MONEY", HISTORY_TYPE_MONEY)
     .value("HISTORY_TYPE_CRIME", HISTORY_TYPE_CRIME)
     .value("HISTORY_TYPE_POLLUTION", HISTORY_TYPE_POLLUTION)
-    .value("HISTORY_TYPE_COUNT", HISTORY_TYPE_COUNT);
+    .value("HISTORY_TYPE_COUNT", HISTORY_TYPE_COUNT)
+    ;
 
   // HistoryScale
   emscripten::enum_<HistoryScale>("HistoryScale")
     .value("HISTORY_SCALE_SHORT", HISTORY_SCALE_SHORT)
     .value("HISTORY_SCALE_LONG", HISTORY_SCALE_LONG)
-    .value("HISTORY_SCALE_COUNT", HISTORY_SCALE_COUNT);
+    .value("HISTORY_SCALE_COUNT", HISTORY_SCALE_COUNT)
+    ;
 
   // MapType
   emscripten::enum_<MapType>("MapType")
@@ -563,7 +630,8 @@ function createTypedArrayFromMap(mapInstance) {
     .value("MAP_TYPE_FIRE_RADIUS", MAP_TYPE_FIRE_RADIUS)
     .value("MAP_TYPE_POLICE_RADIUS", MAP_TYPE_POLICE_RADIUS)
     .value("MAP_TYPE_DYNAMIC", MAP_TYPE_DYNAMIC)
-    .value("MAP_TYPE_COUNT", MAP_TYPE_COUNT);
+    .value("MAP_TYPE_COUNT", MAP_TYPE_COUNT)
+    ;
 
   // SpriteType
   emscripten::enum_<SpriteType>("SpriteType")
@@ -576,7 +644,8 @@ function createTypedArrayFromMap(mapInstance) {
     .value("SPRITE_TORNADO", SPRITE_TORNADO)
     .value("SPRITE_EXPLOSION", SPRITE_EXPLOSION)
     .value("SPRITE_BUS", SPRITE_BUS)
-    .value("SPRITE_COUNT", SPRITE_COUNT);
+    .value("SPRITE_COUNT", SPRITE_COUNT)
+    ;
 
   // ConnectTileCommand
   emscripten::enum_<ConnectTileCommand>("ConnectTileCommand")
@@ -584,14 +653,16 @@ function createTypedArrayFromMap(mapInstance) {
     .value("CONNECT_TILE_BULLDOZE", CONNECT_TILE_BULLDOZE)
     .value("CONNECT_TILE_ROAD", CONNECT_TILE_ROAD)
     .value("CONNECT_TILE_RAILROAD", CONNECT_TILE_RAILROAD)
-    .value("CONNECT_TILE_WIRE", CONNECT_TILE_WIRE);
+    .value("CONNECT_TILE_WIRE", CONNECT_TILE_WIRE)
+    ;
 
   // ToolResult
   emscripten::enum_<ToolResult>("ToolResult")
     .value("TOOLRESULT_NO_MONEY", TOOLRESULT_NO_MONEY)
     .value("TOOLRESULT_NEED_BULLDOZE", TOOLRESULT_NEED_BULLDOZE)
     .value("TOOLRESULT_FAILED", TOOLRESULT_FAILED)
-    .value("TOOLRESULT_OK", TOOLRESULT_OK);
+    .value("TOOLRESULT_OK", TOOLRESULT_OK)
+    ;
 
   // Scenario
   emscripten::enum_<Scenario>("Scenario")
@@ -604,14 +675,16 @@ function createTypedArrayFromMap(mapInstance) {
     .value("SC_DETROIT", SC_DETROIT)
     .value("SC_BOSTON", SC_BOSTON)
     .value("SC_RIO", SC_RIO)
-    .value("SC_COUNT", SC_COUNT);
+    .value("SC_COUNT", SC_COUNT)
+    ;
 
   // ZoneType
   emscripten::enum_<ZoneType>("ZoneType")
     .value("ZT_COMMERCIAL", ZT_COMMERCIAL)
     .value("ZT_INDUSTRIAL", ZT_INDUSTRIAL)
     .value("ZT_RESIDENTIAL", ZT_RESIDENTIAL)
-    .value("ZT_NUM_DESTINATIONS", ZT_NUM_DESTINATIONS);
+    .value("ZT_NUM_DESTINATIONS", ZT_NUM_DESTINATIONS)
+    ;
 
   // CityVotingProblems
   emscripten::enum_<CityVotingProblems>("CityVotingProblems")
@@ -624,7 +697,8 @@ function createTypedArrayFromMap(mapInstance) {
     .value("CVP_FIRE", CVP_FIRE)
     .value("CVP_NUMPROBLEMS", CVP_NUMPROBLEMS)
     .value("CVP_PROBLEM_COMPLAINTS", CVP_PROBLEM_COMPLAINTS)
-    .value("PROBNUM", PROBNUM);
+    .value("PROBNUM", PROBNUM)
+    ;
 
   // CityClass
   emscripten::enum_<CityClass>("CityClass")
@@ -634,7 +708,8 @@ function createTypedArrayFromMap(mapInstance) {
     .value("CC_CAPITAL", CC_CAPITAL)
     .value("CC_METROPOLIS", CC_METROPOLIS)
     .value("CC_MEGALOPOLIS", CC_MEGALOPOLIS)
-    .value("CC_NUM_CITIES", CC_NUM_CITIES);
+    .value("CC_NUM_CITIES", CC_NUM_CITIES)
+    ;
 
   // GameLevel
   emscripten::enum_<GameLevel>("GameLevel")
@@ -643,9 +718,10 @@ function createTypedArrayFromMap(mapInstance) {
     .value("LEVEL_HARD", LEVEL_HARD)
     .value("LEVEL_COUNT", LEVEL_COUNT)
     .value("LEVEL_FIRST", LEVEL_FIRST)
-    .value("LEVEL_LAST", LEVEL_LAST);
+    .value("LEVEL_LAST", LEVEL_LAST)
+    ;
 
-  emscripten::enum_<MapTileCharacters>("MapTileCharacters")
+  emscripten::enum_<Tiles>("Tiles")
     .value("DIRT", DIRT) // 0: Clear tile
     // tile 1 ?
     // Water:
@@ -905,18 +981,8 @@ function createTypedArrayFromMap(mapInstance) {
     .value("CHURCH7LAST", CHURCH7LAST) // 1018
     // Tiles 1020-1023 unused
     .value("TILE_COUNT", TILE_COUNT) // 1024
-    .value("TILE_INVALID", TILE_INVALID); // -1, Invalid tile (not used in the world map).
-
-  class_<Resource>("Resource")
-    //.property("buf", &Resource::buf, allow_raw_pointers())
-    .property("size", &Resource::size)
-    .property("name", &Resource::name)
-    .property("id", &Resource::id);
-
-  class_<StringTable>("StringTable")
-    .property("id", &StringTable::id)
-    .property("lines", &StringTable::lines)
-    .property("strings", &StringTable::strings);
+    .value("TILE_INVALID", TILE_INVALID) // -1, Invalid tile (not used in the world map).
+    ;
 
   class_<SimSprite>("SimSprite")
     .property("name", &SimSprite::name)
@@ -943,7 +1009,8 @@ function createTypedArrayFromMap(mapInstance) {
     .property("control", &SimSprite::control)
     .property("turn", &SimSprite::turn)
     .property("accel", &SimSprite::accel)
-    .property("speed", &SimSprite::speed);
+    .property("speed", &SimSprite::speed)
+    ;
 
   class_<Micropolis>("Micropolis")
 
@@ -967,7 +1034,6 @@ function createTypedArrayFromMap(mapInstance) {
     .function("updateFunds", &Micropolis::updateFunds)
 
     // Game State and Statistics
-
     .property("simSpeed", &Micropolis::simSpeed)
     .property("simSpeedMeta", &Micropolis::simSpeedMeta)
     .property("simPaused", &Micropolis::simPaused)
@@ -1009,7 +1075,6 @@ function createTypedArrayFromMap(mapInstance) {
     .property("nuclearPowerPop", &Micropolis::nuclearPowerPop)
 
     // Resource Management
-
     .property("roadTotal", &Micropolis::roadTotal)
     .property("railTotal", &Micropolis::railTotal)
     .property("resPop", &Micropolis::resPop)
@@ -1026,7 +1091,6 @@ function createTypedArrayFromMap(mapInstance) {
     .property("fireEffect", &Micropolis::fireEffect)
 
     // User Interface and Preferences
-
     .property("autoGoto", &Micropolis::autoGoto)
     .property("autoBudget", &Micropolis::autoBudget)
     .property("autoBulldoze", &Micropolis::autoBulldoze)
@@ -1042,7 +1106,7 @@ function createTypedArrayFromMap(mapInstance) {
     .function("doTool", &Micropolis::doTool)
     .function("generateMap", &Micropolis::generateMap)
     .function("clearMap", &Micropolis::clearMap)
-    //.function("getDemands", &Micropolis::getDemands, allow_raw_pointers()) // TODO
+    //.function("getDemands", &Micropolis::getDemands, allow_raw_pointers()) // TODO: wrap
 
     // Random Number Generation
     .function("simRandom", &Micropolis::simRandom)
@@ -1062,18 +1126,16 @@ function createTypedArrayFromMap(mapInstance) {
     .function("updateEvaluation", &Micropolis::updateEvaluation)
     .function("updateBudget", &Micropolis::updateBudget)
 
-    // City History Arrays TODO
-
-    //.function("getResidentialHistory", &Micropolis::getResidentialHistory, allow_raw_pointers())
-    //.function("getCommercialHistory", &Micropolis::getCommercialHistory, allow_raw_pointers())
-    //.function("getIndustrialHistory", &Micropolis::getIndustrialHistory, allow_raw_pointers());
+    // City History Arrays
+    //.function("getResidentialHistory", &Micropolis::getResidentialHistory, allow_raw_pointers()) // TODO: wrap
+    //.function("getCommercialHistory", &Micropolis::getCommercialHistory, allow_raw_pointers()) // TODO: wrap
+    //.function("getIndustrialHistory", &Micropolis::getIndustrialHistory, allow_raw_pointers()) // TODO: wrap
 
     // Events and Callbacks
     .function("sendMessage", &Micropolis::sendMessage)
     .function("makeSound", &Micropolis::makeSound)
 
-  ;
-
+    ;
 
 }
 

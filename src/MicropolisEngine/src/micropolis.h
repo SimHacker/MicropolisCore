@@ -382,7 +382,7 @@ enum ToolResult {
  *       notation?)
  * @todo Add comments for each sprite (0--1023)
  */
-enum MapTileCharacters {
+enum Tiles {
     DIRT           = 0, ///< Clear tile
     // tile 1 ?
 
@@ -894,31 +894,6 @@ typedef void (*CallbackFunction)(
 
 ////////////////////////////////////////////////////////////////////////
 // Classes
-
-
-/** Resource of the game (a file with data loaded in memory). */
-class Resource {
-
-public:
-
-    char *buf; ///< Pointer to loaded file data.
-    Quad size; ///< Size of the loaded file data.
-    std::string name; ///< Name of the resource.
-    Quad id; ///< Identification of the resource.
-    Resource *next; ///< Pointer to next #Resource.
-};
-
-
-/** Table of strings. */
-class StringTable {
-
-public:
-
-    Quad id; ///< Identification of the string table.
-    int lines; ///< Number of lines in the table.
-    std::vector<std::string> strings; /// list of strings
-    StringTable *next; ///< Pointer to next #StringTable.
-};
 
 
 /** Sprite in the simulator.
@@ -1701,7 +1676,7 @@ private:
 public:
 
 
-    bool loadFileDir(const std::string &filename, const std::string &dir);
+    bool loadFileData(const std::string &filename);
 
     bool loadFile(const std::string &filename);
 
@@ -1967,8 +1942,6 @@ private:
     short *cellDst;
 
 
-    void environmentInit();
-
     void simInit();
 
     void simHeat();
@@ -2134,28 +2107,6 @@ public:
 
 
     ////////////////////////////////////////////////////////////////////////
-    // resource.cpp
-
-public:
-
-
-    /** Name of the Micropolis top level home directory. */
-    std::string homeDir;
-
-    /** Name of the sub-directory where the resources are located. */
-    std::string resourceDir;
-
-    Resource *resources; ///< Linked list of loaded resources
-    StringTable *stringTables; ///< Linked list of loaded string tables
-
-
-    Resource *getResource(std::string name, Quad id);
-
-    std::string getIndString(int id, short num);
-
-    StringTable *findOrLoadStringTable(int id);
-
-    ////////////////////////////////////////////////////////////////////////
     // scan.cpp
 
 private:
@@ -2263,13 +2214,13 @@ public:
 
 private:
 
-    /** Generate a random animated MapTileCharacters::FIRE tile */
+    /** Generate a random animated Tiles::FIRE tile */
     inline MapValue randomFire()
     {
         return (FIRE + (getRandom16() & 7)) | ANIMBIT;
     };
 
-    /** Generate a random MapTileCharacters::RUBBLE tile */
+    /** Generate a random Tiles::RUBBLE tile */
     inline MapValue randomRubble()
     {
         return (RUBBLE + (getRandom16() & 3)) | BULLBIT;

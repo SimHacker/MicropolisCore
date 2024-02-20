@@ -113,7 +113,7 @@ enum MapTileBits {
 
     /// Mask for the bits-part of the tile
     ALLBITS = ZONEBIT | ANIMBIT | BULLBIT | BURNBIT | CONDBIT | PWRBIT,
-    LOMASK = 0x03ff, ///< Mask for the #MapTileCharacters part of the tile
+    LOMASK = 0x03ff, ///< Mask for the #Tiles part of the tile
 
     BLBNBIT   = BULLBIT | BURNBIT,
     BLBNCNBIT = BULLBIT | BURNBIT | CONDBIT,

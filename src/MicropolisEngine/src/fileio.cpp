@@ -199,26 +199,13 @@ static bool save_short(short *buf, int len, FILE *f)
  * @param dir      If not \c NULL, name of the directory containing the file.
  * @return Load was succesfull.
  */
-bool Micropolis::loadFileDir(const std::string &filename, const std::string &dir)
+bool Micropolis::loadFileData(const std::string &filename)
 {
-    char *path = NULL;
     FILE *f;
     Quad size;
 
-    std::string fn = filename;
-
-    // If needed, construct a path to the file.
-    if (!dir.empty()) {
-        fn = dir + "/" + filename;
-    }
-
     // Open the file.
-    f = fopen(fn.c_str(), "rb");
-
-    // Before checking whether open() succeeded, first drop the path.
-    if (path != NULL) {
-        free(path);
-    }
+    f = fopen(filename.c_str(), "rb");
 
     // open() failed; report failure.
     if (f == NULL) {
@@ -254,7 +241,7 @@ bool Micropolis::loadFile(const std::string &filename)
 {
     long n;
 
-    if (!loadFileDir(filename, "")) {
+    if (!loadFileData(filename)) {
         return false;
     }
 
@@ -416,56 +403,56 @@ void Micropolis::loadScenario(Scenario s)
     switch (s) {
         case SC_DULLSVILLE:
             name = "Dullsville";
-            fname = "snro.111";
+            fname = "cities/scenario_dullsville.cty";
             scenario = SC_DULLSVILLE;
             cityTime = ((1900 - 1900) * 48) + 2;
             setFunds(5000);
             break;
         case SC_SAN_FRANCISCO:
             name = "San Francisco";
-            fname = "snro.222";
+            fname = "cities/scenario_san_francisco.cty";
             scenario = SC_SAN_FRANCISCO;
             cityTime = ((1906 - 1900) * 48) + 2;
             setFunds(20000);
             break;
         case SC_HAMBURG:
             name = "Hamburg";
-            fname = "snro.333";
+            fname = "cities/scenario_hamburg.cty";
             scenario = SC_HAMBURG;
             cityTime = ((1944 - 1900) * 48) + 2;
             setFunds(20000);
             break;
         case SC_BERN:
             name = "Bern";
-            fname = "snro.444";
+            fname = "cities/scenario_bern.cty";
             scenario = SC_BERN;
             cityTime = ((1965 - 1900) * 48) + 2;
             setFunds(20000);
             break;
         case SC_TOKYO:
             name = "Tokyo";
-            fname = "snro.555";
+            fname = "cities/scenario_tokyo.cty";
             scenario = SC_TOKYO;
             cityTime = ((1957 - 1900) * 48) + 2;
             setFunds(20000);
             break;
         case SC_DETROIT:
             name = "Detroit";
-            fname = "snro.666";
+            fname = "cities/scenario_detroit.cty";
             scenario = SC_DETROIT;
             cityTime = ((1972 - 1900) * 48) + 2;
             setFunds(20000);
             break;
         case SC_BOSTON:
             name = "Boston";
-            fname = "snro.777";
+            fname = "cities/scenario_boston.cty";
             scenario = SC_BOSTON;
             cityTime = ((2010 - 1900) * 48) + 2;
             setFunds(20000);
             break;
         case SC_RIO:
             name = "Rio de Janeiro";
-            fname = "snro.888";
+            fname = "cities/scenario_rio_de_janeiro.cty";
             scenario = SC_RIO;
             cityTime = ((2047 - 1900) * 48) + 2;
             setFunds(20000);
@@ -479,9 +466,7 @@ void Micropolis::loadScenario(Scenario s)
     setSpeed(3);
     setCityTax(7);
 
-    loadFileDir(
-        fname,
-        resourceDir);
+    loadFileData(fname);
 
     initWillStuff();
     initFundingLevel();

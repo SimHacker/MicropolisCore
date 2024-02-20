@@ -67,8 +67,18 @@
 
 
 EMCC = em++
-EMCXXFLAGS = -std=c++11 -fPIC
-EMLDFLAGS = -s WASM=1 --shell-file micropolisengine_template.html -lembind
+
+EMCXXFLAGS = \
+    -std=c++11 \
+	-fPIC
+
+EMLDFLAGS = \
+    -s WASM=1 \
+	-lembind \
+	--shell-file micropolisengine_template.html \
+	--js-library micropolisengine_lib.js \
+	--embind-emit-tsd micropolisengine.d.ts \
+	--preload-file ../../resources/cities@cities/
 
 
 ########################################################################
@@ -94,7 +104,6 @@ SOURCES = \
 	src/position.cpp \
 	src/power.cpp \
 	src/random.cpp \
-	src/resource.cpp \
 	src/scan.cpp \
 	src/simulate.cpp \
 	src/sprite.cpp \
@@ -122,23 +131,36 @@ HEADERS = \
 
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARY = micropolisengine
-OUTPUTFILES = $(LIBRARY).wasm $(LIBRARY).js $(LIBRARY).html
+OUTPUTFILES = \
+    $(LIBRARY).wasm \
+	$(LIBRARY).js \
+	$(LIBRARY).html \
+	$(LIBRARY).d.ts
 
 all: $(LIBRARY)
 
 # Compilation rule for wasm
 $(LIBRARY): $(OBJECTS)
-	$(EMCC) $(EMLDFLAGS) -o $(LIBRARY).html $^
+	$(EMCC) \
+		$(EMLDFLAGS) \
+		-o $(LIBRARY).html \
+		$^
 
 %.o: %.cpp $(HEADERS)
-	$(EMCC) $(EMCXXFLAGS) -c $< -o $@
+	$(EMCC) \
+	    $(EMCXXFLAGS) \
+		-c $< \
+		-o $@
 
 # Clean rule
 clean:
-	rm -f $(OBJECTS) $(OUTPUTFILES)
+	rm -f \
+	    $(OBJECTS) \
+		$(OUTPUTFILES)
 
 
 ########################################################################
+# Dependencies
 
 
 src/micropolis.h: $(SUBHEADERS)
