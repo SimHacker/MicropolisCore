@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file generate.cpp Terrain generator functions. */
+/** 
+ * @file generate.cpp
+ * @brief Contains functions related to terrain generation in Micropolis.
+ *
+ * This file is a part of Micropolis and is responsible for generating 
+ * various terrain features such as rivers, lakes, islands, and forests. 
+ * It includes functions for creating randomized maps and modifying 
+ * terrain features. The terrain generation methods take into account 
+ * different parameters like seed value for random generation and 
+ * terrain characteristics to create diverse and unique city landscapes.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

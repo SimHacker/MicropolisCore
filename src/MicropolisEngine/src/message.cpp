@@ -60,7 +60,17 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file message.cpp */
+/** 
+ * @file message.cpp
+ * @brief Handles messaging and notifications within the Micropolis game.
+ *
+ * This file includes functions for sending messages to the player, based on
+ * various game events and scenario progress. It handles displaying messages
+ * related to city growth, requirements, disasters, and other significant
+ * events. It also deals with triggering sound effects associated with
+ * specific messages.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

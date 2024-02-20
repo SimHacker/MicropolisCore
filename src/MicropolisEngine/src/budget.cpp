@@ -60,7 +60,17 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file budget.cpp */
+/** 
+ * @file budget.cpp
+ * @brief Budget management functions for the Micropolis game engine.
+ *
+ * This file encompasses the functions responsible for managing the game's 
+ * budget. It includes initializing funding levels, handling budget windows, 
+ * updating budget allocations based on available funds, and setting city 
+ * tax rates. The budget management is vital for the simulation aspect of 
+ * the game, influencing the city's development and the player's strategy.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

@@ -1,4 +1,4 @@
-/* stubs.h
+/* frontendmessage.h
  *
  * Micropolis, Unix Version.  This game was released for the Unix platform
  * in or about 1990 and has been modified for inclusion in the One Laptop
@@ -60,7 +60,16 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file frontendmessage.h */
+/** 
+ * @file frontendmessage.h
+ * @brief Defines classes for handling messages between the game engine and the GUI frontend.
+ *
+ * This header file includes class definitions for managing and sending messages from the Micropolis
+ * game engine to the graphical user interface (GUI) frontend. It facilitates communication and 
+ * interactions between the game's backend and frontend, ensuring a responsive and dynamic user
+ * experience. Classes defined here include the general `FrontendMessage` class and its specialized
+ * subclasses such as `FrontendMessageDidTool` and `FrontendMessageMakeSound` for specific message types.
+ */
 
 
 #ifndef _H_FRONTENDMESSAGE

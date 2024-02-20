@@ -60,7 +60,19 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file map_type.h Map data structures */
+/** 
+ * @file map_type.h
+ * @brief Map data structures for the Micropolis game engine.
+ *
+ * This header file defines the Map template class used for representing
+ * various types of 2D grid maps in the Micropolis game engine. It includes
+ * definitions for map dimensions and provides specialized map types with
+ * different data storage granularities. These map types are crucial for
+ * managing different aspects of the game world, like terrain, population 
+ * density, and resource distribution. The Map class template offers 
+ * flexibility in defining maps with various data types and block sizes, 
+ * optimizing memory usage and access patterns for different game scenarios.
+ */
 
 
 #ifndef H_MAP_TYPE

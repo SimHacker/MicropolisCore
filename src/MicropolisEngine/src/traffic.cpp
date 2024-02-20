@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file traffic.cpp Traffic generation. */
+/**
+ * @file traffic.cpp
+ * @brief Implements traffic simulation for the Micropolis game engine.
+ *
+ * This file handles the generation, management, and effects of traffic within
+ * the Micropolis game. It includes functions for simulating traffic flow, 
+ * connecting destinations, and updating traffic density maps. The code 
+ * manages various traffic-related tasks such as finding road connections, 
+ * driving to destinations, and handling dead-end situations. Additionally, 
+ * it updates the simulation's internal state based on traffic conditions.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

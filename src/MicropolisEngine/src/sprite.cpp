@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file sprite.cpp */
+/**
+ * @file sprite.cpp
+ * @brief Manages sprite objects and their behavior in Micropolis.
+ *
+ * This file defines functions related to the creation, movement, interaction,
+ * and destruction of various sprites such as trains, helicopters, airplanes,
+ * ships, monsters, tornadoes, and explosions within the Micropolis game.
+ * It handles the logic for sprite behavior, including movement patterns,
+ * interactions with other sprites and the game map, and event-triggered
+ * actions like explosions and sound effects.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

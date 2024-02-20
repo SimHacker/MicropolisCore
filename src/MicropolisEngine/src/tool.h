@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file tool.h */
+/** 
+ * @file tool.h
+ * @brief Defines tools, building properties, and tool effects for the Micropolis game.
+ *
+ * This header file includes definitions for various tools used in the game, 
+ * along with the properties of buildings and the effects tools have on the 
+ * game's world. It encompasses the core functionalities of tools, such as 
+ * building, bulldozing, and querying, and their impact on the game's map and 
+ * financial aspects. The classes and enumerations in this file form an integral
+ * part of the game's interaction mechanics, allowing players to modify and 
+ * interact with the game world.
+ */
 
 
 #ifndef _H_TOOL
@@ -311,7 +322,7 @@ class BuildingProperties
 {
 public:
     BuildingProperties(int xs, int ys, MapTile base, EditingTool tool,
-                        std::string tName, bool anim);
+                       std::string tName, bool anim);
     ~BuildingProperties();
 
     const int sizeX; ///< Number of tiles in horizontal direction.

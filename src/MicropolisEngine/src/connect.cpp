@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file connect.cpp */
+/** 
+ * @file connect.cpp
+ * @brief Implements connection utilities for roads, rails, and wires in Micropolis.
+ *
+ * This file contains functions for laying down and updating roads, railways, 
+ * and power lines in the Micropolis game. It handles the logic for determining 
+ * the appropriate tile transformations when these elements are placed on the map, 
+ * considering existing terrain and infrastructure. The file includes utilities 
+ * for bulldozing, repairing, and modifying tiles to ensure correct connectivity 
+ * and appearance on the game map.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

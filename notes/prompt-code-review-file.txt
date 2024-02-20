@@ -1,0 +1,12 @@
+For each file provided:
+Write a concise summary that would be a good comment at the beginning of the file, explaining what it does.
+The summary should be formatted as a C++ doxygen file comment.
+Break lines at 72 characters. Example:
+/** 
+ * @file micropolis.h
+ * @brief Header file for Micropolis game engine.
+ *
+ * Bla bla bla...
+ */
+After the comment code section, write as normal text a concise review of the code, mentioning any possible problems, especially relating to emscripten.
+

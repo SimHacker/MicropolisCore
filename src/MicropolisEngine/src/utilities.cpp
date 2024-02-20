@@ -60,7 +60,20 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file utilities.cpp */
+/**
+ * @file utilities.cpp
+ * @brief Utility functions for the Micropolis game engine.
+ *
+ * This file includes a collection of utility functions used throughout
+ * the Micropolis game engine. These functions perform a variety of tasks
+ * such as manipulating game speed, updating game levels, handling city
+ * names, and managing game settings like disasters, auto-bulldoze, and
+ * sound. It also includes functions for updating the financial status and
+ * formatting numbers into currency strings. The utilities support the
+ * main game engine by providing essential services for game management
+ * and player interaction.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

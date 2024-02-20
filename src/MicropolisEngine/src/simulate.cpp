@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file simulate.cpp */
+/**
+ * @file simulate.cpp
+ * @brief Handles the main simulation logic for Micropolis.
+ *
+ * This file contains the primary functions responsible for advancing the 
+ * simulation state in the Micropolis game. It includes methods for handling
+ * various aspects of the game world, such as power generation, population 
+ * growth, resource management, and disaster events. The simulation is 
+ * divided into multiple phases, with each phase focusing on specific 
+ * components of the game world.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

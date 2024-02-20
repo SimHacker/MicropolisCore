@@ -89,6 +89,7 @@ SOURCES = \
 	src/allocate.cpp \
 	src/animate.cpp \
 	src/budget.cpp \
+	src/callback.cpp \
 	src/connect.cpp \
 	src/disasters.cpp \
 	src/emscripten.cpp \
@@ -180,7 +181,6 @@ fileio.cpp: micropolis.h
 generate.cpp: micropolis.h
 graph.cpp: micropolis.h
 initialize.cpp: micropolis.h
-main.cpp: micropolis.h
 map.cpp: micropolis.h
 message.cpp: micropolis.h
 micropolis.cpp: micropolis.h

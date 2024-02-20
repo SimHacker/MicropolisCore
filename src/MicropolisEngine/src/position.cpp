@@ -60,14 +60,26 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file position.cpp Position handling. */
+/** 
+ * @file position.cpp
+ * @brief Defines the Position class for coordinate handling in Micropolis.
+ *
+ * This file provides the implementation of the Position class, which is
+ * used throughout the Micropolis game engine for managing x and y coordinates.
+ * It includes various constructors for different scenarios, a copy constructor,
+ * an assignment operator, and a method for moving the position in a specified 
+ * direction.
+ */
+
 
 /////////////////////////////////////////////////////////////////////////////
+
 
 #include "micropolis.h"
-#include "position.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
+
 
 /** Default constructor. */
 Position::Position()
@@ -75,6 +87,7 @@ Position::Position()
     this->posX = 0;
     this->posY = 0;
 }
+
 
 /**
  * Construct a position at a given \a x and \a y coordinate.
@@ -87,6 +100,7 @@ Position::Position(int x, int y)
     this->posY = y;
 }
 
+
 /**
  * Copy constructor.
  * @param pos Position to copy.
@@ -96,6 +110,7 @@ Position::Position(const Position &pos)
     this->posX = pos.posX;
     this->posY = pos.posY;
 }
+
 
 /**
  * Copy constructor with a single tile movement.
@@ -109,8 +124,9 @@ Position::Position(const Position &pos, Direction2 dir)
     this->move(dir);
 }
 
+
 /**
- * Copy sonstructor with arbitrary movement.
+ * Copy constructor with arbitrary movement.
  * @param pos Position to copy.
  * @param dx  Horizontal offset.
  * @param dy  Vertical offset.
@@ -120,6 +136,7 @@ Position::Position(const Position &pos, int dx, int dy)
     this->posX = pos.posX + dx;
     this->posY = pos.posY + dy;
 }
+
 
 /**
  * Assignment operator.
@@ -215,7 +232,6 @@ bool Position::move(Direction2 dir)
     if (this->posY >= WORLD_H) this->posY = WORLD_H - 1;
     return false;
 }
-
 
 
 /////////////////////////////////////////////////////////////////////////////

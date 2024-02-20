@@ -60,7 +60,17 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file micropolis.cpp */
+/** 
+ * @file micropolis.cpp
+ * @brief Primary implementation file for the Micropolis game engine.
+ *
+ * This file contains the core implementation of the Micropolis game engine.
+ * It includes the main class constructor, destructor, initialization and
+ * destruction functions, and other essential methods that underpin the
+ * game's functionality. The file covers various aspects of the game such as
+ * simulation control, disaster handling, sound effects, and map manipulation.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -92,12 +102,14 @@ Micropolis::Micropolis() :
         policeStationEffectMap(0),
         comRateMap(0)
 {
+    init();
 }
 
 
 /** Simulator destructor. */
 Micropolis::~Micropolis()
 {
+    setCallback(null, null);
     destroy();
 }
 
@@ -105,9 +117,11 @@ Micropolis::~Micropolis()
 /** You MUST call this to set a non-null callback handler right after constructing, before doing anything else. */
 void Micropolis::initCallback(Callback *callback0, emscripten::val callbackVal0)
 {
+    if (callback != null) {
+        delete callback;
+    }
     callback = callback0;
     callbackVal = callbackVal0;
-    init();
 }
 
 
@@ -306,10 +320,6 @@ void Micropolis::init()
 
 
     ////////////////////////////////////////////////////////////////////////
-    // animate.cpp
-
-
-    ////////////////////////////////////////////////////////////////////////
     // budget.cpp
 
 
@@ -333,10 +343,6 @@ void Micropolis::init()
 
     // int mustDrawBudget;
     mustDrawBudget = 0;
-
-
-    ////////////////////////////////////////////////////////////////////////
-    // connect.cpp
 
 
     ////////////////////////////////////////////////////////////////////////
@@ -382,10 +388,6 @@ void Micropolis::init()
 
 
     ////////////////////////////////////////////////////////////////////////
-    // fileio.cpp
-
-
-    ////////////////////////////////////////////////////////////////////////
     // generate.cpp
 
 
@@ -408,10 +410,6 @@ void Micropolis::init()
 
     graph10Max = 0;
     graph120Max = 0;
-
-
-    ////////////////////////////////////////////////////////////////////////
-    // initialize.cpp
 
 
     ////////////////////////////////////////////////////////////////////////
@@ -1090,13 +1088,9 @@ void Micropolis::setFunds(int dollars)
  */
 Quad Micropolis::tickCount()
 {
-#ifdef _WIN32
-    return (::GetTickCount() * 60) / 1000;
-#else
     struct timeval time;
     gettimeofday(&time, 0);
     return (Quad)((time.tv_sec * 60) + (time.tv_usec * 60) / 1000000);
-#endif
 }
 
 

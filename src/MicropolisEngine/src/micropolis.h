@@ -60,8 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file micropolis.h
- * Micropolis include file
+/** 
+ * @file micropolis.h
+ * @brief Header file for Micropolis game engine.
+ *
+ * This file contains class and method declarations, constant definitions, 
+ * enumerations, and other essential elements for the Micropolis game engine. 
+ * It serves as the central include file that brings together various 
+ * components of the simulation, such as map handling, disaster events, 
+ * budgeting, and zone management. It also defines key data structures, 
+ * such as the SimSprite class for handling sprites within the game. This 
+ * header file is crucial for providing the necessary declarations for 
+ * different parts of the game engine to interact and function cohesively.
  */
 
 
@@ -82,24 +92,10 @@
 #include <math.h>
 #include <cstdarg>
 #include <sys/stat.h>
-
-#ifdef _WIN32
-
-#include <winsock2.h>
-#include <time.h>
-
-#ifndef S_ISDIR
-#define S_ISDIR(x) (((x) & S_IFMT) == S_IFDIR)
-#endif
-
-#else
-
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/types.h>
-
-#endif
 
 #include <string>
 #include <vector>
@@ -775,9 +771,6 @@ enum GameLevel {
 ////////////////////////////////////////////////////////////////////////
 // Inline functions
 
-// min/max won't compile on Win32 platform as it's already part of stdlib
-#ifndef _WIN32
-
 /**
  * Compute minimal value.
  * @param a First value.
@@ -801,8 +794,6 @@ static inline T max(const T a, const T b)
 {
     return (a > b) ? a : b;
 }
-
-#endif // _WIN32
 
 /**
  * Clamp value between lower and upper bound.

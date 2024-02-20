@@ -60,7 +60,20 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file evaluate.cpp */
+/** 
+ * @file evaluate.cpp
+ * @brief Evaluation and scoring for Micropolis city simulation.
+ *
+ * This file is part of the Micropolis game engine and handles the 
+ * evaluation and scoring aspects of a simulated city. It includes 
+ * functions to assess city value, compute population, classify city 
+ * based on population, evaluate city problems, vote on performance 
+ * of the mayor, and calculate the overall city score. The scoring 
+ * system considers various factors like crime, pollution, city class, 
+ * road effectiveness, and more to determine the success and challenges 
+ * of the city management.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

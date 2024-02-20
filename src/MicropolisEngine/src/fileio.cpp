@@ -60,7 +60,18 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file fileio.cpp */
+/** 
+ * @file fileio.cpp
+ * @brief File I/O operations for Micropolis game engine.
+ *
+ * Implements file loading and saving functionalities for the Micropolis 
+ * game engine. It includes endianess conversions for data compatibility 
+ * between different architectures, loading and saving city files, 
+ * handling scenario files, and various utility functions to support 
+ * file I/O operations. It also includes functions to report file 
+ * operations to the front-end.
+ */
+
 
 ////////////////////////////////////////////////////////////////////////
 

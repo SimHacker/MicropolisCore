@@ -60,8 +60,16 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file animate.cpp
- * Animate Tiles, for Unix Micropolis.
+/** 
+ * @file animate.cpp
+ * @brief Animation routines for the Micropolis game engine.
+ *
+ * This file contains functions responsible for animating various tiles 
+ * within the Micropolis game. It includes a mapping of each tile to its 
+ * next animated state, and functions that iterate through the game world's 
+ * tiles to update their animation states. The animation process is crucial 
+ * for enhancing the game's visual appeal and dynamic feel by animating 
+ * elements like water, fire, and smoke.
  */
 
 ////////////////////////////////////////////////////////////////////////

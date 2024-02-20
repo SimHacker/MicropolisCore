@@ -60,7 +60,17 @@
  * NOT APPLY TO YOU.
  */
 
-/** @file data_types.h Commonly used data types. */
+/** 
+ * @file data_types.h
+ * @brief Commonly used data types in Micropolis game engine.
+ *
+ * This header file defines basic data types used throughout the Micropolis
+ * game engine. These include types for bytes, pointers, and quad values 
+ * (both signed and unsigned). This file provides a centralized definition 
+ * of these types to ensure consistency and readability across the game 
+ * engine's codebase. By abstracting data types in this manner, the code 
+ * maintains flexibility and ease of maintenance.
+ */
 
 
 #ifndef H_DATA_TYPES
