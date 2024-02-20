@@ -95,7 +95,7 @@ public:
     virtual void sendMessage(Micropolis *micropolis, emscripten::val callbackVal, int messageIndex, int x, int y, bool picture, bool important) = 0;
     virtual void showBudgetAndWait(Micropolis *micropolis, emscripten::val callbackVal) = 0;
     virtual void showZoneStatus(Micropolis *micropolis, emscripten::val callbackVal, int tileCategoryIndex, int populationDensityIndex, int landValueIndex, int crimeRateIndex, int pollutionIndex, int growthRateIndex, int x, int y) = 0;
-    virtual void simRobots(Micropolis *micropolis, emscripten::val callbackVal) = 0;
+    virtual void simulateRobots(Micropolis *micropolis, emscripten::val callbackVal) = 0;
     virtual void simulateChurch(Micropolis *micropolis, emscripten::val callbackVal, int posX, int posY, int churchNumber) = 0;
     virtual void startEarthquake(Micropolis *micropolis, emscripten::val callbackVal, int strength) = 0;
     virtual void startGame(Micropolis *micropolis, emscripten::val callbackVal) = 0;

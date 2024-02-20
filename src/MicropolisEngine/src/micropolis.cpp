@@ -1019,7 +1019,7 @@ void Micropolis::simLoop(bool doSim)
        }
 
        moveObjects();
-       simRobots();
+       simulateRobots();
 
        newMap = 1;
 
@@ -1029,7 +1029,7 @@ void Micropolis::simLoop(bool doSim)
        }
 
        moveObjects();
-       simRobots();
+       simulateRobots();
    }
 
    simLoops++;
@@ -1052,9 +1052,9 @@ void Micropolis::simTick()
 }
 
 
-void Micropolis::simRobots()
+void Micropolis::simulateRobots()
 {
-    callback->simRobots(this, callbackVal);
+    callback->simulateRobots(this, callbackVal);
 }
 
 

@@ -1916,7 +1916,7 @@ public:
 
     void simTick();
 
-    void simRobots();
+    void simulateRobots();
 
 public:
 
