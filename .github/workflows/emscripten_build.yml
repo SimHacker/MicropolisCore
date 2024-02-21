@@ -16,10 +16,9 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up Emscripten
-      uses: mymindstorm/setup-emsdk@v6
-      # or another action, or manual steps to install Emscripten
-
+    - name: Setup Emscripten toolchain
+      uses: mymindstorm/setup-emsdk@v14
+  
     - name: Build
       run: |
         emcc --version
