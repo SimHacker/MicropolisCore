@@ -65,19 +65,14 @@
 
 # ----------------------------------------------------------------------
 
-all: build_micropolisEngine
+all: build_MicropolisEngine
 
 clean:
-	rm -rf *~ *.suo *.ncb *.pyc *.pyo build 
 	echo DISABLED rm -rf html doxygen_warnings
 	cd MicropolisEngine ; make clean
 
 install: all
-	echo "MicropolisCore install disabled for development."
 	cd MicropolisEngine ; make install
-
-tar: all
-	tar cfz MicropolisCore-build.tgz build
 
 # ----------------------------------------------------------------------
 # Build documentation
@@ -87,12 +82,9 @@ doxygen:
 	@echo "Warnings stored in 'doxygen_warnings'"
 
 # ----------------------------------------------------------------------
-# build/install micropolisEngine
+# build MicropolisEngine
 
-MICROPOLISENGINEDEST = wasmMicropolis/micropolisEngine
-
-build_micropolisEngine:
+build_MicropolisEngine:
 	$(MAKE) -C MicropolisEngine
-	cp MicropolisEngine/objs/$(PYTHONBUILDDIR)/micropolisengine.{html,js,wasm} $(MICROPOLISENGINEDEST)
 
 ########################################################################

@@ -1,0 +1,26 @@
+name: Build Wasm Library with Emscripten
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Emscripten
+      uses: mymindstorm/setup-emsdk@v6
+      # or another action, or manual steps to install Emscripten
+
+    - name: Build
+      run: |
+        emcc --version
+        make
