@@ -66,8 +66,11 @@ all:
 
 install:
 	cd src ; make install
+	mkdir -p build
+	cp -r src/MicropolisEngine/build build/MicropolisEngine
 
 clean:
+	rm -rf build
 	cd src ; make clean
 
 ########################################################################

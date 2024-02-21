@@ -132,7 +132,7 @@ HEADERS = \
 
 
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = out/micropolisengine
+LIBRARY = build/micropolisengine
 OUTPUTFILES = \
     $(LIBRARY).wasm \
 	$(LIBRARY).js \
@@ -150,11 +150,13 @@ $(LIBRARY): $(OBJECTS)
 		$^
 
 %.o: %.cpp $(HEADERS)
-	mkdir -p out
+	mkdir -p build
 	$(EMCC) \
 	    $(EMCXXFLAGS) \
 		-c $< \
 		-o $@
+
+install: all
 
 # Clean rule
 clean:
