@@ -298,4 +298,5 @@ void ConsoleCallback::updateTaxRate(Micropolis *micropolis, emscripten::val call
     }, cityTax);
 }
 
+
 ////////////////////////////////////////////////////////////////////////
