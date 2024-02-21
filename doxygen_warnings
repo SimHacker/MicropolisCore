@@ -1,0 +1,296 @@
+warning: Tag 'SYMBOL_CACHE_SIZE' at line 278 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'SHOW_DIRECTORIES' at line 462 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'COLS_IN_ALPHA_INDEX' at line 734 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'HTML_ALIGN_MEMBERS' at line 789 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'XML_SCHEMA' at line 1109 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'XML_DTD' at line 1115 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'PERL_PATH' at line 1276 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'CLASS_DIAGRAMS' at line 1289 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'MSCGEN_PATH' at line 1298 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'DOT_FONTNAME' at line 1322 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'DOT_FONTSIZE' at line 1327 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: Tag 'DOT_TRANSPARENT' at line 1451 of file 'Doxyfile' has become obsolete.
+         To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
+warning: argument 'a4wide' for option PAPER_TYPE is not a valid enum value
+Using the default: a4!
+warning: doxygen no longer ships with the FreeSans font.
+  You may want to clear or change DOT_FONTNAME.
+  Otherwise you run the risk that the wrong font is being used for dot generated graphs.
+warning: tag INPUT: input source 'CellEngine/src' does not exist
+warning: tag INPUT: input source 'TileEngine/src' does not exist
+warning: tag INPUT: input source 'pyMicropolis' does not exist
+warning: source 'CellEngine/src' is not a readable file or directory... skipping.
+warning: source 'TileEngine/src' is not a readable file or directory... skipping.
+warning: source 'pyMicropolis' is not a readable file or directory... skipping.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:87: warning: Compound Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:131: warning: Compound ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/map_type.h:348: warning: explicit link request to 'short' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/connect.cpp:87: warning: Member RoadTable[16] (variable) of file connect.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/connect.cpp:94: warning: Member RailTable[16] (variable) of file connect.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/connect.cpp:101: warning: Member WireTable[16] (variable) of file connect.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/data_types.h:81: warning: Member Byte (typedef) of file data_types.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/data_types.h:83: warning: Member Ptr (typedef) of file data_types.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/data_types.h:85: warning: Member Quad (typedef) of file data_types.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/data_types.h:87: warning: Member UQuad (typedef) of file data_types.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/emscripten.cpp:285: warning: Member EMSCRIPTEN_BINDINGS(MicropolisEngine) (function) of file emscripten.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/map_type.h:348: warning: explicit link request to 'short' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/map_type.h:348: warning: explicit link request to 'short' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.cpp:920: warning: Member CLIPPER_LOOP_BODY(CODE) (macro definition) of file micropolis.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.cpp:955: warning: Member HEAT (macro definition) of file micropolis.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.cpp:965: warning: Member ECOMASK (macro definition) of file micropolis.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.cpp:966: warning: Member ECO (macro definition) of file micropolis.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:328: warning: Member SpriteType (enumeration) of file micropolis.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:270: warning: Member RES_VALVE_RANGE (variable) of file micropolis.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:271: warning: Member COM_VALVE_RANGE (variable) of file micropolis.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:272: warning: Member IND_VALVE_RANGE (variable) of file micropolis.h is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:851: warning: found documented return type for not_reached that does not return anything
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:198: warning: explicit link request to 'cityTime' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:203: warning: explicit link request to 'cityTime' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:193: warning: explicit link request to 'cityTime' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/position.h:83: warning: explicit link request to 'Direction' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/position.h:84: warning: explicit link request to 'Direction' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/position.h:102: warning: The following parameter of increment45(Direction2 dir, int count=1) is not documented:
+  parameter 'count'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/position.h:123: warning: The following parameter of rotate45(Direction2 dir, int count=1) is not documented:
+  parameter 'count'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/sprite.cpp:87: warning: Member TRA_GROOVE_X (macro definition) of file sprite.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/sprite.cpp:88: warning: Member TRA_GROOVE_Y (macro definition) of file sprite.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/sprite.cpp:89: warning: Member BUS_GROOVE_X (macro definition) of file sprite.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/sprite.cpp:90: warning: Member BUS_GROOVE_Y (macro definition) of file sprite.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/sprite.cpp:1535: warning: Member AHEAD (macro definition) of file sprite.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:743: warning: Member idArray[29] (variable) of file tool.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.h:106: warning: explicit link request to 'MapCharacters' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:232: warning: Member ASCBIT (macro definition) of file zone.cpp is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:233: warning: Member REGBIT (macro definition) of file zone.cpp is not documented.
+todo:18: warning: explicit link request to 'Direction' could not be resolved
+todo:19: warning: explicit link request to 'Direction' could not be resolved
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.h:326: warning: Member BuildingProperties(int xs, int ys, MapTile base, EditingTool tool, std::string tName, bool anim) (function) of class BuildingProperties is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:92: warning: Member autoGoto(Micropolis *micropolis, emscripten::val callbackVal, int x, int y, std::string message)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:93: warning: Member didGenerateMap(Micropolis *micropolis, emscripten::val callbackVal, int seed)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:94: warning: Member didLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:95: warning: Member didLoadScenario(Micropolis *micropolis, emscripten::val callbackVals, std::string name, std::string fname)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:96: warning: Member didLoseGame(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:97: warning: Member didSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:98: warning: Member didTool(Micropolis *micropolis, emscripten::val callbackVal, std::string name, int x, int y)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:99: warning: Member didWinGame(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:100: warning: Member didntLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:101: warning: Member didntSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:102: warning: Member makeSound(Micropolis *micropolis, emscripten::val callbackVal, std::string channel, std::string sound, int x, int y)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:103: warning: Member newGame(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:104: warning: Member saveCityAs(Micropolis *micropolis, emscripten::val callbackVal, std::string filename)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:105: warning: Member sendMessage(Micropolis *micropolis, emscripten::val callbackVal, int messageIndex, int x, int y, bool picture, bool important)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:106: warning: Member showBudgetAndWait(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:107: warning: Member showZoneStatus(Micropolis *micropolis, emscripten::val callbackVal, int tileCategoryIndex, int populationDensityIndex, int landValueIndex, int crimeRateIndex, int pollutionIndex, int growthRateIndex, int x, int y)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:108: warning: Member simulateRobots(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:109: warning: Member simulateChurch(Micropolis *micropolis, emscripten::val callbackVal, int posX, int posY, int churchNumber)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:110: warning: Member startEarthquake(Micropolis *micropolis, emscripten::val callbackVal, int strength)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:111: warning: Member startGame(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:112: warning: Member startScenario(Micropolis *micropolis, emscripten::val callbackVal, int scenario)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:113: warning: Member updateBudget(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:114: warning: Member updateCityName(Micropolis *micropolis, emscripten::val callbackVal, std::string cityName)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:115: warning: Member updateDate(Micropolis *micropolis, emscripten::val callbackVal, int cityYear, int cityMonth)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:116: warning: Member updateDemand(Micropolis *micropolis, emscripten::val callbackVal, float r, float c, float i)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:117: warning: Member updateEvaluation(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:118: warning: Member updateFunds(Micropolis *micropolis, emscripten::val callbackVal, int totalFunds)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:119: warning: Member updateGameLevel(Micropolis *micropolis, emscripten::val callbackVal, int gameLevel)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:120: warning: Member updateHistory(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:121: warning: Member updateMap(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:122: warning: Member updateOptions(Micropolis *micropolis, emscripten::val callbackVal)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:123: warning: Member updatePasses(Micropolis *micropolis, emscripten::val callbackVal, int passes)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:124: warning: Member updatePaused(Micropolis *micropolis, emscripten::val callbackVal, bool simPaused)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:125: warning: Member updateSpeed(Micropolis *micropolis, emscripten::val callbackVal, int speed)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:126: warning: Member updateTaxRate(Micropolis *micropolis, emscripten::val callbackVal, int cityTax)=0 (function) of class Callback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:136: warning: Member autoGoto(Micropolis *micropolis, emscripten::val callbackVal, int x, int y, std::string message) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:137: warning: Member didGenerateMap(Micropolis *micropolis, emscripten::val callbackVal, int seed) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:138: warning: Member didLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:139: warning: Member didLoadScenario(Micropolis *micropolis, emscripten::val callbackVal, std::string name, std::string fname) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:140: warning: Member didLoseGame(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:141: warning: Member didSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:142: warning: Member didTool(Micropolis *micropolis, emscripten::val callbackVal, std::string name, int x, int y) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:143: warning: Member didWinGame(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:144: warning: Member didntLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:145: warning: Member didntSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:146: warning: Member makeSound(Micropolis *micropolis, emscripten::val callbackVal, std::string channel, std::string sound, int x, int y) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:147: warning: Member newGame(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:148: warning: Member saveCityAs(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:149: warning: Member sendMessage(Micropolis *micropolis, emscripten::val callbackVal, int messageIndex, int x, int y, bool picture, bool important) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:150: warning: Member showBudgetAndWait(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:151: warning: Member showZoneStatus(Micropolis *micropolis, emscripten::val callbackVal, int tileCategoryIndex, int populationDensityIndex, int landValueIndex, int crimeRateIndex, int pollutionIndex, int growthRateIndex, int x, int y) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:152: warning: Member simulateRobots(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:153: warning: Member simulateChurch(Micropolis *micropolis, emscripten::val callbackVal, int posX, int posY, int churchNumber) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:154: warning: Member startEarthquake(Micropolis *micropolis, emscripten::val callbackVal, int strength) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:155: warning: Member startGame(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:156: warning: Member startScenario(Micropolis *micropolis, emscripten::val callbackVal, int scenario) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:157: warning: Member updateBudget(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:158: warning: Member updateCityName(Micropolis *micropolis, emscripten::val callbackVal, std::string cityName) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:159: warning: Member updateDate(Micropolis *micropolis, emscripten::val callbackVal, int cityYear, int cityMonth) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:160: warning: Member updateDemand(Micropolis *micropolis, emscripten::val callbackVal, float r, float c, float i) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:161: warning: Member updateEvaluation(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:162: warning: Member updateFunds(Micropolis *micropolis, emscripten::val callbackVal, int totalFunds) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:163: warning: Member updateGameLevel(Micropolis *micropolis, emscripten::val callbackVal, int gameLevel) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:164: warning: Member updateHistory(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:165: warning: Member updateMap(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:166: warning: Member updateOptions(Micropolis *micropolis, emscripten::val callbackVal) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:167: warning: Member updatePasses(Micropolis *micropolis, emscripten::val callbackVal, int passes) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:168: warning: Member updatePaused(Micropolis *micropolis, emscripten::val callbackVal, bool simPaused) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:169: warning: Member updateSpeed(Micropolis *micropolis, emscripten::val callbackVal, int speed) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/callback.h:170: warning: Member updateTaxRate(Micropolis *micropolis, emscripten::val callbackVal, int cityTax) override (function) of class ConsoleCallback is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:111: warning: Member FrontendMessageDidTool(const std::string &tool, int x, int y) (function) of class FrontendMessageDidTool is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:108: warning: Member tool (variable) of class FrontendMessageDidTool is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:109: warning: Member x (variable) of class FrontendMessageDidTool is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:109: warning: Member y (variable) of class FrontendMessageDidTool is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:129: warning: Member FrontendMessageMakeSound(const std::string &channel, const std::string &sound, int x, int y) (function) of class FrontendMessageMakeSound is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:125: warning: Member channel (variable) of class FrontendMessageMakeSound is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:126: warning: Member sound (variable) of class FrontendMessageMakeSound is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:127: warning: Member x (variable) of class FrontendMessageMakeSound is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/frontendmessage.h:127: warning: Member y (variable) of class FrontendMessageMakeSound is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/map_type.h:138: warning: Member getTotalByteSize() const (function) of class Map is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:936: warning: Member setCallback(Callback *callback, emscripten::val callbackVal) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:940: warning: Member destroy() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1410: warning: Member animateTiles() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1466: warning: Member initFundingLevel() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1476: warning: Member showBudgetWindowAndStartWaiting() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1478: warning: Member setCityTax(short tax) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1412: warning: Member getNextAnimatedTile(int index) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1861: warning: Member simLoops (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1879: warning: Member simPausedSpeed (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1933: warning: Member cellSrc (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1935: warning: Member cellDst (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1894: warning: Member getMicropolisVersion() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1900: warning: Member simulateRobots() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1769: warning: Member isTree(MapValue cell) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1771: warning: Member smoothTrees() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1785: warning: Member smoothRiver() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1787: warning: Member smoothWater() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:1942: warning: Member simLoop(bool doSim) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2016: warning: Member nextRandom (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2087: warning: Member valveFlag (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2089: warning: Member crimeRamp (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2091: warning: Member pollutionRamp (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2097: warning: Member cashFlow (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2099: warning: Member externalMarket (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2110: warning: Member newPower (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2112: warning: Member cityTaxAverage (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2114: warning: Member simCycle (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2116: warning: Member phaseCycle (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2118: warning: Member speedCycle (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2332: warning: Member messageTimeLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2336: warning: Member initSimLoad (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2340: warning: Member simSpeed (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2342: warning: Member simSpeedMeta (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2348: warning: Member messageNumber (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2357: warning: Member callbackVal (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2637: warning: Member mustUpdateFunds (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2641: warning: Member cityTimeLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2643: warning: Member cityYearLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2645: warning: Member cityMonthLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2647: warning: Member totalFundsLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2649: warning: Member resLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2651: warning: Member comLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2653: warning: Member indLast (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2126: warning: Member resValve (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2127: warning: Member comValve (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2128: warning: Member indValve (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2233: warning: Member globalSprites[SPRITE_COUNT] (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2235: warning: Member absDist (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2237: warning: Member spriteCycle (variable) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2278: warning: Member checkWet(int x) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2656: warning: Member doUpdateHeads() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2658: warning: Member updateMaps() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2660: warning: Member updateGraphs() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2662: warning: Member updateEvaluation() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2664: warning: Member updateHeads() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2668: warning: Member reallyUpdateFunds() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2670: warning: Member doTimeStuff() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2674: warning: Member showValves() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2676: warning: Member drawValve() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2678: warning: Member setDemand(float r, float c, float i) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2680: warning: Member updateOptions() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2694: warning: Member setSpeed(short speed) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2696: warning: Member setPasses(int passes) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2704: warning: Member setCityName(const std::string &name) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2708: warning: Member setYear(int year) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2065: warning: Member pollutionTerrainLandValueScan() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2073: warning: Member smoothTerrain() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2075: warning: Member doSmooth1() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2077: warning: Member doSmooth2() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2150: warning: Member simFrame() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2152: warning: Member simulate() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2162: warning: Member initSimMemory() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2166: warning: Member setCommonInits() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2170: warning: Member clearCensus() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2174: warning: Member take120Census() (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2178: warning: Member mapScan(int x1, int x2) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2516: warning: Member bulldozerTool(short x, short y) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2534: warning: Member waterTool(short x, short y, ToolEffects *effects) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:2746: warning: Member makeDollarDecimalStr(const std::string &numStr) (function) of class Micropolis is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:998: warning: The following parameter of Micropolis::bulldozerTool(short x, short y, ToolEffects *effects) is not documented:
+  parameter 'effects'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/fileio.cpp:545: warning: argument 'msg' of command @param is not found in the argument list of Micropolis::didntLoadCity(const std::string &filename)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/fileio.cpp:545: warning: The following parameter of Micropolis::didntLoadCity(const std::string &filename) is not documented:
+  parameter 'filename'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/generate.cpp:506: warning: argument 'pos' of command @param is not found in the argument list of Micropolis::doBRiver(const Position &riverPos, Direction2 riverDir, Direction2 terrainDir)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/generate.cpp:506: warning: The following parameter of Micropolis::doBRiver(const Position &riverPos, Direction2 riverDir, Direction2 terrainDir) is not documented:
+  parameter 'riverPos'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:758: warning: argument 'zonePwrFlg' of command @param is not found in the argument list of Micropolis::doCommercial(const Position &pos, bool zonePower)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:758: warning: The following parameter of Micropolis::doCommercial(const Position &pos, bool zonePower) is not documented:
+  parameter 'zonePower'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:960: warning: argument 'pos' from the argument list of Micropolis::doIndIn has multiple @param documentation sections
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:960: warning: The following parameter of Micropolis::doIndIn(const Position &pos, int pop, int value) is not documented:
+  parameter 'pop'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:974: warning: argument 'pos' from the argument list of Micropolis::doIndOut has multiple @param documentation sections
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:974: warning: The following parameter of Micropolis::doIndOut(const Position &pos, int pop, int value) is not documented:
+  parameter 'pop'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:910: warning: argument 'zonePwrFlg' of command @param is not found in the argument list of Micropolis::doIndustrial(const Position &pos, bool zonePower)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:910: warning: The following parameter of Micropolis::doIndustrial(const Position &pos, bool zonePower) is not documented:
+  parameter 'zonePower'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:542: warning: argument 'zonePwrFlg' of command @param is not found in the argument list of Micropolis::doResidential(const Position &pos, bool zonePower)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:542: warning: The following parameter of Micropolis::doResidential(const Position &pos, bool zonePower) is not documented:
+  parameter 'zonePower'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/generate.cpp:546: warning: argument 'pos' of command @param is not found in the argument list of Micropolis::doSRiver(const Position &riverPos, Direction2 riverDir, Direction2 terrainDir)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/generate.cpp:546: warning: The following parameter of Micropolis::doSRiver(const Position &riverPos, Direction2 riverDir, Direction2 terrainDir) is not documented:
+  parameter 'riverPos'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:891: warning: The following parameter of Micropolis::evalCom(const Position &pos, int traf) is not documented:
+  parameter 'pos'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/fileio.cpp:208: warning: argument 'dir' of command @param is not found in the argument list of Micropolis::loadFileData(const std::string &filename)
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/traffic.cpp:88: warning: Found unknown command '\x'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/traffic.cpp:88: warning: Found unknown command '\y'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:360: warning: The following parameter of Micropolis::putDownForest(short mapH, short mapV, ToolEffects *effects) is not documented:
+  parameter 'effects'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:326: warning: The following parameter of Micropolis::putDownLand(short mapH, short mapV, ToolEffects *effects) is not documented:
+  parameter 'effects'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:305: warning: The following parameter of Micropolis::putDownWater(short mapH, short mapV, ToolEffects *effects) is not documented:
+  parameter 'effects'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:918: warning: The following parameter of Micropolis::putRubble(int x, int y, int size, ToolEffects *effects) is not documented:
+  parameter 'effects'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/zone.cpp:359: warning: The following parameter of Micropolis::zonePlop(const Position &pos, int base) is not documented:
+  parameter 'pos'
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:893: warning: Member width (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:894: warning: Member height (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:895: warning: Member xOffset (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:896: warning: Member yOffset (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:899: warning: Member origX (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:900: warning: Member origY (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:903: warning: Member count (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:904: warning: Member soundCount (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:905: warning: Member dir (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:906: warning: Member newDir (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:907: warning: Member step (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:908: warning: Member flag (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:909: warning: Member control (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:910: warning: Member turn (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:911: warning: Member accel (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/micropolis.h:912: warning: Member speed (variable) of class SimSprite is not documented.
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.cpp:116: warning: ToolEffects::modifyWorld has @param documentation sections but no arguments
+/Users/a2deh/Code/Micropolis/git/MicropolisCore/MicropolisEngine/src/tool.h:297: warning: argument 'pos' of command @param is not found in the argument list of ToolEffects::setMapValue(int x, int y, MapValue mapVal)

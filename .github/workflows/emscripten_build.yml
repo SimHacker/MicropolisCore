@@ -13,21 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Setup Emscripten toolchain
-      uses: mymindstorm/setup-emsdk@v14
+      - name: Setup Emscripten toolchain
+        uses: mymindstorm/setup-emsdk@v14
   
-    - name: Build
-      run: |
-        emcc --version
-        make install
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen
 
-        - name: Deploy to GitHub Pages
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21' # Specify the Node.js version you need
+
+      - name: Build
+        run: |
+          emcc --version
+          node --version
+          make install
+
+      - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/main' # Only deploy if build was successful and on main branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-  

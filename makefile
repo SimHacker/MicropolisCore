@@ -61,16 +61,36 @@
 
 ########################################################################
 
-all:
-	cd src ; make all
+.PHONY: all doxygen
 
-install:
-	cd src ; make install
+all: build_MicropolisEngine build_micropolis build_doxygen
+
+install: all
 	mkdir -p build
-	cp -r src/MicropolisEngine/build build/MicropolisEngine
+	cd MicropolisEngine ; make install
+	cp -r html build/doc
 
-clean:
-	rm -rf build
-	cd src ; make clean
+clean:!laptop
+	cd MicropolisEngine ; make clean
+	rm -rf build html doxygen_warnings
+
+########################################################################
+# Build documentation
+
+build_doxygen:
+	doxygen Doxyfile 2> doxygen_warnings > /dev/null
+	@echo "Warnings stored in 'doxygen_warnings'"
+
+########################################################################
+# build MicropolisEngine
+
+build_MicropolisEngine:
+	cd MicropolisEngine ; make all
+
+########################################################################
+# build micropolis
+
+build_micropolis:
+	cd micropolis ; npm ci ; npm run build
 
 ########################################################################
