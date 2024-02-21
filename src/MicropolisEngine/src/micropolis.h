@@ -102,6 +102,7 @@
 #include <vector>
 #include <map>
 
+#include <emscripten.h>
 #include <emscripten/bind.h>
 
 #include "data_types.h"
@@ -866,21 +867,9 @@ static inline void not_reached(int line, const char *fname)
 
 class Micropolis;
 class Callback;
+class ConsoleCallback;
 class ToolEffects;
 class BuildingProperties;
-
-
-////////////////////////////////////////////////////////////////////////
-// Typedefs
-
-
-// This is the signature of the scripting language independent
-// callback function.
-typedef void (*CallbackFunction)(
-    Micropolis *micropolis,
-    void *data,
-    const std::string &name,
-    const std::string &json);
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -944,7 +933,7 @@ public:
 
     ~Micropolis();
 
-    void initCallback(Callback *callback, emscripten::val callbackVal);
+    void setCallback(Callback *callback, emscripten::val callbackVal);
 
 private:
 

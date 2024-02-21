@@ -103,6 +103,7 @@ Micropolis::Micropolis() :
         policeStationEffectMap(0),
         comRateMap(0)
 {
+    setCallback(new ConsoleCallback(), emscripten::val::null());
     init();
 }
 
@@ -110,15 +111,14 @@ Micropolis::Micropolis() :
 /** Simulator destructor. */
 Micropolis::~Micropolis()
 {
-    setCallback(null, null);
+    setCallback(NULL, emscripten::val::null());
     destroy();
 }
 
 
-/** You MUST call this to set a non-null callback handler right after constructing, before doing anything else. */
-void Micropolis::initCallback(Callback *callback0, emscripten::val callbackVal0)
+void Micropolis::setCallback(Callback *callback0, emscripten::val callbackVal0)
 {
-    if (callback != null) {
+    if (callback != NULL) {
         delete callback;
     }
     callback = callback0;

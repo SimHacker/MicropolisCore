@@ -79,229 +79,223 @@
 
 
 #include "micropolis.h"
+#include <emscripten.h>
 
 
-class ConsoleCallback : Callback {
+ConsoleCallback::~ConsoleCallback() {
+    EM_ASM_({
+        console.log('~ConsoleCallback destructor');
+    });
+}
 
-public:
+void ConsoleCallback::autoGoto(Micropolis *micropolis, emscripten::val callbackVal, int x, int y, std::string message) {
+    EM_ASM_({
+        console.log('autoGoto:', 'x:', $0, 'y:', $1, 'message:', UTF8ToString($2));
+    }, x, y, message.c_str());
+}
 
-    virtual ~ConsoleCallback() {
-        EM_ASM({
-            console.log('~ConsoleCallback destructor');
-        });
-    }
+void ConsoleCallback::didGenerateMap(Micropolis *micropolis, emscripten::val callbackVal, int seed) {
+    EM_ASM_({
+        console.log('didGenerateMap:', 'seed:', $0);
+    }, seed);
+}
 
-    virtual void autoGoto(Micropolis *micropolis, emscripten::val callbackVal, int x, int y, std::string message) override {
-        EM_ASM_({
-            console.log('autoGoto:', 'micropolis:', $0, 'callbackVal:', $1, 'x:', $2, 'y:', $3, 'message:', UTF8ToString($4));
-        }, micropolis, callbackVal, x, y, message.c_str());
-    }
+void ConsoleCallback::didLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) {
+    EM_ASM_({
+        console.log('didLoadCity:', 'filename:', UTF8ToString($0));
+    }, filename.c_str());
+}
 
-    virtual void didGenerateMap(Micropolis *micropolis, emscripten::val callbackVal, int seed) override {
-        EM_ASM_({
-            console.log('didGenerateMap:', 'micropolis:', $0, 'callbackVal:', $1, 'seed:', $2);
-        }, micropolis, callbackVal, seed);
-    }
+void ConsoleCallback::didLoadScenario(Micropolis *micropolis, emscripten::val callbackVal, std::string name, std::string fname) {
+    EM_ASM_({
+        console.log('didLoadScenario:', 'name:', UTF8ToString($0), 'fname:', UTF8ToString($1));
+    }, name.c_str(), fname.c_str());
+}
 
-    virtual void didLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override {
-        EM_ASM_({
-            console.log('didLoadCity:', 'micropolis:', $0, 'callbackVal:', $1, 'filename:', UTF8ToString($2));
-        }, micropolis, callbackVal, filename.c_str());
-    }
+void ConsoleCallback::didLoseGame(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('didLoseGame');
+    });
+}
 
-    virtual void didLoadScenario(Micropolis *micropolis, emscripten::val callbackVal, std::string name, std::string fname) override {
-        EM_ASM_({
-            console.log('didLoadScenario:', 'micropolis:', $0, 'callbackVal:', $1, 'name:', UTF8ToString($2), 'fname:', UTF8ToString($3));
-        }, micropolis, callbackVal, name.c_str(), fname.c_str());
-    }
+void ConsoleCallback::didSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) {
+    EM_ASM_({
+        console.log('didSaveCity:', 'filename:', UTF8ToString($0));
+    }, filename.c_str());
+}
 
-    virtual void didLoseGame(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('didLoseGame:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::didTool(Micropolis *micropolis, emscripten::val callbackVal, std::string name, int x, int y) {
+    EM_ASM_({
+        console.log('didTool:', 'name:', UTF8ToString($0), 'x:', $1, 'y:', $2);
+    }, name.c_str(), x, y);
+}
 
-    virtual void didSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override {
-        EM_ASM_({
-            console.log('didSaveCity:', 'micropolis:', $0, 'callbackVal:', $1, 'filename:', UTF8ToString($2));
-        }, micropolis, callbackVal, filename.c_str());
-    }
+void ConsoleCallback::didWinGame(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('didWinGame');
+    });
+}
 
-    virtual void didTool(Micropolis *micropolis, emscripten::val callbackVal, std::string name, int x, int y) override {
-        EM_ASM_({
-            console.log('didTool:', 'micropolis:', $0, 'callbackVal:', $1, 'name:', UTF8ToString($2), 'x:', $3, 'y:', $4);
-        }, micropolis, callbackVal, name.c_str(), x, y);
-    }
+void ConsoleCallback::didntLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) {
+    EM_ASM_({
+        console.log('didntLoadCity:', 'filename:', UTF8ToString($0));
+    }, filename.c_str());
+}
 
-    virtual void didWinGame(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('didWinGame:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::didntSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) {
+    EM_ASM_({
+        console.log('didntSaveCity:', 'filename:', UTF8ToString($0));
+    }, filename.c_str());
+}
 
-    virtual void didntLoadCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override {
-        EM_ASM_({
-            console.log('didntLoadCity:', 'micropolis:', $0, 'callbackVal:', $1, 'filename:', UTF8ToString($2));
-        }, micropolis, callbackVal, filename.c_str());
-    }
+void ConsoleCallback::makeSound(Micropolis *micropolis, emscripten::val callbackVal, std::string channel, std::string sound, int x, int y) {
+    EM_ASM_({
+        console.log('makeSound:', 'channel:', UTF8ToString($0), 'sound:', UTF8ToString($1), 'x:', $2, 'y:', $3);
+    }, channel.c_str(), sound.c_str(), x, y);
+}
 
-    virtual void didntSaveCity(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override {
-        EM_ASM_({
-            console.log('didntSaveCity:', 'micropolis:', $0, 'callbackVal:', $1, 'filename:', UTF8ToString($2));
-        }, micropolis, callbackVal, filename.c_str());
-    }
+void ConsoleCallback::newGame(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('newGame');
+    });
+}
 
-    virtual void makeSound(Micropolis *micropolis, emscripten::val callbackVal, std::string channel, std::string sound, int x, int y) override {
-        EM_ASM_({
-            console.log('makeSound:', 'micropolis:', $0, 'callbackVal:', $1, 'channel:', UTF8ToString($2), 'sound:', UTF8ToString($3), 'x:', $4, 'y:', $5);
-        }, micropolis, callbackVal, channel.c_str(), sound.c_str(), x, y);
-    }
+void ConsoleCallback::saveCityAs(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) {
+    EM_ASM_({
+        console.log('saveCityAs:', 'filename:', UTF8ToString($0));
+    }, filename.c_str());
+}
 
-    virtual void newGame(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('newGame:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::sendMessage(Micropolis *micropolis, emscripten::val callbackVal, int messageIndex, int x, int y, bool picture, bool important) {
+    EM_ASM_({
+        console.log('sendMessage:', 'messageIndex:', $0, 'x:', $1, 'y:', $2, 'picture:', $3, 'important:', $4);
+    }, messageIndex, x, y, picture, important);
+}
 
-    virtual void saveCityAs(Micropolis *micropolis, emscripten::val callbackVal, std::string filename) override {
-        EM_ASM_({
-            console.log('saveCityAs:', 'micropolis:', $0, 'callbackVal:', $1, 'filename:', UTF8ToString($2));
-        }, micropolis, callbackVal, filename.c_str());
-    }
+void ConsoleCallback::showBudgetAndWait(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('showBudgetAndWait');
+    });
+}
 
-    virtual void sendMessage(Micropolis *micropolis, emscripten::val callbackVal, int messageIndex, int x, int y, bool picture, bool important) override {
-        EM_ASM_({
-            console.log('sendMessage:', 'micropolis:', $0, 'callbackVal:', $1, 'messageIndex:', $2, 'x:', $3, 'y:', $4, 'picture:', $5, 'important:', $6);
-        }, micropolis, callbackVal, messageIndex, x, y, picture, important);
-    }
+void ConsoleCallback::showZoneStatus(Micropolis *micropolis, emscripten::val callbackVal, int tileCategoryIndex, int populationDensityIndex, int landValueIndex, int crimeRateIndex, int pollutionIndex, int growthRateIndex, int x, int y) {
+    EM_ASM_({
+        console.log('showZoneStatus:', 'tileCategoryIndex:', $0, 'populationDensityIndex:', $1, 'landValueIndex:', $2, 'crimeRateIndex:', $3, 'pollutionIndex:', $4, 'growthRateIndex:', $5, 'x:', $6, 'y:', $7);
+    }, tileCategoryIndex, populationDensityIndex, landValueIndex, crimeRateIndex, pollutionIndex, growthRateIndex, x, y);
+}
 
-    virtual void showBudgetAndWait(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('showBudgetAndWait:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::simulateRobots(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('simulateRobots');
+    });
+}
 
-    virtual void showZoneStatus(Micropolis *micropolis, emscripten::val callbackVal, int tileCategoryIndex, int populationDensityIndex, int landValueIndex, int crimeRateIndex, int pollutionIndex, int growthRateIndex, int x, int y) override {
-        EM_ASM_({
-            console.log('showZoneStatus:', 'micropolis:', $0, 'callbackVal:', $1, 'tileCategoryIndex:', $2, 'populationDensityIndex:', $3, 'landValueIndex:', $4, 'crimeRateIndex:', $5, 'pollutionIndex:', $6, 'growthRateIndex:', $7, 'x:', $8, 'y:', $9);
-        }, micropolis, callbackVal, tileCategoryIndex, populationDensityIndex, landValueIndex, crimeRateIndex, pollutionIndex, growthRateIndex, x, y);
-    }
+void ConsoleCallback::simulateChurch(Micropolis *micropolis, emscripten::val callbackVal, int posX, int posY, int churchNumber) {
+    EM_ASM_({
+        console.log('simulateChurch:', 'posX:', $0, 'posY:', $1, 'churchNumber:', $2);
+    }, posX, posY, churchNumber);
+}
 
-    virtual void simulateRobots(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('simulateRobots:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::startEarthquake(Micropolis *micropolis, emscripten::val callbackVal, int strength) {
+    EM_ASM_({
+        console.log('startEarthquake:', 'strength:', $0);
+    }, strength);
+}
 
-    virtual void simulateChurch(Micropolis *micropolis, emscripten::val callbackVal, int posX, int posY, int churchNumber) override {
-        EM_ASM_({
-            console.log('simulateChurch:', 'micropolis:', $0, 'callbackVal:', $1, 'posX:', $2, 'posY:', $3, 'churchNumber:', $4);
-        }, micropolis, callbackVal, posX, posY, churchNumber);
-    }
+void ConsoleCallback::startGame(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('startGame');
+    });
+}
 
-    virtual void startEarthquake(Micropolis *micropolis, emscripten::val callbackVal, int strength) override {
-        EM_ASM_({
-            console.log('startEarthquake:', 'micropolis:', $0, 'callbackVal:', $1, 'strength:', $2);
-        }, micropolis, callbackVal, strength);
-    }
+void ConsoleCallback::startScenario(Micropolis *micropolis, emscripten::val callbackVal, int scenario) {
+    EM_ASM_({
+        console.log('startScenario:', 'scenario:', $0);
+    }, scenario);
+}
 
-    virtual void startGame(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('startGame:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::updateBudget(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM_({
+        console.log('updateBudget');
+    });
+}
 
-    virtual void startScenario(Micropolis *micropolis, emscripten::val callbackVal, int scenario) override {
-        EM_ASM_({
-            console.log('startScenario:', 'micropolis:', $0, 'callbackVal:', $1, 'scenario:', $2);
-        }, micropolis, callbackVal, scenario);
-    }
+void ConsoleCallback::updateCityName(Micropolis *micropolis, emscripten::val callbackVal, std::string cityName) {
+    EM_ASM_({
+        console.log('updateCityName:', 'cityName:', UTF8ToString($0));
+    }, cityName.c_str());
+}
 
-    virtual void updateBudget(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('updateBudget:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::updateDate(Micropolis *micropolis, emscripten::val callbackVal, int cityYear, int cityMonth) {
+    EM_ASM_({
+        console.log('updateDate:', 'cityYear:', $0, 'cityMonth:', $1);
+    }, cityYear, cityMonth);
+}
 
-    virtual void updateCityName(Micropolis *micropolis, emscripten::val callbackVal, std::string cityName) override {
-        EM_ASM_({
-            console.log('updateCityName:', 'micropolis:', $0, 'callbackVal:', $1, 'cityName:', UTF8ToString($2));
-        }, micropolis, callbackVal, cityName.c_str());
-    }
+void ConsoleCallback::updateDemand(Micropolis *micropolis, emscripten::val callbackVal, float r, float c, float i) {
+    EM_ASM_({
+        console.log('updateDemand:', 'r:', $0, 'c:', $1, 'i:', $2);
+    }, r, c, i);
+}
 
-    virtual void updateDate(Micropolis *micropolis, emscripten::val callbackVal, int cityYear, int cityMonth) override {
-        EM_ASM_({
-            console.log('updateDate:', 'micropolis:', $0, 'callbackVal:', $1, 'cityYear:', $2, 'cityMonth:', $3);
-        }, micropolis, callbackVal, cityYear, cityMonth);
-    }
+void ConsoleCallback::updateEvaluation(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM({
+        console.log('updateEvaluation');
+    });
+}
 
-    virtual void updateDemand(Micropolis *micropolis, emscripten::val callbackVal, float r, float c, float i) override {
-        EM_ASM_({
-            console.log('updateDemand:', 'micropolis:', $0, 'callbackVal:', $1, 'r:', $2, 'c:', $3, 'i:', $4);
-        }, micropolis, callbackVal, r, c, i);
-    }
+void ConsoleCallback::updateFunds(Micropolis *micropolis, emscripten::val callbackVal, int totalFunds) {
+    EM_ASM_({
+        console.log('updateFunds:', 'totalFunds:', $0);
+    }, totalFunds);
+}
 
-    virtual void updateEvaluation(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('updateEvaluation:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::updateGameLevel(Micropolis *micropolis, emscripten::val callbackVal, int gameLevel) {
+    EM_ASM_({
+        console.log('updateGameLevel:', 'gameLevel:', $0);
+    }, gameLevel);
+}
 
-    virtual void updateFunds(Micropolis *micropolis, emscripten::val callbackVal, int totalFunds) override {
-        EM_ASM_({
-            console.log('updateFunds:', 'micropolis:', $0, 'callbackVal:', $1, 'totalFunds:', $2);
-        }, micropolis, callbackVal, totalFunds);
-    }
+void ConsoleCallback::updateHistory(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM({
+        console.log('updateHistory');
+    });
+}
 
-    virtual void updateGameLevel(Micropolis *micropolis, emscripten::val callbackVal, int gameLevel) override {
-        EM_ASM_({
-            console.log('updateGameLevel:', 'micropolis:', $0, 'callbackVal:', $1, 'gameLevel:', $2);
-        }, micropolis, callbackVal, gameLevel);
-    }
+void ConsoleCallback::updateMap(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM({
+        console.log('updateMap');
+    });
+}
 
-    virtual void updateHistory(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('updateHistory:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::updateOptions(Micropolis *micropolis, emscripten::val callbackVal) {
+    EM_ASM({
+        console.log('updateOptions');
+    });
+}
 
-    virtual void updateMap(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('updateMap:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::updatePasses(Micropolis *micropolis, emscripten::val callbackVal, int passes) {
+    EM_ASM_({
+        console.log('updatePasses:', 'passes:', $0);
+    }, passes);
+}
 
-    virtual void updateOptions(Micropolis *micropolis, emscripten::val callbackVal) override {
-        EM_ASM_({
-            console.log('updateOptions:', 'micropolis:', $0, 'callbackVal:', $1);
-        }, micropolis, callbackVal);
-    }
+void ConsoleCallback::updatePaused(Micropolis *micropolis, emscripten::val callbackVal, bool simPaused) {
+    EM_ASM_({
+        console.log('updatePaused:', 'simPaused:', $0);
+    }, simPaused);
+}
 
-    virtual void updatePasses(Micropolis *micropolis, emscripten::val callbackVal, int passes) override {
-        EM_ASM_({
-            console.log('updatePasses:', 'micropolis:', $0, 'callbackVal:', $1, 'passes:', $2);
-        }, micropolis, callbackVal, passes);
-    }
+void ConsoleCallback::updateSpeed(Micropolis *micropolis, emscripten::val callbackVal, int speed) {
+    EM_ASM_({
+        console.log('updateSpeed:', 'speed:', $0);
+    }, speed);
+}
 
-    virtual void updatePaused(Micropolis *micropolis, emscripten::val callbackVal, bool simPaused) override {
-        EM_ASM_({
-            console.log('updatePaused:', 'micropolis:', $0, 'callbackVal:', $1, 'simPaused:', $2);
-        }, micropolis, callbackVal, simPaused);
-    }
-
-    virtual void updateSpeed(Micropolis *micropolis, emscripten::val callbackVal, int speed) override {
-        EM_ASM_({
-            console.log('updateSpeed:', 'micropolis:', $0, 'callbackVal:', $1, 'speed:', $2);
-        }, micropolis, callbackVal, speed);
-    }
-
-    virtual void updateTaxRate(Micropolis *micropolis, emscripten::val callbackVal, int cityTax) override {
-        EM_ASM_({
-            console.log('updateTaxRate:', 'micropolis:', $0, 'callbackVal:', $1, 'cityTax:', $2);
-        }, micropolis, callbackVal, cityTax);
-    }
-
-};
-
+void ConsoleCallback::updateTaxRate(Micropolis *micropolis, emscripten::val callbackVal, int cityTax) {
+    EM_ASM_({
+        console.log('updateTaxRate:', 'cityTax:', $0);
+    }, cityTax);
+}
 
 ////////////////////////////////////////////////////////////////////////
