@@ -6,10 +6,25 @@ This is the source code for Micropolis (based on [SimCity](http://en.wikipedia.o
 
 The origin of this repo is the "MicropolisCore" directory of the full micropolis repo, https://github.com/SimHacker/micropolis , but it's been stripped down and simplified.
 
-I am now in the process of converting it to build for WebAssembly with emscripten and bind to JavaScript with embind.
+I am now in the process of converting it to build for WebAssembly with emscripten and bind to JavaScript with embind, and implementing a SvelteKit front-end.
+
+## Micropolis Web
+
+### Main Micropolis Web Page:
+
+https://MicropolisWeb.com
+
+### Doxygen MicropolisEngine Documentation:
+
+https://MicropolisWeb.com/doc
+
+### MicropolisEngine Test (look at "Module" in js console):
+
+https://MicropolisWeb.com/MicropolisEngine/micropolisengine.html
 
 ## [GPL-3 License](LICENSE) ##
 The Micropolis GPL-3 license.
 
 ## [Micropolis GPL License Notice](MicropolisGPLLicenseNotice.md) ##
 The Micropolis GPL-3 license.
+
