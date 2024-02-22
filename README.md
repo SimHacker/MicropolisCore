@@ -18,7 +18,7 @@ https://MicropolisWeb.com
 
 https://MicropolisWeb.com/doc
 
-### MicropolisEngine Test (look at "Module" in js console):
+### MicropolisEngine WebAssembly Test (look at "Module" in js console):
 
 https://MicropolisWeb.com/MicropolisEngine/micropolisengine.html
 
