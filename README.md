@@ -2,7 +2,7 @@
 
 # MicropolisCore C++ Core
 
-This is the source code for Micropolis (based on [SimCity](http://en.wikipedia.org/wiki/SimCity_(1989_video_game))), released under the GPL. Micropolis is based on the original SimCity from Electronic Arts / Maxis, and designed and written by Will Wright.
+This is the source code for Micropolis (based on [SimCity](http://en.wikipedia.org/wiki/SimCity_(1989_video_game))), released under GPL-3. Micropolis is based on the original SimCity from Electronic Arts / Maxis, and designed and written by Will Wright.
 
 The origin of this repo is the "MicropolisCore" directory of the full micropolis repo, https://github.com/SimHacker/micropolis , but it's been stripped down and simplified.
 
