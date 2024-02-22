@@ -8,6 +8,8 @@ The origin of this repo is the "MicropolisCore" directory of the full micropolis
 
 I am now in the process of converting it to build for WebAssembly with emscripten and bind to JavaScript with embind, and implementing a SvelteKit front-end.
 
+-Don don@DonHopkins.com
+
 ## Micropolis Web
 
 ### Main Micropolis Web Page:
