@@ -436,7 +436,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MAG_FILTER, this.context.NEAREST);
     
         return texture;
-        }
+    }
 
     protected loadTexture(tileTextureURL: string): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -447,6 +447,8 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
     
             // Create a new texture object in WebGL
             const texture = this.context.createTexture();
+            this.tilesTexture = texture;
+
             this.context.bindTexture(this.context.TEXTURE_2D, texture);
     
             // Initialize the texture with a 1x1 pixel to prevent issues on slow networks
@@ -469,12 +471,12 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
                 this.context.bindTexture(this.context.TEXTURE_2D, texture);
                 this.context.texImage2D(this.context.TEXTURE_2D, 0, this.context.RGBA, this.context.RGBA, this.context.UNSIGNED_BYTE, image);
-    
+
                 // Setup texture so that we can render it at non-power of 2 sizes
                 this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_S, this.context.CLAMP_TO_EDGE);
                 this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_T, this.context.CLAMP_TO_EDGE);
                 this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MIN_FILTER, this.context.LINEAR);
-    
+
                 resolve();
             };
             image.onerror = () => {
@@ -677,9 +679,10 @@ void main() {
 
         // Pass the list of positions into WebGL to build the shape. 
         // We do this by creating a Float32Array from the JavaScript array, then use it to fill the current buffer.
-        this.context.bufferData(this.context.ARRAY_BUFFER,
-                                new Float32Array(positions),
-                                this.context.STATIC_DRAW);
+        this.context.bufferData(
+            this.context.ARRAY_BUFFER,
+            new Float32Array(positions),
+            this.context.STATIC_DRAW);
 
         const screenTileCoordinates: number[] = [
             0.0,  0.0, // First triangle
@@ -692,7 +695,6 @@ void main() {
 
         // Set up the screen tile texture coordinates for the map.
         const screenTileBuffer: WebGLBuffer | null = this.context.createBuffer();
-
         //this.updateScreenTileArray();
 
         // Build the element array buffer; this specifies the indices
