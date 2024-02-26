@@ -10,7 +10,7 @@
 	const mapHeight = 256;
 	const tileWidth = 16;
 	const tileHeight = 16;
-	const tileTexture = '/images/tiles.png';
+	const tileTexture = tiles_png;
 
 	// Generate a random map data
 	const mapData = Array.from({ length: mapWidth * mapHeight }, () => Math.floor(Math.random() * 256));
