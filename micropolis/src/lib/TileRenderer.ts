@@ -518,7 +518,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
     uniform sampler2D u_tiles;
     uniform vec2 u_mapSize;
     uniform usampler2D u_map;
-    out vec2 v_screenTile;
+    in vec2 v_screenTile;
 
     void main() {
 
