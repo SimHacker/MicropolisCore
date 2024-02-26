@@ -513,13 +513,14 @@ void main() {
         // Define the source code for the fragment shader.
         const fsSource = `#version 300 es
 precision mediump float;
-precision highp usampler2D; // Add this line
+precision highp usampler2D;
 uniform vec2 u_tileSize;
 uniform vec2 u_tilesSize;
 uniform sampler2D u_tiles;
 uniform vec2 u_mapSize;
 uniform usampler2D u_map;
 in vec2 v_screenTile;
+out vec4 fragColor;
 
 void main() {
 
@@ -545,7 +546,7 @@ void main() {
     vec2 uv = tilePixel / u_tilesSize;
 
     // Sample the tile.
-    gl_FragColor = texture2D(u_tiles, uv);
+    fragColor = texture(u_tiles, uv);
 
 }
 `;
