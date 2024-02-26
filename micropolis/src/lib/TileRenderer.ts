@@ -807,7 +807,8 @@ void main() {
         // position.
         const indices: number[] = [
             0, 1, 2,    // First triangle
-            2, 1, 3,    // Second triangle
+            //XXX 2, 1, 3,    // Second triangle
+            2, 3, 1,    // Second triangle
         ];
 
         // Now send the element array to GL.
@@ -830,10 +831,10 @@ void main() {
 
         // Calculate the new texture coordinates based on pan and zoom
         // Convert pan from tile coordinates to normalized texture coordinates
-        const left = (this.panX - this.viewWidth / 2 / this.zoom) / (this.mapWidth * this.tileWidth);
-        const right = (this.panX + this.viewWidth / 2 / this.zoom) / (this.mapWidth * this.tileWidth);
-        const bottom = (this.panY - this.viewHeight / 2 / this.zoom) / (this.mapHeight * this.tileHeight);
-        const top = (this.panY + this.viewHeight / 2 / this.zoom) / (this.mapHeight * this.tileHeight);
+        const left = (this.panX - this.viewWidth / 2 / this.zoom) / this.mapWidth / this.tileWidth;
+        const right = (this.panX + this.viewWidth / 2 / this.zoom) / this.mapWidth / this.tileWidth;
+        const bottom = (this.panY - this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
+        const top = (this.panY + this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
 
         // Update the screenTileArray with the new texture coordinates
         this.screenTileArray.set([

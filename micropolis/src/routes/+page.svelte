@@ -1,6 +1,5 @@
 <script lang="ts">
 	import tiles_png from '$lib/images/tiles.png';
-
 	import { onMount } from 'svelte';
 	import { TileRenderer, CanvasTileRenderer, GLTileRenderer } from '$lib/TileRenderer';
 
@@ -15,7 +14,10 @@
 	const tileTexture = tiles_png;
 
 	// Generate a random map data
-	const mapData = Array.from({ length: mapWidth * mapHeight }, () => Math.floor(Math.random() * 256));
+	const mapData = 
+	    Array.from(
+			{length: mapWidth * mapHeight}, 
+			() => Math.floor(Math.random() * 256));
 
 	onMount(() => {
 
@@ -31,14 +33,16 @@
 
 		// Create CanvasTileRenderer.
 		
-		const canvasTileRenderer_context: CanvasRenderingContext2D | null = canvasTileRenderer_canvas.getContext('2d');
+		const canvasTileRenderer_context: CanvasRenderingContext2D | null = 
+		    canvasTileRenderer_canvas.getContext('2d');
 		console.log('TileEngine Test: onMount:', 'canvasTileRenderer_context:', canvasTileRenderer_context);
 		if (canvasTileRenderer_context == null) {
 			console.log('TileEngine Test: onMount: no canvasTileRenderer_context!');
 			return;
 		}
 
-		canvasTileRenderer = new CanvasTileRenderer();
+		canvasTileRenderer = 
+		    new CanvasTileRenderer();
 		console.log('TileEngine Test: onMount: canvasTileRenderer:', canvasTileRenderer);
 		if (canvasTileRenderer == null) {
 			console.log('TileEngine Test: onMount: no canvasTileRenderer!');
@@ -62,20 +66,25 @@
 					return;
 				}
 
-				canvasTileRenderer.updateScreenSize(canvasTileRenderer_canvas.width, canvasTileRenderer_canvas.height);
+				canvasTileRenderer.updateScreenSize(
+					canvasTileRenderer_canvas.width, 
+					canvasTileRenderer_canvas.height);
+
 				canvasTileRenderer.render();
 			});
 
 		// Create GLTileRenderer.
 		
-		const glTileRenderer_context: WebGL2RenderingContext | null = glTileRenderer_canvas.getContext('webgl2');
+		const glTileRenderer_context: WebGL2RenderingContext | null = 
+		    glTileRenderer_canvas.getContext('webgl2');
 		console.log('TileEngine Test: onMount:', 'glTileRenderer_context:', glTileRenderer_context);
 		if (glTileRenderer_context == null) {
 			console.log('TileEngine Test: onMount: no glTileRenderer_context!');
 			return;
 		}
 
-		glTileRenderer = new GLTileRenderer();
+		glTileRenderer = new 
+		    GLTileRenderer();
 		console.log('TileEngine Test: onMount: glTileRenderer:', glTileRenderer);
 		if (canvasTileRenderer == null) {
 			console.log('TileEngine Test: onMount: no glTileRenderer!');
@@ -99,7 +108,10 @@
 					return;
 				}
 
-				glTileRenderer.updateScreenSize(glTileRenderer_canvas.width, glTileRenderer_canvas.height);
+				glTileRenderer.updateScreenSize(
+					glTileRenderer_canvas.width, 
+					glTileRenderer_canvas.height);
+				
 				glTileRenderer.render();
 			});
 
@@ -114,9 +126,9 @@
 
 <section>
 	<h3>CanvasTileRenderer:</h3>
-	<canvas bind:this={canvasTileRenderer_canvas} width="512" height="512"></canvas> <!-- Set desired canvas size -->
+	<canvas bind:this={canvasTileRenderer_canvas} width="512" height="512"></canvas>
 	<h3>GLTileRenderer:</h3>
-	<canvas bind:this={glTileRenderer_canvas} width="512" height="512"></canvas> <!-- Set desired canvas size -->
+	<canvas bind:this={glTileRenderer_canvas} width="512" height="512"></canvas>
 </section>
 
 <style>
