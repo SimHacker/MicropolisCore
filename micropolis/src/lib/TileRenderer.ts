@@ -582,12 +582,12 @@ void main() {
         const fsSource = `#version 300 es
 precision mediump float;
 precision highp usampler2D;
-uniform vec2 u_tileSize;
-uniform vec2 u_tilesSize;
+uniform vec2 u_tileSize; // 16 16
+uniform vec2 u_tilesSize; // 256 960
 uniform sampler2D u_tiles;
-uniform vec2 u_mapSize;
+uniform vec2 u_mapSize; // 256 256
 uniform usampler2D u_map;
-in vec2 v_screenTile;
+in vec2 v_screenTile; // 
 out vec4 fragColor;
 
 void main() {
@@ -790,8 +790,8 @@ void main() {
         ];
 
         // Set up the screen tile texture coordinates for the map.
-        const screenTileBuffer: WebGLBuffer | null = this.context.createBuffer();
-        //this.updateScreenTileArray();
+        const screenTileBuffer: WebGLBuffer | null = 
+            this.context.createBuffer();
 
         // Build the element array buffer; this specifies the indices
         // into the vertex arrays for each face's vertices.
@@ -807,8 +807,7 @@ void main() {
         // position.
         const indices: number[] = [
             0, 1, 2,    // First triangle
-            //XXX 2, 1, 3,    // Second triangle
-            2, 3, 1,    // Second triangle
+            2, 1, 3,    // Second triangle
         ];
 
         // Now send the element array to GL.
@@ -829,31 +828,39 @@ void main() {
             throw new Error('The WebGL context is not initialized.');
         }
 
-        // Calculate the new texture coordinates based on pan and zoom
-        // Convert pan from tile coordinates to normalized texture coordinates
-        const left = (this.panX - this.viewWidth / 2 / this.zoom) / this.mapWidth / this.tileWidth;
-        const right = (this.panX + this.viewWidth / 2 / this.zoom) / this.mapWidth / this.tileWidth;
+        // Calculate the new texture coordinates based on pan and zoom.
+        // Convert pan from tile coordinates to normalized texture coordinates.
+        /*
+        const left   = (this.panX - this.viewWidth  / 2 / this.zoom) / this.mapWidth  / this.tileWidth;
+        const right  = (this.panX + this.viewWidth  / 2 / this.zoom) / this.mapWidth  / this.tileWidth;
         const bottom = (this.panY - this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
-        const top = (this.panY + this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
+        const top    = (this.panY + this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
+        */
+        const left   = this.panX;
+        const right  = this.panX + (this.viewWidth  / this.zoom);
+        const top    = this.panY;
+        const bottom = this.panY + (this.viewHeight / this.zoom);
 
-        // Update the screenTileArray with the new texture coordinates
+        // Update the screenTileArray with the new texture coordinates.
         this.screenTileArray.set([
-            left, bottom, // Bottom left
+            left,  bottom, // Bottom left
             right, bottom, // Bottom right
-            left, top, // Top left
-            left, top, // Top left
+            left,  top,    // Top left
+            left,  top,    // Top left
             right, bottom, // Bottom right
-            right, top, // Top right
+            right, top,    // Top right
         ]);
 
-        // Bind the updated screenTileArray to the buffer
+        // Bind the updated screenTileArray to the buffer.
         this.context.bindBuffer(
             this.context.ARRAY_BUFFER, 
             this.tileBufferInfo.screenTile);
+
         this.context.bufferData(
             this.context.ARRAY_BUFFER, 
             this.screenTileArray, 
             this.context.DYNAMIC_DRAW);
+
     }
 
     render(): void {
