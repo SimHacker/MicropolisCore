@@ -497,21 +497,24 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
         // Define the source code for the vertex shader.
         const vsSource = `
+            #version 300 es
             precision mediump float;
             attribute vec3 a_position;
             attribute vec2 a_screenTile;
             varying vec2 v_screenTile;
 
             void main() {
+
                 gl_Position = vec4(a_position, 1.0);
                 v_screenTile = a_screenTile;
+
             }
         `;
 
         // Define the source code for the fragment shader.
         const fsSource = `
+            #version 300 es
             precision mediump float;
-
             uniform vec2 u_tileSize;
             uniform vec2 u_tilesSize;
             uniform sampler2D u_tiles;
@@ -559,6 +562,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             position: this.context.getAttribLocation(shaderProgram, 'a_position'),
             screenTile: this.context.getAttribLocation(shaderProgram, 'a_screenTile'),
         };
+        
         const uniformLocations = {
             tileSize: this.context.getUniformLocation(shaderProgram, 'u_tileSize'),
             tilesSize: this.context.getUniformLocation(shaderProgram, 'u_tilesSize'),
@@ -568,11 +572,13 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         };
 
         // Check if fetching locations failed for any attribute or uniform.
+
         for (const [key, value] of Object.entries(attributeLocations)) {
             if (value === -1) {
                 throw new Error(`Shader attribute location not found: ${key}`);
             }
         }
+
         for (const [key, value] of Object.entries(uniformLocations)) {
             if (value === null) {
                 throw new Error(`Shader uniform location not found: ${key}`);
@@ -632,6 +638,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
         // Set the shader source code
         this.context.shaderSource(shader, source);
+        
         // Compile the shader
         this.context.compileShader(shader);
 
