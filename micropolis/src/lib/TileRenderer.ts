@@ -166,12 +166,14 @@ abstract class TileRenderer<TContext> {
 
     /**
      * Updates the size of the rendering canvas.
-     * @param newScreenSize - The new size of the rendering canvas in pixels.
+     * @param width - The new width of the rendering canvas in pixels.
+     * @param height - The new height of the rendering canvas in pixels.
      */
-    updateScreenSize(newScreenSize: { width: number, height: number }): void {
-        this.viewWidth = newScreenSize.width;
-        this.viewHeight = newScreenSize.height;
+    updateScreenSize(width: number, height: number): void {
+        this.viewWidth = width;
+        this.viewHeight = height;
     }
+
 }
 
 
