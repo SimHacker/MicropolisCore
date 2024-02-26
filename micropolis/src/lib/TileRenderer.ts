@@ -496,60 +496,58 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         }
 
         // Define the source code for the vertex shader.
-        const vsSource = `
-            #version 300 es
-            precision mediump float;
-            attribute vec3 a_position;
-            attribute vec2 a_screenTile;
-            varying vec2 v_screenTile;
+        const vsSource = `#version 300 es
+    precision mediump float;
+    attribute vec3 a_position;
+    attribute vec2 a_screenTile;
+    varying vec2 v_screenTile;
 
-            void main() {
+    void main() {
 
-                gl_Position = vec4(a_position, 1.0);
-                v_screenTile = a_screenTile;
+        gl_Position = vec4(a_position, 1.0);
+        v_screenTile = a_screenTile;
 
-            }
-        `;
+    }
+`;
 
         // Define the source code for the fragment shader.
-        const fsSource = `
-            #version 300 es
-            precision mediump float;
-            uniform vec2 u_tileSize;
-            uniform vec2 u_tilesSize;
-            uniform sampler2D u_tiles;
-            uniform vec2 u_mapSize;
-            uniform usampler2D u_map;
-            varying vec2 v_screenTile;
+        const fsSource = `#version 300 es
+    precision mediump float;
+    uniform vec2 u_tileSize;
+    uniform vec2 u_tilesSize;
+    uniform sampler2D u_tiles;
+    uniform vec2 u_mapSize;
+    uniform usampler2D u_map;
+    varying vec2 v_screenTile;
 
-            void main() {
+    void main() {
 
-                // Calculate the screen tile coordinate.
-                vec2 screenTileColRow = floor(v_screenTile);
-                vec2 screenTilePosition = v_screenTile - screenTileColRow;
+        // Calculate the screen tile coordinate.
+        vec2 screenTileColRow = floor(v_screenTile);
+        vec2 screenTilePosition = v_screenTile - screenTileColRow;
 
-                vec2 cellColRow = mod(screenTileColRow, mapSize);
-                vec2 cellUV = cellColRow / u_mapSize;
+        vec2 cellColRow = mod(screenTileColRow, mapSize);
+        vec2 cellUV = cellColRow / u_mapSize;
 
-                // Extract data from the 32-bit unsigned integer texture
-                uvec4 cellData = texture(u_map, cellUV);
-                uint cellValue = cellData.r & 0xFFFFu; // Use lower 16 bits of the red channel
-                float cell = float(cellValue);
+        // Extract data from the 32-bit unsigned integer texture
+        uvec4 cellData = texture(u_map, cellUV);
+        uint cellValue = cellData.r & 0xFFFFu; // Use lower 16 bits of the red channel
+        float cell = float(cellValue);
 
-                // Calculate the tile row and column from the cell value.
-                float tileRow = floor(cell * u_tileSize.x / u_tilesSize.x);
-                float tileCol = cell - (tileRow * u_tileSize.y / u_tilesSize.y);
+        // Calculate the tile row and column from the cell value.
+        float tileRow = floor(cell * u_tileSize.x / u_tilesSize.x);
+        float tileCol = cell - (tileRow * u_tileSize.y / u_tilesSize.y);
 
-                // Calculate which pixel of the tile to sample.
-                vec2 tileCorner = vec2(tileCol, tileRow) * u_tileSize;
-                vec2 tilePixel = tileCorner + (screenTilePosition * u_tileSize);
-                vec2 uv = tilePixel / u_tilesSize;
+        // Calculate which pixel of the tile to sample.
+        vec2 tileCorner = vec2(tileCol, tileRow) * u_tileSize;
+        vec2 tilePixel = tileCorner + (screenTilePosition * u_tileSize);
+        vec2 uv = tilePixel / u_tilesSize;
 
-                // Sample the tile.
-                gl_FragColor = texture2D(u_tiles, uv);
+        // Sample the tile.
+        gl_FragColor = texture2D(u_tiles, uv);
 
-            }
-        `;
+    }
+`;
 
         // Compile shaders and create a WebGL program.
         const shaderProgram: WebGLProgram = this.compileShaders(vsSource, fsSource);
@@ -638,7 +636,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
         // Set the shader source code
         this.context.shaderSource(shader, source);
-        
+
         // Compile the shader
         this.context.compileShader(shader);
 
