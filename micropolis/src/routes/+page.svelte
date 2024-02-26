@@ -1,6 +1,5 @@
 <script lang="ts">
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import tiles_png from '$lib/images/tiles.png';
 
 	import { onMount } from 'svelte';
 	import { TileRenderer, CanvasTileRenderer } from '$lib/TileRenderer';
@@ -11,32 +10,38 @@
 	const mapHeight = 256;
 	const tileWidth = 16;
 	const tileHeight = 16;
-	const tileImageURL = '/images/tiles.png';
+	const tileTexture = '/images/tiles.png';
 
 	// Generate a random map data
 	const mapData = Array.from({ length: mapWidth * mapHeight }, () => Math.floor(Math.random() * 256));
 
 	onMount(() => {
 
+		console.log('TileEngine Test: onMount:', 'canvas:', canvas);
 		if (canvas == null) {
-			console.log('canvas is null!');
+			console.log('TileEngine Test: onMount: canvas is null!');
 			return;
 		}
 
 		const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
+		console.log('TileEngine Test: onMount:', 'context:', context);
 		if (context == null) {
-			console.log('no 2d canvas context!');
+			console.log('TileEngine Test: onMount: no 2d canvas context!');
 			return;
 		}
 
 		renderer = new CanvasTileRenderer();
+		console.log('TileEngine Test: onMount: renderer:', renderer);
 		if (renderer == null) {
-			console.log('no CanvasTileRenderer!');
+			console.log('TileEngine Test: onMount: no CanvasTileRenderer!');
 			return;
 		}
 
-		renderer.initialize(context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileImageURL)
+		console.log('TileEngine Test: onMount: initialize:', 'context:', context, 'mapData:', mapData, 'mapWidth:', mapWidth, 'mapHeight:', mapHeight, 'tileWidth:', tileWidth, 'tileWidth:', tileHeight, 'tileTexture:', tileTexture);
+
+		renderer.initialize(context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTexture)
 			.then(() => {
+				console.log('TileEngine Test: onMount: initialize: then:', 'context:', context, 'renderer:', renderer);
 				if (renderer == null) {
 					console.log('no renderer!');
 					return;
