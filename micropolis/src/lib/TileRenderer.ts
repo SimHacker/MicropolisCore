@@ -248,10 +248,10 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
         const canvasCenterY = this.context.canvas.height / 2.0;
     
         // Calculate the range of visible tiles based on pan and zoom
-        const tileRangeStartX = Math.max(0, Math.floor(this.panX / this.zoom));
-        const tileRangeStartY = Math.max(0, Math.floor(this.panY / this.zoom));
-        const tileRangeEndX = Math.min(this.mapWidth, Math.ceil((this.panX + this.context.canvas.width / this.zoom) / this.tileWidth));
-        const tileRangeEndY = Math.min(this.mapHeight, Math.ceil((this.panY + this.context.canvas.height / this.zoom) / this.tileHeight));
+        const tileRangeStartX = 0; //Math.max(0, Math.floor(this.panX / this.zoom));
+        const tileRangeStartY = 0; //Math.max(0, Math.floor(this.panY / this.zoom));
+        const tileRangeEndX = this.tileWidth; //Math.min(this.mapWidth, Math.ceil((this.panX + this.context.canvas.width / this.zoom) / this.tileWidth));
+        const tileRangeEndY = this.tileHeight; //Math.min(this.mapHeight, Math.ceil((this.panY + this.context.canvas.height / this.zoom) / this.tileHeight));
     
         // Loop through each visible tile
         for (let tileY = tileRangeStartY; tileY < tileRangeEndY; tileY++) {
