@@ -7,8 +7,8 @@
 	let glTileRenderer_canvas: HTMLCanvasElement | null = null;
 	let canvasTileRenderer: CanvasTileRenderer | null = null;
 	let glTileRenderer: GLTileRenderer | null = null;
-	const mapWidth = 256;
-	const mapHeight = 256;
+	const mapWidth = 2; // 256;
+	const mapHeight = 2; // 256;
 	const tileWidth = 16;
 	const tileHeight = 16;
 	const tileTexture = tiles_png;
@@ -69,6 +69,9 @@
 				canvasTileRenderer.updateScreenSize(
 					canvasTileRenderer_canvas.width, 
 					canvasTileRenderer_canvas.height);
+				
+				canvasTileRenderer.panX = mapWidth / 2;
+				canvasTileRenderer.panY = mapHeight / 2;
 
 				canvasTileRenderer.render();
 			});
@@ -112,6 +115,9 @@
 					glTileRenderer_canvas.width, 
 					glTileRenderer_canvas.height);
 				
+				glTileRenderer.panX = mapWidth / 2;
+				glTileRenderer.panY = mapHeight / 2;
+
 				glTileRenderer.render();
 			});
 
