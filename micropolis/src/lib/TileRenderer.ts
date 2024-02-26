@@ -383,20 +383,34 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         
         return super.initialize(context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURL)
             .then(() => {
+
                 this.context = context;
+
                 // Here we will set up WebGL state, shaders, and buffers.
                 // For example, initializing the viewport and creating a shader program:
-                this.context.viewport(0, 0, this.context.drawingBufferWidth, this.context.drawingBufferHeight);
-                this.tileProgramInfo = this.createShaderProgram();
+                this.context.viewport(
+                    0, 
+                    0, 
+                    this.context.drawingBufferWidth, 
+                    this.context.drawingBufferHeight);
+                
+                this.tileProgramInfo = 
+                    this.createShaderProgram();
 
                 // Create and set up buffers, for example, for vertices and texture coordinates.
-                this.tileBufferInfo = this.createBuffers();
+                this.tileBufferInfo = 
+                    this.createBuffers();
 
                 // Create a texture for the map data
-                this.mapTexture = this.createMapTexture(mapData, mapWidth, mapHeight);
+                this.mapTexture = 
+                    this.createMapTexture(
+                        mapData, 
+                        mapWidth, 
+                        mapHeight);
 
                 // Load the texture from the provided URL.
-                return this.loadTexture(tileTextureURL);
+                return this.loadTexture(
+                    tileTextureURL);
             })
             .then(() => {
                 // Texture loaded successfully.
@@ -406,7 +420,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 throw error; // Rethrow to be caught by the caller.
             });
     }
-    
+
     /**
      * Creates a texture from the map data array.
      */
@@ -416,24 +430,45 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             return null;
         }
     
-        const texture = this.context.createTexture();
-        this.context.bindTexture(this.context.TEXTURE_2D, texture);
+        const texture = 
+            this.context.createTexture();
+
+        this.context.bindTexture(
+            this.context.TEXTURE_2D, 
+            texture);
     
-        // Assuming mapData is an array of 32-bit unsigned integers
-        const texData = new Uint32Array(mapData);
-    
-        // Load the texture with the map data
+        // Load the texture with the map data.
+        // Assuming mapData is an array of 32-bit unsigned integers.
         this.context.texImage2D(
-            this.context.TEXTURE_2D, 0, this.context.RGBA32UI,
-            mapWidth, mapHeight, 0,
-            this.context.RGBA_INTEGER, this.context.UNSIGNED_INT, texData
-        );
+            this.context.TEXTURE_2D, 0, 
+            this.context.RGBA32UI,
+            mapWidth, 
+            mapHeight, 
+            0,
+            this.context.RGBA_INTEGER, 
+            this.context.UNSIGNED_INT, 
+            new Uint32Array(mapData));
     
         // Set texture parameters
-        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_S, this.context.CLAMP_TO_EDGE);
-        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_T, this.context.CLAMP_TO_EDGE);
-        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MIN_FILTER, this.context.NEAREST);
-        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MAG_FILTER, this.context.NEAREST);
+        this.context.texParameteri(
+            this.context.TEXTURE_2D, 
+            this.context.TEXTURE_WRAP_S, 
+            this.context.CLAMP_TO_EDGE);
+        
+        this.context.texParameteri(
+            this.context.TEXTURE_2D, 
+            this.context.TEXTURE_WRAP_T, 
+            this.context.CLAMP_TO_EDGE);
+        
+        this.context.texParameteri(
+            this.context.TEXTURE_2D, 
+            this.context.TEXTURE_MIN_FILTER, 
+            this.context.NEAREST);
+        
+        this.context.texParameteri(
+            this.context.TEXTURE_2D, 
+            this.context.TEXTURE_MAG_FILTER, 
+            this.context.NEAREST);
     
         return texture;
     }
@@ -446,20 +481,30 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             }
     
             // Create a new texture object in WebGL
-            const texture = this.context.createTexture();
+            const texture = 
+                this.context.createTexture();
             this.tilesTexture = texture;
 
-            this.context.bindTexture(this.context.TEXTURE_2D, texture);
+            this.context.bindTexture(
+                this.context.TEXTURE_2D, 
+                texture);
     
             // Initialize the texture with a 1x1 pixel to prevent issues on slow networks
             this.context.texImage2D(
-                this.context.TEXTURE_2D, 0, this.context.RGBA,
-                1, 1, 0, this.context.RGBA, this.context.UNSIGNED_BYTE,
-                new Uint8Array([0, 0, 0, 255]) // opaque black
-            );
+                this.context.TEXTURE_2D,
+                0,
+                this.context.RGBA,
+                1,
+                1,
+                0, 
+                this.context.RGBA, 
+                this.context.UNSIGNED_BYTE,
+                new Uint8Array([0, 0, 0, 255])); // opaque black
     
             // Asynchronously load the image for the texture
-            const image = new Image();
+            const image =
+                new Image();
+
             image.onload = () => {
                 if (!this.context) {
                     reject(new Error('GL context is not initialized.'));
@@ -469,13 +514,34 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 this.tilesWidth = image.width;
                 this.tilesHeight = image.height;
 
-                this.context.bindTexture(this.context.TEXTURE_2D, texture);
-                this.context.texImage2D(this.context.TEXTURE_2D, 0, this.context.RGBA, this.context.RGBA, this.context.UNSIGNED_BYTE, image);
+                this.context.bindTexture(
+                    this.context.TEXTURE_2D,
+                    texture);
+
+                this.context.texImage2D(
+                    this.context.TEXTURE_2D, 
+                    0, 
+                    this.context.RGBA, 
+                    this.context.RGBA, 
+                    this.context.UNSIGNED_BYTE, 
+                    image);
 
                 // Setup texture so that we can render it at non-power of 2 sizes
-                this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_S, this.context.CLAMP_TO_EDGE);
-                this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_T, this.context.CLAMP_TO_EDGE);
-                this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MIN_FILTER, this.context.LINEAR);
+
+                this.context.texParameteri(
+                    this.context.TEXTURE_2D, 
+                    this.context.TEXTURE_WRAP_S, 
+                    this.context.CLAMP_TO_EDGE);
+
+                this.context.texParameteri(
+                    this.context.TEXTURE_2D, 
+                    this.context.TEXTURE_WRAP_T, 
+                    this.context.CLAMP_TO_EDGE);
+
+                this.context.texParameteri(
+                    this.context.TEXTURE_2D, 
+                    this.context.TEXTURE_MIN_FILTER, 
+                    this.context.LINEAR);
 
                 resolve();
             };
@@ -554,23 +620,23 @@ void main() {
 `;
 
         // Compile shaders and create a WebGL program.
-        const shaderProgram: WebGLProgram = this.compileShaders(vsSource, fsSource);
-        if (!shaderProgram) {
+        const program: WebGLProgram = this.compileShaders(vsSource, fsSource);
+        if (!program) {
             throw new Error('Unable to create shader program');
         }
 
         // Fetch the locations of the shader attributes and uniforms.
         const attributeLocations = {
-            position: this.context.getAttribLocation(shaderProgram, 'a_position'),
-            screenTile: this.context.getAttribLocation(shaderProgram, 'a_screenTile'),
+            position: this.context.getAttribLocation(program, 'a_position'),
+            screenTile: this.context.getAttribLocation(program, 'a_screenTile'),
         };
-        
+
         const uniformLocations = {
-            tileSize: this.context.getUniformLocation(shaderProgram, 'u_tileSize'),
-            tilesSize: this.context.getUniformLocation(shaderProgram, 'u_tilesSize'),
-            tiles: this.context.getUniformLocation(shaderProgram, 'u_tiles'),
-            mapSize: this.context.getUniformLocation(shaderProgram, 'u_mapSize'),
-            map: this.context.getUniformLocation(shaderProgram, 'u_map'),
+            tileSize: this.context.getUniformLocation(program, 'u_tileSize'),
+            tilesSize: this.context.getUniformLocation(program, 'u_tilesSize'),
+            tiles: this.context.getUniformLocation(program, 'u_tiles'),
+            mapSize: this.context.getUniformLocation(program, 'u_mapSize'),
+            map: this.context.getUniformLocation(program, 'u_map'),
         };
 
         // Check if fetching locations failed for any attribute or uniform.
@@ -588,7 +654,7 @@ void main() {
         }
 
         return {
-            program: shaderProgram,
+            program,
             attributeLocations,
             uniformLocations,
         };
@@ -600,32 +666,49 @@ void main() {
         }
 
         // Create vertex shader
-        const vertexShader = this.loadShader(this.context.VERTEX_SHADER, vsSource);
+        const vertexShader = 
+            this.loadShader(
+                this.context.VERTEX_SHADER, 
+                vsSource);
 
         // Create fragment shader
-        const fragmentShader = this.loadShader(this.context.FRAGMENT_SHADER, fsSource);
+        const fragmentShader = 
+            this.loadShader(
+                this.context.FRAGMENT_SHADER, 
+                fsSource);
 
         // Create the shader program
-        const shaderProgram = this.context.createProgram();
-        if (!shaderProgram) {
+        const program = 
+            this.context.createProgram();
+        if (!program) {
             throw new Error('Unable to create shader program');
         }
 
         // Attach the vertex and fragment shaders to the program
-        this.context.attachShader(shaderProgram, vertexShader);
-        this.context.attachShader(shaderProgram, fragmentShader);
+        this.context.attachShader(
+            program, 
+            vertexShader);
+        this.context.attachShader(
+            program, 
+            fragmentShader);
 
         // Link the program
-        this.context.linkProgram(shaderProgram);
+        this.context.linkProgram(
+            program);
 
         // Check if the program linked successfully
-        if (!this.context.getProgramParameter(shaderProgram, this.context.LINK_STATUS)) {
-            const infoLog = this.context.getProgramInfoLog(shaderProgram);
-            this.context.deleteProgram(shaderProgram);
+        if (!this.context.getProgramParameter(
+                program, 
+                this.context.LINK_STATUS)) {
+            const infoLog = 
+                this.context.getProgramInfoLog(
+                    program);
+            this.context.deleteProgram(
+                program);
             throw new Error('Failed to link shader program: ' + infoLog);
         }
 
-        return shaderProgram;
+        return program;
     }
 
     private loadShader(type: number, source: string): WebGLShader {
@@ -633,21 +716,31 @@ void main() {
             throw new Error('The WebGL context is not initialized.');
         }
 
-        const shader = this.context.createShader(type);
+        const shader = 
+            this.context.createShader(
+                type);
         if (!shader) {
-            throw new Error('Unable to create shader');
+            throw new Error('Unable to create shader.');
         }
 
         // Set the shader source code
-        this.context.shaderSource(shader, source);
+        this.context.shaderSource(
+            shader, 
+            source);
 
         // Compile the shader
-        this.context.compileShader(shader);
+        this.context.compileShader(
+            shader);
 
         // Check for compilation errors
-        if (!this.context.getShaderParameter(shader, this.context.COMPILE_STATUS)) {
-            const infoLog = this.context.getShaderInfoLog(shader);
-            this.context.deleteShader(shader);
+        if (!this.context.getShaderParameter(
+                shader, 
+                this.context.COMPILE_STATUS)) {
+            const infoLog = 
+                this.context.getShaderInfoLog(
+                    shader);
+            this.context.deleteShader(
+                shader);
             throw new Error('An error occurred compiling the shaders: ' + infoLog);
         }
 
@@ -663,9 +756,12 @@ void main() {
             throw new Error('The WebGL context is not initialized.');
         }
 
-        const positionBuffer: WebGLBuffer | null = this.context.createBuffer();
+        const positionBuffer: WebGLBuffer | null = 
+            this.context.createBuffer();
 
-        this.context.bindBuffer(this.context.ARRAY_BUFFER, positionBuffer);
+        this.context.bindBuffer(
+            this.context.ARRAY_BUFFER, 
+            positionBuffer);
 
         // Now create an array of positions for the square.
         const positions: number[] = [
@@ -699,8 +795,12 @@ void main() {
 
         // Build the element array buffer; this specifies the indices
         // into the vertex arrays for each face's vertices.
-        const indexBuffer: WebGLBuffer | null = this.context.createBuffer();
-        this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        const indexBuffer: WebGLBuffer | null = 
+            this.context.createBuffer();
+        
+        this.context.bindBuffer(
+            this.context.ELEMENT_ARRAY_BUFFER, 
+            indexBuffer);
 
         // This array defines each face as two triangles, using the
         // indices into the vertex array to specify each triangle's
@@ -711,8 +811,10 @@ void main() {
         ];
 
         // Now send the element array to GL.
-        this.context.bufferData(this.context.ELEMENT_ARRAY_BUFFER,
-                                new Uint16Array(indices), this.context.STATIC_DRAW);
+        this.context.bufferData(
+            this.context.ELEMENT_ARRAY_BUFFER,
+            new Uint16Array(indices), 
+            this.context.STATIC_DRAW);
 
         return {
             position: positionBuffer,
@@ -728,10 +830,10 @@ void main() {
 
         // Calculate the new texture coordinates based on pan and zoom
         // Convert pan from tile coordinates to normalized texture coordinates
-        const left = (this.panX - this.viewWidth / 2 / this.zoom) / this.mapWidth;
-        const right = (this.panX + this.viewWidth / 2 / this.zoom) / this.mapWidth;
-        const bottom = (this.panY - this.viewHeight / 2 / this.zoom) / this.mapHeight;
-        const top = (this.panY + this.viewHeight / 2 / this.zoom) / this.mapHeight;
+        const left = (this.panX - this.viewWidth / 2 / this.zoom) / (this.mapWidth * this.tileWidth);
+        const right = (this.panX + this.viewWidth / 2 / this.zoom) / (this.mapWidth * this.tileWidth);
+        const bottom = (this.panY - this.viewHeight / 2 / this.zoom) / (this.mapHeight * this.tileHeight);
+        const top = (this.panY + this.viewHeight / 2 / this.zoom) / (this.mapHeight * this.tileHeight);
 
         // Update the screenTileArray with the new texture coordinates
         this.screenTileArray.set([
@@ -744,8 +846,13 @@ void main() {
         ]);
 
         // Bind the updated screenTileArray to the buffer
-        this.context.bindBuffer(this.context.ARRAY_BUFFER, this.tileBufferInfo.screenTile);
-        this.context.bufferData(this.context.ARRAY_BUFFER, this.screenTileArray, this.context.DYNAMIC_DRAW);
+        this.context.bindBuffer(
+            this.context.ARRAY_BUFFER, 
+            this.tileBufferInfo.screenTile);
+        this.context.bufferData(
+            this.context.ARRAY_BUFFER, 
+            this.screenTileArray, 
+            this.context.DYNAMIC_DRAW);
     }
 
     render(): void {
