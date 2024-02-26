@@ -693,7 +693,7 @@ void main() {
         // Set up the screen tile texture coordinates for the map.
         const screenTileBuffer: WebGLBuffer | null = this.context.createBuffer();
 
-        this.updateScreenTileArray();
+        //this.updateScreenTileArray();
 
         // Build the element array buffer; this specifies the indices
         // into the vertex arrays for each face's vertices.
