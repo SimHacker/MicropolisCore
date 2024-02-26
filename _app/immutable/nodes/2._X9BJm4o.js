@@ -17,7 +17,7 @@ var U=Object.defineProperty;var b=(c,r,e)=>r in c?U(c,r,{enumerable:!0,configura
     uniform sampler2D u_tiles;
     uniform vec2 u_mapSize;
     uniform usampler2D u_map;
-    out vec2 v_screenTile;
+    in vec2 v_screenTile;
 
     void main() {
 
