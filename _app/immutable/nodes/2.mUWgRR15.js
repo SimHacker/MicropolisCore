@@ -26,7 +26,7 @@ void main() {
     vec2 screenTileColRow = floor(v_screenTile);
     vec2 screenTilePosition = v_screenTile - screenTileColRow;
 
-    vec2 cellColRow = mod(screenTileColRow, mapSize);
+    vec2 cellColRow = mod(screenTileColRow, u_mapSize);
     vec2 cellUV = cellColRow / u_mapSize;
 
     // Extract data from the 32-bit unsigned integer texture
