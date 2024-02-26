@@ -498,9 +498,9 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         // Define the source code for the vertex shader.
         const vsSource = `#version 300 es
     precision mediump float;
-    attribute vec3 a_position;
-    attribute vec2 a_screenTile;
-    varying vec2 v_screenTile;
+    in vec3 a_position;
+    in vec2 a_screenTile;
+    out vec2 v_screenTile;
 
     void main() {
 
@@ -518,7 +518,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
     uniform sampler2D u_tiles;
     uniform vec2 u_mapSize;
     uniform usampler2D u_map;
-    varying vec2 v_screenTile;
+    out vec2 v_screenTile;
 
     void main() {
 
