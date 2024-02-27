@@ -238,41 +238,53 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
         if (!this.context || !this.tileImage) {
             throw new Error('Canvas context or tile image is not properly initialized.');
         }
-    
+
         // Fill the background with black
-        this.context.fillStyle = 'black';
-        this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-    
-        // Center of the canvas
-        const canvasCenterX = this.context.canvas.width / 2.0;
+        this.context.fillStyle = '#000000';
+        this.context.fillRect(
+            0,
+            0,
+            this.context.canvas.width,
+            this.context.canvas.height);
+
+        // Center of the canvas.
+        const canvasCenterX = this.context.canvas.width  / 2.0;
         const canvasCenterY = this.context.canvas.height / 2.0;
-    
-        // Calculate the range of visible tiles based on pan and zoom
-        const tileRangeStartX = 0; //Math.max(0, Math.floor(this.panX / this.zoom));
-        const tileRangeStartY = 0; //Math.max(0, Math.floor(this.panY / this.zoom));
-        const tileRangeEndX = this.mapWidth; //Math.min(this.mapWidth, Math.ceil((this.panX + this.context.canvas.width / this.zoom) / this.tileWidth));
-        const tileRangeEndY = this.mapHeight; //Math.min(this.mapHeight, Math.ceil((this.panY + this.context.canvas.height / this.zoom) / this.tileHeight));
+
+        // Calculate the range of visible tiles based on pan and zoom.
+        const tileRangeStartX = Math.max(0,              Math.floor(this.panX / this.zoom));
+        const tileRangeStartY = Math.max(0,              Math.floor(this.panY / this.zoom));
+        const tileRangeEndX =   Math.min(this.mapWidth,  Math.ceil((this.panX + this.context.canvas.width  / this.zoom) / this.tileWidth ));
+        const tileRangeEndY =   Math.min(this.mapHeight, Math.ceil((this.panY + this.context.canvas.height / this.zoom) / this.tileHeight));
     
         // Loop through each visible tile
         for (let tileY = tileRangeStartY; tileY < tileRangeEndY; tileY++) {
             for (let tileX = tileRangeStartX; tileX < tileRangeEndX; tileX++) {
+
                 // Get the index of the current tile
                 const tileIndex = this.mapData[tileY * this.mapWidth + tileX];
     
                 // Calculate the position to draw the tile on the canvas
-                const drawPosX = (tileX * this.tileWidth - this.panX) * this.zoom + canvasCenterX;
-                const drawPosY = (tileY * this.tileHeight - this.panY) * this.zoom + canvasCenterY;
+                const drawPosX = canvasCenterX + (((tileX * this.tileWidth ) - this.panX) * this.zoom);
+                const drawPosY = canvasCenterY + (((tileY * this.tileHeight) - this.panY) * this.zoom);
     
                 // Calculate the source coordinates of the tile in the tileset image
-                const srcX = (tileIndex % (this.tileImage.width / this.tileWidth)) * this.tileWidth;
-                const srcY = Math.floor(tileIndex / (this.tileImage.width / this.tileWidth)) * this.tileHeight;
+                const columns =         this.tileImage.width / this.tileWidth;
+                const srcX =           (tileIndex % columns) * this.tileWidth;
+                const srcY = Math.floor(tileIndex / columns) * this.tileHeight;
     
                 // Draw the tile
                 this.context.drawImage(
                     this.tileImage,
-                    srcX, srcY, this.tileWidth, this.tileHeight,
-                    drawPosX, drawPosY, this.tileWidth * this.zoom, this.tileHeight * this.zoom
-                );
+                    srcX,
+                    srcY,
+                    this.tileWidth,
+                    this.tileHeight,
+                    drawPosX,
+                    drawPosY,
+                    this.tileWidth * this.zoom,
+                    this.tileHeight * this.zoom);
+
             }
         }
     }

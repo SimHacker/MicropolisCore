@@ -7,8 +7,8 @@
 	let glTileRenderer_canvas: HTMLCanvasElement | null = null;
 	let canvasTileRenderer: CanvasTileRenderer | null = null;
 	let glTileRenderer: GLTileRenderer | null = null;
-	const mapWidth = 2; // 256;
-	const mapHeight = 2; // 256;
+	const mapWidth = 8; // 256;
+	const mapHeight = 8; // 256;
 	const tileWidth = 16;
 	const tileHeight = 16;
 	const tileTexture = tiles_png;
