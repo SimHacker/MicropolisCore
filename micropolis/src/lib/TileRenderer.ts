@@ -260,8 +260,8 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
                 const tileIndex = this.mapData[tileY * this.mapWidth + tileX];
     
                 // Calculate the position to draw the tile on the canvas
-                const drawPosX = (tileX * this.tileWidth - this.panX) * this.zoom + canvasCenterX - (this.tileWidth * this.zoom / 2);
-                const drawPosY = (tileY * this.tileHeight - this.panY) * this.zoom + canvasCenterY - (this.tileHeight * this.zoom / 2);
+                const drawPosX = (tileX * this.tileWidth - this.panX) * this.zoom + canvasCenterX;
+                const drawPosY = (tileY * this.tileHeight - this.panY) * this.zoom + canvasCenterY;
     
                 // Calculate the source coordinates of the tile in the tileset image
                 const srcX = (tileIndex % (this.tileImage.width / this.tileWidth)) * this.tileWidth;
