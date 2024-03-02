@@ -198,8 +198,8 @@
 
   <canvas
     bind:this={canvas2D}
-    width="${canvasWidth}"
-    height="${canvasHeight}"
+    width="{canvasWidth}"
+    height="{canvasHeight}"
     onmousedown={onmousedown}
     onmousemove={onmousemove}
     onmouseup={onmouseup}
@@ -209,8 +209,8 @@
 
   <canvas
     bind:this={canvasGL}
-    width="${canvasWidth}"
-    height="${canvasHeight}"
+    width="{canvasWidth}"
+    height="{canvasHeight}"
     onmousedown={onmousedown}
     onmousemove={onmousemove}
     onmouseup={onmouseup}
