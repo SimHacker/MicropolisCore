@@ -256,8 +256,8 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
         const screenTileHeight = this.tileHeight * this.zoom;
 
         // Calculate the range of visible tiles based on pan and zoom.
-        const tileRangeStartX = 0;//Math.max(0,              Math.floor(this.panX / this.zoom));
-        const tileRangeStartY = 0;//Math.max(0,              Math.floor(this.panY / this.zoom));
+        const tileRangeStartX = Math.max(0,              Math.floor(this.panX / this.zoom));
+        const tileRangeStartY = Math.max(0,              Math.floor(this.panY / this.zoom));
         const tileRangeEndX   = this.mapWidth; //Math.min(this.mapWidth,  Math.ceil((this.panX + this.context.canvas.width  / this.zoom) / this.tileWidth ));
         const tileRangeEndY   = this.mapHeight;//Math.min(this.mapHeight, Math.ceil((this.panY + this.context.canvas.height / this.zoom) / this.tileHeight));
 
@@ -269,10 +269,8 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
                 const tileIndex = this.mapData[tileY * this.mapWidth + tileX];
     
                 // Calculate the position to draw the tile on the canvas.
-                //const drawPosX = canvasCenterX + (((tileX * this.tileWidth ) - this.panX) * this.zoom);
-                //const drawPosY = canvasCenterY + (((tileY * this.tileHeight) - this.panY) * this.zoom);
-                const drawPosX = screenCenterX + ((((tileX - this.panX) * this.tileWidth )) * this.zoom);
-                const drawPosY = screenCenterY + ((((tileY - this.panY) * this.tileHeight)) * this.zoom);
+                const drawPosX = screenCenterX + (((tileX - this.panX) * this.tileWidth ) * this.zoom);
+                const drawPosY = screenCenterY + (((tileY - this.panY) * this.tileHeight) * this.zoom);
     
                 // Calculate the source coordinates of the tile in the tileset image.
                 const columns =         this.tileImage.width / this.tileWidth;
