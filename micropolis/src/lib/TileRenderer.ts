@@ -490,16 +490,16 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             texture);
     
         // Load the texture with the map data.
-        // Assuming mapData is an array of 32-bit unsigned integers.
+        // Assuming mapData is an array of 16-bit unsigned integers.
         this.context.texImage2D(
             this.context.TEXTURE_2D, 0, 
-            this.context.RGBA32UI,
+            this.context.R16UI,
             mapWidth, 
             mapHeight, 
             0,
             this.context.RED_INTEGER, 
-            this.context.UNSIGNED_INT, 
-            new Uint32Array(mapData));
+            this.context.UNSIGNED_SHORT, 
+            new Uint16Array(mapData));
     
         // Set texture parameters
         this.context.texParameteri(
@@ -654,14 +654,14 @@ void main() {
     vec2 cellColRow = mod(screenTileColRow, u_mapSize);
     vec2 cellUV = cellColRow / u_mapSize;
 
-    // Extract data from the 32-bit unsigned integer texture
-    uint cellData = texture(u_map, cellUV).r;
-    uint cellValue = cellData & 0xFFFFu; // Use lower 16 bits of the red channel
+    // Extract data from the 16-bit unsigned integer texture
+    uint cellValue = texture(u_map, cellUV).r; // Directly use the red channel as the cell value
     float cell = float(cellValue);
 
     // Calculate the tile row and column from the cell value.
-    float tileRow = floor(cell * u_tileSize.x / u_tilesSize.x);
-    float tileCol = cell - (tileRow * u_tileSize.y / u_tilesSize.y);
+    float tilesPerRow = u_tilesSize.x / u_tileSize.x;
+    float tileRow = floor(cell / tilesPerRow);
+    float tileCol = mod(cell, tilesPerRow);
 
     // Calculate which pixel of the tile to sample.
     vec2 tileCorner = vec2(tileCol, tileRow) * u_tileSize;
