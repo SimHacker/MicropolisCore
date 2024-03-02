@@ -21,13 +21,18 @@
 abstract class TileRenderer<TContext> {
 
     /**
+     * The canvas to render into, or null.
+     */
+    public canvas?: HTMLCanvasElement;
+
+    /**
      * The rendering context is a generic placeholder for the graphical context in which the
      * rendering takes place. This could be a WebGL2RenderingContext for 3D rendering or a 2D
      * canvas rendering context, for example. The exact type of the context is specified by the
      * generic parameter TContext when implementing the concrete renderer class. This allows the
      * TileRenderer to be adapted to different rendering technologies.
      */
-    protected context?: TContext;
+    public context?: TContext;
 
     /**
      * An array representing the map's tile data. Each element in the array corresponds to a tile
@@ -91,6 +96,8 @@ abstract class TileRenderer<TContext> {
     public zoom: number = 1;
 
     constructor() {
+
+        this.canvas = undefined;
         this.context = undefined;
         this.mapData = [];
         this.mapWidth = 0;
@@ -99,10 +106,12 @@ abstract class TileRenderer<TContext> {
         this.tileHeight = 0;
         this.viewWidth = 0;
         this.viewHeight = 0;
+
     }
 
     /**
      * Initializes the renderer with the necessary configuration and begins loading the tile texture.
+     * @param canvas The canvas to render into.
      * @param context The rendering context specific to the subclass implementation.
      * @param mapData An array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
@@ -113,6 +122,7 @@ abstract class TileRenderer<TContext> {
      * @returns A promise that resolves when the renderer is fully initialized and the texture is loaded.
      */
     initialize(
+        canvas: HTMLCanvasElement,
         context: TContext,
         mapData: number[],
         mapWidth: number,
@@ -121,6 +131,8 @@ abstract class TileRenderer<TContext> {
         tileHeight: number,
         tileTextureURL: string
     ): Promise<void> {
+
+        this.canvas = canvas;
         this.context = context;
         this.mapData = mapData;
         this.mapWidth = mapWidth;
@@ -195,6 +207,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
 
     /**
      * Initializes the CanvasTileRenderer with a 2D canvas context and loads the tile image.
+     * @param canvas The canvas.
      * @param context The CanvasRenderingContext2D.
      * @param mapData Array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
@@ -205,6 +218,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
      * @returns A promise that resolves when the renderer is fully initialized and the image is loaded.
      */
     initialize(
+        canvas: HTMLCanvasElement,
         context: CanvasRenderingContext2D,
         mapData: number[],
         mapWidth: number,
@@ -213,8 +227,10 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
         tileHeight: number,
         tileImageURL: string
     ): Promise<void> {
-        return super.initialize(context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileImageURL)
+
+        return super.initialize(canvas, context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileImageURL)
             .then(() => {
+
                 this.context = context;
                 this.tileImage = new Image();
                 this.tileImage.src = tileImageURL;
@@ -226,6 +242,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
                     this.tileImage.onload = () => resolve();
                     this.tileImage.onerror = () => reject(new Error(`Failed to load image at ${tileImageURL}`));
                 });
+
             });
     }
 
@@ -235,9 +252,15 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
      * Only draws tiles that appear in the panned and zoomed view.
      */
     render(): void {
-        if (!this.context || !this.tileImage) {
-            throw new Error('Canvas context or tile image is not properly initialized.');
+
+        if (!this.canvas || !this.context || !this.tileImage) {
+            throw new Error('Canvas canvas, context, or tile image is not properly initialized.');
         }
+
+        // Update the screen size from the canvas;.
+        this.updateScreenSize(
+            this.canvas.width,
+            this.canvas.height);
 
         // Fill the background with black
         this.context.fillStyle = '#000000';
@@ -325,11 +348,13 @@ interface ShaderProgramInfo {
     };
 }
 
+
 interface BufferInfo {
     position: WebGLBuffer | null;
     screenTile: WebGLBuffer | null;
     indices: WebGLBuffer | null;
 }
+
 
 class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
@@ -388,6 +413,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
     /**
      * Initializes the GLTileRenderer with the WebGL context and loads the tile texture.
+     * @param context The canvas.
      * @param context The WebGL rendering context.
      * @param mapData An array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
@@ -398,6 +424,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
      * @returns A promise that resolves when the renderer is fully initialized and the texture is loaded.
      */
     initialize(
+        canvas: HTMLCanvasElement,
         context: WebGL2RenderingContext,
         mapData: number[],
         mapWidth: number,
@@ -407,7 +434,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         tileTextureURL: string
     ): Promise<void> {
         
-        return super.initialize(context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURL)
+        return super.initialize(canvas, context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURL)
             .then(() => {
 
                 this.context = context;
@@ -451,6 +478,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
      * Creates a texture from the map data array.
      */
     private createMapTexture(mapData: number[], mapWidth: number, mapHeight: number): WebGLTexture | null {
+
         if (!this.context) {
             console.error('GL context is not initialized.');
             return null;
@@ -500,6 +528,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
     }
 
     protected loadTexture(tileTextureURL: string): Promise<void> {
+
         return new Promise((resolve, reject) => {
             if (!this.context) {
                 reject(new Error('GL context is not initialized.'));
@@ -576,6 +605,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             };
             image.src = tileTextureURL;
         });
+
     }
     
     /**
@@ -585,6 +615,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
      * @returns The created ShaderProgramInfo.
      */
     private createShaderProgram(): ShaderProgramInfo {
+
         if (!this.context) {
             throw new Error('The WebGL context is not initialized.');
         }
@@ -687,6 +718,7 @@ void main() {
     }
 
     private compileShaders(vsSource: string, fsSource: string): WebGLProgram {
+
         if (!this.context) {
             throw new Error('The WebGL context is not initialized.');
         }
@@ -738,6 +770,7 @@ void main() {
     }
 
     private loadShader(type: number, source: string): WebGLShader {
+
         if (!this.context) {
             throw new Error('The WebGL context is not initialized.');
         }
@@ -778,6 +811,7 @@ void main() {
      * This is where you would create vertex buffers and bind the data for vertices and texture coordinates.
      */
     private createBuffers(): BufferInfo {
+
         if (!this.context) {
             throw new Error('The WebGL context is not initialized.');
         }
@@ -850,6 +884,7 @@ void main() {
     }
 
     updateScreenTileArray() {
+
         if (!this.context || !this.tileBufferInfo) {
             throw new Error('The WebGL context is not initialized.');
         }
@@ -890,10 +925,16 @@ void main() {
     }
 
     render(): void {
-        if (!this.context || !this.tileProgramInfo || !this.tileBufferInfo || !this.tilesTexture) {
-            throw new Error('The WebGL context, shaders, or textures are not properly initialized.');
+
+        if (!this.canvas || !this.context || !this.tileProgramInfo || !this.tileBufferInfo || !this.tilesTexture) {
+            throw new Error('The canvas, WebGL context, shaders, or textures are not properly initialized.');
         }
-    
+
+        // Update the screen size from the canvas;.
+        this.updateScreenSize(
+            this.canvas.width,
+            this.canvas.height);
+
         // Clear the canvas before drawing.
         this.context.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
         this.context.clearDepth(1.0);                // Clear everything
@@ -944,9 +985,7 @@ void main() {
         this.context.viewport(0, 0, this.context.canvas.width, this.context.canvas.height);
     
         // Draw the scene
-        const offset = 0;
-        const vertexCount = 6; // Six vertices for two triangles
-        this.context.drawElements(this.context.TRIANGLES, vertexCount, this.context.UNSIGNED_SHORT, offset);
+        this.context.drawElements(this.context.TRIANGLES, 6, this.context.UNSIGNED_SHORT, 0);
     }
     
 }
