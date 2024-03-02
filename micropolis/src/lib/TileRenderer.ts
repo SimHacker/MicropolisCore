@@ -642,7 +642,7 @@ uniform vec2 u_tilesSize; // 256 960
 uniform sampler2D u_tiles;
 uniform vec2 u_mapSize; // 256 256
 uniform usampler2D u_map;
-in vec2 v_screenTile; // 
+in vec2 v_screenTile;
 out vec4 fragColor;
 
 void main() {
@@ -656,12 +656,16 @@ void main() {
 
     // Extract data from the 16-bit unsigned integer texture
     uint cellValue = texture(u_map, cellUV).r; // Directly use the red channel as the cell value
-    float cell = float(cellValue);
 
     // Calculate the tile row and column from the cell value.
     float tilesPerRow = u_tilesSize.x / u_tileSize.x;
-    float tileRow = floor(cell / tilesPerRow);
-    float tileCol = mod(cell, tilesPerRow);
+    float tilesPerCol = u_tilesSize.y / u_tileSize.y;
+
+    // Wrap the cell value by the number of tiles there are.
+    cellValue = mod(cellValue, tilesPerRow * tilesPerCol);
+
+    float tileRow = floor(cellValue / tilesPerRow);
+    float tileCol = mod(cellValue, tilesPerRow);
 
     // Calculate which pixel of the tile to sample.
     vec2 tileCorner = vec2(tileCol, tileRow) * u_tileSize;
