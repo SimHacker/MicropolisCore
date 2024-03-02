@@ -31,8 +31,8 @@ void main() {
     vec2 cellUV = cellColRow / u_mapSize;
 
     // Extract data from the 32-bit unsigned integer texture
-    uvec4 cellData = texture(u_map, cellUV);
-    uint cellValue = cellData.r & 0xFFFFu; // Use lower 16 bits of the red channel
+    uint cellData = texture(u_map, cellUV).r;
+    uint cellValue = cellData & 0xFFFFu; // Use lower 16 bits of the red channel
     float cell = float(cellValue);
 
     // Calculate the tile row and column from the cell value.
