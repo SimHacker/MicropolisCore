@@ -41,6 +41,9 @@
 
   let tileRenderers: TileRenderer<any>[] = [];
 
+  let framesPerSecond: number = 10;
+  
+
   let mouse = null;
   let last = null;
 
@@ -63,6 +66,8 @@
   function onmousemove(event: Event) {
     console.log('TileView: onmousemove: event:', event, 'target:', event.target);
   }
+
+  const intervalId = setInterval(renderAll, 1000 / framesPerSecond); // Interval for 10 times per second
 
 
   $effect(() => {
@@ -121,14 +126,10 @@
 					return;
 				}
 
-				canvasTileRenderer.updateScreenSize(
-					canvas2D.width, 
-					canvas2D.height);
+        canvasTileRenderer.render();
 
-				canvasTileRenderer.panX = mapWidth / 2;
-				canvasTileRenderer.panY = mapHeight / 2;
+        tileRenderers.push(canvasTileRenderer);
 
-				canvasTileRenderer.render();
 			});
 
 
@@ -181,12 +182,16 @@
 
         tileRenderers.push(glTileRenderer);
 
-			});
+        glTileRenderer.render();
+
+      });
 
 
       // Return a function to clean up the effect.
       return () => {
-        console.log('TileView: $effect: clean up')
+        console.log('TileView: $effect: clean up');
+
+        clearInterval(intervalId);
       };
 
   });
