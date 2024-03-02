@@ -49,10 +49,16 @@
 
 
   function renderAll() {
+
+    for (let i = 0, n = mapData.length; i < n; i++) {
+      mapData[i] = Math.floor(Math.random() * tileCount);
+    }
+
     for (let tileRenderer of tileRenderers) {
       if (!tileRenderer || !tileRenderer.canvas) continue;
       tileRenderer.render();
     }
+    
   };
 
   function onmousedown(event: Event) {
