@@ -440,13 +440,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 this.context = context;
 
                 // Here we will set up WebGL state, shaders, and buffers.
-                // For example, initializing the viewport and creating a shader program:
-                this.context.viewport(
-                    0, 
-                    0, 
-                    this.context.drawingBufferWidth, 
-                    this.context.drawingBufferHeight);
-                
+
                 this.tileProgramInfo = 
                     this.createShaderProgram();
 
@@ -934,6 +928,13 @@ void main() {
         this.updateScreenSize(
             this.canvas.width,
             this.canvas.height);
+
+        // Update the viewport size.
+        this.context.viewport(
+            0, 
+            0, 
+            this.context.drawingBufferWidth, 
+            this.context.drawingBufferHeight);
 
         // Clear the canvas before drawing.
         this.context.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque

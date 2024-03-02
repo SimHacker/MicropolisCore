@@ -53,17 +53,18 @@
   };
 
   function onmousedown(event: Event) {
-    console.log('TileView: onmousedown: event:', event, event.target);
+    console.log('TileView: onmousedown: event:', event, 'target:', event.target);
   }
 
   function onmouseup(event: Event) {
-    console.log('TileView: onmousedown: event:', event, event.target);
+    console.log('TileView: onmouseup: event:', event, 'target:', event.target);
   }
 
   function onmousemove(event: Event) {
-    console.log('TileView: onmousedown: event:', event, event.target);
+    console.log('TileView: onmousemove: event:', event, 'target:', event.target);
   }
 
+  
   $effect(() => {
 
 
