@@ -440,7 +440,11 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 this.context = context;
 
                 // Here we will set up WebGL state, shaders, and buffers.
-
+                if (!this.context.getExtension('EXT_texture_norm16')) {
+                    console.error('R32UI format is not supported on this device.');
+                    return null;
+                }
+                
                 this.tileProgramInfo = 
                     this.createShaderProgram();
 
@@ -493,7 +497,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             mapWidth, 
             mapHeight, 
             0,
-            this.context.RGBA_INTEGER, 
+            this.context.RED_INTEGER, 
             this.context.UNSIGNED_INT, 
             new Uint32Array(mapData));
     
