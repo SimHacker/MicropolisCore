@@ -51,18 +51,29 @@
   let mousePosLast: [number, number] = [0, 0];
 
 
-  function renderAll() {
+
+  function simulate(): void {
 
     for (let i = 0, n = mapData.length; i < n; i++) {
       mapData[i] = Math.floor(Math.random() * tileCount);
     }
 
+  }
+
+
+  function renderAll(): void {
+
     for (let tileRenderer of tileRenderers) {
       if (!tileRenderer || !tileRenderer.canvas) continue;
       tileRenderer.render();
     }
+  }
 
-  };
+  
+  function tick(): void {
+    simulate();
+    renderAll();
+  }
 
 
   function findTileRenderer(canvas: HTMLCanvasElement): TileRenderer<any> | null {
@@ -91,52 +102,62 @@
     }
 
     mousePosLast = mousePos;
-    mousePos = tileRenderer.screenToTile(event.clientX, event.clientY);
-    console.log('TileRenderer: trackMouse: event:', event, 'mousePosLast:', mousePosLast, 'mousePos:', mousePos, 'tileRenderer:', tileRenderer)
+    mousePos = [event.clientX, event.clientY];
+
+    //console.log('TileRenderer: trackMouse: event:', event, 'mousePosLast:', mousePosLast, 'mousePos:', mousePos, 'tileRenderer:', tileRenderer)
 
     return tileRenderer;
   }
 
 
   function panBy(dx: number, dy: number): void {
-    console.log('TileRenderer: panBy:', dx, dy);
+    //console.log('TileRenderer: panBy:', dx, dy);
+    
     for (let tileRenderer of tileRenderers) {
       tileRenderer.panX += dx;
       tileRenderer.panY += dy;
     }
+
   }
 
 
   function zoomBy(zoomFactor: number, centerX: number, centerY: number): void {
-    console.log('TileRenderer: zoomBy:', zoomFactor, centerX, centerY);
+    //console.log('TileRenderer: zoomBy:', zoomFactor, centerX, centerY);
+
     for (let tileRenderer of tileRenderers) {
       tileRenderer.handleZoom(zoomFactor, centerX, centerY);
     }
+
   }
 
 
   function onmousedown(event: MouseEvent): void {
-    console.log('TileView: onmousedown: event:', event, 'target:', event.target);
-
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
     mousePanning = true;
+
+    console.log('TileView: onmousedown: event:', event, 'target:', event.target, 'mousePos:', mousePos);
+
   }
 
 
   function onmousemove(event: MouseEvent): void {
     if (!mousePanning) return;
 
-    console.log('TileView: onmousemove: event:', event, 'target:', event.target);
-
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
-    let dx = mousePosLast[0] - mousePos[0];
-    let dy = mousePosLast[1] - mousePos[1];
+    let tilePos = tileRenderer.screenToTile(mousePos);
+    let tilePosLast = tileRenderer.screenToTile(mousePosLast);
+
+    let dx = tilePosLast[0] - tilePos[0];
+    let dy = tilePosLast[1] - tilePos[1];
+
+    console.log('TileView: onmousemove: event:', event, 'target:', event.target, 'dx:', dx, 'dy:', dy, 'tilePos:', tilePos, 'tilePosLast:', tilePosLast, 'mousePos:', mousePos, 'mousePosLast:', mousePosLast);
 
     panBy(dx, dy);
+    
     renderAll();
   }
 
@@ -168,6 +189,7 @@
     const zoomFactor = 1 + delta; // Adjust the zoom factor based on the delta
 
     zoomBy(zoomFactor, mousePos[0], mousePos[1]);
+    
     renderAll();
   }
 
@@ -184,7 +206,7 @@
 
     intervalId = 
       setInterval(
-        renderAll, 
+        tick, 
         1000 / framesPerSecond);
   }
 
