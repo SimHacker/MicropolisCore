@@ -91,7 +91,7 @@
     }
 
     mousePosLast = mousePos;
-    mousePos = tileRenderer.screenToTile(event.screenX, event.screenY);
+    mousePos = tileRenderer.screenToTile(event.clientX, event.clientY);
     console.log('TileRenderer: trackMouse: event:', event, 'mousePosLast:', mousePosLast, 'mousePos:', mousePos, 'tileRenderer:', tileRenderer)
 
     return tileRenderer;
