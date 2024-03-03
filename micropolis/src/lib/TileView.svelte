@@ -153,6 +153,8 @@
     let dy = mousePosLast[1] - mousePos[1];
 
     panBy(dx, dy);
+    mousePanning = false;
+
     renderAll();
   }
 
