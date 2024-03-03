@@ -14,8 +14,8 @@
  * one unit will move the view by 1 tile. The panning origin is centered on the screen.
  *
  * Public properties such as panX, panY, viewWidth, and viewHeight can be modified directly to adjust the view.
- * The client (user of this class) can write directly into the mapData array and then call the render function
- * to update the display based on the current map state.
+ * The client (user of this class) can write directly into the mapData new Uint16Array( and then call the
+ * render function to update the display based on the current map state.
  */
 
 abstract class TileRenderer<TContext> {
@@ -38,7 +38,7 @@ abstract class TileRenderer<TContext> {
      * An array representing the map's tile data. Each element in the array corresponds to a tile
      * on the map. The data will determine which texture to use for each tile when rendering.
      */
-    public mapData: number[];
+    public mapData: Uint16Array;
 
     /**
      * The x dimension of the map measured in tiles. This determines the total number of tiles
@@ -99,9 +99,9 @@ abstract class TileRenderer<TContext> {
 
         this.canvas = undefined;
         this.context = undefined;
-        this.mapData = [];
-        this.mapWidth = 0;
-        this.mapHeight = 0;
+        this.mapData = new Uint16Array(0);
+        this.mapWidth = 1;
+        this.mapHeight = 1;
         this.tileWidth = 0;
         this.tileHeight = 0;
         this.viewWidth = 0;
@@ -113,7 +113,7 @@ abstract class TileRenderer<TContext> {
      * Initializes the renderer with the necessary configuration and begins loading the tile texture.
      * @param canvas The canvas to render into.
      * @param context The rendering context specific to the subclass implementation.
-     * @param mapData An array representing the tile data of the map.
+     * @param mapData A Uint16Array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
      * @param mapHeight The y dimension of the map measured in number of tiles.
      * @param tileWidth The x dimension of a single tile measured in pixels.
@@ -124,7 +124,7 @@ abstract class TileRenderer<TContext> {
     initialize(
         canvas: HTMLCanvasElement,
         context: TContext,
-        mapData: number[],
+        mapData: Uint16Array,
         mapWidth: number,
         mapHeight: number,
         tileWidth: number,
@@ -153,6 +153,24 @@ abstract class TileRenderer<TContext> {
      * This method should contain the specific rendering logic for the map.
      */
     abstract render(): void;
+
+    /**
+     * Convert screen coordinates to tile coordinates.
+     */
+    screenToTile(screenX: number, screenY: number): [number, number] {
+        const tileX = (screenX + this.panX) / (this.tileWidth * this.zoom);
+        const tileY = (screenY + this.panY) / (this.tileHeight * this.zoom);
+        return [tileX, tileY];
+    }
+
+    /**
+     * Converts tile coordinates to screen coordinates.
+     **/
+    tileToScreen(tileX: number, tileY: number): [number, number] {
+        const screenX = tileX * this.tileWidth * this.zoom - this.panX;
+        const screenY = tileY * this.tileHeight * this.zoom - this.panY;
+        return [screenX, screenY];
+    }
 
     /**
      * Handles panning of the tile map based on drag events.
@@ -209,7 +227,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
      * Initializes the CanvasTileRenderer with a 2D canvas context and loads the tile image.
      * @param canvas The canvas.
      * @param context The CanvasRenderingContext2D.
-     * @param mapData Array representing the tile data of the map.
+     * @param mapData Uint16Array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
      * @param mapHeight The y dimension of the map measured in number of tiles.
      * @param tileWidth The x dimension of a single tile measured in pixels.
@@ -220,7 +238,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
     initialize(
         canvas: HTMLCanvasElement,
         context: CanvasRenderingContext2D,
-        mapData: number[],
+        mapData: Uint16Array,
         mapWidth: number,
         mapHeight: number,
         tileWidth: number,
@@ -417,7 +435,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
      * Initializes the GLTileRenderer with the WebGL context and loads the tile texture.
      * @param context The canvas.
      * @param context The WebGL rendering context.
-     * @param mapData An array representing the tile data of the map.
+     * @param mapData A Uint16Array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
      * @param mapHeight The y dimension of the map measured in number of tiles.
      * @param tileWidth The x dimension of a single tile measured in pixels.
@@ -428,7 +446,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
     initialize(
         canvas: HTMLCanvasElement,
         context: WebGL2RenderingContext,
-        mapData: number[],
+        mapData: Uint16Array,
         mapWidth: number,
         mapHeight: number,
         tileWidth: number,
@@ -477,7 +495,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
     /**
      * Creates a texture from the map data array.
      */
-    private createMapTexture(mapData: number[], mapWidth: number, mapHeight: number): WebGLTexture | null {
+    private createMapTexture(mapData: Uint16Array, mapWidth: number, mapHeight: number): WebGLTexture | null {
 
         if (!this.context) {
             console.error('GL context is not initialized.');
@@ -501,7 +519,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             0,
             this.context.RED_INTEGER, 
             this.context.UNSIGNED_SHORT, 
-            new Uint16Array(mapData));
+            mapData);
     
         // Set texture parameters
         this.context.texParameteri(
