@@ -148,8 +148,8 @@
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
-    let tilePos = tileRenderer.screenToTile(mousePos);
-    let tilePosLast = tileRenderer.screenToTile(mousePosLast);
+    let tilePos = tileRenderer.screenToTile(mousePos[0], mousePos[1]);
+    let tilePosLast = tileRenderer.screenToTile(mousePosLast[0], mousePosLast[1]);
 
     let dx = tilePosLast[0] - tilePos[0];
     let dy = tilePosLast[1] - tilePos[1];
