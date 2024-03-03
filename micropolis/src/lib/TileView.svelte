@@ -151,8 +151,10 @@
     let tilePos = tileRenderer.screenToTile(mousePos[0], mousePos[1]);
     let tilePosLast = tileRenderer.screenToTile(mousePosLast[0], mousePosLast[1]);
 
-    let dx = tilePosLast[0] - tilePos[0];
-    let dy = tilePosLast[1] - tilePos[1];
+//    let dx = tilePosLast[0] - tilePos[0];
+//    let dy = tilePosLast[1] - tilePos[1];
+    let dx = (mousePosLast[0] - mousePos[0]) * tileRenderer.zoom;
+    let dy = (mousePosLast[1] - mousePos[1]) * tileRenderer.zoom;
 
     console.log('TileView: onmousemove: event:', event, 'target:', event.target, 'dx:', dx, 'dy:', dy, 'tilePos:', tilePos, 'tilePosLast:', tilePosLast, 'mousePos:', mousePos, 'mousePosLast:', mousePosLast);
 
