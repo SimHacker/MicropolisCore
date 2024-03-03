@@ -271,7 +271,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
      */
     render(): void {
 
-        console.log('CanvasTileRenderer: render: this:', this);
+        //console.log('CanvasTileRenderer: render: this:', this);
 
         if (!this.canvas || !this.context || !this.tileImage) {
             throw new Error('The canvas, 2d context, or tile image are not properly initialized.');
@@ -948,7 +948,7 @@ void main() {
 
     render(): void {
 
-        console.log('GLTileRenderer: render: this:', this);
+        //console.log('GLTileRenderer: render: this:', this);
 
         if (!this.canvas || !this.context || !this.tileProgramInfo || !this.tileBufferInfo || !this.tilesTexture) {
             throw new Error('The canvas, WebGL context, shaders, or textures are not properly initialized.');

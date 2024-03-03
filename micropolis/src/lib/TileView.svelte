@@ -92,12 +92,14 @@
 
     mousePosLast = mousePos;
     mousePos = tileRenderer.screenToTile(event.screenX, event.screenY);
+    console.log('TileRenderer: trackMouse: event:', event, 'mousePosLast:', mousePosLast, 'mousePos:', mousePos, 'tileRenderer:', tileRenderer)
 
     return tileRenderer;
   }
 
 
   function panBy(dx: number, dy: number): void {
+    console.log('TileRenderer: panBy:', dx, dy);
     for (let tileRenderer of tileRenderers) {
       tileRenderer.panX += dx;
       tileRenderer.panY += dy;
@@ -106,6 +108,7 @@
 
 
   function zoomBy(zoomFactor: number, centerX: number, centerY: number): void {
+    console.log('TileRenderer: zoomBy:', zoomFactor, centerX, centerY);
     for (let tileRenderer of tileRenderers) {
       tileRenderer.handleZoom(zoomFactor, centerX, centerY);
     }
