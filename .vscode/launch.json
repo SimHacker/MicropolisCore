@@ -1,15 +1,42 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Server",
+            "type": "pwa-node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "skipFiles": ["<node_internals>/**"],
+            "console": "integratedTerminal",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "cwd": "${workspaceFolder}/micropolis",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "Localhost server is ready on port (\\d+).",
+                "uriFormat": "http://localhost:%s"
+            },
+            "outputCapture": "std"
+        },
+        {
             "name": "Attach to Chrome",
-            "port": 9222,
+            "type": "pwa-chrome",
             "request": "attach",
-            "type": "chrome",
-            "webRoot": "${workspaceFolder}"
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/micropolis/src",
+            "pathMapping": {
+                "/": "${webRoot}"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug SvelteKit",
+            "configurations": ["Launch Server", "Attach to Chrome"],
+            "preLaunchTask": "", // You can specify a task to run before launching the debug session
+            "stopAll": true
         }
     ]
 }
