@@ -11,7 +11,7 @@
 
 <section>
 	<h1>Canvas and WebGL Tile View Test:</h1>
-	<TileView/>
+	<TileView mapWidth={16} mapHeight={16}/>
 </section>
 
 <style>

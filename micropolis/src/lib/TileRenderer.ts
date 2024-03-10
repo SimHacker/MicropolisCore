@@ -11,9 +11,9 @@
  *
  * The panning functionality is measured in tile coordinates, independent of tile size or aspect ratio. 
  * For example, if the tiles are 16x16 pixels, or 4x62 pixels, or any other size, then panning by 
- * one unit will move the view by 1 tile. The panning origin is centered on the screen.
+ * one unit will move the map by 1 tile. The panning origin is centered on the screen.
  *
- * Public properties such as panX, panY, viewWidth, and viewHeight can be modified directly to adjust the view.
+ * Public properties such as panX, panY, screenWidth, and screenHeight can be modified directly to adjust the screen.
  * The client (user of this class) can write directly into the mapData new Uint16Array( and then call the
  * render function to update the display based on the current map state.
  */
@@ -23,7 +23,7 @@ abstract class TileRenderer<TContext> {
     /**
      * The canvas to render into, or null.
      */
-    public canvas?: HTMLCanvasElement;
+    public canvas?: HTMLCanvasElement = undefined;
 
     /**
      * The rendering context is a generic placeholder for the graphical context in which the
@@ -32,37 +32,37 @@ abstract class TileRenderer<TContext> {
      * generic parameter TContext when implementing the concrete renderer class. This allows the
      * TileRenderer to be adapted to different rendering technologies.
      */
-    public context?: TContext;
+    public context?: TContext = undefined;
 
     /**
      * An array representing the map's tile data. Each element in the array corresponds to a tile
      * on the map. The data will determine which texture to use for each tile when rendering.
      */
-    public mapData: Uint16Array;
+    public mapData: Uint16Array = new Uint16Array(1);
 
     /**
      * The x dimension of the map measured in tiles. This determines the total number of tiles
      * in the width direction of the tile map.
      */
-    public mapWidth: number = 0;
+    public mapWidth: number = 1;
 
     /**
      * The y dimension of the map measured in tiles. This determines the total number of tiles
      * in the height direction of the tile map.
      */
-    public mapHeight: number = 0;
+    public mapHeight: number = 1;
 
     /**
      * The x dimension of an individual tile measured in pixels. This dimension is used to
      * scale the tile textures to the correct width when rendering.
      */
-    public tileWidth: number = 0;
+    public tileWidth: number = 1;
 
     /**
      * The y dimension of an individual tile measured in pixels. This dimensions is used to
      * scale the tile textures to the correct height when rendering.
      */
-    public tileHeight: number = 0;
+    public tileHeight: number = 1;
 
     /**
      * The current horizontal pan position in tile pixels. This value offsets the map rendering
@@ -80,13 +80,27 @@ abstract class TileRenderer<TContext> {
      * The width of the viewable area on the screen. This is typically set to the width of the
      * canvas element in pixels and determines the horizontal extent of the visible map area.
      */
-    public viewWidth: number = 0;
+    public screenWidth: number = 0;
 
     /**
      * The height of the viewable area on the screen. This is typically set to the height of the
      * canvas element in pixels and determines the vertical extent of the visible map area.
      */
-    public viewHeight: number = 0;
+    public screenHeight: number = 0;
+
+    /**
+     * The screen x anchor, from 0 (left) through 0.5 (center) to 1 (right).
+     * The tile at panX will be pinned to screenAnchorX times the screen width. 
+     */
+
+    public screenAnchorX: number = 0.5;
+
+    /**
+     * The screen y anchor, from 0 (top) through 0.5 (middle) to 1 (bottom).
+     * The tile at panY will be pinned to screenAnchorY times the screen height. 
+     */
+
+    public screenAnchorY: number = 0.5;
 
     /**
      * The current zoom level. A value of 1 indicates a default zoom level where the map is rendered
@@ -95,18 +109,12 @@ abstract class TileRenderer<TContext> {
      */
     public zoom: number = 1;
 
+    /**
+     * The URL of the tile texture.
+     */
+    public tileTextureURL: string | null = null;
+ 
     constructor() {
-
-        this.canvas = undefined;
-        this.context = undefined;
-        this.mapData = new Uint16Array(0);
-        this.mapWidth = 1;
-        this.mapHeight = 1;
-        this.tileWidth = 0;
-        this.tileHeight = 0;
-        this.viewWidth = 0;
-        this.viewHeight = 0;
-
     }
 
     /**
@@ -139,6 +147,7 @@ abstract class TileRenderer<TContext> {
         this.mapHeight = mapHeight;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
+        this.tileTextureURL = tileTextureURL;
 
         // Perform any other common setup here.
 
@@ -157,41 +166,71 @@ abstract class TileRenderer<TContext> {
     /**
      * Convert screen coordinates to tile coordinates.
      */
-    screenToTile(screenX: number, screenY: number): [number, number] {
-        const tileX = (screenX + this.panX) / (this.tileWidth * this.zoom);
-        const tileY = (screenY + this.panY) / (this.tileHeight * this.zoom);
+    screenToTile(screenPos: [number, number]): [number, number] {
+        const [screenX, screenY] = screenPos;
+
+        // First, translate the screen coordinates so that the origin is at the anchor of the screen.
+        const anchoredScreenX = screenX - (this.screenWidth * this.screenAnchorX);
+        const anchoredScreenY = screenY - (this.screenHeight * this.screenAnchorY);
+
+        // Next, apply the inverse of the zoom to scale the anchored screen coordinates down to tile space
+        const scaledX = anchoredScreenX / this.zoom;
+        const scaledY = anchoredScreenY / this.zoom;
+
+        // Then, convert the scaled screen coordinates into tile coordinates by dividing by the tile size
+        const tileXBeforePan = scaledX / this.tileWidth;
+        const tileYBeforePan = scaledY / this.tileHeight;
+
+        // Finally, apply the pan offsets to get the final tile coordinates
+        const tileX = tileXBeforePan - this.panX;
+        const tileY = tileYBeforePan - this.panY;
+
         return [tileX, tileY];
+    }
+
+    /**
+     * Converts change in screen coordinates to change in tile coordinates.
+     **/
+    screenToTileDelta(screenDelta: [number, number]): [number, number] {
+        const [screenDX, screenDY] = screenDelta;
+
+        const tileDX = screenDX / this.zoom / this.tileWidth;
+        const tileDY = screenDY / this.zoom / this.tileHeight;
+
+        return [tileDX, tileDY];
     }
 
     /**
      * Converts tile coordinates to screen coordinates.
      **/
-    tileToScreen(tileX: number, tileY: number): [number, number] {
-        const screenX = tileX * this.tileWidth * this.zoom - this.panX;
-        const screenY = tileY * this.tileHeight * this.zoom - this.panY;
+    tileToScreen(tilePos: [number, number]): [number, number] {
+        const [tileX, tileY] = tilePos;
+
+        // First, undo the panning by subtracting the pan offsets
+        const unpannedTileX = tileX - this.panX;
+        const unpannedTileY = tileY - this.panY;
+        
+        // Next, apply the zoom to scale the tile coordinates up to screen space
+        const zoomedX = unpannedTileX * this.zoom;
+        const zoomedY = unpannedTileY * this.zoom;
+
+        // Finally, translate the origin back to the screen anchor.
+        const screenX = (zoomedX * this.tileWidth ) + (this.screenWidth  * this.screenAnchorX);
+        const screenY = (zoomedY * this.tileHeight) + (this.screenHeight * this.screenAnchorY);
+
         return [screenX, screenY];
     }
 
     /**
-     * Handles panning of the tile map based on drag events.
-     * @param deltaX - The change in the X screen coordinate.
-     * @param deltaY - The change in the Y screen coordinate.
-     */
-    handleDrag(deltaX: number, deltaY: number): void {
-        this.panX += deltaX;
-        this.panY += deltaY;
-    }
+     * Converts change in tile coordinates to change in screen coordinates.
+     **/
+    tileToScreenDelta(tileDelta: [number, number]): [number, number] {
+        const [tileDX, tileDY] = tileDelta;
 
-    /**
-     * Handles zoom events.
-     * @param zoomFactor - The factor by which to zoom in or out.
-     * @param centerX - The X screen coordinate around which to zoom.
-     * @param centerY - The Y screen coordinate around which to zoom.
-     */
-    handleZoom(zoomFactor: number, centerX: number, centerY: number): void {
-        this.zoom *= zoomFactor;
-        this.panX = (this.panX - centerX) * zoomFactor + centerX;
-        this.panY = (this.panY - centerY) * zoomFactor + centerY;
+        const screenDX = tileDX * this.zoom * this.tileWidth;
+        const screenDY = tileDY * this.zoom * this.tileHeight;
+
+        return [screenDX, screenDY];
     }
 
     /**
@@ -199,9 +238,46 @@ abstract class TileRenderer<TContext> {
      * @param width - The new width of the rendering canvas in pixels.
      * @param height - The new height of the rendering canvas in pixels.
      */
-    updateScreenSize(width: number, height: number): void {
-        this.viewWidth = width;
-        this.viewHeight = height;
+    setScreenSize(width: number, height: number): void {
+        this.screenWidth = width;
+        this.screenHeight = height;
+    }
+
+    /**
+     * Set the pan.
+     * @param panX - The pan X tile coordinate.
+     * @param panY - The pan Y tile coordinate.
+     */
+    panTo(panX: number, panY: number): void {
+        this.panX = panX;
+        this.panY = panY;
+    }
+
+    /**
+     * Change the pan.
+     * @param dx - The change in the pan X tile coordinate.
+     * @param dy - The change in the pan Y tile coordinate.
+     */
+    panBy(dx: number, dy: number): void {
+        this.panX += dx;
+        this.panY += dy;
+    }
+
+    /**
+     * Set the zoom.
+     * @param zoom - The zoom.
+     */
+    zoomTo(zoom: number): void {
+        this.zoom = zoom;
+    }
+
+
+    /**
+     * Change the zoom.
+     * @param zoomFactor - The factor by which to zoom in or out.
+     */
+    zoomBy(zoomFactor: number): void {
+        this.zoom *= zoomFactor;
     }
 
 }
@@ -267,7 +343,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
     /**
      * Renders the tile map using the Canvas 2D context.
      * Renders the visible portion of the tile map using the Canvas 2D context.
-     * Only draws tiles that appear in the panned and zoomed view.
+     * Only draws tiles that appear in the panned and zoomed screen.
      */
     render(): void {
 
@@ -277,48 +353,53 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
             throw new Error('The canvas, 2d context, or tile image are not properly initialized.');
         }
 
-        // Update the screen size from the canvas;.
-        this.updateScreenSize(
-            this.canvas.width,
-            this.canvas.height);
+        const screenWidth = this.canvas.width;
+        const screenHeight = this.canvas.height;
+        const anchorX = screenWidth * this.screenAnchorX;
+        const anchorY = screenHeight * this.screenAnchorY;
+        const screenTileWidth = this.tileWidth * this.zoom;
+        const screenTileHeight = this.tileHeight * this.zoom;
+
+        const upperLeft  = this.screenToTile([0, 0]);
+        const lowerRight = this.screenToTile([screenWidth, screenHeight]);
+        let left   = Math.max(0, Math.min(Math.floor(upperLeft [0]), this.mapWidth ));
+        let top    = Math.max(0, Math.min(Math.floor(upperLeft [1]), this.mapHeight));
+        let right  = Math.max(0, Math.min(Math.ceil (lowerRight[0]), this.mapWidth ));
+        let bottom = Math.max(0, Math.min(Math.ceil (lowerRight[1]), this.mapHeight));
+
+left = 0;
+top = 0;
+right = this.mapWidth;
+bottom = this.mapHeight;
+
+        this.setScreenSize(
+            screenWidth,
+            screenHeight);
 
         // Fill the background with black
         this.context.fillStyle = '#000000';
         this.context.fillRect(
             0,
             0,
-            this.context.canvas.width,
-            this.context.canvas.height);
+            screenWidth,
+            screenHeight);
 
-        // Center of the canvas.
-        const screenWidth = this.context.canvas.width;
-        const screenHeight = this.context.canvas.height;
-        const screenCenterX = screenWidth  / 2.0;
-        const screenCenterY = screenHeight / 2.0;
-        const screenTileWidth = this.tileWidth * this.zoom;
-        const screenTileHeight = this.tileHeight * this.zoom;
-
-        // Calculate the range of visible tiles based on pan and zoom.
-        const tileRangeStartX = Math.max(0,              Math.floor(this.panX / this.zoom));
-        const tileRangeStartY = Math.max(0,              Math.floor(this.panY / this.zoom));
-        const tileRangeEndX   = this.mapWidth; //Math.min(this.mapWidth,  Math.ceil((this.panX + this.context.canvas.width  / this.zoom) / this.tileWidth ));
-        const tileRangeEndY   = this.mapHeight;//Math.min(this.mapHeight, Math.ceil((this.panY + this.context.canvas.height / this.zoom) / this.tileHeight));
-
+        console.log("CanvasTileRenderer:", this, "render:", "screenWidth:", screenWidth, "screenHeight:", screenHeight, "anchorX:", anchorX, "anchorY:", anchorY, "screenTileWidth:", screenTileWidth, "screenTileHeight:", screenTileHeight, "upperLeft:", upperLeft, "lowerRight:", lowerRight, "left:", left, "top:", top, "right:", right, "bottom:", bottom);
+        
         // Loop through each visible tile
-        for (let tileY = tileRangeStartY; tileY < tileRangeEndY; tileY++) {
-            for (let tileX = tileRangeStartX; tileX < tileRangeEndX; tileX++) {
+        for (let tileY = top; tileY <= bottom; tileY++) {
+            for (let tileX = left; tileX <= right; tileX++) {
 
                 // Get the index of the current tile.
                 const tileIndex = this.mapData[tileY * this.mapWidth + tileX];
     
                 // Calculate the position to draw the tile on the canvas.
-                const drawPosX = screenCenterX + (((tileX - this.panX) * this.tileWidth ) * this.zoom);
-                const drawPosY = screenCenterY + (((tileY - this.panY) * this.tileHeight) * this.zoom);
+                const tilePos = this.tileToScreen([tileX, tileY]);
     
                 // Calculate the source coordinates of the tile in the tileset image.
-                const columns =         this.tileImage.width / this.tileWidth;
-                const srcX =           (tileIndex % columns) * this.tileWidth;
-                const srcY = Math.floor(tileIndex / columns) * this.tileHeight;
+                const columns =            this.tileImage.width / this.tileWidth;
+                const srcX    =           (tileIndex % columns) * this.tileWidth;
+                const srcY    = Math.floor(tileIndex / columns) * this.tileHeight;
     
                 // Draw the tile
                 this.context.drawImage(
@@ -327,10 +408,10 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
                     srcY,
                     this.tileWidth,
                     this.tileHeight,
-                    drawPosX,
-                    drawPosY,
-                    this.tileWidth * this.zoom,
-                    this.tileHeight * this.zoom);
+                    tilePos[0],
+                    tilePos[1],
+                    screenTileWidth,
+                    screenTileHeight);
 
             }
         }
@@ -352,6 +433,7 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
  * the canvas by invoking the render method.
  * 
  */
+
 
 interface ShaderProgramInfo {
     program: WebGLProgram;
@@ -453,7 +535,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         tileHeight: number,
         tileTextureURL: string
     ): Promise<void> {
-        
+ 
         return super.initialize(canvas, context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURL)
             .then(() => {
 
@@ -464,7 +546,7 @@ class GLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                     console.error('R32UI format is not supported on this device.');
                     return null;
                 }
-                
+
                 this.tileProgramInfo = 
                     this.createShaderProgram();
 
@@ -914,15 +996,15 @@ void main() {
         // Calculate the new texture coordinates based on pan and zoom.
         // Convert pan from tile coordinates to normalized texture coordinates.
         /*
-        const left   = (this.panX - this.viewWidth  / 2 / this.zoom) / this.mapWidth  / this.tileWidth;
-        const right  = (this.panX + this.viewWidth  / 2 / this.zoom) / this.mapWidth  / this.tileWidth;
-        const bottom = (this.panY - this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
-        const top    = (this.panY + this.viewHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
+        const left   = (this.panX - this.screenWidth  / 2 / this.zoom) / this.mapWidth  / this.tileWidth;
+        const right  = (this.panX + this.screenWidth  / 2 / this.zoom) / this.mapWidth  / this.tileWidth;
+        const bottom = (this.panY - this.screenHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
+        const top    = (this.panY + this.screenHeight / 2 / this.zoom) / this.mapHeight / this.tileHeight;
         */
         const left   = this.panX;
-        const right  = this.panX + (this.viewWidth  / this.zoom);
+        const right  = this.panX + (this.screenWidth  / this.zoom);
         const top    = this.panY;
-        const bottom = this.panY + (this.viewHeight / this.zoom);
+        const bottom = this.panY + (this.screenHeight / this.zoom);
 
         // Update the screenTileArray with the new texture coordinates.
         this.screenTileArray.set([
@@ -955,7 +1037,7 @@ void main() {
         }
 
         // Update the screen size from the canvas;.
-        this.updateScreenSize(
+        this.setScreenSize(
             this.canvas.width,
             this.canvas.height);
 

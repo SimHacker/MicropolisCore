@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Server",
+            "name": "Launch Micropolis SvelteKit Server",
             "type": "pwa-node",
             "request": "launch",
             "runtimeExecutable": "npm",
@@ -21,7 +21,7 @@
             "outputCapture": "std"
         },
         {
-            "name": "Attach to Chrome",
+            "name": "Attach Micropolis SveltKit Client to Chrome",
             "type": "pwa-chrome",
             "request": "attach",
             "port": 9222,
@@ -33,8 +33,10 @@
     ],
     "compounds": [
         {
-            "name": "Debug SvelteKit",
-            "configurations": ["Launch Server", "Attach to Chrome"],
+            "name": "Debug Micropolis SvelteKit App",
+            "configurations": [
+                "Launch Micropolis SvelteKit Server",
+                "Attach Micropolis SveltKit Client to Chrome"],
             "preLaunchTask": "", // You can specify a task to run before launching the debug session
             "stopAll": true
         }

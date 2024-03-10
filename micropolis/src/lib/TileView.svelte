@@ -3,34 +3,50 @@
   import tiles_png from '$lib/images/tiles.png';
 	import { TileRenderer, CanvasTileRenderer, GLTileRenderer } from '$lib/TileRenderer';
 
+  // Properties that can be configured with attributes.
 
   type Props = {
-    name?: string;
+    tileWidth?: number;
+    tileHeight?: number;
+    tileCount?: number;
+    tileTextureWidth?: number;
+    tileTextureHeight?: number;
+    tileTexture?: string;
+    mapWidth?: number;
+    mapHeight?: number;
+    mapLength?: number;
+    mapData?: Uint16Array;
+    canvasWidth?: number;
+    canvasHeight?: number;
+    framesPerSecond?: number;
+    zoomScale?: number;
   };
 
 
+  // Bind propertis from attributes and defaults.
+
   let { 
-    name = "Tile View", 
+    tileWidth = 16,
+    tileHeight = 16,
+    tileCount = 960,
+    tileTextureWidth = 256,
+    tileTextureHeight = 960,
+    tileTexture = tiles_png,
+    mapWidth = 1,
+    mapHeight = 1,
+    mapLength = mapWidth * mapHeight,
+    mapData = new Uint16Array(
+      Array.from(	// Generate a random map data
+        {length: mapLength}, 
+        () => Math.floor(Math.random() * tileCount))),
+    canvasWidth = 512,
+    canvasHeight = 512,
+    framesPerSecond = 1,
+    zoomScale = 0.025,
   } = $props<Props>();
 
-  let tileWidth: number = 16;
-	let tileHeight: number = 16;
-  let tileCount: number = 960;
-  let tileTextureWidth: number = 256;
-  let tileTextureHeight: number = 960;
-	let tileTexture: string = tiles_png;
 
-  let mapWidth: number = 256;
-	let mapHeight: number = 256;
-  let mapLength: number = mapWidth * mapHeight;
-	let mapData: Uint16Array =
-    new Uint16Array(
-        Array.from(	// Generate a random map data
-          {length: mapLength}, 
-          () => Math.floor(Math.random() * tileCount)));
-  
-  let canvasWidth: number = 512;
-  let canvasHeight: number = 512;
+  // Component private state.
 
   let canvas2D: HTMLCanvasElement | null = null;
   let ctx2D: CanvasRenderingContext2D | null = null;
@@ -42,16 +58,14 @@
 
   let tileRenderers: TileRenderer<any>[] = [];
 
-  let framesPerSecond: number = 1;
-  let zoomScale: number = 0.1;
   let intervalId: number | null = null;
 
-  let mousePanning: boolean = false;
-  let mousePos: [number, number] = [0, 0];
+  let panning: boolean = false;
+  let screenPos: [number, number] = [0, 0];
   let tilePos: [number, number] = [0, 0];
-  let mousePosLast: [number, number] = [0, 0];
+  let screenPosLast: [number, number] = [0, 0];
   let tilePosLast: [number, number] = [0, 0];
-  let mousePosDown: [number, number] = [0, 0];
+  let screenPosDown: [number, number] = [0, 0];
   let tilePosDown: [number, number] = [0, 0];
   let panDown: [number, number] = [0, 0];
 
@@ -59,7 +73,7 @@
   function simulate(): void {
 
     for (let i = 0, n = mapData.length; i < n; i++) {
-      mapData[i] = Math.floor(Math.random() * tileCount);
+      mapData[i] = i % tileCount;
     }
 
   }
@@ -105,33 +119,56 @@
       return null;
     }
 
-    mousePosLast = mousePos;
+    screenPosLast = screenPos;
     tilePosLast = tilePos;
-    mousePos = [event.clientX, event.clientY];
-    tilePos = tileRenderer.screenToTile(mousePos[0], mousePos[1]);
 
-    //console.log('TileRenderer: trackMouse: event:', event, 'mousePosLast:', mousePosLast, 'mousePos:', mousePos, 'tileRenderer:', tileRenderer)
+    screenPos = [
+      event.offsetX, 
+      event.offsetY,
+    ];
+    tilePos = tileRenderer.screenToTile(screenPos);
+
+    console.log('TileRenderer: trackMouse: event:', event, 'screenPosLast:', screenPosLast, 'screenPos:', screenPos, 'tilePos:', tilePos, 'tilePosLast:', tilePosLast, 'tileRenderer:', tileRenderer)
 
     return tileRenderer;
   }
 
 
   function panTo(panX: number, panY: number): void {
-    //console.log('TileRenderer: panTo:', panX, panY);
+    console.log('TileRenderer: panTo:', panX, panY);
     
     for (let tileRenderer of tileRenderers) {
-      tileRenderer.panX = panX;
-      tileRenderer.panY = panY;
+      tileRenderer.panTo(panX, panY);
     }
 
   }
 
 
-  function zoomBy(zoomFactor: number, centerX: number, centerY: number): void {
-    //console.log('TileRenderer: zoomBy:', zoomFactor, centerX, centerY);
+  function panBy(dx: number, dy: number): void {
+    console.log('TileRenderer: panBy:', dx, dy);
+    
+    for (let tileRenderer of tileRenderers) {
+      tileRenderer.panBy(dx, dy);
+    }
+
+  }
+
+
+  function zoomTo(zoom: number, centerX: number, centerY: number): void {
+    //console.log('TileRenderer: zoomTo:', zoom, centerX, centerY);
 
     for (let tileRenderer of tileRenderers) {
-      tileRenderer.handleZoom(zoomFactor, centerX, centerY);
+      tileRenderer.zoomTo(zoom);
+    }
+
+  }
+
+
+  function zoomBy(zoomFactor: number): void {
+    //console.log('TileRenderer: zoomBy:', zoomFactor);
+
+    for (let tileRenderer of tileRenderers) {
+      tileRenderer.zoomBy(zoomFactor);
     }
 
   }
@@ -141,61 +178,60 @@
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
-    mousePanning = true;
-    mousePosDown = mousePos;
+    panning = true;
+    screenPosDown = screenPos;
     panDown = [tileRenderer.panX, tileRenderer.panY];
 
-    console.log('TileView: onmousedown: event:', event, 'target:', event.target, 'mousePos:', mousePos);
-
+    console.log('TileView: onmousedown: event:', event, 'target:', event.target, 'screenPos:', screenPos, 'panDown:', panDown);
   }
 
 
   function onmousemove(event: MouseEvent): void {
-    if (!mousePanning) return;
+    if (!panning) return;
 
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
-    let dx = tilePosLast[0] - tilePos[0];
-    let dy = tilePosLast[1] - tilePos[1];
-    let panX = panDown[0] + dx;
-    let panY = panDown[1] + dx;
+    const screenDelta: [number, number] = [
+      screenPosLast[0] - screenPos[0],
+      screenPosLast[1] - screenPos[1],
+    ];
+    let tileDelta = tileRenderer.screenToTileDelta(screenDelta);
 
-    console.log('TileView: onmousemove: event:', event, 'target:', event.target, 'dx:', dx, 'dy:', dy, 'panX:', panX, 'panY:', panY, 'tilePos:', tilePos, 'tilePosDown:', tilePosDown, 'mousePos:', mousePos, 'mousePosLast:', mousePosDown);
+    console.log('TileView: onmousemove: event:', event, 'target:', event.target, 'screenDelta:', screenDelta, 'tileDelta:', tileDelta, 'tilePos:', tilePos, 'tilePosDown:', tilePosDown, 'screenPos:', screenPos, 'screenPosLast:', screenPosDown);
 
-    panTo(panX, panY);
+    panBy(tileDelta[0], tileDelta[1]);
     
     renderAll();
   }
 
 
   function onmouseup(event: MouseEvent): void {
-    if (!mousePanning) return;
+    if (!panning) return;
 
     console.log('TileView: onmouseup: event:', event, 'target:', event.target);
 
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
-    let dx = mousePosDown[0] - mousePos[0];
-    let dy = mousePosDown[1] - mousePos[1];
-
-    panTo(dx, dy);
-    mousePanning = false;
+    panning = false;
 
     renderAll();
   }
 
 
-  function onmousewheel(event: WheelEvent): void {
+  function onwheel(event: WheelEvent): void {
 
     let tileRenderer = trackMouse(event);
     if (!tileRenderer) return;
 
+    event.preventDefault();
+    event.stopPropagation();
+
     const delta = event.deltaY > 0 ? -zoomScale : zoomScale; // Change the multiplier as needed
     const zoomFactor = 1 + delta; // Adjust the zoom factor based on the delta
 
-    zoomBy(zoomFactor, mousePos[0], mousePos[1]);
+    zoomBy(zoomFactor);
     
     renderAll();
   }
@@ -274,9 +310,12 @@
 					return;
 				}
 
-        canvasTileRenderer.render();
+        canvasTileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
+        canvasTileRenderer.zoomTo(1);
 
         tileRenderers.push(canvasTileRenderer);
+
+        canvasTileRenderer.render();
 
 			});
 
@@ -328,6 +367,9 @@
 					return;
 				}
 
+        glTileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
+        glTileRenderer.zoomTo(1);
+
         tileRenderers.push(glTileRenderer);
 
         glTileRenderer.render();
@@ -336,7 +378,6 @@
 
 
       setFramesPerSecond(framesPerSecond);
-
 
       // Return a function to clean up the effect.
       return () => {
@@ -360,6 +401,7 @@
     onmousedown={onmousedown}
     onmousemove={onmousemove}
     onmouseup={onmouseup}
+    onwheel={onwheel}
   ></canvas>
 
   <br/>
@@ -371,6 +413,7 @@
     onmousedown={onmousedown}
     onmousemove={onmousemove}
     onmouseup={onmouseup}
+    onwheel={onwheel}
   ></canvas>
 
 </div>
