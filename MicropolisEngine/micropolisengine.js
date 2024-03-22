@@ -16,7 +16,7 @@ var Module = typeof Module != 'undefined' ? Module : {};
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /tmp/tmpc2xkl2d4.js
+// include: /tmp/tmpksiv1vmu.js
 
   if (!Module.expectedDataFileDownloads) {
     Module.expectedDataFileDownloads = 0;
@@ -195,21 +195,21 @@ Module['FS_createPath']("/", "cities", true, true);
 
   })();
 
-// end include: /tmp/tmpc2xkl2d4.js
-// include: /tmp/tmpp5by94dz.js
+// end include: /tmp/tmpksiv1vmu.js
+// include: /tmp/tmpr6o8yxfw.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if (Module['ENVIRONMENT_IS_PTHREAD'] || Module['$ww']) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /tmp/tmpp5by94dz.js
-// include: /tmp/tmpu6tobe7q.js
+  // end include: /tmp/tmpr6o8yxfw.js
+// include: /tmp/tmpc55j8j0x.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach(function(task) {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /tmp/tmpu6tobe7q.js
+  // end include: /tmp/tmpc55j8j0x.js
 
 
 // Sometimes an existing Module object exists with properties
@@ -531,7 +531,7 @@ var wasmBinary;
 if (Module['wasmBinary']) wasmBinary = Module['wasmBinary'];legacyModuleProp('wasmBinary', 'wasmBinary');
 
 if (typeof WebAssembly != 'object') {
-  abort('no native wasm support detected');
+  err('no native wasm support detected');
 }
 
 // include: base64Utils.js
@@ -1012,10 +1012,6 @@ function createWasm() {
     wasmMemory = wasmExports['memory'];
     
     assert(wasmMemory, 'memory not found in wasm exports');
-    // This assertion doesn't hold when emscripten is run in --post-link
-    // mode.
-    // TODO(sbc): Read INITIAL_MEMORY out of the wasm file in post-link mode.
-    //assert(wasmMemory.buffer.byteLength === 16777216);
     updateMemoryViews();
 
     wasmTable = wasmExports['__indirect_function_table'];
@@ -6352,7 +6348,7 @@ var ASM_CONSTS = {
       return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
     };
   function _fd_seek(fd,offset_low, offset_high,whence,newOffset) {
-    var offset = convertI32PairToI53Checked(offset_low, offset_high);;
+    var offset = convertI32PairToI53Checked(offset_low, offset_high);
   
     
   try {
