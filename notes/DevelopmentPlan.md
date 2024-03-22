@@ -1,4 +1,4 @@
-_(This page is several (at least 16 or so) years old. A lot of progress rewriting the code has been made since the notes written below! Technology has changed a lot, but the same basic approach applies, but with Emscripten, Embind, and JavaScript/TypeScript instead of SWIG and Python)_
+_(This page is several (at least 16 or so) years old. A lot of progress rewriting the code has been made since the notes written below! Technology has changed a lot, but the same basic approach applies, but with Emscripten, Embind, and JavaScript/TypeScript and HTML/Canvas/WebGL instead of SWIG and Python and GTK/Cairo.)_
 
 # Notes on a development plan, in progress #
 
