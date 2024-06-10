@@ -1,0 +1,18 @@
+<library>
+
+
+    <!-- Preview Map View -->
+    <!-- Written for Micropolis -->
+    <!-- By Don Hopkins -->
+    <!-- Licensed under GPLv3 -->
+
+
+    <class name="previewmapview" extends="mapview"
+        tileSize="3"
+    >
+
+
+    </class>
+
+
+</library>
