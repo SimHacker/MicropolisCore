@@ -82,6 +82,7 @@
 
 #include <emscripten/bind.h>
 #include "micropolis.h"
+#include "js_callback.h"
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -1026,12 +1027,61 @@ function createTypedArrayFromMap(mapInstance) {
     .property("speed", &SimSprite::speed)
     ;
 
+  class_<Callback>("Callback")
+      .function("autoGoto", &Callback::autoGoto, allow_raw_pointers())
+      .function("didGenerateMap", &Callback::didGenerateMap, allow_raw_pointers())
+      .function("didLoadCity", &Callback::didLoadCity, allow_raw_pointers())
+      .function("didLoadScenario", &Callback::didLoadScenario, allow_raw_pointers())
+      .function("didLoseGame", &Callback::didLoseGame, allow_raw_pointers())
+      .function("didSaveCity", &Callback::didSaveCity, allow_raw_pointers())
+      .function("didTool", &Callback::didTool, allow_raw_pointers())
+      .function("didWinGame", &Callback::didWinGame, allow_raw_pointers())
+      .function("didntLoadCity", &Callback::didntLoadCity, allow_raw_pointers())
+      .function("didntSaveCity", &Callback::didntSaveCity, allow_raw_pointers())
+      .function("makeSound", &Callback::makeSound, allow_raw_pointers())
+      .function("newGame", &Callback::newGame, allow_raw_pointers())
+      .function("saveCityAs", &Callback::saveCityAs, allow_raw_pointers())
+      .function("sendMessage", &Callback::sendMessage, allow_raw_pointers())
+      .function("showBudgetAndWait", &Callback::showBudgetAndWait, allow_raw_pointers())
+      .function("showZoneStatus", &Callback::showZoneStatus, allow_raw_pointers())
+      .function("simulateRobots", &Callback::simulateRobots, allow_raw_pointers())
+      .function("simulateChurch", &Callback::simulateChurch, allow_raw_pointers())
+      .function("startEarthquake", &Callback::startEarthquake, allow_raw_pointers())
+      .function("startGame", &Callback::startGame, allow_raw_pointers())
+      .function("startScenario", &Callback::startScenario, allow_raw_pointers())
+      .function("updateBudget", &Callback::updateBudget, allow_raw_pointers())
+      .function("updateCityName", &Callback::updateCityName, allow_raw_pointers())
+      .function("updateDate", &Callback::updateDate, allow_raw_pointers())
+      .function("updateDemand", &Callback::updateDemand, allow_raw_pointers())
+      .function("updateEvaluation", &Callback::updateEvaluation, allow_raw_pointers())
+      .function("updateFunds", &Callback::updateFunds, allow_raw_pointers())
+      .function("updateGameLevel", &Callback::updateGameLevel, allow_raw_pointers())
+      .function("updateHistory", &Callback::updateHistory, allow_raw_pointers())
+      .function("updateMap", &Callback::updateMap, allow_raw_pointers())
+      .function("updateOptions", &Callback::updateOptions, allow_raw_pointers())
+      .function("updatePasses", &Callback::updatePasses, allow_raw_pointers())
+      .function("updatePaused", &Callback::updatePaused, allow_raw_pointers())
+      .function("updateSpeed", &Callback::updateSpeed, allow_raw_pointers())
+      .function("updateTaxRate", &Callback::updateTaxRate, allow_raw_pointers())
+      ;
+
+  class_<JSCallback, base<Callback>>("JSCallback")
+      .constructor<emscripten::val>();
+      
   class_<Micropolis>("Micropolis")
 
     .constructor<>()
 
     // Simulation Control and Settings
+    .function("setCallback", &Micropolis::setCallback, allow_raw_pointers())
+    .function("init", &Micropolis::init)
+    .function("loadCity", &Micropolis::loadCity)
     .function("simTick", &Micropolis::simTick)
+    .function("simUpdate", &Micropolis::simUpdate)
+    .function("generateSomeRandomCity", &Micropolis::generateSomeRandomCity)
+    .function("getMapAddress", &Micropolis::getMapAddress)
+    .function("getMapSize", &Micropolis::getMapSize)
+    .function("animateTiles", &Micropolis::animateTiles)
     .function("setSpeed", &Micropolis::setSpeed)
     .function("setGameLevel", &Micropolis::setGameLevel)
     .function("setCityName", &Micropolis::setCityName)
@@ -1050,6 +1100,7 @@ function createTypedArrayFromMap(mapInstance) {
     .function("updateFunds", &Micropolis::updateFunds)
 
     // Game State and Statistics
+    //.property("map", &Micropolis::map)
     .property("simSpeed", &Micropolis::simSpeed)
     .property("simSpeedMeta", &Micropolis::simSpeedMeta)
     .property("simPaused", &Micropolis::simPaused)

@@ -935,12 +935,12 @@ public:
 
     void setCallback(Callback *callback, emscripten::val callbackVal);
 
+    void init();
+
+
 private:
 
     void destroy();
-
-    void init();
-
 
     ////////////////////////////////////////////////////////////////////////
     // allocate.cpp
@@ -1853,7 +1853,7 @@ private:
 
 
     ////////////////////////////////////////////////////////////////////////
-    // main.cpp
+    // micropolis.cpp
 
 public:
 
@@ -1898,6 +1898,10 @@ public:
     void simTick();
 
     void simulateRobots();
+
+    long getMapAddress();
+
+    long getMapSize();
 
 public:
 

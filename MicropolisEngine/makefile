@@ -74,6 +74,9 @@ EMCXXFLAGS = \
 
 EMLDFLAGS = \
     -s WASM=1 \
+    -s MODULARIZE=1 \
+    -s EXPORT_ES6=1 \
+    -s 'ENVIRONMENT=web,worker' \
 	-lembind \
 	--embind-emit-tsd micropolisengine.d.ts \
 	--shell-file src/micropolisengine_template.html \
@@ -157,8 +160,7 @@ $(LIBRARY): $(OBJECTS)
 		-o $@
 
 install: all
-	mkdir -p ../build/MicropolisEngine
-	cp -r build/* ../build/MicropolisEngine
+	cp -r build/* ../micropolis/static
 
 clean:
 	rm -rf \

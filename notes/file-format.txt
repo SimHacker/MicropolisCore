@@ -1,0 +1,78 @@
+little endian
+
+
+/**
+ * The number of history entries.
+ */
+static const int HISTORY_LENGTH = 480;
+
+/**
+ * The number of miscellaneous history entries.
+ */
+static const int MISC_HISTORY_LENGTH = 240;
+
+/**
+ * Length of the history tables.
+ * @todo It is not really a count of histories, rename to something else?
+ */
+static const int HISTORY_COUNT = 120;
+
+WORLD_W 120
+WORLD_H 100
+
+
+    bool result =
+      (size == 27120) &&
+      load_short(resHist, HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(comHist, HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(indHist, HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(crimeHist, HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(pollutionHist, HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(moneyHist, HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(miscHist, MISC_HISTORY_LENGTH / sizeof(short), f) &&
+      load_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f);
+
+0x0BC4 residintial population x 10, value changes while playing (change has no real influence)
+0x0BC6 commercial population x 10, value changes while playing (change has no real influence)
+0x0BC8 industrial population x 10, value changes while playing (change has no real influence)
+these values are special calculated, however 3300 equals 330 0x14A while only 4A is stored?
+
+0x0BCA residential value, value changes while playing (change has no real influence)
+0x0BCC commercial value, value changes while playing (change has no real influence)
+0x0BCE industrial value, value changes while playing (change has no real influence)
+-------------------------------------------------------------------------------
+
+0x0BD0 - 0x0BD3 weeks since january 1st 1900, NOTE: one year equals 48 weeks
+
+-------------------------------------------------------------------------------
+following values change as soon as the game starts
+-------------------------------------------------------------------------------
+0x0BD5 crime ramp, value changes while playing (change has no real influence)
+0x0BD7 pollute ramp, value changes while playing (change has no real influence)
+-------------------------------------------------------------------------------
+
+0x0BDF difficulty level 0 - 2
+
+0x0BE2 overall city score (max. 0x03E8, 1000), value changes as soon as the game starts
+
+0x0C24 - 0x0C27 cash
+
+0x0C29 auto bulldoze 0/1
+0x0C2B auto budget 0/1
+0x0C2D auto goto 0/1
+0x0C2F sound 0/1
+0x0C31 tax rate 0% - 20% (0x00 - 0x14)
+0x0C33 speed 0 - 4 (amiga 1 - 3, unfortunately "0 pause" is fast (3) and "4 fastest" is fast as well)
+
+0x0C35 - 0x0C37 % police stations founding
+0x0C39 - 0x0C3B % fire stations founding
+0x0C3D - 0x0C3F % traffic founding
+Amiga: 0x0C35 0x64 = 100% 0x1 = 1 %
+MS-DOS 0x0C35 - 0xC37 0x010000 = 100% 0x28F = 1% (MS-DOS TerrainEditor writes 00 FF FF)
+NOTE: SimCity will know the difference the data will be interpreted proper no matter how it is stored.
+Also the MS-DOS TerrainEditor will double here the cash amount (weird error).
+
+These is all static data which is of interest (or even not of interest), i listed here all i know so far
+(except for the map data itself). Most of this i don't use in the scripts i offer.
+They won't be as comfortable as "EDITCITY" but will do the same job.
+One is a special MS-DOS to Amiga - Amiga to MS-DOS script which isn't part of "EDITCITY"

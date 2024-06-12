@@ -82,7 +82,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#ifdef IS_INTEL
+#if !defined(__BIG_ENDIAN__)
 
 /**
  * Convert an array of short values between MAC and Intel endian formats.

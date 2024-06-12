@@ -103,8 +103,6 @@ Micropolis::Micropolis() :
         policeStationEffectMap(0),
         comRateMap(0)
 {
-    setCallback(new ConsoleCallback(), emscripten::val::null());
-    init();
 }
 
 
@@ -428,7 +426,7 @@ void Micropolis::init()
     simPaused = false; // Simulation is running
 
     // int simPausedSpeed;
-    simPausedSpeed = 3;
+    simPausedSpeed = 0;
 
     // int heatSteps;
     heatSteps = 0;
@@ -1137,22 +1135,6 @@ void Micropolis::doStartGame()
 
 
 /**
- * Initialize the game.
- * This is called from the scripting language.
- * @todo we seem to have several of these functions.
- */
-void Micropolis::initGame()
-{
-    simPaused = false; // Simulation is running.
-    simPausedSpeed = 0;
-    simPass = 0;
-    simPasses = 1;
-    heatSteps = 0; // Disable cellular automata machine.
-    setSpeed(0);
-}
-
-
-/**
  * Tell the front-end to show an earthquake to the user (shaking the map for
  * some time).
  */
@@ -1593,6 +1575,18 @@ void Micropolis::setPoliceCoverage(int x, int y, int coverage)
 void *Micropolis::getPoliceCoverageMapBuffer()
 {
     return (void *)policeStationEffectMap.getBase();
+}
+
+
+long Micropolis::getMapAddress()
+{
+    return (long)mapBase;
+}
+
+
+long Micropolis::getMapSize()
+{
+    return (long)(WORLD_W * WORLD_H * sizeof (short));
 }
 
 
