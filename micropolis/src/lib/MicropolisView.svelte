@@ -178,7 +178,7 @@
     mapWidth = 120,
     mapHeight = 100,
     mapLength = mapWidth * mapHeight,
-    framesPerSecond = 30,
+    framesPerSecond = 1,
     zoomScale = 0.025,
   } = $props<Props>();
 
@@ -209,6 +209,7 @@
   function micropolisMain() {
 
     window.micropolis = micropolis = new micropolisengine.Micropolis();
+    console.log("micropolisMain: micropolis:", micropolis);
 
     const micropolisCallback = new MicropolisCallback()
     const jsCallback = new micropolisengine.JSCallback(micropolisCallback);
@@ -220,7 +221,7 @@
     mapStartAddress = micropolis.getMapAddress() / 2;
     mapEndAddress = mapStartAddress + micropolis.getMapSize() / 2;
     mapData = micropolisengine.HEAPU16.slice(mapStartAddress, mapEndAddress);
-    //console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
+    console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
 
   }
 

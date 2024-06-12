@@ -4,16 +4,16 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-			  %sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
         <script type="module">
-			//console.log("app.html loading micropolisengine...");
+			console.log("app.html loading micropolisengine...");
 			import initModule from "./micropolisengine.js";
 			window.micropolisengine = {};
 			initModule(micropolisengine);
-			//console.log("app.html loaded micropolisengine:", micropolisengine);
+			console.log("app.html loaded micropolisengine:", micropolisengine);
 		  </script>
+		  %sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
 		  <div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
