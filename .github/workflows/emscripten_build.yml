@@ -31,7 +31,9 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install Dependencies with pnpm
-        run: pnpm install  # Use pnpm to install dependencies
+        run: |
+          cd micropolis
+          pnpm install  # Use pnpm to install dependencies
 
       - name: Build
         run: |
