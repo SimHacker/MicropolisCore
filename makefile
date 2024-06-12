@@ -63,14 +63,14 @@
 
 .PHONY: all doxygen
 
-all: build_MicropolisEngine build_doxygen
+all: build_MicropolisEngine build_micropolis build_doxygen
 
 install: all
 	mkdir -p build
 	cd MicropolisEngine ; make install
 	cp -r html build/doc
 
-clean:!laptop
+clean:
 	cd MicropolisEngine ; make clean
 	rm -rf build html doxygen_warnings
 
@@ -78,6 +78,7 @@ clean:!laptop
 # Build documentation
 
 build_doxygen:
+	echo "Building Doxygen documentation..."
 	doxygen Doxyfile 2> doxygen_warnings > /dev/null
 	@echo "Warnings stored in 'doxygen_warnings'"
 
@@ -85,6 +86,14 @@ build_doxygen:
 # build MicropolisEngine
 
 build_MicropolisEngine:
+	echo "Building MicropolisEngine with Emscripten..."
 	cd MicropolisEngine ; make all
+
+########################################################################
+# build micropolis
+
+build_micropolis:
+	echo "Building micropolis SvelteKit front and back end..."
+	cd micropolis ; pnpm install ; pnpm run build
 
 ########################################################################
