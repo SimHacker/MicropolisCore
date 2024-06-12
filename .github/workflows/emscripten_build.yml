@@ -20,12 +20,12 @@ jobs:
         uses: mymindstorm/setup-emsdk@v14
   
       - name: Install Doxygen
-        run: sudo apt-get install doxygen
+        run: sudo apt-get install -y doxygen
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3  # Ensure using the latest version
+        uses: actions/setup-node@v4  # Ensure using the latest version
         with:
-          node-version: '21'  # Specify the Node.js version you need
+          node-version: '20'  # Specify the Node.js version you need
 
       - name: Build
         run: |
