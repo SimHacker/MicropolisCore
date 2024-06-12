@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Update to v3 for Node.js 20 support
+        uses: actions/checkout@v4  # Update to v3 for Node.js 20 support
 
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v14
@@ -35,7 +35,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/main' # Only deploy if build was successful and on main branch
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
