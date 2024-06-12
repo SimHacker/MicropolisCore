@@ -178,7 +178,7 @@
     mapWidth = 120,
     mapHeight = 100,
     mapLength = mapWidth * mapHeight,
-    framesPerSecond = 1,
+    framesPerSecond = 60,
     zoomScale = 0.025,
   } = $props<Props>();
 
@@ -226,7 +226,7 @@
   }
 
   function tick(): void {
-    console.log('tick');
+    //console.log('tick');
     micropolisTick();
     renderAll();
   }

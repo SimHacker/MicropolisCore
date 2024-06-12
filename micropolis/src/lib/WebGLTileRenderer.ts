@@ -295,6 +295,11 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                     this.context.TEXTURE_MIN_FILTER, 
                     this.context.NEAREST);
 
+                this.context.texParameteri(
+                    this.context.TEXTURE_2D, 
+                    this.context.TEXTURE_MAG_FILTER, 
+                    this.context.NEAREST);
+
                 resolve();
             };
             image.onerror = () => {
@@ -332,7 +337,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
         // Define the source code for the fragment shader.
         const fsSource = `#version 300 es
-            precision mediump float;
+            precision highp float;
             precision highp usampler2D;
             uniform vec2 u_tileSize;
             uniform vec2 u_tilesSize;
@@ -349,7 +354,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 // Step 1: Calculate the screen tile coordinate.
                 vec2 screenTileColRow = floor(v_screenTile);
                 vec2 screenTilePosition = fract(v_screenTile);
-            
+
                 // Check if the screen tile coordinate is out of the map bounds.
                 // u_mapSize is the map size in tiles in column-major order so x is rows and y is columns
                 if (screenTileColRow.x <  0.0         || screenTileColRow.y <  0.0 || 
@@ -372,18 +377,19 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 int tileCount = tilesPerRow * tilesPerCol;
                 int cellValue = int(texture(u_map, cellUV).r);
                 int tileValue = int(mod(float(cellValue & 0x03ff), float(tileCount)));
-                        
+
                 // Step 4: Calculate tile row and column from cell value
                 int tileRow = int(floor(float(tileValue) / float(tilesPerRow)));
                 int tileCol = int(mod(float(tileValue), float(tilesPerRow)));
-                    
+
                 // Step 5: Calculate which pixel of the tile to sample
                 vec2 tileCorner = vec2(tileCol, tileRow) * u_tileSize;
                 vec2 tilePixel = tileCorner + (screenTilePosition * u_tileSize);
                 vec2 uv = tilePixel / u_tilesSize;
-                    
+
                 // Step 6: Sample the tile
                 fragColor = texture(u_tiles, uv);
+
             }
         `;
 
