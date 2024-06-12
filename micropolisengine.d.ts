@@ -1,7 +1,3 @@
-// TypeScript bindings for emscripten-generated code.  Automatically generated at compile time.
-interface WasmModule {
-}
-
 export interface Direction2Value<T extends number> {
   value: T;
 }
@@ -200,6 +196,49 @@ export interface SimSprite {
   delete(): void;
 }
 
+export interface Callback {
+  autoGoto(_0: Micropolis, _1: any, _2: number, _3: number, _4: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  didGenerateMap(_0: Micropolis, _1: any, _2: number): void;
+  didLoadCity(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  didLoadScenario(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _3: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  didLoseGame(_0: Micropolis, _1: any): void;
+  didSaveCity(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  didTool(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _3: number, _4: number): void;
+  didWinGame(_0: Micropolis, _1: any): void;
+  didntLoadCity(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  didntSaveCity(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  makeSound(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _3: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _4: number, _5: number): void;
+  newGame(_0: Micropolis, _1: any): void;
+  saveCityAs(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  sendMessage(_0: Micropolis, _1: any, _2: number, _3: number, _4: number, _5: boolean, _6: boolean): void;
+  showBudgetAndWait(_0: Micropolis, _1: any): void;
+  showZoneStatus(_0: Micropolis, _1: any, _2: number, _3: number, _4: number, _5: number, _6: number, _7: number, _8: number, _9: number): void;
+  simulateRobots(_0: Micropolis, _1: any): void;
+  simulateChurch(_0: Micropolis, _1: any, _2: number, _3: number, _4: number): void;
+  startEarthquake(_0: Micropolis, _1: any, _2: number): void;
+  startGame(_0: Micropolis, _1: any): void;
+  startScenario(_0: Micropolis, _1: any, _2: number): void;
+  updateBudget(_0: Micropolis, _1: any): void;
+  updateCityName(_0: Micropolis, _1: any, _2: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
+  updateDate(_0: Micropolis, _1: any, _2: number, _3: number): void;
+  updateDemand(_0: Micropolis, _1: any, _2: number, _3: number, _4: number): void;
+  updateEvaluation(_0: Micropolis, _1: any): void;
+  updateFunds(_0: Micropolis, _1: any, _2: number): void;
+  updateGameLevel(_0: Micropolis, _1: any, _2: number): void;
+  updateHistory(_0: Micropolis, _1: any): void;
+  updateMap(_0: Micropolis, _1: any): void;
+  updateOptions(_0: Micropolis, _1: any): void;
+  updatePasses(_0: Micropolis, _1: any, _2: number): void;
+  updatePaused(_0: Micropolis, _1: any, _2: boolean): void;
+  updateSpeed(_0: Micropolis, _1: any, _2: number): void;
+  updateTaxRate(_0: Micropolis, _1: any, _2: number): void;
+  delete(): void;
+}
+
+export interface JSCallback extends Callback {
+  delete(): void;
+}
+
 export interface Micropolis {
   disasterEvent: Scenario;
   scenario: Scenario;
@@ -264,7 +303,11 @@ export interface Micropolis {
   fireEffect: number;
   cityFileName: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string;
   cityName: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string;
+  init(): void;
   simTick(): void;
+  simUpdate(): void;
+  generateSomeRandomCity(): void;
+  animateTiles(): void;
   setGameLevel(_0: GameLevel): void;
   pause(): void;
   resume(): void;
@@ -298,12 +341,16 @@ export interface Micropolis {
   getTile(_0: number, _1: number): number;
   setTile(_0: number, _1: number, _2: number): void;
   setFunds(_0: number): void;
+  getMapAddress(): number;
+  getMapSize(): number;
+  loadCity(_0: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): boolean;
   setCityName(_0: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
   makeSound(_0: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _1: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _2: number, _3: number): void;
+  setCallback(_0: Callback, _1: any): void;
   delete(): void;
 }
 
-interface EmbindModule {
+export interface MainModule {
   Direction2: {INVALID: Direction2Value<0>, NORTH: Direction2Value<1>, NORTH_EAST: Direction2Value<2>, EAST: Direction2Value<3>, SOUTH_EAST: Direction2Value<4>, SOUTH: Direction2Value<5>, SOUTH_WEST: Direction2Value<6>, WEST: Direction2Value<7>, NORTH_WEST: Direction2Value<8>};
   Position: {new(): Position; new(_0: number, _1: number): Position};
   increment90(_0: Direction2): Direction2;
@@ -331,6 +378,8 @@ interface EmbindModule {
   GameLevel: {LEVEL_EASY: GameLevelValue<0>, LEVEL_MEDIUM: GameLevelValue<1>, LEVEL_HARD: GameLevelValue<2>, LEVEL_COUNT: GameLevelValue<3>, LEVEL_FIRST: GameLevelValue<0>, LEVEL_LAST: GameLevelValue<2>};
   Tiles: {DIRT: TilesValue<0>, RIVER: TilesValue<2>, REDGE: TilesValue<3>, CHANNEL: TilesValue<4>, FIRSTRIVEDGE: TilesValue<5>, LASTRIVEDGE: TilesValue<20>, WATER_LOW: TilesValue<2>, WATER_HIGH: TilesValue<20>, TREEBASE: TilesValue<21>, WOODS_LOW: TilesValue<21>, LASTTREE: TilesValue<36>, WOODS: TilesValue<37>, UNUSED_TRASH1: TilesValue<38>, UNUSED_TRASH2: TilesValue<39>, WOODS_HIGH: TilesValue<39>, WOODS2: TilesValue<40>, WOODS3: TilesValue<41>, WOODS4: TilesValue<42>, WOODS5: TilesValue<43>, RUBBLE: TilesValue<44>, LASTRUBBLE: TilesValue<47>, FLOOD: TilesValue<48>, LASTFLOOD: TilesValue<51>, RADTILE: TilesValue<52>, UNUSED_TRASH3: TilesValue<53>, UNUSED_TRASH4: TilesValue<54>, UNUSED_TRASH5: TilesValue<55>, FIRE: TilesValue<56>, FIREBASE: TilesValue<56>, LASTFIRE: TilesValue<63>, HBRIDGE: TilesValue<64>, ROADBASE: TilesValue<64>, VBRIDGE: TilesValue<65>, ROADS: TilesValue<66>, ROADS2: TilesValue<67>, ROADS3: TilesValue<68>, ROADS4: TilesValue<69>, ROADS5: TilesValue<70>, ROADS6: TilesValue<71>, ROADS7: TilesValue<72>, ROADS8: TilesValue<73>, ROADS9: TilesValue<74>, ROADS10: TilesValue<75>, INTERSECTION: TilesValue<76>, HROADPOWER: TilesValue<77>, VROADPOWER: TilesValue<78>, BRWH: TilesValue<79>, LTRFBASE: TilesValue<80>, BRWV: TilesValue<95>, BRWXXX1: TilesValue<111>, BRWXXX2: TilesValue<127>, BRWXXX3: TilesValue<143>, HTRFBASE: TilesValue<144>, BRWXXX4: TilesValue<159>, BRWXXX5: TilesValue<175>, BRWXXX6: TilesValue<191>, LASTROAD: TilesValue<206>, BRWXXX7: TilesValue<207>, HPOWER: TilesValue<208>, VPOWER: TilesValue<209>, LHPOWER: TilesValue<210>, LVPOWER: TilesValue<211>, LVPOWER2: TilesValue<212>, LVPOWER3: TilesValue<213>, LVPOWER4: TilesValue<214>, LVPOWER5: TilesValue<215>, LVPOWER6: TilesValue<216>, LVPOWER7: TilesValue<217>, LVPOWER8: TilesValue<218>, LVPOWER9: TilesValue<219>, LVPOWER10: TilesValue<220>, RAILHPOWERV: TilesValue<221>, RAILVPOWERH: TilesValue<222>, POWERBASE: TilesValue<208>, LASTPOWER: TilesValue<222>, UNUSED_TRASH6: TilesValue<223>, HRAIL: TilesValue<224>, VRAIL: TilesValue<225>, LHRAIL: TilesValue<226>, LVRAIL: TilesValue<227>, LVRAIL2: TilesValue<228>, LVRAIL3: TilesValue<229>, LVRAIL4: TilesValue<230>, LVRAIL5: TilesValue<231>, LVRAIL6: TilesValue<232>, LVRAIL7: TilesValue<233>, LVRAIL8: TilesValue<234>, LVRAIL9: TilesValue<235>, LVRAIL10: TilesValue<236>, HRAILROAD: TilesValue<237>, VRAILROAD: TilesValue<238>, RAILBASE: TilesValue<224>, LASTRAIL: TilesValue<238>, ROADVPOWERH: TilesValue<239>, RESBASE: TilesValue<240>, FREEZ: TilesValue<244>, HOUSE: TilesValue<249>, LHTHR: TilesValue<249>, HHTHR: TilesValue<260>, RZB: TilesValue<265>, HOSPITALBASE: TilesValue<405>, HOSPITAL: TilesValue<409>, CHURCHBASE: TilesValue<414>, CHURCH0BASE: TilesValue<414>, CHURCH: TilesValue<418>, CHURCH0: TilesValue<418>, COMBASE: TilesValue<423>, COMCLR: TilesValue<427>, CZB: TilesValue<436>, COMLAST: TilesValue<609>, INDBASE: TilesValue<612>, INDCLR: TilesValue<616>, LASTIND: TilesValue<620>, IND1: TilesValue<621>, IZB: TilesValue<625>, IND2: TilesValue<641>, IND3: TilesValue<644>, IND4: TilesValue<649>, IND5: TilesValue<650>, IND6: TilesValue<676>, IND7: TilesValue<677>, IND8: TilesValue<686>, IND9: TilesValue<689>, PORTBASE: TilesValue<693>, PORT: TilesValue<698>, LASTPORT: TilesValue<708>, AIRPORTBASE: TilesValue<709>, RADAR: TilesValue<711>, AIRPORT: TilesValue<716>, COALBASE: TilesValue<745>, POWERPLANT: TilesValue<750>, LASTPOWERPLANT: TilesValue<760>, FIRESTBASE: TilesValue<761>, FIRESTATION: TilesValue<765>, POLICESTBASE: TilesValue<770>, POLICESTATION: TilesValue<774>, STADIUMBASE: TilesValue<779>, STADIUM: TilesValue<784>, FULLSTADIUM: TilesValue<800>, NUCLEARBASE: TilesValue<811>, NUCLEAR: TilesValue<816>, LASTZONE: TilesValue<826>, LIGHTNINGBOLT: TilesValue<827>, HBRDG0: TilesValue<828>, HBRDG1: TilesValue<829>, HBRDG2: TilesValue<830>, HBRDG3: TilesValue<831>, HBRDG_END: TilesValue<832>, RADAR0: TilesValue<832>, RADAR1: TilesValue<833>, RADAR2: TilesValue<834>, RADAR3: TilesValue<835>, RADAR4: TilesValue<836>, RADAR5: TilesValue<837>, RADAR6: TilesValue<838>, RADAR7: TilesValue<839>, FOUNTAIN: TilesValue<840>, INDBASE2: TilesValue<844>, TELEBASE: TilesValue<844>, TELELAST: TilesValue<851>, SMOKEBASE: TilesValue<852>, TINYEXP: TilesValue<860>, SOMETINYEXP: TilesValue<864>, LASTTINYEXP: TilesValue<867>, TINYEXPLAST: TilesValue<883>, COALSMOKE1: TilesValue<916>, COALSMOKE2: TilesValue<920>, COALSMOKE3: TilesValue<924>, COALSMOKE4: TilesValue<928>, FOOTBALLGAME1: TilesValue<932>, FOOTBALLGAME2: TilesValue<940>, VBRDG0: TilesValue<948>, VBRDG1: TilesValue<949>, VBRDG2: TilesValue<950>, VBRDG3: TilesValue<951>, NUKESWIRL1: TilesValue<952>, NUKESWIRL2: TilesValue<953>, NUKESWIRL3: TilesValue<954>, NUKESWIRL4: TilesValue<955>, CHURCH1BASE: TilesValue<956>, CHURCH1: TilesValue<960>, CHURCH1BASE: TilesValue<956>, CHURCH1: TilesValue<960>, CHURCH2BASE: TilesValue<965>, CHURCH2: TilesValue<969>, CHURCH3BASE: TilesValue<974>, CHURCH3: TilesValue<978>, CHURCH4BASE: TilesValue<983>, CHURCH4: TilesValue<987>, CHURCH5BASE: TilesValue<992>, CHURCH5: TilesValue<996>, CHURCH6BASE: TilesValue<1001>, CHURCH6: TilesValue<1005>, CHURCH7BASE: TilesValue<1010>, CHURCH7: TilesValue<1014>, CHURCH7LAST: TilesValue<1018>, TILE_COUNT: TilesValue<1024>, TILE_INVALID: TilesValue<-1>};
   SimSprite: {};
+  Callback: {};
+  JSCallback: {new(_0: any): JSCallback};
   Micropolis: {new(): Micropolis};
   increment45(_0: Direction2, _1: number): Direction2;
   rotate45(_0: Direction2, _1: number): Direction2;
@@ -362,4 +411,3 @@ interface EmbindModule {
   COM_VALVE_RANGE: number;
   IND_VALVE_RANGE: number;
 }
-export type MainModule = WasmModule & EmbindModule;
