@@ -206,7 +206,7 @@
   let tilePosDown: [number, number] = [0, 0];
   let panDown: [number, number] = [0, 0];
 
-  async function micropolisMain() {
+  function micropolisMain() {
 
     window.micropolis = micropolis = new micropolisengine.Micropolis();
 
