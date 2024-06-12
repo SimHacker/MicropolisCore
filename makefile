@@ -63,7 +63,7 @@
 
 .PHONY: all doxygen
 
-all: build_MicropolisEngine build_micropolis build_doxygen
+all: build_MicropolisEngine build_doxygen
 
 install: all
 	mkdir -p build
