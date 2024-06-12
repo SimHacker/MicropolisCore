@@ -23,9 +23,15 @@ jobs:
         run: sudo apt-get install -y doxygen
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4  # Ensure using the latest version
+        uses: actions/setup-node@v3  # Ensure using the latest version
         with:
-          node-version: '20'  # Specify the Node.js version you need
+          node-version: '20'  # Specify Node.js 20 for compatibility
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies with pnpm
+        run: pnpm install  # Use pnpm to install dependencies
 
       - name: Build
         run: |
