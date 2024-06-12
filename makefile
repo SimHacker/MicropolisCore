@@ -88,9 +88,3 @@ build_MicropolisEngine:
 	cd MicropolisEngine ; make all
 
 ########################################################################
-# build micropolis
-
-build_micropolis:
-	cd micropolis ; npm ci ; npm run build
-
-########################################################################
