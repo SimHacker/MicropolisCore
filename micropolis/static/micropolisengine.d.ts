@@ -321,6 +321,13 @@ export interface Micropolis {
   updateGraphs(): void;
   updateEvaluation(): void;
   updateBudget(): void;
+  makeMeltdown(): void;
+  makeFireBombs(): void;
+  makeEarthquake(): void;
+  makeFire(): void;
+  makeFlood(): void;
+  setFire(): void;
+  fireBomb(): void;
   setEnableDisasters(_0: boolean): void;
   setAutoBudget(_0: boolean): void;
   setAutoBulldoze(_0: boolean): void;

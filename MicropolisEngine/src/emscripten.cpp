@@ -1100,7 +1100,6 @@ function createTypedArrayFromMap(mapInstance) {
     .function("updateFunds", &Micropolis::updateFunds)
 
     // Game State and Statistics
-    //.property("map", &Micropolis::map)
     .property("simSpeed", &Micropolis::simSpeed)
     .property("simSpeedMeta", &Micropolis::simSpeedMeta)
     .property("simPaused", &Micropolis::simPaused)
@@ -1192,6 +1191,15 @@ function createTypedArrayFromMap(mapInstance) {
     .function("updateGraphs", &Micropolis::updateGraphs)
     .function("updateEvaluation", &Micropolis::updateEvaluation)
     .function("updateBudget", &Micropolis::updateBudget)
+
+    // Disasters
+    .function("makeMeltdown", &Micropolis::makeMeltdown)
+    .function("makeFireBombs", &Micropolis::makeFireBombs)
+    .function("makeEarthquake", &Micropolis::makeEarthquake)
+    .function("makeFire", &Micropolis::makeFire)
+    .function("makeFlood", &Micropolis::makeFlood)
+    .function("setFire", &Micropolis::setFire)
+    .function("fireBomb", &Micropolis::fireBomb)
 
     // City History Arrays
     //.function("getResidentialHistory", &Micropolis::getResidentialHistory, allow_raw_pointers()) // TODO: wrap
