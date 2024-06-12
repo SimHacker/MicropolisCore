@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Update to v3 for Node.js 20 support
 
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v14
@@ -23,9 +23,9 @@ jobs:
         run: sudo apt-get install doxygen
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3  # Ensure using the latest version
         with:
-          node-version: '21' # Specify the Node.js version you need
+          node-version: '21'  # Specify the Node.js version you need
 
       - name: Build
         run: |
