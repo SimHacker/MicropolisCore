@@ -344,8 +344,10 @@
       event.offsetY,
     ];
 
-    tilePos = tileRenderer.screenToTile(screenPos);
-    //console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
+    if (tileRender != null) {
+      tilePos = tileRenderer.screenToTile(screenPos);
+      //console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
+    }
   }
 
   function onmousedown(event: MouseEvent): void {
