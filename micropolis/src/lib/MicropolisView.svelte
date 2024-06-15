@@ -486,6 +486,12 @@
     renderAll();
   }
 
+  function resetFramesPerSecond() {
+    const lastFramesPerSecond = framesPerSecond;
+    setFramesPerSecond(0);
+    setFramesPerSecond(lastFramesPerSecond);
+  }
+
   function setFramesPerSecond(fps: number): void {
     //console.log('setFramesPerSecond: fps:', fps);
     framesPerSecond = fps;
@@ -512,12 +518,17 @@
     paused = nowPaused;
     micropolis.simPaused = nowPaused;
     if (!wasPaused && nowPaused) {
-      pausedFramesPerSecond = framesPerSecond;
+      if (framesPerSecond !== 0) {
+        pausedFramesPerSecond = framesPerSecond;
+      }
       setFramesPerSecond(0);
     } else if (wasPaused && !nowPaused) {
       framesPerSecond = pausedFramesPerSecond;
       setFramesPerSecond(framesPerSecond);
+    } else {
+      resetFramesPerSecond();
     }
+    tick();
   }
 
   function refocusCanvas() {
