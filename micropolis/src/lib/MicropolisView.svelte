@@ -211,7 +211,10 @@
   let ctxGL: WebGL2RenderingContext | null = null;
   let tileRenderer: TileRenderer | null = null;
 
-  let intervalId: number | null = null;
+  let tickIntervalId: number | null = null;
+  let autoRepeatIntervalId: number | null = null;
+  let autoRepeatDelay = 1000 / 60; // 60 repeats per second
+  let autoRepeatKeys = [];
 
   let panning: boolean = false;
   let screenPos: [number, number] = [0, 0];
@@ -261,6 +264,29 @@
   }
 
   function handleInput(): void {
+
+  }
+
+  function startAutoRepeat(key): void {
+    if (autoRepeatKeys.indexOf(key) < 0) {
+      autoRepeatKeys.push(key);
+    }
+    if (autoRepeatIntervalId === null) {
+      autoRepeatIntervalId = setInterval(handleAutoRepeat, autoRepeatDelay);
+    }
+  }
+
+  function stopAutoRepeat(key): void {
+    if (autoRepeatKeys.indexOf(key) >= 0) {
+      autoRepeatKeys.splice(autoRepeatKeys.indexOf(key), 1);
+    }
+    if ((autoRepeatKeys.length === 0) && (autoRepeatIntervalId !== null)) {
+      clearInterval(autoRepeatIntervalId);
+      autoRepeatIntervalId = null;
+    }
+  }
+
+  function handleAutoRepeat(): void {
     if (leftKeyDown) {
       tileRenderer.panBy(-keyPanScale / tileRenderer.zoom, 0);
     }
@@ -279,6 +305,7 @@
     if (outKeyDown) {
       tileRenderer.zoomBy(1 - keyZoomScale);
     }
+    renderAll();
   }
 
   function trackCursor(): void {
@@ -389,24 +416,61 @@
           }
         }
         break;
-      case 37: leftKeyDown = true; break;
-      case 39: rightKeyDown = true; break;
-      case 38: upKeyDown = true; break;
-      case 40: downKeyDown = true; break;
-      case 188: inKeyDown = true; break;
-      case 190: outKeyDown = true; break;
+      case 37: 
+        leftKeyDown = true;
+        startAutoRepeat(key);
+        break;
+      case 39:
+        rightKeyDown = true;
+        startAutoRepeat(key);
+        break;
+      case 38:
+        upKeyDown = true;
+        startAutoRepeat(key);
+        break;
+      case 40:
+        downKeyDown = true;
+        startAutoRepeat(key);
+        break;
+      case 188:
+        inKeyDown = true;
+        startAutoRepeat(key)
+        break;
+      case 190:
+        outKeyDown = true;
+        startAutoRepeat(key);
+        break;
     }
   }
   
   function onkeyup(event: KeyboardEvent): void {
     //console.log('MicropolisView: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
-    switch (event.keyCode) {
-      case 37: leftKeyDown = false; break;
-      case 39: rightKeyDown = false; break;
-      case 38: upKeyDown = false; break;
-      case 40: downKeyDown = false; break;
-      case 188: inKeyDown = false; break;
-      case 190: outKeyDown = false; break;
+    const key = event.keyCode;
+    switch (key) {
+      case 37: 
+        leftKeyDown = false; 
+        stopAutoRepeat(key);
+        break;
+      case 39: 
+        rightKeyDown = false; 
+        stopAutoRepeat(key);
+        break;
+      case 38:
+        upKeyDown = false;
+        stopAutoRepeat(key);
+        break;
+      case 40:
+        downKeyDown = false;
+        stopAutoRepeat(key);
+        break;
+      case 188:
+        inKeyDown = false;
+        stopAutoRepeat(key);
+        break;
+      case 190:
+        outKeyDown = false;
+        stopAutoRepeat(key);
+        break;
     }
   }
   
@@ -423,20 +487,20 @@
     //console.log('setFramesPerSecond: fps:', fps);
     framesPerSecond = fps;
 
-    if (intervalId !== null) {
-        clearInterval(intervalId);
+    if (tickIntervalId !== null) {
+        clearInterval(tickIntervalId);
     }
 
     if (fps <= 0) {
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-        intervalId = null;
+      if (tickIntervalId !== null) {
+        clearInterval(tickIntervalId);
+        tickIntervalId = null;
       }
       return;
     }
 
     const delay = 1000 / fps;
-    intervalId = setInterval(tick, delay);
+    tickIntervalId = setInterval(tick, delay);
   }
 
   function setPaused(nowPaused) {
@@ -454,7 +518,8 @@
   }
 
   function refocusCanvas() {
-    if (document.activeElement !== canvasGL) {
+    if (canvasGL && 
+        (document.activeElement !== canvasGL)) {
       canvasGL.focus();
     }
   }
