@@ -396,12 +396,14 @@
       } else {
         setFramesPerSecond(keyFramesPerSecondValues[digit - 1]);
         micropolis.setPasses(keyPassesValues[digit - 1]);
+        setPaused(false);
       }
     } else if ((key >= 64) && (key <= 90)) { // letters
       const letter = key - 64;
       const city = cityFileNames[letter % cityFileNames.length];
       //console.log("CITY", city);
       micropolis.loadCity(city);
+      tick();
     } else switch (key) {
       case 32:
         if (micropolis.heatSteps) {
@@ -415,6 +417,7 @@
             micropolis.heatFlow = Math.round(((Math.random() * 2.0) - 1.0) * heatFlowRange);
           }
         }
+        tick();
         break;
       case 37: 
         leftKeyDown = true;
