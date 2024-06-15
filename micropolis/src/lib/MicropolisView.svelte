@@ -1,8 +1,10 @@
 <script lang="ts">
 
+  import { onMount, onDestroy } from 'svelte';
   import tiles_png from '$lib/images/tiles.png';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
-
+  import initModule from "$lib/../micropolisengine.js";
+  
   // Micropolis Callback Interface Implementation
 
   class MicropolisCallback implements micropolisengine.JSCallback {
@@ -149,40 +151,17 @@
 
   }
 
-  // Properties that can be configured with attributes.
-
-  type Props = {
-    tileWidth?: number;
-    tileHeight?: number;
-    tileCount?: number;
-    tileTextureWidth?: number;
-    tileTextureHeight?: number;
-    tileTexture?: string;
-    mapWidth?: number;
-    mapHeight?: number;
-    mapLength?: number;
-    mapData?: Uint16Array;
-    framesPerSecond?: number;
-    zoomScale?: number;
-  };
-
-  // Bind properties from attributes and defaults.
-
-  let { 
-    tileWidth = 16,
-    tileHeight = 16,
-    tileCount = 960,
-    tileTextureWidth = 256,
-    tileTextureHeight = 960,
-    tileTexture = tiles_png,
-    mapWidth = 120,
-    mapHeight = 100,
-    mapLength = mapWidth * mapHeight,
-    framesPerSecond = 60,
-    zoomScale = 0.025,
-  } = $props<Props>();
-
-  // Component private state.
+  const tileWidth = 16;
+  const tileHeight = 16;
+  const tileCount = 960;
+  const tileTextureWidth = 256;
+  const tileTextureHeight = 960;
+  const tileTexture = tiles_png;
+  const mapWidth = 120;
+  const mapHeight = 100;
+  const mapLength = mapWidth * mapHeight;
+  const framesPerSecond = 60;
+  const zoomScale = 0.05;
 
   let micropolis = null;
   let cityFileName = '/cities/haight.cty';
@@ -192,8 +171,7 @@
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
-  let webGLTileRenderer: WebGLTileRenderer | null = null;
-  let tileRenderers: TileRenderer<any>[] = [];
+  let tileRenderer: TileRenderer | null = null;
 
   let intervalId: number | null = null;
 
@@ -220,31 +198,31 @@
     
     mapStartAddress = micropolis.getMapAddress() / 2;
     mapEndAddress = mapStartAddress + micropolis.getMapSize() / 2;
-    mapData = micropolisengine.HEAPU16.slice(mapStartAddress, mapEndAddress);
+    mapData = micropolisengine.HEAPU16.subarray(mapStartAddress, mapEndAddress);
     console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
 
   }
 
   function tick(): void {
     //console.log('tick');
+    trackCursor();
     micropolisTick();
     renderAll();
   }
 
-  async function micropolisTick() {
+  function trackCursor(): void {
+    //console.log('trackCursor');
+  }
+
+  function micropolisTick() {
     //console.log('micropolisTick: micropolis:', micropolis);
     micropolis.simTick();
     micropolis.animateTiles();
   }
 
   function renderAll(): void {
-    for (let tileRenderer of tileRenderers) {
-      if (!tileRenderer || !tileRenderer.canvas) continue;
-        mapData = micropolisengine.HEAPU16.slice(mapStartAddress, mapEndAddress);
-        webGLTileRenderer.mapData = mapData;
-        //console.log("renderAll: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
-      tileRenderer.render();
-    }
+    //console.log("renderAll: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
+    tileRenderer.render();
   }
 
   // Function to resize the canvas to match the screen size.
@@ -259,25 +237,7 @@
     }
   }
 
-  function findTileRenderer(canvas: HTMLCanvasElement): TileRenderer<any> | null {
-    if (!canvas) {
-      return null;
-    }
-    for (let tileRenderer of tileRenderers) {
-      if (tileRenderer.canvas == canvas) {
-        return tileRenderer;
-      }
-    }
-    return null;
-  }
-
   function trackMouse(event: MouseEvent): TileRenderer<any> | null {
-    let tileRenderer = findTileRenderer(event.target as HTMLCanvasElement);
-    if (tileRenderer == null) {
-      console.log('MicropolisView: trackMouse: no TileRenderer for event target:', event.target);
-      return null;
-    }
-
     screenPosLast = screenPos;
     tilePosLast = tilePos;
 
@@ -285,42 +245,31 @@
       event.offsetX, 
       event.offsetY,
     ];
+
     tilePos = tileRenderer.screenToTile(screenPos);
-
-    //console.log('TileRenderer: trackMouse: event:', event, 'screenPosLast:', screenPosLast, 'screenPos:', screenPos, 'tilePos:', tilePos, 'tilePosLast:', tilePosLast, 'tileRenderer:', tileRenderer)
-
-    return tileRenderer;
+    console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
   }
 
   function panTo(panX: number, panY: number): void {
     //console.log('TileRenderer: panTo:', panX, panY);
-    for (let tileRenderer of tileRenderers) {
-      tileRenderer.panTo(panX, panY);
-    }
+    tileRenderer.panTo(panX, panY);
   }
 
   function panBy(dx: number, dy: number): void {
     //console.log('TileRenderer: panBy:', dx, dy);
-    for (let tileRenderer of tileRenderers) {
-      tileRenderer.panBy(dx, dy);
-    }
+    tileRenderer.panBy(dx, dy);
   }
 
   function zoomTo(zoom: number, centerX: number, centerY: number): void {
-    for (let tileRenderer of tileRenderers) {
-      tileRenderer.zoomTo(zoom);
-    }
+    tileRenderer.zoomTo(zoom);
   }
 
   function zoomBy(zoomFactor: number): void {
-    for (let tileRenderer of tileRenderers) {
-      tileRenderer.zoomBy(zoomFactor);
-    }
+    tileRenderer.zoomBy(zoomFactor);
   }
 
   function onmousedown(event: MouseEvent): void {
-    let tileRenderer = trackMouse(event);
-    if (!tileRenderer) return;
+    trackMouse(event);
 
     panning = true;
     screenPosDown = screenPos;
@@ -330,10 +279,9 @@
   }
 
   function onmousemove(event: MouseEvent): void {
-    if (!panning) return;
+    trackMouse(event);
 
-    let tileRenderer = trackMouse(event);
-    if (!tileRenderer) return;
+    if (!panning) return;
 
     const screenDelta: [number, number] = [
       screenPosLast[0] - screenPos[0],
@@ -344,6 +292,7 @@
     //console.log('MicropolisView: onmousemove: event:', event, 'target:', event.target, 'screenDelta:', screenDelta, 'tileDelta:', tileDelta, 'tilePos:', tilePos, 'tilePosDown:', tilePosDown, 'screenPos:', screenPos, 'screenPosLast:', screenPosDown);
 
     panBy(tileDelta[0], tileDelta[1]);
+
     renderAll();
   }
 
@@ -352,23 +301,15 @@
 
     //console.log('MicropolisView: onmouseup: event:', event, 'target:', event.target);
 
-    let tileRenderer = trackMouse(event);
-    if (!tileRenderer) return;
-
     panning = false;
+
     renderAll();
   }
 
   function onwheel(event: WheelEvent): void {
-    let tileRenderer = trackMouse(event);
-    if (!tileRenderer) return;
-
-    //event.preventDefault();
-    //event.stopPropagation();
-
     const delta = event.deltaY > 0 ? -zoomScale : zoomScale; // Change the multiplier as needed
     const zoomFactor = 1 + delta; // Adjust the zoom factor based on the delta
-
+console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor);
     zoomBy(zoomFactor);
     renderAll();
   }
@@ -385,69 +326,73 @@
     intervalId = setInterval(tick, 1000 / framesPerSecond);
   }
 
-  $effect(() => {
-    //console.log('MicropolisView: $effect: ', 'tileWidth:', tileWidth, 'tileHeight:', tileHeight, 'tileCount:', tileCount, 'tileTextureWidth:', tileTextureWidth, 'tileTextureHeight:', tileTextureHeight, 'tileTexture:', tileTexture, 'mapWidth:', mapWidth, 'mapHeight:', mapHeight, 'mapLength:', mapLength, 'mapData:', mapData);
+  onMount(async () => {
+
+    //console.log('MicropolisView: onMount: ', 'tileWidth:', tileWidth, 'tileHeight:', tileHeight, 'tileCount:', tileCount, 'tileTextureWidth:', tileTextureWidth, 'tileTextureHeight:', tileTextureHeight, 'tileTexture:', tileTexture, 'mapWidth:', mapWidth, 'mapHeight:', mapHeight, 'mapLength:', mapLength, 'mapData:', mapData);
+
+    console.log("MicropolisView: onMount: initializing micropolisengine...");
+    window.micropolisengine = {};
+    await initModule(micropolisengine);
+    console.log("MicropolisView: onMount: initialized micropolisengine:", micropolisengine);
 
     micropolisMain();
 
-    // Create 3d canvas drawing context and webGLTileRenderer.
-    //console.log('MicropolisView: $effect:', 'canvasGL:', canvasGL);
+    // Create 3d canvas drawing context and tileRenderer.
+    //console.log('MicropolisView: onMount', 'canvasGL:', canvasGL);
     if (canvasGL == null) {
-      console.log('MicropolisView: $effect: canvasGL is null!');
+      console.log('MicropolisView: onMount: canvasGL is null!');
       return;
     }
 
     ctxGL = canvasGL.getContext('webgl2');
-    //console.log('MicropolisView: $effect:', 'ctxGL:', ctxGL);
+    //console.log('MicropolisView: onMount:', 'ctxGL:', ctxGL);
     if (ctxGL == null) {
-      console.log('MicropolisView: $effect: no ctxGL!');
+      console.log('MicropolisView: onMount: no ctxGL!');
       return;
     }
 
-    webGLTileRenderer = new WebGLTileRenderer();
-    //console.log('MicropolisView: $effect: webGLTileRenderer:', webGLTileRenderer);
-    if (webGLTileRenderer == null) {
-      console.log('MicropolisView: $effect: no webGLTileRenderer!');
+    tileRenderer = new WebGLTileRenderer();
+    //console.log('MicropolisView: onMount: tileRenderer:', tileRenderer);
+    if (tileRenderer == null) {
+      console.log('MicropolisView: onMount: no tileRenderer!');
       return;
     }
 
     resizeCanvas();
 
-    //console.log('MicropolisView: $effect: initialize:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'webGLTileRenderer:', webGLTileRenderer);
+    //console.log('MicropolisView: onMount: initialize:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTileRetileRenderernderer);
 
-    webGLTileRenderer.initialize(canvasGL, ctxGL, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTexture)
+    tileRenderer.initialize(canvasGL, ctxGL, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTexture)
       .then(() => {
-        //console.log('MicropolisView: $effect: initialize: then:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'webGLTileRenderer:', webGLTileRenderer);
+        //console.log('MicropolisView: onMount: initialize: then:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTiltileRenderereRenderer);
 
         if (canvasGL == null) {
-          console.log('MicropolisView: $effect: initialize: then: no canvasGL!');
+          console.log('MicropolisView: onMount: initialize: then: no canvasGL!');
           return;
         }
 
         if (ctxGL == null) {
-          console.log('MicropolisView: $effect: initialize: then: no ctxGL!');
+          console.log('MicropolisView: onMount: initialize: then: no ctxGL!');
           return;
         }
 
-        if (webGLTileRenderer == null) {
-          console.log('MicropolisView: $effect: initialize: then: no webGLTileRenderer!');
+        if (tileRenderer == null) {
+          console.log('MicropolisView: onMount: initialize: then: no tileRenderer!');
           return;
         }
 
-        webGLTileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
-        webGLTileRenderer.zoomTo(0.5);
-        tileRenderers.push(webGLTileRenderer);
-
-        webGLTileRenderer.render();
+        tileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
+        tileRenderer.zoomTo(0.5);
+        tileRenderer.render();
       });
 
     setFramesPerSecond(framesPerSecond);
 
-    // Return a function to clean up the effect.
-    return () => {
-      //console.log('MicropolisView: $effect: clean up');
-      setFramesPerSecond(0);
-    };
+  });
+
+  onDestroy(() => {
+    //console.log('MicropolisView: onDestroy'); 
+    setFramesPerSecond(0);
   });
 
 </script>

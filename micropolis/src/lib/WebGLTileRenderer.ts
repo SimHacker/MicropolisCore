@@ -611,7 +611,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         if (!this.canvas || !this.context || !this.tileProgramInfo || !this.tileBufferInfo || !this.tilesTexture || !this.mapTexture) {
             throw new Error('The canvas, WebGL context, shaders, or textures are not properly initialized.');
         }
-    
+
         this.setScreenSize(this.canvas.width, this.canvas.height);
         this.context.viewport(0, 0, this.context.drawingBufferWidth, this.context.drawingBufferHeight);
         this.context.clearColor(0.0, 0.0, 0.0, 1.0);

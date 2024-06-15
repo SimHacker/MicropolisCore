@@ -33,6 +33,7 @@
 
 # WebAssembly
 #*.wasm
+#*.data
 
 # Mac
 .DS_Store

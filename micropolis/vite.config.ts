@@ -1,45 +1,27 @@
 import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
+//import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
   plugins: [
     sveltekit(),
-/*
-    nodePolyfills({
-      exclude: [],
-      globals: {
-        Buffer: true, // Enable buffer
-        global: true, // Enable global
-        process: true, // Enable process
-      },
-      polyfills: {
-        fs: true, // Enable fs polyfill
-        path: true, // Enable path polyfill
-        os: true, // Enable os polyfill
-      },
-    }),
-*/
-  ],
-/*
-  optimizeDeps: {
-    esbuildOptions: {
-      plugins: [
-        NodeGlobalsPolyfillPlugin({
-          buffer: true,
-          process: true,
-        }),
-        NodeModulesPolyfillPlugin(),
+    //wasm(),
+    topLevelAwait(),
+    viteStaticCopy({
+      targets: [
+        {
+          //src: "src/lib/micropolisengine/micropolisengine.wasm",
+          src: "src/micropolisengine.wasm",
+          dest: ".",
+        },
+        {
+          //src: "src/lib/micropolisengine/micropolisengine.data",
+          src: "src/micropolisengine.data",
+          dest: ".",
+        },
       ],
-    },
-  },
-  resolve: {
-    alias: {
-      stream: 'rollup-plugin-node-builtins',
-      buffer: 'rollup-plugin-node-globals',
-    },
-  },
-*/
+    }),
+  ],
 });
