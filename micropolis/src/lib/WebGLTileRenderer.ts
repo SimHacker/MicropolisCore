@@ -383,12 +383,13 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                     int(u_tilesSize.y / u_tileSize.y);
                 int tileCount = 
                     tilesPerRow * tilesPerCol;
-                int cellValue = 
+                int cellValue =
                     int(texture(u_map, cellUV).r);
                 int cellRotatedValue = 
                     (cellValue & 0x03ff) + 
-                    int(u_tileRotateOpacity.x);
-                int tileValue = 
+                    int(u_tileRotateOpacity.x) +
+                    (10 * tileCount);
+                int tileValue =
                     int(mod(float(cellRotatedValue), float(tileCount)));
 
                 // Step 4: Calculate tile row and column from cell value

@@ -417,6 +417,7 @@
           //tileRenderer.tileOpacity = 1.0;
         } else {
           tileRenderer.tileRotate = Math.floor(Math.random() * tileCount);
+          rotateTiles(-tileRenderer.tileRotate);
           micropolis.heatSteps = 1;
           //tileRenderer.tileOpacity = 0.1;
           if (Math.random() < 0.75) {
@@ -424,7 +425,7 @@
             micropolis.heatFlow = 
               Math.round(
                 ((Math.random() * 2.0) - 1.0) * 
-                ((Math.random() < 0.5) ? heatFlowRangeLow : heatFlowRangeHigh));
+                ((Math.random() < 0.75) ? heatFlowRangeLow : heatFlowRangeHigh));
           } else {
             micropolis.heatRule = 1;
           }
@@ -465,29 +466,15 @@
   }
 
   function rotateTiles(rotation: number) {
-    console.log('rotateTiles: rotation:', rotation, 'tileCount:', tileCount, 'mapData:', mapData);
     const lomask = 0x3ff;
-    for (let i = 0; i < tileCount; i++) {
+    for (let i = 0; i < mapData.length; i++) {
       let cell = mapData[i];
       let tile = cell & lomask;
-      if (i < 10) {
-        console.log('tile 1:', tile, 'cell:', cell, 'lomask:', lomask, 'tileCount:', tileCount);
-      }
-      tile += rotation + (2 * tileCount);
-      if (i < 10) {
-        console.log('tile 2:', tile);
-      }
+      tile += rotation + (10 * tileCount);
       tile %= tileCount;
-      if (i < 10) {
-        console.log('tile 3:', tile);
-      }
       cell = (cell & ~lomask) | (tile & lomask);
-      if (i < 10) {
-        console.log('tile 4:', tile, 'rotateTiles: i:', i, 'old:', mapData[i], 'cell:', cell);
-      }
       mapData[i] = cell;
     }
-    console.log('mapData:', mapData);
   }
   
   function onkeyup(event: KeyboardEvent): void {
