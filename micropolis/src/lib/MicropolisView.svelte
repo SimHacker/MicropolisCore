@@ -443,6 +443,12 @@
         outKeyDown = true;
         startAutoRepeat(key);
         break;
+      case 219:
+        micropolis.setCityTax(Math.max(0, micropolis.cityTax - 1));
+        break;
+      case 221:
+        micropolis.setCityTax(Math.min(20, micropolis.cityTax + 1));
+        break;
     }
   }
   
@@ -637,7 +643,6 @@
     onmouseup={onmouseup}
     onkeydown={onkeydown}
     onkeyup={onkeyup}
-    Xonwheel={onwheel}
   ></canvas>
 </div>
 
@@ -659,6 +664,7 @@
       Arrow keys pan, comma and period zoom. <br/>
       Letter keys load various classic cities.<br/>
       Numeric keys set the speed, 0 toggles pause.<br/>
+      The brackets lower and raise the tax rate.<br/>
       WARNING: DO NOT hit the space bar,<br/>
       because that will open up the 
       <a

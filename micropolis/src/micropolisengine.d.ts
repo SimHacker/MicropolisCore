@@ -335,6 +335,7 @@ export interface Micropolis {
   setEnableSound(_0: boolean): void;
   setDoAnimation(_0: boolean): void;
   setSpeed(_0: number): void;
+  setCityTax(_0: number): void;
   doTool(_0: EditingTool, _1: number, _2: number): ToolResult;
   getRandom(_0: number): number;
   getERandom(_0: number): number;
