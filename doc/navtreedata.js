@@ -58,7 +58,7 @@ var NAVTREEINDEX =
 "classMicropolis.html#a98e5158b4fa233b25461167c46b6beeb",
 "classSimSprite.html#a5c8ac895626cad194a4ffa2a5a9eb79b",
 "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06e",
-"micropolis_8h.html#ac6fa10729dffeb6a192492f13c25e31aaa7d3c2d6672ee99804110a6bd1822807"
+"micropolis_8h.html#ac6fa10729dffeb6a192492f13c25e31aaa40883d3858eeb1bdd4a0e27b5ffb153"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
