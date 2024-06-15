@@ -409,6 +409,10 @@
       micropolis.loadCity(city);
       tick();
     } else switch (key) {
+      case 9:
+        micropolis.generateSomeRandomCity();
+        tick();
+        break;        
       case 32:
         if (micropolis.heatSteps) {
           rotateTiles(tileRenderer.tileRotate);
@@ -689,7 +693,7 @@
       >https://github.com/SimHacker/MicropolisCore</a><br/>
       Left button drag to pan, mouse wheel to zoom.<br/>
       Arrow keys pan, comma and period zoom. <br/>
-      Letter keys load various classic cities.<br/>
+      Letter keys load various cities, tab to generate.<br/>
       Numeric keys set the speed, 0 toggles pause.<br/>
       The brackets lower and raise the tax rate.<br/>
       WARNING: DO NOT hit the space bar,<br/>
