@@ -70,12 +70,16 @@ abstract class TileRenderer<TContext> {
      * along the X-axis, allowing the user to pan left and right across the map.
      */
     public panX: number = 0;
+    public panXMin: number = 0.0;
+    public panXMax: number = 120.0;
 
     /**
      * The current vertical pan position in tile pixels. This value offsets the map rendering
      * along the Y-axis, allowing the user to pan up and down across the map.
      */
     public panY: number = 0;
+    public panYMin: number = 0.0;
+    public panYMax: number = 120.0;
 
     /**
      * The width of the viewable area on the screen. This is typically set to the width of the
@@ -109,6 +113,8 @@ abstract class TileRenderer<TContext> {
      * less than 1 zoom out, making the tiles appear smaller.
      */
     public zoom: number = 1;
+    public zoomMin: number = 1.0 / 128.0;
+    public zoomMax: number = 256.0;
 
     /**
      * The URL of the tile texture.
@@ -149,7 +155,9 @@ abstract class TileRenderer<TContext> {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.tileTextureURL = tileTextureURL;
-
+        this.panXMax = this.mapWidth;
+        this.panYMax = this.mapHeight;
+    
         // Perform any other common setup here.
 
         // Since this is a default implementation, we just resolve immediately.
@@ -250,8 +258,9 @@ abstract class TileRenderer<TContext> {
      * @param panY - The pan Y tile coordinate.
      */
     panTo(panX: number, panY: number): void {
-        this.panX = panX;
-        this.panY = panY;
+        this.panX = Math.max(this.panXMin, Math.min(this.panXMax, panX));
+        this.panY = Math.max(this.panYMin, Math.min(this.panYMax, panY));
+        //console.log("panX:", this.panX, "panY:", this.panY);
     }
 
     /**
@@ -260,8 +269,7 @@ abstract class TileRenderer<TContext> {
      * @param dy - The change in the pan Y tile coordinate.
      */
     panBy(dx: number, dy: number): void {
-        this.panX += dx;
-        this.panY += dy;
+        this.panTo(this.panX + dx, this.panY + dy);
     }
 
     /**
@@ -269,7 +277,8 @@ abstract class TileRenderer<TContext> {
      * @param zoom - The zoom.
      */
     zoomTo(zoom: number): void {
-        this.zoom = zoom;
+        this.zoom = Math.max(this.zoomMin, Math.min(this.zoomMax, zoom));
+        //console.log("zoom:", this.zoom);
     }
 
 
@@ -278,7 +287,7 @@ abstract class TileRenderer<TContext> {
      * @param zoomFactor - The factor by which to zoom in or out.
      */
     zoomBy(zoomFactor: number): void {
-        this.zoom *= zoomFactor;
+        this.zoomTo(this.zoom * zoomFactor);
     }
 
 }

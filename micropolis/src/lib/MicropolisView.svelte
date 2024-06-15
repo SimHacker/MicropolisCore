@@ -161,7 +161,6 @@
   const mapHeight = 100;
   const mapLength = mapWidth * mapHeight;
   const framesPerSecond = 60;
-  const zoomScale = 0.05;
 
   let micropolis = null;
   let cityFileName = '/cities/haight.cty';
@@ -183,6 +182,15 @@
   let screenPosDown: [number, number] = [0, 0];
   let tilePosDown: [number, number] = [0, 0];
   let panDown: [number, number] = [0, 0];
+  let leftKeyDown = false;
+  let rightKeyDown = false;
+  let upKeyDown = false;
+  let downKeyDown = false;
+  let inKeyDown = false;
+  let outKeyDown = false;
+  let keyPanScale = 1;
+  let keyZoomScale = 0.025;
+  let wheelZoomScale = 0.05;
 
   function micropolisMain() {
 
@@ -199,15 +207,37 @@
     mapStartAddress = micropolis.getMapAddress() / 2;
     mapEndAddress = mapStartAddress + micropolis.getMapSize() / 2;
     mapData = micropolisengine.HEAPU16.subarray(mapStartAddress, mapEndAddress);
-    console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
+    //console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
 
   }
 
   function tick(): void {
     //console.log('tick');
+    handleInput();
     trackCursor();
     micropolisTick();
     renderAll();
+  }
+
+  function handleInput(): void {
+    if (leftKeyDown) {
+      tileRenderer.panBy(-keyPanScale / tileRenderer.zoom, 0);
+    }
+    if (rightKeyDown) {
+      tileRenderer.panBy(keyPanScale / tileRenderer.zoom, 0);
+    }
+    if (upKeyDown) {
+      tileRenderer.panBy(0, -keyPanScale / tileRenderer.zoom);
+    }
+    if (downKeyDown) {
+      tileRenderer.panBy(0, keyPanScale / tileRenderer.zoom);
+    }
+    if (inKeyDown) {
+      tileRenderer.zoomBy(1 + keyZoomScale);
+    }
+    if (outKeyDown) {
+      tileRenderer.zoomBy(1 - keyZoomScale);
+    }
   }
 
   function trackCursor(): void {
@@ -247,25 +277,7 @@
     ];
 
     tilePos = tileRenderer.screenToTile(screenPos);
-    console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
-  }
-
-  function panTo(panX: number, panY: number): void {
-    //console.log('TileRenderer: panTo:', panX, panY);
-    tileRenderer.panTo(panX, panY);
-  }
-
-  function panBy(dx: number, dy: number): void {
-    //console.log('TileRenderer: panBy:', dx, dy);
-    tileRenderer.panBy(dx, dy);
-  }
-
-  function zoomTo(zoom: number, centerX: number, centerY: number): void {
-    tileRenderer.zoomTo(zoom);
-  }
-
-  function zoomBy(zoomFactor: number): void {
-    tileRenderer.zoomBy(zoomFactor);
+    //console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
   }
 
   function onmousedown(event: MouseEvent): void {
@@ -291,7 +303,7 @@
 
     //console.log('MicropolisView: onmousemove: event:', event, 'target:', event.target, 'screenDelta:', screenDelta, 'tileDelta:', tileDelta, 'tilePos:', tilePos, 'tilePosDown:', tilePosDown, 'screenPos:', screenPos, 'screenPosLast:', screenPosDown);
 
-    panBy(tileDelta[0], tileDelta[1]);
+    tileRenderer.panBy(tileDelta[0], tileDelta[1]);
 
     renderAll();
   }
@@ -306,11 +318,35 @@
     renderAll();
   }
 
+  function onkeydown(event: KeyboardEvent): void {
+    //console.log('MicropolisView: onkeydown: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
+    switch (event.keyCode) {
+      case 37: leftKeyDown = true; break;
+      case 39: rightKeyDown = true; break;
+      case 38: upKeyDown = true; break;
+      case 40: downKeyDown = true; break;
+      case 188: inKeyDown = true; break;
+      case 190: outKeyDown = true; break;
+    }
+  }
+  
+  function onkeyup(event: KeyboardEvent): void {
+    //console.log('MicropolisView: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
+    switch (event.keyCode) {
+      case 37: leftKeyDown = false; break;
+      case 39: rightKeyDown = false; break;
+      case 38: upKeyDown = false; break;
+      case 40: downKeyDown = false; break;
+      case 188: inKeyDown = false; break;
+      case 190: outKeyDown = false; break;
+    }
+  }
+  
   function onwheel(event: WheelEvent): void {
-    const delta = event.deltaY > 0 ? -zoomScale : zoomScale; // Change the multiplier as needed
+    const delta = event.deltaY > 0 ? -wheelZoomScale : wheelZoomScale; // Change the multiplier as needed
     const zoomFactor = 1 + delta; // Adjust the zoom factor based on the delta
-console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor);
-    zoomBy(zoomFactor);
+    //console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor);
+    tileRenderer.zoomBy(zoomFactor);
     renderAll();
   }
 
@@ -351,7 +387,7 @@ console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor
       return;
     }
 
-    tileRenderer = new WebGLTileRenderer();
+    window.tileRenderer = tileRenderer = new WebGLTileRenderer();
     //console.log('MicropolisView: onMount: tileRenderer:', tileRenderer);
     if (tileRenderer == null) {
       console.log('MicropolisView: onMount: no tileRenderer!');
@@ -386,6 +422,8 @@ console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor
         tileRenderer.render();
       });
 
+    canvasGL.focus();
+
     setFramesPerSecond(framesPerSecond);
 
   });
@@ -398,16 +436,19 @@ console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor
 </script>
 
 <svelte:window
-  on:resize={resizeCanvas}
+  onresize={resizeCanvas}
 />
 
 <div class="fullscreen">
   <canvas
     bind:this={canvasGL}
-    on:mousedown={onmousedown}
-    on:mousemove={onmousemove}
-    on:mouseup={onmouseup}
-    on:wheel|passive={onwheel}
+    tabindex="0"
+    onmousedown={onmousedown}
+    onmousemove={onmousemove}
+    onmouseup={onmouseup}
+    onkeydown={onkeydown}
+    onkeyup={onkeyup}
+    onwheel={onwheel}
   ></canvas>
 </div>
 
