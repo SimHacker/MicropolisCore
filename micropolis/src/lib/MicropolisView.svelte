@@ -50,7 +50,7 @@
     }
 
     makeSound(micropolis: micropolisengine.Micropolis, callbackVal: any, channel: string, sound: string, x: number, y: number): void {
-        console.log('MicropolisCallback: makeSound:', 'channel:', channel, 'sound:', sound, 'x:', x, 'y:', y);
+        //console.log('MicropolisCallback: makeSound:', 'channel:', channel, 'sound:', sound, 'x:', x, 'y:', y);
     }
 
     newGame(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
@@ -62,7 +62,7 @@
     }
 
     sendMessage(micropolis: micropolisengine.Micropolis, callbackVal: any, messageIndex: number, x: number, y: number, picture: boolean, important: boolean): void {
-        console.log('MicropolisCallback: sendMessage:', 'messageIndex:', messageIndex, 'x:', x, 'y:', y, 'picture:', picture, 'important:', important);
+        //console.log('MicropolisCallback: sendMessage:', 'messageIndex:', messageIndex, 'x:', x, 'y:', y, 'picture:', picture, 'important:', important);
     }
 
     showBudgetAndWait(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
@@ -94,7 +94,7 @@
     }
 
     updateBudget(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
-        console.log('MicropolisCallback: updateBudget');
+        //console.log('MicropolisCallback: updateBudget');
     }
 
     updateCityName(micropolis: micropolisengine.Micropolis, callbackVal: any, cityName: string): void {
@@ -102,19 +102,19 @@
     }
 
     updateDate(micropolis: micropolisengine.Micropolis, callbackVal: any, cityYear: number, cityMonth: number): void {
-        console.log('MicropolisCallback: updateDate:', 'cityYear:', cityYear, 'cityMonth:', cityMonth);
+        //console.log('MicropolisCallback: updateDate:', 'cityYear:', cityYear, 'cityMonth:', cityMonth);
     }
 
     updateDemand(micropolis: micropolisengine.Micropolis, callbackVal: any, r: number, c: number, i: number): void {
-        console.log('MicropolisCallback: updateDemand:', 'r:', r, 'c:', c, 'i:', i);
+        //console.log('MicropolisCallback: updateDemand:', 'r:', r, 'c:', c, 'i:', i);
     }
 
     updateEvaluation(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
-        console.log('MicropolisCallback: updateEvaluation');
+        //console.log('MicropolisCallback: updateEvaluation');
     }
 
     updateFunds(micropolis: micropolisengine.Micropolis, callbackVal: any, totalFunds: number): void {
-        console.log('MicropolisCallback: updateFunds:', 'totalFunds:', totalFunds);
+        //console.log('MicropolisCallback: updateFunds:', 'totalFunds:', totalFunds);
     }
 
     updateGameLevel(micropolis: micropolisengine.Micropolis, callbackVal: any, gameLevel: number): void {
@@ -122,11 +122,11 @@
     }
 
     updateHistory(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
-        console.log('MicropolisCallback: updateHistory');
+        //console.log('MicropolisCallback: updateHistory');
     }
 
     updateMap(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
-        console.log('MicropolisCallback: updateMap');
+        //console.log('MicropolisCallback: updateMap');
     }
 
     updateOptions(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
@@ -134,7 +134,7 @@
     }
 
     updatePasses(micropolis: micropolisengine.Micropolis, callbackVal: any, passes: number): void {
-        console.log('MicropolisCallback: updatePasses:', 'passes:', passes);
+        //console.log('MicropolisCallback: updatePasses:', 'passes:', passes);
     }
 
     updatePaused(micropolis: micropolisengine.Micropolis, callbackVal: any, simPaused: boolean): void {
@@ -160,13 +160,52 @@
   const mapWidth = 120;
   const mapHeight = 100;
   const mapLength = mapWidth * mapHeight;
-  const framesPerSecond = 60;
+  let framesPerSecond = 60;
+  let pausedFramesPerSecond = 60;
+  let paused = false;
+  const keyFramesPerSecondValues = [ 1, 5, 10, 30, 60, 120, 120, 120, 120 ];
+  const keyPassesValues =          [ 1, 1, 1,  1,  1,  1,   4,   10,  50  ];
+  
 
   let micropolis = null;
-  let cityFileName = '/cities/haight.cty';
   let mapData = null;
   let mapStartAddress = 0;
   let mapEndAddress = 0;
+  let cityFileName = '/cities/haight.cty';
+  let cityFileNames = [
+    "/cities/about.cty",
+    "/cities/badnews.cty",
+    "/cities/bluebird.cty",
+    "/cities/bruce.cty",
+    "/cities/deadwood.cty",
+    "/cities/finnigan.cty",
+    "/cities/freds.cty",
+    "/cities/haight.cty",
+    "/cities/happisle.cty",
+    "/cities/joffburg.cty",
+    "/cities/kamakura.cty",
+    "/cities/kobe.cty",
+    "/cities/kowloon.cty",
+    "/cities/kyoto.cty",
+    "/cities/linecity.cty",
+    "/cities/med_isle.cty",
+    "/cities/ndulls.cty",
+    "/cities/neatmap.cty",
+    "/cities/radial.cty",
+    "/cities/scenario_bern.cty",
+    "/cities/scenario_boston.cty",
+    "/cities/scenario_detroit.cty",
+    "/cities/scenario_dullsville.cty",
+    "/cities/scenario_hamburg.cty",
+    "/cities/scenario_rio_de_janeiro.cty",
+    "/cities/scenario_san_francisco.cty",
+    "/cities/scenario_tokyo.cty",
+    "/cities/senri.cty",
+    "/cities/southpac.cty",
+    "/cities/splats.cty",
+    "/cities/wetcity.cty",
+    "/cities/yokohama.cty",
+  ];
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
@@ -191,6 +230,8 @@
   let keyPanScale = 1;
   let keyZoomScale = 0.025;
   let wheelZoomScale = 0.05;
+  let heatFlowRange = 200;
+  let showAbout = true;
 
   function micropolisMain() {
 
@@ -320,7 +361,34 @@
 
   function onkeydown(event: KeyboardEvent): void {
     //console.log('MicropolisView: onkeydown: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
-    switch (event.keyCode) {
+    const key = event.keyCode;
+    if ((key >= 48) && (key <= 57)) { // digits
+      const digit = key - 48;
+      if (digit == 0) {
+        setPaused(!paused);
+      } else {
+        setFramesPerSecond(keyFramesPerSecondValues[digit - 1]);
+        micropolis.setPasses(keyPassesValues[digit - 1]);
+      }
+    } else if ((key >= 64) && (key <= 90)) { // letters
+      const letter = key - 64;
+      const city = cityFileNames[letter % cityFileNames.length];
+      //console.log("CITY", city);
+      micropolis.loadCity(city);
+    } else switch (key) {
+      case 32:
+        if (micropolis.heatSteps) {
+          micropolis.heatSteps = 0;
+        } else {
+          micropolis.heatSteps = 1;
+          if (Math.random() < 0.9) {
+            micropolis.heatRule = 0;
+          } else {
+            micropolis.heatRule = 1;
+            micropolis.heatFlow = Math.round(((Math.random() * 2.0) - 1.0) * heatFlowRange);
+          }
+        }
+        break;
       case 37: leftKeyDown = true; break;
       case 39: rightKeyDown = true; break;
       case 38: upKeyDown = true; break;
@@ -343,6 +411,7 @@
   }
   
   function onwheel(event: WheelEvent): void {
+    event.preventDefault();
     const delta = event.deltaY > 0 ? -wheelZoomScale : wheelZoomScale; // Change the multiplier as needed
     const zoomFactor = 1 + delta; // Adjust the zoom factor based on the delta
     //console.log('onwheel: event:', event, 'delta:', delta, 'zoomFactor:', zoomFactor);
@@ -351,6 +420,13 @@
   }
 
   function setFramesPerSecond(fps: number): void {
+    //console.log('setFramesPerSecond: fps:', fps);
+    framesPerSecond = fps;
+
+    if (intervalId !== null) {
+        clearInterval(intervalId);
+    }
+
     if (fps <= 0) {
       if (intervalId !== null) {
         clearInterval(intervalId);
@@ -359,7 +435,22 @@
       return;
     }
 
-    intervalId = setInterval(tick, 1000 / framesPerSecond);
+    const delay = 1000 / fps;
+    intervalId = setInterval(tick, delay);
+  }
+
+  function setPaused(nowPaused) {
+    console.log('setPaused: nowPaused:', nowPaused);
+    const wasPaused = paused;
+    paused = nowPaused;
+    micropolis.simPaused = nowPaused;
+    if (!wasPaused && nowPaused) {
+      pausedFramesPerSecond = framesPerSecond;
+      setFramesPerSecond(0);
+    } else if (wasPaused && !nowPaused) {
+      framesPerSecond = pausedFramesPerSecond;
+      setFramesPerSecond(framesPerSecond);
+    }
   }
 
   onMount(async () => {
@@ -394,6 +485,8 @@
       return;
     }
 
+    canvasGL.addEventListener('wheel', onwheel, {passive: false});
+
     resizeCanvas();
 
     //console.log('MicropolisView: onMount: initialize:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTileRetileRenderernderer);
@@ -417,8 +510,17 @@
           return;
         }
 
+        const scrollTop = 
+            window.pageYOffset || window.document.documentElement.scrollTop;
+        const scrollLeft = 
+            window.pageXOffset || window.document.documentElement.scrollLeft;
+        window.onscroll = function() {
+          console.log(scrollLeft, scrollTop);
+          window.scrollTo(scrollLeft, scrollTop);
+        };
+
         tileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
-        tileRenderer.zoomTo(0.5);
+        tileRenderer.zoomTo(1.0);
         tileRenderer.render();
       });
 
@@ -448,14 +550,107 @@
     onmouseup={onmouseup}
     onkeydown={onkeydown}
     onkeyup={onkeyup}
-    onwheel={onwheel}
+    Xonwheel={onwheel}
   ></canvas>
 </div>
 
+<div class="fullscreen mouseless">
+  <div
+    class="about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
+    onclick="{(event) => showAbout = !showAbout}"
+  >{showAbout ? "➖" : "➕"}</div>
+  {#if showAbout}
+    <div class="about-div">
+      <b>This is Micropolis in WebAssembly!</b><br/>
+      Based on the original SimCity sources,<br/>
+      designed by Will Wright, ported by Don Hopkins.<br/>
+      <a
+        target="_new"
+        href="https://github.com/SimHacker/MicropolisCore"
+      >https://github.com/SimHacker/MicropolisCore</a><br/>
+      Left button drag to pan, mouse wheel to zoom.<br/>
+      Arrow keys pan, comma and period zoom. <br/>
+      Letter keys load various classic cities.<br/>
+      Numeric keys set the speed, 0 toggles pause.<br/>
+      WARNING: DO NOT hit the space bar,<br/>
+      because that will open up the 
+      <a
+        target="_new"
+        href="https://www.youtube.com/watch?v=WPMeWas4kXM"
+      >Space Inventory</a><br/>
+    </div>
+  {/if}
+</div>
+
 <style>
+
+  .mouseless {
+    pointer-events: none;
+  }
+
   .fullscreen {
+    position: absolute;
     width: 100%;
     height: 100%;
+  }
+
+  .about-show {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 20px;
+    height: 20px;
+    z-index: 25;
+    pointer-events: auto;
+    cursor: pointer;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    padding-top: 2px;
+    color: white;
+  }
+
+  .about-show-opened {
+    background: #ffffff80;
+    color: white;
+  }
+
+  .about-show-closed {
+    background: #ffffff80;
+  }
+
+  .about-div {
+    position: absolute;
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    font-size: 12px;
+    color: white;
+    z-index: 20
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 
+      1px 1px 0 black, /* Right and down */
+      -1px -1px 0 black, /* Left and up */
+      -1px 1px 0 black, /* Left and down */
+      1px -1px 0 black; /* Right and up */
+    background: #00000080;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+
+  .about-div b {
+    font-size: 1.4em;
+  }
+
+  .about-div a {
+    pointer-events: auto; /* Allows the link to be clickable */
+    user-select: auto; /* Allows the link to be selectable */
+    color: yellow; /* Optional: Different color for better visibility */
+    text-decoration: underline; /* Optional: Underline to indicate it's a link */
   }
 
   canvas {

@@ -1098,6 +1098,7 @@ function createTypedArrayFromMap(mapInstance) {
     .function("doBudget", &Micropolis::doBudget)
     .function("doScoreCard", &Micropolis::doScoreCard)
     .function("updateFunds", &Micropolis::updateFunds)
+    .function("setPasses", &Micropolis::setPasses)
 
     // Game State and Statistics
     .property("simSpeed", &Micropolis::simSpeed)

@@ -273,7 +273,8 @@ bool Micropolis::loadFile(const std::string &filename)
     setAutoGoto(miscHist[54] != 0);       // flag for auto-goto
     setEnableSound(miscHist[55] != 0);    // flag for the sound on/off
     setCityTax(miscHist[56]);
-    setSpeed(miscHist[57]);
+    //setSpeed(miscHist[57]);
+    setSpeed(3); // Naw let's reset the speed to 3 after loading a city.
     changeCensus();
     mustUpdateOptions = true;
 

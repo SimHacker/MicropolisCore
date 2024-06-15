@@ -340,6 +340,7 @@ export interface Micropolis {
   getERandom(_0: number): number;
   sendMessage(_0: number, _1: number, _2: number, _3: boolean, _4: boolean): void;
   setYear(_0: number): void;
+  setPasses(_0: number): void;
   generateMap(_0: number): void;
   simRandom(): number;
   getRandom16(): number;

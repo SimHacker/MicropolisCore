@@ -811,7 +811,6 @@ void Micropolis::simHeat()
     const int SRCCOL = WORLD_H + 2;
     const int DSTCOL = WORLD_H;
 
-
     if (cellSrc == NULL) {
         cellSrc = (short *)newPtr((WORLD_W + 2) * (WORLD_H + 2) * sizeof (short));
         cellDst = (short *)&map[0][0];
