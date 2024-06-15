@@ -687,11 +687,19 @@
       <b>This is Micropolis in WebAssembly!</b><br/>
       Based on the original SimCity sources,<br/>
       designed by Will Wright, ported by Don Hopkins.<br/>
-      <a
+      Repo: <a
         target="_new"
         href="https://github.com/SimHacker/MicropolisCore"
       >https://github.com/SimHacker/MicropolisCore</a><br/>
-      Left button drag to pan, mouse wheel to zoom.<br/>
+      More Info: <a
+        target="_new"
+        href="https://mitpress.mit.edu/9780262547482/building-simcity/"
+        >Chaim Gingold's book "Building SimCity"</a><br/>
+        <a
+        target="_new"
+        href="https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams.pdf"
+        >Chaim Gingold's "SimCity Reverse Diagrams"</a><br/>
+              Left button drag to pan, mouse wheel to zoom.<br/>
       Arrow keys pan, comma and period zoom. <br/>
       Letter keys load various cities, tab to generate.<br/>
       Numeric keys set the speed, 0 toggles pause.<br/>
@@ -751,7 +759,7 @@
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
-    font-size: 12px;
+    font-size: 16px;
     color: white;
     z-index: 20
     pointer-events: none;
