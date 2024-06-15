@@ -453,6 +453,12 @@
     }
   }
 
+  function refocusCanvas() {
+    if (document.activeElement !== canvasGL) {
+      canvasGL.focus();
+    }
+  }
+
   onMount(async () => {
 
     //console.log('MicropolisView: onMount: ', 'tileWidth:', tileWidth, 'tileHeight:', tileHeight, 'tileCount:', tileCount, 'tileTextureWidth:', tileTextureWidth, 'tileTextureHeight:', tileTextureHeight, 'tileTexture:', tileTexture, 'mapWidth:', mapWidth, 'mapHeight:', mapHeight, 'mapLength:', mapLength, 'mapData:', mapData);
@@ -485,6 +491,8 @@
       return;
     }
 
+    document.addEventListener('focusin', refocusCanvas);
+    canvasGL.addEventListener('focusout', refocusCanvas);
     canvasGL.addEventListener('wheel', onwheel, {passive: false});
 
     resizeCanvas();
@@ -524,7 +532,7 @@
         tileRenderer.render();
       });
 
-    canvasGL.focus();
+    refocusCanvas();
 
     setFramesPerSecond(framesPerSecond);
 
