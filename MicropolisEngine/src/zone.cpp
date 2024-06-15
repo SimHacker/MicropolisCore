@@ -135,7 +135,7 @@ void Micropolis::doZone(const Position &pos)
         return;
     }
 
-    printf("UNEXPOECTED ZONE: %d !!!\n", tile);
+    printf("UNEXPECTED ZONE: %d !!!\n", tile);
 }
 
 /**

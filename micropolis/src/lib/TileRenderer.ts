@@ -113,8 +113,11 @@ abstract class TileRenderer<TContext> {
      * less than 1 zoom out, making the tiles appear smaller.
      */
     public zoom: number = 1;
-    public zoomMin: number = 1.0 / 128.0;
+    public zoomMin: number = 1.0 / 32.0;
     public zoomMax: number = 256.0;
+
+    public tileRotate: number = 0;
+    public tileOpacity: number = 1.0;
 
     /**
      * The URL of the tile texture.

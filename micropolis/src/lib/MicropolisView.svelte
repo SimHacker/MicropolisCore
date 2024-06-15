@@ -233,7 +233,8 @@
   let keyPanScale = 1;
   let keyZoomScale = 0.025;
   let wheelZoomScale = 0.05;
-  let heatFlowRange = 200;
+  let heatFlowRangeLow = 5;
+  let heatFlowRangeHigh = 100;
   let showAbout = true;
 
   function micropolisMain() {
@@ -251,6 +252,7 @@
     mapStartAddress = micropolis.getMapAddress() / 2;
     mapEndAddress = mapStartAddress + micropolis.getMapSize() / 2;
     mapData = micropolisengine.HEAPU16.subarray(mapStartAddress, mapEndAddress);
+    window.mapData = mapData;
     //console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
 
   }
@@ -344,7 +346,7 @@
       event.offsetY,
     ];
 
-    if (tileRender != null) {
+    if (tileRenderer != null) {
       tilePos = tileRenderer.screenToTile(screenPos);
       //console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
     }
@@ -409,14 +411,22 @@
     } else switch (key) {
       case 32:
         if (micropolis.heatSteps) {
+          rotateTiles(tileRenderer.tileRotate);
+          tileRenderer.tileRotate = 0;
           micropolis.heatSteps = 0;
+          //tileRenderer.tileOpacity = 1.0;
         } else {
+          tileRenderer.tileRotate = Math.floor(Math.random() * tileCount);
           micropolis.heatSteps = 1;
-          if (Math.random() < 0.9) {
+          //tileRenderer.tileOpacity = 0.1;
+          if (Math.random() < 0.75) {
             micropolis.heatRule = 0;
+            micropolis.heatFlow = 
+              Math.round(
+                ((Math.random() * 2.0) - 1.0) * 
+                ((Math.random() < 0.5) ? heatFlowRangeLow : heatFlowRangeHigh));
           } else {
             micropolis.heatRule = 1;
-            micropolis.heatFlow = Math.round(((Math.random() * 2.0) - 1.0) * heatFlowRange);
           }
         }
         tick();
@@ -452,6 +462,32 @@
         micropolis.setCityTax(Math.min(20, micropolis.cityTax + 1));
         break;
     }
+  }
+
+  function rotateTiles(rotation: number) {
+    console.log('rotateTiles: rotation:', rotation, 'tileCount:', tileCount, 'mapData:', mapData);
+    const lomask = 0x3ff;
+    for (let i = 0; i < tileCount; i++) {
+      let cell = mapData[i];
+      let tile = cell & lomask;
+      if (i < 10) {
+        console.log('tile 1:', tile, 'cell:', cell, 'lomask:', lomask, 'tileCount:', tileCount);
+      }
+      tile += rotation + (2 * tileCount);
+      if (i < 10) {
+        console.log('tile 2:', tile);
+      }
+      tile %= tileCount;
+      if (i < 10) {
+        console.log('tile 3:', tile);
+      }
+      cell = (cell & ~lomask) | (tile & lomask);
+      if (i < 10) {
+        console.log('tile 4:', tile, 'rotateTiles: i:', i, 'old:', mapData[i], 'cell:', cell);
+      }
+      mapData[i] = cell;
+    }
+    console.log('mapData:', mapData);
   }
   
   function onkeyup(event: KeyboardEvent): void {
@@ -553,6 +589,7 @@
     console.log("MicropolisView: onMount: initializing micropolisengine...");
     window.micropolisengine = {};
     await initModule(micropolisengine);
+    window.rotateTiles = rotateTiles;
     console.log("MicropolisView: onMount: initialized micropolisengine:", micropolisengine);
 
     micropolisMain();
@@ -638,6 +675,7 @@
 
 <div class="fullscreen">
   <canvas
+    class="tile-canvas"
     bind:this={canvasGL}
     tabindex="0"
     onmousedown={onmousedown}
@@ -748,9 +786,10 @@
     text-decoration: underline; /* Optional: Underline to indicate it's a link */
   }
 
-  canvas {
+  .tile-canvas {
     display: block;
     width: 100%;
     height: 100%;
+    background: none;
   }
 </style>

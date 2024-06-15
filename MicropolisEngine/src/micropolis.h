@@ -684,7 +684,8 @@ enum Tiles {
 
     // Tiles 1020-1023 unused
 
-    TILE_COUNT     = 1024,
+    USED_TILE_COUNT = 1019,
+    TILE_COUNT      = 1024,
 
     TILE_INVALID   = -1, ///< Invalid tile (not used in the world map).
 };

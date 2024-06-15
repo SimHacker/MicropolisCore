@@ -977,6 +977,7 @@ void Micropolis::simHeat()
                     (ne&2) + (nw&2) + (se&2) + (sw&2)) == (2 <<1))      \
                  ) ? 2 : 0) | \
                  1; \
+            cell &= 0x00f; \
         } else { \
             /* anti-life */ \
             sum = \
@@ -987,6 +988,7 @@ void Micropolis::simHeat()
                 ((c&2) \
                    ? ((sum != 5) ? 2 : 0) \
                    : (((sum != 5) && (sum != 6)) ? 2 : 0)); \
+            cell &= 0x00f; \
         } \
         dst[0] = \
             ((fl + cell) & LOMASK) | ANIMBIT | BURNBIT | BULLBIT; \

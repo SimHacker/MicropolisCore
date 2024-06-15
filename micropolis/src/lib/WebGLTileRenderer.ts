@@ -19,20 +19,24 @@ import { TileRenderer } from './TileRenderer';
  * 
  */
 
+interface ShaderUniformLocations {
+    tileSize: WebGLUniformLocation | null;
+    tilesSize: WebGLUniformLocation | null;
+    tileRotateOpacity:  WebGLUniformLocation | null;
+    tiles: WebGLUniformLocation | null;
+    mapSize: WebGLUniformLocation | null;
+    map: WebGLUniformLocation | null;
+};
+
+interface ShaderAttributeLocations {
+    position: GLint;
+    screenTile: GLint;
+};
 
 interface ShaderProgramInfo {
     program: WebGLProgram;
-    attributeLocations: {
-        position: GLint;
-        screenTile: GLint;
-    };
-    uniformLocations: {
-        tileSize: WebGLUniformLocation | null;
-        tilesSize: WebGLUniformLocation | null;
-        tiles: WebGLUniformLocation | null;
-        mapSize: WebGLUniformLocation | null;
-        map: WebGLUniformLocation | null;
-    };
+    attributeLocations: ShaderAttributeLocations;
+    uniformLocations: ShaderUniformLocations;
 }
 
 
@@ -341,6 +345,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             precision highp usampler2D;
             uniform vec2 u_tileSize;
             uniform vec2 u_tilesSize;
+            uniform vec2 u_tileRotateOpacity;
             uniform sampler2D u_tiles;
             uniform vec2 u_mapSize;
             uniform usampler2D u_map;
@@ -372,11 +377,19 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 cellUV.x = cellUV.x * 1.00001;
 
                 // Step 3: Extract data from the 16-bit unsigned integer texture
-                int tilesPerRow = int(u_tilesSize.x / u_tileSize.x);
-                int tilesPerCol = int(u_tilesSize.y / u_tileSize.y);
-                int tileCount = tilesPerRow * tilesPerCol;
-                int cellValue = int(texture(u_map, cellUV).r);
-                int tileValue = int(mod(float(cellValue & 0x03ff), float(tileCount)));
+                int tilesPerRow = 
+                    int(u_tilesSize.x / u_tileSize.x);
+                int tilesPerCol = 
+                    int(u_tilesSize.y / u_tileSize.y);
+                int tileCount = 
+                    tilesPerRow * tilesPerCol;
+                int cellValue = 
+                    int(texture(u_map, cellUV).r);
+                int cellRotatedValue = 
+                    (cellValue & 0x03ff) + 
+                    int(u_tileRotateOpacity.x);
+                int tileValue = 
+                    int(mod(float(cellRotatedValue), float(tileCount)));
 
                 // Step 4: Calculate tile row and column from cell value
                 int tileRow = int(floor(float(tileValue) / float(tilesPerRow)));
@@ -388,7 +401,11 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 vec2 uv = tilePixel / u_tilesSize;
 
                 // Step 6: Sample the tile
-                fragColor = texture(u_tiles, uv);
+                if (u_tileRotateOpacity.y >= 1.0) {
+                    fragColor = texture(u_tiles, uv);
+                } else if (u_tileRotateOpacity.y > 0.0) {
+                    fragColor = mix(texture(u_tiles, uv), fragColor, u_tileRotateOpacity.y);
+                }
 
             }
         `;
@@ -400,14 +417,15 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         }
 
         // Fetch the locations of the shader attributes and uniforms.
-        const attributeLocations = {
+        const attributeLocations: ShaderAttributeLocations = {
             position: this.context.getAttribLocation(program, 'a_position'),
             screenTile: this.context.getAttribLocation(program, 'a_screenTile'),
         };
 
-        const uniformLocations = {
+        const uniformLocations: ShaderUniformLocations = {
             tileSize: this.context.getUniformLocation(program, 'u_tileSize'),
             tilesSize: this.context.getUniformLocation(program, 'u_tilesSize'),
+            tileRotateOpacity: this.context.getUniformLocation(program, 'u_tileRotateOpacity'),
             tiles: this.context.getUniformLocation(program, 'u_tiles'),
             mapSize: this.context.getUniformLocation(program, 'u_mapSize'),
             map: this.context.getUniformLocation(program, 'u_map'),
@@ -614,11 +632,12 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
         this.setScreenSize(this.canvas.width, this.canvas.height);
         this.context.viewport(0, 0, this.context.drawingBufferWidth, this.context.drawingBufferHeight);
-        this.context.clearColor(0.0, 0.0, 0.0, 1.0);
-        this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+        //this.context.clearColor(0.0, 0.0, 0.0, 1.0);
+        //this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
         this.context.useProgram(this.tileProgramInfo.program);
         this.context.uniform2f(this.tileProgramInfo.uniformLocations.tileSize, this.tileWidth, this.tileHeight);
         this.context.uniform2f(this.tileProgramInfo.uniformLocations.tilesSize, this.tilesWidth, this.tilesHeight);
+        this.context.uniform2f(this.tileProgramInfo.uniformLocations.tileRotateOpacity, this.tileRotate, this.tileOpacity);
         this.context.activeTexture(this.context.TEXTURE0);
         this.context.bindTexture(this.context.TEXTURE_2D, this.tilesTexture);
         this.context.uniform1i(this.tileProgramInfo.uniformLocations.tiles, 0);
