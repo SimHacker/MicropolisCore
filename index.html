@@ -13,24 +13,30 @@
 		</script>
 		
 		<link href="./_app/immutable/assets/0.D65TOd4H.css" rel="stylesheet">
-		<link href="./_app/immutable/assets/2.PfPXHqOg.css" rel="stylesheet">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.DvnUTVQz.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/entry.Dmg9xNyU.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/runtime.TASJD8L9.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.DjaOknEQ.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/render.C6vswtv7.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/disclose-version.CjKy68oX.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index-client.DJPY-EI4.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.nRFPxQeQ.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/2.C7HUmh9A.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/lifecycle.BWRUUMIU.js">
+		<link href="./_app/immutable/assets/2.B3Pm9uul.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.DGOEkgBE.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.ou4bexKL.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/runtime.D6WQHevi.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.DvxKI2By.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/render.CpKeD9t8.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/disclose-version.DtfVvAfv.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index-client.rMvLx0CH.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.D-iriQxe.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.Ode7FSXQ.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/lifecycle.JeW5pHf2.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		  <div style="display: contents"><!--[--><!--[--><!--[--><div class="app svelte-1pqy7hq"><main class="svelte-1pqy7hq"><!--[--><!--[--><div class="fullscreen svelte-ge4q34"><!--[--><div class="fullscreen svelte-1pp8o3e"><canvas tabindex="0" class="svelte-1pp8o3e"></canvas></div><!--]--></div><!--]--><!--]--></main></div><!--]--><!--]--> <!--[--><!--]!--><!--]-->
+		  <div style="display: contents"><!--[--><!--[--><!--[--><div class="app svelte-1pqy7hq"><main class="svelte-1pqy7hq"><!--[--><!--[--><div class="fullscreen svelte-ge4q34"><!--[--><div class="fullscreen svelte-1c2qpa6"><canvas tabindex="0" xonwheel="function onwheel(event) {
+    event.preventDefault();
+    const delta = event.deltaY > 0 ? -wheelZoomScale : wheelZoomScale;
+    const zoomFactor = 1 + delta;
+    tileRenderer.zoomBy(zoomFactor);
+    renderAll();
+  }" class="svelte-1c2qpa6"></canvas></div> <div class="fullscreen mouseless svelte-1c2qpa6"><div class="about-show about-show-opened svelte-1c2qpa6">➖</div> <!--[--><div class="about-div svelte-1c2qpa6"><b class="svelte-1c2qpa6">This is Micropolis in WebAssembly!</b><br> Based on the original SimCity sources,<br> designed by Will Wright, ported by Don Hopkins.<br> <a target="_new" href="https://github.com/SimHacker/MicropolisCore" class="svelte-1c2qpa6">https://github.com/SimHacker/MicropolisCore</a><br> Left button drag to pan, mouse wheel to zoom.<br> Arrow keys pan, comma and period zoom. <br> Letter keys load various classic cities.<br> Numeric keys set the speed, 0 toggles pause.<br> WARNING: DO NOT hit the space bar,<br> because that will open up the <a target="_new" href="https://www.youtube.com/watch?v=WPMeWas4kXM" class="svelte-1c2qpa6">Space Inventory</a><br></div><!--]--></div><!--]--></div><!--]--><!--]--></main></div><!--]--><!--]--> <!--[--><!--]!--><!--]-->
 			
 			<script>
 				{
-					__sveltekit_gltf9u = {
+					__sveltekit_1mhaads = {
 						base: new URL(".", location).pathname.slice(0, -1)
 					};
 
@@ -39,8 +45,8 @@
 					const data = [null,null];
 
 					Promise.all([
-						import("./_app/immutable/entry/start.DvnUTVQz.js"),
-						import("./_app/immutable/entry/app.DjaOknEQ.js")
+						import("./_app/immutable/entry/start.DGOEkgBE.js"),
+						import("./_app/immutable/entry/app.DvxKI2By.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2],
