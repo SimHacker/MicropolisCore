@@ -130,10 +130,10 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 this.context = context;
                 this.zoom = 1; // Adjust initial zoom level to fit more tiles on screen
     
-                if (!this.context.getExtension('EXT_texture_norm16')) {
-                    console.error('R32UI format is not supported on this device.');
-                    return null;
-                }
+                //if (!this.context.getExtension('EXT_texture_norm16')) {
+                //    console.error('R32UI format is not supported on this device.');
+                //    return null;
+                //}
     
                 this.tileProgramInfo = this.createShaderProgram();
                 this.tileBufferInfo = this.createBuffers();
