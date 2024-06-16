@@ -679,23 +679,33 @@
 
 <div class="fullscreen mouseless">
   <div
-    class="about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
+    class="text-shadow about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
     onclick="{(event) => showAbout = !showAbout}"
-  >{showAbout ? "➖" : "➕"}</div>
+  >{showAbout ? "X" : "+"}</div>
   {#if showAbout}
-    <div class="about-div">
+    <div class="text-shadow about-div">
       <b>This is Micropolis in WebAssembly!</b><br/>
-      Based on the original SimCity sources,<br/>
+      Based on the original SimCity Classic from Maxis,<br/>
       designed by Will Wright, ported by Don Hopkins.<br/>
+      This is just an unfinished evolving scrappy fiddle.<br/>
+      Please support its further development via
+      <a
+        target="_new"
+        href="https://www.patreon.com/DonHopkins"
+      >Patreon</a>.<br/>
       GitHub: <a
         target="_new"
         href="https://github.com/SimHacker/MicropolisCore"
-      >https://github.com/SimHacker/MicropolisCore</a><br/>
+      >https://github.com/SimHacker/MicropolisCore</a>.<br/>
       YouTube: <a
         target="_new"
         href="https://www.youtube.com/watch?v=wlHGfNlE8Os"
-        >"MicropolisWeb Demo 1"</a><br/>
-      More Info: <a
+      >"MicropolisWeb Demo 1"</a> and<br/>
+        <a
+        target="_new"
+        href="https://www.youtube.com/watch?v=BBVyCpmVQew"
+      >"Space Inventory Cellular Automata Music 1"</a>.<br/>
+     More Info: <a
         target="_new"
         href="https://mitpress.mit.edu/9780262547482/building-simcity/"
         >Chaim Gingold's book "Building SimCity"</a><br/>
@@ -703,18 +713,20 @@
         target="_new"
         href="https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams.pdf"
         >Chaim Gingold's "SimCity Reverse Diagrams"</a>.<br/>
-      Left button drag to pan, mouse wheel to zoom.<br/>
-      Arrow keys pan, comma and period zoom. <br/>
+      Drag left button to pan, spin mouse wheel to zoom.<br/>
+      Arrow keys pan, comma and period keys zoom.<br/>
       Letter keys load various cities, tab to generate.<br/>
       Numeric keys set the speed, 0 toggles pause.<br/>
       The brackets lower and raise the tax rate.<br/>
+      Click the "<div class="about-show-opened-text">X</div>" button above to hide this window.<br/>
+      More features and easter eggs on the way...<br/>
       <em>
-        WARNING: DO NOT hit the space bar,<br/>
+        WARNING: <u>DO NOT</u> hit the space bar,<br/>
         because that will open up the 
         <a
           target="_new"
           href="https://www.youtube.com/watch?v=WPMeWas4kXM"
-        >Space Inventory</a><br/>
+        >Space Inventory</a> !<br/>
       </em>
     </div>
   {/if}
@@ -732,31 +744,56 @@
     height: 100%;
   }
 
+  .text-shadow {
+    text-shadow: 
+      1px 1px 0 black, /* Right and down */
+      -1px -1px 0 black, /* Left and up */
+      -1px 1px 0 black, /* Left and down */
+      1px -1px 0 black; /* Right and up */
+  }
+
   .about-show {
     position: absolute;
     left: 0px;
     top: 0px;
-    width: 20px;
-    height: 20px;
     z-index: 25;
     pointer-events: auto;
     cursor: pointer;
+    margin-left: 3px;
+    margin-top: 3px;
+    width: 20px;
+    height: 20px;
     border: 1px solid black;
-    display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16x;
+    display: flex;
     padding-top: 2px;
     color: white;
-  }
-
-  .about-show-opened {
-    background: #ffffff80;
-    color: white;
+    font-weight: bold;
   }
 
   .about-show-closed {
     background: #ffffff80;
+    color: #00ff00;
+    font-size: 20px;
+  }
+
+  .about-show-opened {
+    background: #ffffff80;
+    color: #ff0000;
+  }
+
+  .about-show-opened-text {
+    background: #ffffff80;
+    color: #ff0000;
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    align-items: center;
+    justify-content: center;
+    font-size: 16x;
   }
 
   .about-div {
@@ -766,26 +803,25 @@
     padding-right: 5px;
     padding-bottom: 5px;
     font-size: 16px;
+    line-height: 1.25em;
     color: white;
     z-index: 20
     pointer-events: none;
     user-select: none;
-    text-shadow: 
-      1px 1px 0 black, /* Right and down */
-      -1px -1px 0 black, /* Left and up */
-      -1px 1px 0 black, /* Left and down */
-      1px -1px 0 black; /* Right and up */
     background: #00000080;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
   }
 
   .about-div b {
-    font-size: 1.4em;
+    font-size: 1.5em;
+    color: #40ff40
   }
 
   .about-div em {
-    color: #ff8080;
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 1.1em;
   }
 
   .about-div a {
