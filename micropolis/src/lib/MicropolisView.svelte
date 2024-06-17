@@ -222,7 +222,7 @@
     tileset_moon_png,
     tileset_snow_png,
     tileset_wild_west_png,
-  ]
+  ];
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
@@ -427,14 +427,14 @@
       tick();
     } else if (event.key === '+') {
       // Next tileset
-      const nextPosition = tilesets.indexOf(tileTexture) + 1
-      tileTexture = tilesets[nextPosition] || tilesets[0]
-      tileRenderer.loadTexture(tileTexture)
+      const nextPosition = tilesets.indexOf(tileTexture) + 1;
+      tileTexture = tilesets[nextPosition] || tilesets[0];
+      tileRenderer.loadTexture(tileTexture);
     } else if (event.key === '-') {
       // Previous tileset
-      const previousPosition = tilesets.indexOf(tileTexture) - 1
-      tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ]
-      tileRenderer.loadTexture(tileTexture)
+      const previousPosition = tilesets.indexOf(tileTexture) - 1;
+      tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ];
+      tileRenderer.loadTexture(tileTexture);
     } else switch (key) {
       case 9:
         micropolis.generateSomeRandomCity();
