@@ -228,7 +228,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             mapData);
     }
     
-    protected loadTexture(tileTextureURL: string): Promise<void> {
+    public loadTexture(tileTextureURL: string): Promise<void> {
 
         return new Promise((resolve, reject) => {
             if (!this.context) {
