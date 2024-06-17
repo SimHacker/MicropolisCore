@@ -2,6 +2,13 @@
 
   import { onMount, onDestroy } from 'svelte';
   import tiles_png from '$lib/images/tiles.png';
+  import tileset_asia_png from '$lib/images/tilesets/asia.png';
+  import tileset_earth_png from '$lib/images/tilesets/earth.png';
+  import tileset_future_png from '$lib/images/tilesets/future.png';
+  import tileset_medieval_png from '$lib/images/tilesets/medieval.png';
+  import tileset_moon_png from '$lib/images/tilesets/moon.png';
+  import tileset_snow_png from '$lib/images/tilesets/snow.png';
+  import tileset_wild_west_png from '$lib/images/tilesets/wild-west.png';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
   import initModule from "$lib/../micropolisengine.js";
   
@@ -156,7 +163,7 @@
   const tileCount = 960;
   const tileTextureWidth = 256;
   const tileTextureHeight = 960;
-  const tileTexture = tiles_png;
+  let tileTexture = tiles_png;
   const mapWidth = 120;
   const mapHeight = 100;
   const mapLength = mapWidth * mapHeight;
@@ -206,6 +213,16 @@
     "/cities/wetcity.cty",
     "/cities/yokohama.cty",
   ];
+  const tilesets = [
+    tiles_png,
+    tileset_asia_png,
+    tileset_earth_png,
+    tileset_future_png,
+    tileset_medieval_png,
+    tileset_moon_png,
+    tileset_snow_png,
+    tileset_wild_west_png,
+  ]
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
