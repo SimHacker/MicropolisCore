@@ -3,6 +3,7 @@
   import { onMount, onDestroy } from 'svelte';
   import tiles_png from '$lib/images/tiles.png';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  import { PieMenu } from '$lib/PieMenu';
   import initModule from "$lib/../micropolisengine.js";
   
   // Micropolis Callback Interface Implementation
@@ -165,7 +166,7 @@
   let paused = false;
   const keyFramesPerSecondValues = [ 1, 5, 10, 30, 60, 120, 120, 120, 120 ];
   const keyPassesValues =          [ 1, 1, 1,  1,  1,  1,   4,   10,  50  ];
-  
+  const rootPie: PieMenu | null = null;
 
   let micropolis = null;
   let mapData = null;
@@ -731,6 +732,10 @@
     </div>
   {/if}
 </div>
+
+<PieMenu
+  bind:this="rootPie"
+/>
 
 <style>
 
