@@ -432,11 +432,13 @@
       const nextPosition = tilesets.indexOf(tileTexture) + 1;
       tileTexture = tilesets[nextPosition] || tilesets[0];
       tileRenderer.loadTexture(tileTexture);
+      tick();
     } else if ((key === '-') || (key == '_')) {
       // Previous tileset
       const previousPosition = tilesets.indexOf(tileTexture) - 1;
       tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ];
       tileRenderer.loadTexture(tileTexture);
+      tick();
     } else switch (keyCode) {
       case 9:
         micropolis.generateSomeRandomCity();
