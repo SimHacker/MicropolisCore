@@ -2,6 +2,13 @@
 
   import { onMount, onDestroy } from 'svelte';
   import tiles_png from '$lib/images/tiles.png';
+  import tileset_asia_png from '$lib/images/tilesets/asia.png';
+  import tileset_earth_png from '$lib/images/tilesets/earth.png';
+  import tileset_future_png from '$lib/images/tilesets/future.png';
+  import tileset_medieval_png from '$lib/images/tilesets/medieval.png';
+  import tileset_moon_png from '$lib/images/tilesets/moon.png';
+  import tileset_snow_png from '$lib/images/tilesets/snow.png';
+  import tileset_wild_west_png from '$lib/images/tilesets/wild-west.png';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
   //import { PieMenu } from '$lib/PieMenu';
   import initModule from "$lib/../micropolisengine.js";
@@ -157,7 +164,7 @@
   const tileCount = 960;
   const tileTextureWidth = 256;
   const tileTextureHeight = 960;
-  const tileTexture = tiles_png;
+  let tileTexture = tiles_png;
   const mapWidth = 120;
   const mapHeight = 100;
   const mapLength = mapWidth * mapHeight;
@@ -206,6 +213,16 @@
     "/cities/splats.cty",
     "/cities/wetcity.cty",
     "/cities/yokohama.cty",
+  ];
+  const tilesets = [
+    tiles_png,
+    tileset_asia_png,
+    tileset_earth_png,
+    tileset_future_png,
+    tileset_medieval_png,
+    tileset_moon_png,
+    tileset_snow_png,
+    tileset_wild_west_png,
   ];
 
   let canvasGL: HTMLCanvasElement | null = null;
@@ -409,6 +426,16 @@
       //console.log("CITY", city);
       micropolis.loadCity(city);
       tick();
+    } else if (event.key === '+') {
+      // Next tileset
+      const nextPosition = tilesets.indexOf(tileTexture) + 1;
+      tileTexture = tilesets[nextPosition] || tilesets[0];
+      tileRenderer.loadTexture(tileTexture);
+    } else if (event.key === '-') {
+      // Previous tileset
+      const previousPosition = tilesets.indexOf(tileTexture) - 1;
+      tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ];
+      tileRenderer.loadTexture(tileTexture);
     } else switch (key) {
       case 9:
         micropolis.generateSomeRandomCity();
