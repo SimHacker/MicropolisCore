@@ -425,6 +425,16 @@
       //console.log("CITY", city);
       micropolis.loadCity(city);
       tick();
+    } else if (event.key === '+') {
+      // Next tileset
+      const nextPosition = tilesets.indexOf(tileTexture) + 1
+      tileTexture = tilesets[nextPosition] || tilesets[0]
+      tileRenderer.loadTexture(tileTexture)
+    } else if (event.key === '-') {
+      // Previous tileset
+      const previousPosition = tilesets.indexOf(tileTexture) - 1
+      tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ]
+      tileRenderer.loadTexture(tileTexture)
     } else switch (key) {
       case 9:
         micropolis.generateSomeRandomCity();
