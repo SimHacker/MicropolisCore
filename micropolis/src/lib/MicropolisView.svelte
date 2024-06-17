@@ -410,9 +410,10 @@
 
   function onkeydown(event: KeyboardEvent): void {
     //console.log('MicropolisView: onkeydown: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
-    const key = event.keyCode;
-    if ((key >= 48) && (key <= 57)) { // digits
-      const digit = key - 48;
+    const key = event.key;
+    const keyCode = event.keyCode;
+    if ((keyCode >= 48) && (keyCode <= 57)) { // digits
+      const digit = keyCode - 48;
       if (digit == 0) {
         setPaused(!paused);
       } else {
@@ -420,23 +421,23 @@
         micropolis.setPasses(keyPassesValues[digit - 1]);
         setPaused(false);
       }
-    } else if ((key >= 64) && (key <= 90)) { // letters
-      const letter = key - 64;
+    } else if ((keyCode >= 64) && (keyCode <= 90)) { // letters
+      const letter = keyCode - 64;
       const city = cityFileNames[letter % cityFileNames.length];
       //console.log("CITY", city);
       micropolis.loadCity(city);
       tick();
-    } else if (event.key === '+') {
+    } else if ((key == '=') || (key === '+')) {
       // Next tileset
       const nextPosition = tilesets.indexOf(tileTexture) + 1;
       tileTexture = tilesets[nextPosition] || tilesets[0];
       tileRenderer.loadTexture(tileTexture);
-    } else if (event.key === '-') {
+    } else if ((key === '-') || (key == '_')) {
       // Previous tileset
       const previousPosition = tilesets.indexOf(tileTexture) - 1;
       tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ];
       tileRenderer.loadTexture(tileTexture);
-    } else switch (key) {
+    } else switch (keyCode) {
       case 9:
         micropolis.generateSomeRandomCity();
         tick();
@@ -746,6 +747,7 @@
       Letter keys load various cities, tab to generate.<br/>
       Numeric keys set the speed, 0 toggles pause.<br/>
       The brackets lower and raise the tax rate.<br/>
+      The - and = keys switch between tile sets!<br/>
       Click the "<div class="about-show-opened-text">X</div>" button above to hide this window.<br/>
       More features and easter eggs on the way...<br/>
       <em>
