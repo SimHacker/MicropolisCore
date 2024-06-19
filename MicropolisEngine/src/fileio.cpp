@@ -227,8 +227,24 @@ bool Micropolis::loadFileData(const std::string &filename)
     size = ftell(f);
     fseek(f, 0L, SEEK_SET);
 
+    int mapSizeShort = // 12000
+      WORLD_W * WORLD_H;
+    int mapSize = // 24000
+      mapSizeShort * sizeof(short);
+    int historySize = // 3120
+      (6 * HISTORY_LENGTH) +
+       MISC_HISTORY_LENGTH;
+    int mapFileSize = // 27120
+        historySize + mapSize;
+    int mopFileSize = // 51120
+        historySize + mapSize + mapSize;
+    bool hasMop =
+        size == mopFileSize;
+    bool isValid =
+        hasMop || (size == mapFileSize);
+
     bool result =
-      (size == 27120) &&
+      isValid &&
       load_short(resHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(comHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(indHist, HISTORY_LENGTH / sizeof(short), f) &&
@@ -236,7 +252,15 @@ bool Micropolis::loadFileData(const std::string &filename)
       load_short(pollutionHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(moneyHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(miscHist, MISC_HISTORY_LENGTH / sizeof(short), f) &&
-      load_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f);
+      load_short((short *)mapBase, mapSizeShort, f) &&
+      (hasMop &&
+       load_short((short *)mopBase, mapSizeShort, f));
+
+    //printf("mapSize: %d historySize: %d mapFileSize: %d mopFileSize: %d size: %d hasMop: %d isValid: %d result: %d\n", mapSize, historySize, mapFileSize, mopFileSize, size, hasMop, isValid, result);
+
+    if (!hasMop) {
+        memset(mopBase, 0, WORLD_W * WORLD_H * sizeof(short));
+    }
 
     fclose(f);
 
@@ -311,7 +335,7 @@ bool Micropolis::loadFile(const std::string &filename)
 
     // If the speed is nonsensical, set it to a reasonable value.
     if (simSpeed < 0 || simSpeed > 3) {
-        setSpeed(3);
+        simSpeed = 3;
     }
 
     setSpeed(simSpeed);
@@ -386,7 +410,8 @@ bool Micropolis::saveFile(const std::string &filename)
         save_short(pollutionHist, HISTORY_LENGTH / 2, f) &&
         save_short(moneyHist, HISTORY_LENGTH / 2, f) &&
         save_short(miscHist, MISC_HISTORY_LENGTH / 2, f) &&
-        save_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f);
+        save_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f) &&
+        save_short(((short *)&mop[0][0]), WORLD_W * WORLD_H, f);
 
     fclose(f);
 

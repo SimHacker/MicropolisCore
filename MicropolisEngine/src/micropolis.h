@@ -1119,6 +1119,7 @@ public:
      * Map[0 <= x < 120][0 <= y < 100]
      */
     unsigned short *map[WORLD_W];
+    unsigned short *mop[WORLD_W];
 
     /**
      * 10 year residential history maximum value.
@@ -1395,6 +1396,7 @@ private:
      * Memory for map array.
      */
     unsigned short *mapBase;
+    unsigned short *mopBase;
 
 
     void initMapArrays();
@@ -1903,6 +1905,10 @@ public:
     long getMapAddress();
 
     long getMapSize();
+
+    long getMopAddress();
+
+    long getMopSize();
 
 public:
 

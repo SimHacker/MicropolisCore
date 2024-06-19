@@ -131,7 +131,6 @@ void Micropolis::init()
     ////////////////////////////////////////////////////////////////////////
     // allocate.cpp
 
-
     // short roadTotal;
     roadTotal = 0;
 
@@ -753,7 +752,6 @@ void Micropolis::simInit()
     setAutoBulldoze(true); // Enable auto bulldoze
     setAutoBudget(true); // Enable auto-budget
     blinkFlag = 1;
-    simSpeed = 3;
     changeEval();
     simPaused = false; // Simulation is running
     simLoops = 0;
@@ -768,7 +766,7 @@ void Micropolis::simInit()
     initWillStuff();
     setFunds(5000);
     setGameLevelFunds(LEVEL_EASY);
-    setSpeed(0);
+    setSpeed(3);
     setPasses(1);
 }
 
@@ -780,7 +778,6 @@ void Micropolis::simInit()
  */
 void Micropolis::simUpdate()
 {
-    //printf("simUpdate\n");
     blinkFlag = ((tickCount() % 60) < 30) ? 1 : -1;
 
     if (simSpeed && !heatSteps) {
@@ -1586,6 +1583,18 @@ long Micropolis::getMapAddress()
 
 
 long Micropolis::getMapSize()
+{
+    return (long)(WORLD_W * WORLD_H * sizeof (short));
+}
+
+
+long Micropolis::getMopAddress()
+{
+    return (long)mopBase;
+}
+
+
+long Micropolis::getMopSize()
 {
     return (long)(WORLD_W * WORLD_H * sizeof (short));
 }

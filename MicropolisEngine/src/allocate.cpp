@@ -95,8 +95,15 @@ void Micropolis::initMapArrays()
             WORLD_W * WORLD_H);
     }
 
+    if (!mopBase) {
+        mopBase = (unsigned short *)newPtr(
+            sizeof(unsigned short) *
+            WORLD_W * WORLD_H);
+    }
+
     for (i = 0; i < WORLD_W; i++) {
         map[i] = (unsigned short *)(mapBase + (i * WORLD_H));
+        mop[i] = (unsigned short *)(mopBase + (i * WORLD_H));
     }
 
     resHist = (short *)newPtr(HISTORY_LENGTH);
@@ -118,7 +125,13 @@ void Micropolis::destroyMapArrays()
         mapBase = NULL;
     }
 
+    if (mopBase != NULL) {
+        freePtr(mopBase);
+        mopBase = NULL;
+    }
+
     memset(map, 0, sizeof(short *) * WORLD_W);
+    memset(mop, 0, sizeof(short *) * WORLD_W);
 
     populationDensityMap.clear();
     trafficDensityMap.clear();

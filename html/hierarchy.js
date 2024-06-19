@@ -2,7 +2,8 @@ var hierarchy =
 [
     [ "BuildingProperties", "classBuildingProperties.html", null ],
     [ "Callback", "classCallback.html", [
-      [ "ConsoleCallback", "classConsoleCallback.html", null ]
+      [ "ConsoleCallback", "classConsoleCallback.html", null ],
+      [ "JSCallback", "classJSCallback.html", null ]
     ] ],
     [ "FrontendMessage", "classFrontendMessage.html", [
       [ "FrontendMessageDidTool", "classFrontendMessageDidTool.html", null ],

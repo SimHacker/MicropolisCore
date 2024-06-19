@@ -352,6 +352,8 @@ export interface Micropolis {
   setFunds(_0: number): void;
   getMapAddress(): number;
   getMapSize(): number;
+  getMopAddress(): number;
+  getMopSize(): number;
   loadCity(_0: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): boolean;
   setCityName(_0: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string): void;
   makeSound(_0: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _1: ArrayBuffer|Uint8Array|Uint8ClampedArray|Int8Array|string, _2: number, _3: number): void;

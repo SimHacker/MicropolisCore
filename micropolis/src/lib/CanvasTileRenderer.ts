@@ -27,37 +27,39 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
      * @param canvas The canvas.
      * @param context The CanvasRenderingContext2D.
      * @param mapData Uint16Array representing the tile data of the map.
+     * @param mopData Uint16Array representing the tile data of the map.
      * @param mapWidth The x dimension of the map measured in number of tiles.
      * @param mapHeight The y dimension of the map measured in number of tiles.
      * @param tileWidth The x dimension of a single tile measured in pixels.
      * @param tileHeight The y dimension of a single tile measured in pixels.
-     * @param tileImageURL The URL of the tile image to be loaded.
+     * @param tileTextureURLs The URLs of the tile images to be loaded.
      * @returns A promise that resolves when the renderer is fully initialized and the image is loaded.
      */
     initialize(
         canvas: HTMLCanvasElement,
         context: CanvasRenderingContext2D,
         mapData: Uint16Array,
+        mopData: Uint16Array,
         mapWidth: number,
         mapHeight: number,
         tileWidth: number,
         tileHeight: number,
-        tileImageURL: string
+        tileTextureURLs: string[]
     ): Promise<void> {
 
-        return super.initialize(canvas, context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileImageURL)
+        return super.initialize(canvas, context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs)
             .then(() => {
 
                 this.context = context;
                 this.tileImage = new Image();
-                this.tileImage.src = tileImageURL;
+                this.tileImage.src = tileTextureURLs[0];
 
                 return new Promise((resolve, reject) => {
                     if (!this.context || !this.tileImage) {
                         throw new Error('Canvas context or tile image is not properly initialized.');
                     }
                     this.tileImage.onload = () => resolve();
-                    this.tileImage.onerror = () => reject(new Error(`Failed to load image at ${tileImageURL}`));
+                    this.tileImage.onerror = () => reject(new Error(`Failed to load image at ${tileTextureURLs[0]}`));
                 });
 
             });

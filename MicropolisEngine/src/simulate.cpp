@@ -948,11 +948,11 @@ void Micropolis::mapScan(int x1, int x2)
         for (y = 0; y < WORLD_H; y++) {
 
             MapValue mapVal = map[x][y];
-            if (mapVal == DIRT) {
+            MapTile tile = mapVal & LOMASK;  /* Mask off status bits  */
+
+            if (tile == DIRT) {
                 continue;
             }
-
-            MapTile tile = mapVal & LOMASK;  /* Mask off status bits  */
 
             if (tile < FLOOD) {
                 continue;

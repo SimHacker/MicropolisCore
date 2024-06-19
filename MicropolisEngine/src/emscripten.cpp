@@ -1081,6 +1081,8 @@ function createTypedArrayFromMap(mapInstance) {
     .function("generateSomeRandomCity", &Micropolis::generateSomeRandomCity)
     .function("getMapAddress", &Micropolis::getMapAddress)
     .function("getMapSize", &Micropolis::getMapSize)
+    .function("getMopAddress", &Micropolis::getMopAddress)
+    .function("getMopSize", &Micropolis::getMopSize)
     .function("animateTiles", &Micropolis::animateTiles)
     .function("setSpeed", &Micropolis::setSpeed)
     .function("setGameLevel", &Micropolis::setGameLevel)

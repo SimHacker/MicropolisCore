@@ -292,6 +292,7 @@ var micropolis_8h =
       [ "CHURCH7BASE", "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06ea665e0a80945b40fa8d65df7d940c2ec7", null ],
       [ "CHURCH7", "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06eaf64b7090a4548ca25e37d3f2ca435828", null ],
       [ "CHURCH7LAST", "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06eaa8865e108cbd313a9cce95ddf53c121f", null ],
+      [ "USED_TILE_COUNT", "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06eab5973edb184c70ec99d000fd076a44eb", null ],
       [ "TILE_COUNT", "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06ea8d3a5b665cf950dc6f23818e1bb37078", null ],
       [ "TILE_INVALID", "micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06eae5dec972160e0e46ffbbf153a66986c8", null ]
     ] ],

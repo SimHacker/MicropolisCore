@@ -14,8 +14,8 @@
  * one unit will move the map by 1 tile. The panning origin is centered on the screen.
  *
  * Public properties such as panX, panY, screenWidth, and screenHeight can be modified directly to adjust the screen.
- * The client (user of this class) can write directly into the mapData new Uint16Array( and then call the
- * render function to update the display based on the current map state.
+ * The client (user of this class) can write directly into the mapData and mopData new Uint16Array
+ * and then call the render function to update the display based on the current map state.
  */
 
 
@@ -40,6 +40,7 @@ abstract class TileRenderer<TContext> {
      * on the map. The data will determine which texture to use for each tile when rendering.
      */
     public mapData: Uint16Array = new Uint16Array(1);
+    public mopData: Uint16Array = new Uint16Array(1);
 
     /**
      * The x dimension of the map measured in tiles. This determines the total number of tiles
@@ -117,12 +118,12 @@ abstract class TileRenderer<TContext> {
     public zoomMax: number = 256.0;
 
     public tileRotate: number = 0;
-    public tileOpacity: number = 1.0;
+    public tileLayer: number = 0;
 
     /**
      * The URL of the tile texture.
      */
-    public tileTextureURL: string | null = null;
+    public tileTextureURLs: (string | null)[] | null = null;
  
     constructor() {
     }
@@ -132,32 +133,35 @@ abstract class TileRenderer<TContext> {
      * @param canvas The canvas to render into.
      * @param context The rendering context specific to the subclass implementation.
      * @param mapData A Uint16Array representing the tile data of the map.
+     * @param mopData A Uint16Array representing the tile data of the mop.
      * @param mapWidth The x dimension of the map measured in number of tiles.
      * @param mapHeight The y dimension of the map measured in number of tiles.
      * @param tileWidth The x dimension of a single tile measured in pixels.
      * @param tileHeight The y dimension of a single tile measured in pixels.
-     * @param tileTextureURL The URL of the tile texture image to be loaded.
+     * @param tileTextureURLs The URLs of the tile texture images to be loaded.
      * @returns A promise that resolves when the renderer is fully initialized and the texture is loaded.
      */
     initialize(
         canvas: HTMLCanvasElement,
         context: TContext,
         mapData: Uint16Array,
+        mopData: Uint16Array,
         mapWidth: number,
         mapHeight: number,
         tileWidth: number,
         tileHeight: number,
-        tileTextureURL: string
+        tileTextureURLs: (string | null)[],
     ): Promise<void> {
 
         this.canvas = canvas;
         this.context = context;
         this.mapData = mapData;
+        this.mopData = mopData;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
-        this.tileTextureURL = tileTextureURL;
+        this.tileTextureURLs = tileTextureURLs;
         this.panXMax = this.mapWidth;
         this.panYMax = this.mapHeight;
     

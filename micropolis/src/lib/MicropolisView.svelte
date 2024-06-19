@@ -1,18 +1,39 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import tiles_png from '$lib/images/tiles.png';
-  import tileset_asia_png from '$lib/images/tilesets/asia.png';
-  import tileset_earth_png from '$lib/images/tilesets/earth.png';
-  import tileset_future_png from '$lib/images/tilesets/future.png';
-  import tileset_medieval_png from '$lib/images/tilesets/medieval.png';
-  import tileset_moon_png from '$lib/images/tilesets/moon.png';
-  import tileset_snow_png from '$lib/images/tilesets/snow.png';
-  import tileset_wild_west_png from '$lib/images/tilesets/wild-west.png';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
-  //import { PieMenu } from '$lib/PieMenu';
   import initModule from "$lib/../micropolisengine.js";
-  
+  //import { PieMenu } from '$lib/PieMenu';
+
+  // Tile Sets
+  import tileLayer_all9 from '$lib/images/tilesets/all.png';
+/*
+  import tileLayer_monochrome from '$lib/images/tilesets/monochrome.png';
+  import tileLayer_classic from '$lib/images/tilesets/classic.png';
+  import tileLayer_asia from '$lib/images/tilesets/asia.png';
+  import tileLayer_earth from '$lib/images/tilesets/earth.png';
+  import tileLayer_future from '$lib/images/tilesets/future.png';
+  import tileLayer_medieval from '$lib/images/tilesets/medieval.png';
+  import tileLayer_moon from '$lib/images/tilesets/moon.png';
+  import tileLayer_snow from '$lib/images/tilesets/snow.png';
+  import tileLayer_wild_west from '$lib/images/tilesets/wild-west.png';
+*/
+
+  const tileLayers = [
+    tileLayer_all9,
+/*
+    tileLayer_classic,
+    tileLayer_monochrome,
+    tileLayer_asia,
+    tileLayer_earth,
+    tileLayer_future,
+    tileLayer_medieval,
+    tileLayer_moon,
+    tileLayer_snow,
+    tileLayer_wild_west,
+*/
+  ];
+
   // Micropolis Callback Interface Implementation
 
   class MicropolisCallback implements micropolisengine.JSCallback {
@@ -164,7 +185,9 @@
   const tileCount = 960;
   const tileTextureWidth = 256;
   const tileTextureHeight = 960;
-  let tileTexture = tiles_png;
+  let tileSetCount = 9;
+  let tileSet = 1;
+  let tileLayer = 0;
   const mapWidth = 120;
   const mapHeight = 100;
   const mapLength = mapWidth * mapHeight;
@@ -179,6 +202,9 @@
   let mapData = null;
   let mapStartAddress = 0;
   let mapEndAddress = 0;
+  let mopData = null;
+  let mopStartAddress = 0;
+  let mopEndAddress = 0;
   let cityFileName = '/cities/haight.cty';
   let cityFileNames = [
     "/cities/about.cty",
@@ -213,16 +239,6 @@
     "/cities/splats.cty",
     "/cities/wetcity.cty",
     "/cities/yokohama.cty",
-  ];
-  const tilesets = [
-    tiles_png,
-    tileset_asia_png,
-    tileset_earth_png,
-    tileset_future_png,
-    tileset_medieval_png,
-    tileset_moon_png,
-    tileset_snow_png,
-    tileset_wild_west_png,
   ];
 
   let canvasGL: HTMLCanvasElement | null = null;
@@ -272,6 +288,14 @@
     mapData = micropolisengine.HEAPU16.subarray(mapStartAddress, mapEndAddress);
     window.mapData = mapData;
     //console.log("micropolisMain: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
+
+    mopStartAddress = micropolis.getMopAddress() / 2;
+    mopEndAddress = mopStartAddress + micropolis.getMopSize() / 2;
+    mopData = micropolisengine.HEAPU16.subarray(mopStartAddress, mopEndAddress);
+    window.mopData = mopData;
+    //console.log("micropolisMain: mopStartAddress:", mopStartAddress, "mopEndAddress:", mopEndAddress, "mopData:", mopData);
+
+    setTileSet(tileSet);
 
   }
 
@@ -340,6 +364,7 @@
 
   function renderAll(): void {
     //console.log("renderAll: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
+    tileRenderer.tileLayer = tileLayer;
     tileRenderer.render();
   }
 
@@ -427,17 +452,21 @@
       //console.log("CITY", city);
       micropolis.loadCity(city);
       tick();
-    } else if ((key == '=') || (key === '+')) {
-      // Next tileset
-      const nextPosition = tilesets.indexOf(tileTexture) + 1;
-      tileTexture = tilesets[nextPosition] || tilesets[0];
-      tileRenderer.loadTexture(tileTexture);
+    } else if (key == '=') {
+      // Next tile set
+      setTileSet((tileSet + 1) % tileSetCount);
       tick();
-    } else if ((key === '-') || (key == '_')) {
-      // Previous tileset
-      const previousPosition = tilesets.indexOf(tileTexture) - 1;
-      tileTexture = tilesets[previousPosition] || tilesets[ tilesets.length - 1 ];
-      tileRenderer.loadTexture(tileTexture);
+    } else if (key === '-') {
+      // Previous tile set
+      setTileSet((tileSet + tileSetCount - 1) % tileSetCount);
+      tick();
+    } else if (key == '+') {
+      // Next tile layer
+      setTileLayer((tileLayer + 1) % tileLayers.length);
+      tick();
+    } else if (key === '_') {
+      // Previous tile layer
+      setTileLayer((tileLayer + tileLayers.length - 1) % tileLayers.length);
       tick();
     } else switch (keyCode) {
       case 9:
@@ -511,6 +540,19 @@
       mapData[i] = cell;
     }
   }
+
+  function setTileSet(index) {
+    //console.log('setTileSet:', index);
+    tileSet = index;
+    for (let i = 0; i < mopData.length; i++) {
+      mopData[i] = tileSet;
+    }
+  }
+  
+  function setTileLayer(index) {
+    //console.log('setTileLayer:', index);
+    tileLayer = index;
+  }
   
   function onkeyup(event: KeyboardEvent): void {
     //console.log('MicropolisView: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
@@ -579,7 +621,6 @@
   }
 
   function setPaused(nowPaused) {
-    console.log('setPaused: nowPaused:', nowPaused);
     const wasPaused = paused;
     paused = nowPaused;
     micropolis.simPaused = nowPaused;
@@ -645,7 +686,7 @@
 
     //console.log('MicropolisView: onMount: initialize:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTileRetileRenderernderer);
 
-    tileRenderer.initialize(canvasGL, ctxGL, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTexture)
+    tileRenderer.initialize(canvasGL, ctxGL, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileLayers)
       .then(() => {
         //console.log('MicropolisView: onMount: initialize: then:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTiltileRenderereRenderer);
 
@@ -675,6 +716,7 @@
 
         tileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
         tileRenderer.zoomTo(1.0);
+        tileRenderer.tileLayer = tileLayer;
         tileRenderer.render();
       });
 
@@ -874,5 +916,7 @@
     width: 100%;
     height: 100%;
     background: none;
+    image-rendering: pixelated;
   }
+
 </style>

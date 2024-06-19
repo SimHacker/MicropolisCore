@@ -125,7 +125,7 @@ Private Attributes</h2></td></tr>
 </ul>
 <p>The funds gives a decision problem. To decide whether the tool can be applied, you need to know the cost. To know the cost you need to know the exact changes being made. The simplest way to compute the exact changes is to simply apply the tool to the world. This holds especially when tools get stacked on top of each other.</p>
 <p>This class provides an easy way out, greatly simplifying the problem. All tools do not modify the world directly, but instead put their results in an instance of this class, thus collecting all the modifications. After the whole operation is 'done', the <a class="el" href="classToolEffects.html">ToolEffects</a> instance can tell the precise cost and what has been changed in the world. At that moment, the yes/no decision can be made, and the effects can be copied to the real map and funds.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000128">Todo</a></b></dt><dd>Extend the class for storing messages and sounds. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000127">Todo</a></b></dt><dd>Extend the class for storing messages and sounds. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="tool_8h_source.html#l00203">203</a> of file <a class="el" href="tool_8h_source.html">tool.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -399,7 +399,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="tool_8cpp_source.html#l00169">169</a> of file <a class="el" href="tool_8cpp_source.html">tool.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="micropolis_8h_source.html#l01120">Micropolis::map</a>, <a class="el" href="tool_8h_source.html#l00227">modifications</a>, <a class="el" href="position_8h_source.html#l00168">Position::posX</a>, <a class="el" href="position_8h_source.html#l00169">Position::posY</a>, and <a class="el" href="tool_8h_source.html#l00225">sim</a>.</p>
+<p class="reference">References <a class="el" href="micropolis_8h_source.html#l01121">Micropolis::map</a>, <a class="el" href="tool_8h_source.html#l00227">modifications</a>, <a class="el" href="position_8h_source.html#l00168">Position::posX</a>, <a class="el" href="position_8h_source.html#l00169">Position::posY</a>, and <a class="el" href="tool_8h_source.html#l00225">sim</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="tool_8cpp_source.html#l01010">Micropolis::bulldozerTool()</a>, <a class="el" href="connect_8cpp_source.html#l00133">Micropolis::connectTile()</a>, <a class="el" href="connect_8cpp_source.html#l00593">Micropolis::fixSingle()</a>, <a class="el" href="tool_8cpp_source.html#l01351">Micropolis::forestTool()</a>, <a class="el" href="tool_8h_source.html#l00242">getMapTile()</a>, <a class="el" href="tool_8h_source.html#l00256">getMapTile()</a>, <a class="el" href="tool_8h_source.html#l00290">getMapValue()</a>, <a class="el" href="connect_8cpp_source.html#l00222">Micropolis::layDoze()</a>, <a class="el" href="connect_8cpp_source.html#l00460">Micropolis::layWire()</a>, <a class="el" href="tool_8cpp_source.html#l00252">Micropolis::putDownPark()</a>, and <a class="el" href="generate_8cpp_source.html#l00441">Micropolis::smoothTreesAt()</a>.</p>
 
@@ -466,7 +466,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="tool_8cpp_source.html#l00152">152</a> of file <a class="el" href="tool_8cpp_source.html">tool.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="tool_8cpp_source.html#l00121">modifyWorld()</a>, <a class="el" href="tool_8h_source.html#l00225">sim</a>, and <a class="el" href="micropolis_8h_source.html#l02315">Micropolis::totalFunds</a>.</p>
+<p class="reference">References <a class="el" href="tool_8cpp_source.html#l00121">modifyWorld()</a>, <a class="el" href="tool_8h_source.html#l00225">sim</a>, and <a class="el" href="micropolis_8h_source.html#l02326">Micropolis::totalFunds</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="tool_8cpp_source.html#l01397">Micropolis::doTool()</a>.</p>
 
@@ -496,7 +496,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="tool_8cpp_source.html#l00121">121</a> of file <a class="el" href="tool_8cpp_source.html">tool.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="tool_8cpp_source.html#l00103">clear()</a>, <a class="el" href="tool_8h_source.html#l00226">cost</a>, <a class="el" href="tool_8h_source.html#l00228">frontendMessages</a>, <a class="el" href="micropolis_8h_source.html#l01120">Micropolis::map</a>, <a class="el" href="tool_8h_source.html#l00227">modifications</a>, <a class="el" href="position_8h_source.html#l00168">Position::posX</a>, <a class="el" href="position_8h_source.html#l00169">Position::posY</a>, <a class="el" href="tool_8h_source.html#l00225">sim</a>, <a class="el" href="micropolis_8cpp_source.html#l01064">Micropolis::spend()</a>, and <a class="el" href="update_8cpp_source.html#l00127">Micropolis::updateFunds()</a>.</p>
+<p class="reference">References <a class="el" href="tool_8cpp_source.html#l00103">clear()</a>, <a class="el" href="tool_8h_source.html#l00226">cost</a>, <a class="el" href="tool_8h_source.html#l00228">frontendMessages</a>, <a class="el" href="micropolis_8h_source.html#l01121">Micropolis::map</a>, <a class="el" href="tool_8h_source.html#l00227">modifications</a>, <a class="el" href="position_8h_source.html#l00168">Position::posX</a>, <a class="el" href="position_8h_source.html#l00169">Position::posY</a>, <a class="el" href="tool_8h_source.html#l00225">sim</a>, <a class="el" href="micropolis_8cpp_source.html#l01063">Micropolis::spend()</a>, and <a class="el" href="update_8cpp_source.html#l00127">Micropolis::updateFunds()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="tool_8cpp_source.html#l00152">modifyIfEnoughFunding()</a>, and <a class="el" href="generate_8cpp_source.html#l00429">Micropolis::smoothTreesAt()</a>.</p>
 

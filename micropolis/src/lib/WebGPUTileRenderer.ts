@@ -35,13 +35,14 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         canvas: HTMLCanvasElement,
         context: GPUCanvasContext,
         mapData: Uint16Array,
+        mopData: Uint16Array,
         mapWidth: number,
         mapHeight: number,
         tileWidth: number,
         tileHeight: number,
-        tileTextureURL: string
+        tileTextureURLs: string[],
     ): Promise<void> {
-        await super.initialize(canvas, this.context, mapData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURL);
+        await super.initialize(canvas, this.context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
         this.context = canvas.getContext('webgpu') as GPUCanvasContext;
         if (!this.context) {
             throw new Error('WebGPU is not supported.');
@@ -61,7 +62,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         });
 
         // Load the tile texture
-        const tileImage = await this.loadImage(tileTextureURL);
+        const tileImage = await this.loadImage(tileTextureURLs[0]);
         this.tileTexture = this.device.createTexture({
             size: [tileImage.width, tileImage.height, 1],
             format: 'rgba8unorm',

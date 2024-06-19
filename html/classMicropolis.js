@@ -174,7 +174,6 @@ var classMicropolis =
     [ "incRateOfGrowth", "classMicropolis.html#adc802a675042701f0697e91da90e6b05", null ],
     [ "indPlop", "classMicropolis.html#a42d48d4d4ef658ba3122ec18fb4bce93", null ],
     [ "init", "classMicropolis.html#af172a8a06f190bac7977bf2800d3a131", null ],
-    [ "initGame", "classMicropolis.html#a730c8a1936381bc775d7a4ee3d471a07", null ],
     [ "initGraphMax", "classMicropolis.html#ae94969adbdac02dbc2441b9ba91bf898", null ],
     [ "initGraphs", "classMicropolis.html#a184065f20829c633c49365c2500bbbdb", null ],
     [ "initMapArrays", "classMicropolis.html#aa048942aa0ec83146b29f263584cf9cd", null ],
