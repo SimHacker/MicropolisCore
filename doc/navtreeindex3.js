@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"classSimSprite.html#a41c2753edd8414a4865deab98956cbea":[2,0,10,1],
+"classSimSprite.html#a43e3499729a01fe47e356222928c6d3f":[2,0,10,5],
+"classSimSprite.html#a444c32353014fed8b55fb0352883fbe1":[2,0,10,0],
+"classSimSprite.html#a4ee651480a2baf67fa98727f1e9edab5":[2,0,10,24],
 "classSimSprite.html#a5c8ac895626cad194a4ffa2a5a9eb79b":[2,0,10,18],
 "classSimSprite.html#a623b97f6165a6428d5586ea1b7ceaeca":[2,0,10,14],
 "classSimSprite.html#a78b587ad42d3ee790f302addfb7ba16c":[2,0,10,25],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada0e6f3d14201a24c586064d4390b28f96":[3,0,0,0,21,10,4],
 "micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada5a1d2ed49bc2da641fc47fdea18aa158":[3,0,0,0,21,10,3],
 "micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada6086a695d344b8ceb45aa3a53c62fbde":[3,0,0,0,21,10,5],
-"micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada61c043f9df9a24c5937083e04ef7e848":[3,0,0,0,21,10,2],
-"micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada7abadccf09c09a7d03b717c9832bef5e":[3,0,0,0,21,10,6],
-"micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbadaecc63731c5e9ef5cddf472ba159bb14a":[3,0,0,0,21,10,0],
-"micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbadaef7d191f1aef652fc6b3526683620330":[3,0,0,0,21,10,1],
-"micropolis_8h.html#a54e819eb574bcffda8afe93f7d6f20a0":[3,0,0,0,21,28]
+"micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada61c043f9df9a24c5937083e04ef7e848":[3,0,0,0,21,10,2]
 };

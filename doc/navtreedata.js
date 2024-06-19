@@ -54,11 +54,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "allocate_8cpp.html",
-"classMicropolis.html#a263c4048712149a27d18f1b8552f8b39",
-"classMicropolis.html#a98e5158b4fa233b25461167c46b6beeb",
-"classSimSprite.html#a5c8ac895626cad194a4ffa2a5a9eb79b",
-"micropolis_8h.html#a5df1979fa3586a2b69ed8a07a584d06e",
-"micropolis_8h.html#ac6fa10729dffeb6a192492f13c25e31aaa40883d3858eeb1bdd4a0e27b5ffb153"
+"classMicropolis.html#a24f3d99fef591c5c11d5a662acfbeff1",
+"classMicropolis.html#a981638fa00fe222a4b7ab5543e85db5c",
+"classSimSprite.html#a41c2753edd8414a4865deab98956cbea",
+"micropolis_8h.html#a5132dc04a038b45ee5bf237a3281bbada7abadccf09c09a7d03b717c9832bef5e",
+"micropolis_8h.html#ac6fa10729dffeb6a192492f13c25e31aa44c7f6a65cc2597239f9c4babfdbc296"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
