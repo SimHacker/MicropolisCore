@@ -3,7 +3,8 @@
   import { onMount, onDestroy } from 'svelte';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
   import initModule from "$lib/../micropolisengine.js";
-  //import { PieMenu } from '$lib/PieMenu';
+  //import PieMenu from '$lib/PieMenu.svelte';
+  import SnapView from '$lib/SnapView.svelte';
 
   // Tile Sets
   import tileLayer_all9 from '$lib/images/tilesets/all.png';
@@ -197,6 +198,7 @@
   const keyFramesPerSecondValues = [ 1, 5, 10, 30, 60, 120, 120, 120, 120 ];
   const keyPassesValues =          [ 1, 1, 1,  1,  1,  1,   4,   10,  50  ];
   //const rootPie: PieMenu | null = null;
+  const snapView: SnapView | null = null;
 
   let micropolis = null;
   let mapData = null;
@@ -751,12 +753,16 @@
 </div>
 
 <div class="fullscreen mouseless">
+
   <div
     class="text-shadow about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
     onclick="{(event) => showAbout = !showAbout}"
   >{showAbout ? "X" : "+"}</div>
+
   {#if showAbout}
+
     <div class="text-shadow about-div">
+
       <b>This is Micropolis in WebAssembly!</b><br/>
       Based on the original SimCity Classic from Maxis,<br/>
       designed by Will Wright, ported by Don Hopkins.<br/>
@@ -802,9 +808,14 @@
           href="https://www.youtube.com/watch?v=WPMeWas4kXM"
         >Space Inventory</a> !<br/>
       </em>
+
     </div>
+
   {/if}
+
 </div>
+
+<SnapView/>
 
 <!--
 <PieMenu
