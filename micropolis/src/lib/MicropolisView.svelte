@@ -8,32 +8,102 @@
 
   // Tile Sets
   import tileLayer_all9 from '$lib/images/tilesets/all.png';
-/*
-  import tileLayer_monochrome from '$lib/images/tilesets/monochrome.png';
-  import tileLayer_classic from '$lib/images/tilesets/classic.png';
-  import tileLayer_asia from '$lib/images/tilesets/asia.png';
-  import tileLayer_earth from '$lib/images/tilesets/earth.png';
-  import tileLayer_future from '$lib/images/tilesets/future.png';
-  import tileLayer_medieval from '$lib/images/tilesets/medieval.png';
-  import tileLayer_moon from '$lib/images/tilesets/moon.png';
-  import tileLayer_snow from '$lib/images/tilesets/snow.png';
-  import tileLayer_wild_west from '$lib/images/tilesets/wild-west.png';
-*/
 
   const tileLayers = [
     tileLayer_all9,
-/*
-    tileLayer_classic,
-    tileLayer_monochrome,
-    tileLayer_asia,
-    tileLayer_earth,
-    tileLayer_future,
-    tileLayer_medieval,
-    tileLayer_moon,
-    tileLayer_snow,
-    tileLayer_wild_west,
-*/
   ];
+
+  const tileWidth = 16;
+  const tileHeight = 16;
+  const tileCount = 960;
+  const tileTextureWidth = 256;
+  const tileTextureHeight = 960;
+  let tileSetCount = 9;
+  let tileSet = 1;
+  const mapWidth = 120;
+  const mapHeight = 100;
+  const mapLength = mapWidth * mapHeight;
+  let framesPerSecond = 60;
+  let pausedFramesPerSecond = 60;
+  let paused = false;
+  const keyFramesPerSecondValues = [ 1, 5, 10, 30, 60, 120, 120, 120, 120 ];
+  const keyPassesValues =          [ 1, 1, 1,  1,  1,  1,   4,   10,  50  ];
+  //const rootPie: PieMenu | null = null;
+  const snapView: SnapView | null = null;
+
+  let micropolisengine = null;
+  let micropolis = null;
+  let mapData = null;
+  let mapStartAddress = 0;
+  let mapEndAddress = 0;
+  let mopData = null;
+  let mopStartAddress = 0;
+  let mopEndAddress = 0;
+  let cityFileName = '/cities/haight.cty';
+  let cityFileNames = [
+    "/cities/about.cty",
+    "/cities/badnews.cty",
+    "/cities/bluebird.cty",
+    "/cities/bruce.cty",
+    "/cities/deadwood.cty",
+    "/cities/finnigan.cty",
+    "/cities/freds.cty",
+    "/cities/haight.cty",
+    "/cities/happisle.cty",
+    "/cities/joffburg.cty",
+    "/cities/kamakura.cty",
+    "/cities/kobe.cty",
+    "/cities/kowloon.cty",
+    "/cities/kyoto.cty",
+    "/cities/linecity.cty",
+    "/cities/med_isle.cty",
+    "/cities/ndulls.cty",
+    "/cities/neatmap.cty",
+    "/cities/radial.cty",
+    "/cities/scenario_bern.cty",
+    "/cities/scenario_boston.cty",
+    "/cities/scenario_detroit.cty",
+    "/cities/scenario_dullsville.cty",
+    "/cities/scenario_hamburg.cty",
+    "/cities/scenario_rio_de_janeiro.cty",
+    "/cities/scenario_san_francisco.cty",
+    "/cities/scenario_tokyo.cty",
+    "/cities/senri.cty",
+    "/cities/southpac.cty",
+    "/cities/splats.cty",
+    "/cities/wetcity.cty",
+    "/cities/yokohama.cty",
+  ];
+
+  let canvasGL: HTMLCanvasElement | null = null;
+  let ctxGL: WebGL2RenderingContext | null = null;
+  let tileRenderer: TileRenderer | null = null;
+
+  let tickIntervalId: number | null = null;
+  let autoRepeatIntervalId: number | null = null;
+  let autoRepeatDelay = 1000 / 60; // 60 repeats per second
+  let autoRepeatKeys = [];
+
+  let panning: boolean = false;
+  let screenPos: [number, number] = [0, 0];
+  let tilePos: [number, number] = [0, 0];
+  let screenPosLast: [number, number] = [0, 0];
+  let tilePosLast: [number, number] = [0, 0];
+  let screenPosDown: [number, number] = [0, 0];
+  let tilePosDown: [number, number] = [0, 0];
+  let panDown: [number, number] = [0, 0];
+  let leftKeyDown = false;
+  let rightKeyDown = false;
+  let upKeyDown = false;
+  let downKeyDown = false;
+  let inKeyDown = false;
+  let outKeyDown = false;
+  let keyPanScale = 1;
+  let keyZoomScale = 0.025;
+  let wheelZoomScale = 0.05;
+  let heatFlowRangeLow = 5;
+  let heatFlowRangeHigh = 100;
+  let showAbout = true;
 
   // Micropolis Callback Interface Implementation
 
@@ -44,14 +114,17 @@
     }
 
     didGenerateMap(micropolis: micropolisengine.Micropolis, callbackVal: any, seed: number): void {
+        setTileSet(tileSet); // The tile set layer gets overwritten when we load a city.
         console.log('MicropolisCallback: didGenerateMap:', 'seed:', seed);
     }
 
     didLoadCity(micropolis: micropolisengine.Micropolis, callbackVal: any, filename: string): void {
+        setTileSet(tileSet); // The tile set layer gets overwritten when we load a city.
         console.log('MicropolisCallback: didLoadCity:', 'filename:', filename);
     }
 
     didLoadScenario(micropolis: micropolisengine.Micropolis, callbackVal: any, name: string, fname: string): void {
+        setTileSet(tileSet); // The tile set layer gets overwritten when we load a city.
         console.log('MicropolisCallback: didLoadScenario:', 'name:', name, 'fname:', fname);
     }
 
@@ -96,7 +169,7 @@
     }
 
     showBudgetAndWait(micropolis: micropolisengine.Micropolis, callbackVal: any): void {
-        console.log('MicropolisCallback: showBudgetAndWait');
+        //console.log('MicropolisCallback: showBudgetAndWait');
     }
 
     showZoneStatus(micropolis: micropolisengine.Micropolis, callbackVal: any, tileCategoryIndex: number, populationDensityIndex: number, landValueIndex: number, crimeRateIndex: number, pollutionIndex: number, growthRateIndex: number, x: number, y: number): void {
@@ -180,99 +253,7 @@
     }
 
   }
-
-  const tileWidth = 16;
-  const tileHeight = 16;
-  const tileCount = 960;
-  const tileTextureWidth = 256;
-  const tileTextureHeight = 960;
-  let tileSetCount = 9;
-  let tileSet = 1;
-  let tileLayer = 0;
-  const mapWidth = 120;
-  const mapHeight = 100;
-  const mapLength = mapWidth * mapHeight;
-  let framesPerSecond = 60;
-  let pausedFramesPerSecond = 60;
-  let paused = false;
-  const keyFramesPerSecondValues = [ 1, 5, 10, 30, 60, 120, 120, 120, 120 ];
-  const keyPassesValues =          [ 1, 1, 1,  1,  1,  1,   4,   10,  50  ];
-  //const rootPie: PieMenu | null = null;
-  const snapView: SnapView | null = null;
-
-  let micropolis = null;
-  let mapData = null;
-  let mapStartAddress = 0;
-  let mapEndAddress = 0;
-  let mopData = null;
-  let mopStartAddress = 0;
-  let mopEndAddress = 0;
-  let cityFileName = '/cities/haight.cty';
-  let cityFileNames = [
-    "/cities/about.cty",
-    "/cities/badnews.cty",
-    "/cities/bluebird.cty",
-    "/cities/bruce.cty",
-    "/cities/deadwood.cty",
-    "/cities/finnigan.cty",
-    "/cities/freds.cty",
-    "/cities/haight.cty",
-    "/cities/happisle.cty",
-    "/cities/joffburg.cty",
-    "/cities/kamakura.cty",
-    "/cities/kobe.cty",
-    "/cities/kowloon.cty",
-    "/cities/kyoto.cty",
-    "/cities/linecity.cty",
-    "/cities/med_isle.cty",
-    "/cities/ndulls.cty",
-    "/cities/neatmap.cty",
-    "/cities/radial.cty",
-    "/cities/scenario_bern.cty",
-    "/cities/scenario_boston.cty",
-    "/cities/scenario_detroit.cty",
-    "/cities/scenario_dullsville.cty",
-    "/cities/scenario_hamburg.cty",
-    "/cities/scenario_rio_de_janeiro.cty",
-    "/cities/scenario_san_francisco.cty",
-    "/cities/scenario_tokyo.cty",
-    "/cities/senri.cty",
-    "/cities/southpac.cty",
-    "/cities/splats.cty",
-    "/cities/wetcity.cty",
-    "/cities/yokohama.cty",
-  ];
-
-  let canvasGL: HTMLCanvasElement | null = null;
-  let ctxGL: WebGL2RenderingContext | null = null;
-  let tileRenderer: TileRenderer | null = null;
-
-  let tickIntervalId: number | null = null;
-  let autoRepeatIntervalId: number | null = null;
-  let autoRepeatDelay = 1000 / 60; // 60 repeats per second
-  let autoRepeatKeys = [];
-
-  let panning: boolean = false;
-  let screenPos: [number, number] = [0, 0];
-  let tilePos: [number, number] = [0, 0];
-  let screenPosLast: [number, number] = [0, 0];
-  let tilePosLast: [number, number] = [0, 0];
-  let screenPosDown: [number, number] = [0, 0];
-  let tilePosDown: [number, number] = [0, 0];
-  let panDown: [number, number] = [0, 0];
-  let leftKeyDown = false;
-  let rightKeyDown = false;
-  let upKeyDown = false;
-  let downKeyDown = false;
-  let inKeyDown = false;
-  let outKeyDown = false;
-  let keyPanScale = 1;
-  let keyZoomScale = 0.025;
-  let wheelZoomScale = 0.05;
-  let heatFlowRangeLow = 5;
-  let heatFlowRangeHigh = 100;
-  let showAbout = true;
-
+  
   function micropolisMain() {
 
     window.micropolis = micropolis = new micropolisengine.Micropolis();
@@ -283,7 +264,6 @@
     micropolis.setCallback(jsCallback, null);
 
     micropolis.init();
-    micropolis.loadCity(cityFileName);
     
     mapStartAddress = micropolis.getMapAddress() / 2;
     mapEndAddress = mapStartAddress + micropolis.getMapSize() / 2;
@@ -297,8 +277,9 @@
     window.mopData = mopData;
     //console.log("micropolisMain: mopStartAddress:", mopStartAddress, "mopEndAddress:", mopEndAddress, "mopData:", mopData);
 
-    setTileSet(tileSet);
+    micropolis.loadCity(cityFileName);
 
+    setTileSet(tileSet);
   }
 
   function tick(): void {
@@ -366,7 +347,6 @@
 
   function renderAll(): void {
     //console.log("renderAll: mapStartAddress:", mapStartAddress, "mapEndAddress:", mapEndAddress, "mapData:", mapData);
-    tileRenderer.tileLayer = tileLayer;
     tileRenderer.render();
   }
 
@@ -464,17 +444,16 @@
       tick();
     } else if (key == '+') {
       // Next tile layer
-      setTileLayer((tileLayer + 1) % tileLayers.length);
+      setTileLayer((tileRenderer.tileLayer + 1) % tileLayers.length);
       tick();
     } else if (key === '_') {
       // Previous tile layer
-      setTileLayer((tileLayer + tileLayers.length - 1) % tileLayers.length);
+      setTileLayer((tileRenderer.tileLayer + tileLayers.length - 1) % tileLayers.length);
+      tick();
+    } else if (key === '\\') {
+      micropolis.generateSomeRandomCity();
       tick();
     } else switch (keyCode) {
-      case 9:
-        micropolis.generateSomeRandomCity();
-        tick();
-        break;        
       case 32:
         if (micropolis.heatSteps) {
           rotateTiles(tileRenderer.tileRotate);
@@ -544,8 +523,10 @@
   }
 
   function setTileSet(index) {
-    //console.log('setTileSet:', index);
     tileSet = index;
+    if (!mopData) {
+      return;
+    } 
     for (let i = 0; i < mopData.length; i++) {
       mopData[i] = tileSet;
     }
@@ -553,7 +534,7 @@
   
   function setTileLayer(index) {
     //console.log('setTileLayer:', index);
-    tileLayer = index;
+    tileRenderer.tileLayer = index;
   }
   
   function onkeyup(event: KeyboardEvent): void {
@@ -652,12 +633,10 @@
     //console.log('MicropolisView: onMount: ', 'tileWidth:', tileWidth, 'tileHeight:', tileHeight, 'tileCount:', tileCount, 'tileTextureWidth:', tileTextureWidth, 'tileTextureHeight:', tileTextureHeight, 'tileTexture:', tileTexture, 'mapWidth:', mapWidth, 'mapHeight:', mapHeight, 'mapLength:', mapLength, 'mapData:', mapData);
 
     console.log("MicropolisView: onMount: initializing micropolisengine...");
-    window.micropolisengine = {};
+    micropolisengine = window.micropolisengine = {};
     await initModule(micropolisengine);
     window.rotateTiles = rotateTiles;
     console.log("MicropolisView: onMount: initialized micropolisengine:", micropolisengine);
-
-    micropolisMain();
 
     // Create 3d canvas drawing context and tileRenderer.
     //console.log('MicropolisView: onMount', 'canvasGL:', canvasGL);
@@ -680,13 +659,15 @@
       return;
     }
 
-    document.addEventListener('focusin', refocusCanvas);
-    canvasGL.addEventListener('focusout', refocusCanvas);
+    //document.addEventListener('focusin', refocusCanvas);
+    //canvasGL.addEventListener('focusout', refocusCanvas);
     canvasGL.addEventListener('wheel', onwheel, {passive: false});
 
     resizeCanvas();
 
     //console.log('MicropolisView: onMount: initialize:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTileRetileRenderernderer);
+
+    micropolisMain();
 
     tileRenderer.initialize(canvasGL, ctxGL, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileLayers)
       .then(() => {
@@ -718,13 +699,11 @@
 
         tileRenderer.panTo(mapWidth * 0.5, mapHeight * 0.5);
         tileRenderer.zoomTo(1.0);
-        tileRenderer.tileLayer = tileLayer;
-        tileRenderer.render();
+        tileRenderer.tileLayer = 0;
+        setFramesPerSecond(framesPerSecond);
       });
 
     refocusCanvas();
-
-    setFramesPerSecond(framesPerSecond);
 
   });
 

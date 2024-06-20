@@ -14,6 +14,9 @@
     let margin = $state(24);
     let snapViewVisible = $state(true);
     let snapWorld: any;
+    let snapIde: any;
+    let snapScene: any;
+    let snapStage: any;
 
     // JavaScript for handling dragging and resizing
     let offsetX = 0;
@@ -140,8 +143,44 @@
         //if ('serviceWorker' in navigator) {
         //    navigator.serviceWorker.register('https://snap.berkeley.edu/snap/src/sw.js');
         //}
-        snapWorld = new WorldMorph(snapCanvas, false);
-        new IDE_Morph().openIn(snapWorld);
+        snapWorld = window.snapWorld = new WorldMorph(snapCanvas, false);
+        snapIde = window.snapIde = new IDE_Morph().openIn(snapWorld);
+        snapScene = window.snapScene = snapIde.scenes.contents[0];
+        snapStage = window.snapStage = snapScene.stage;
+
+        /*
+
+    // projection layer - for video, maps, 3D extensions etc., transient
+    this.projectionSource = null; // offscreen DOM element for video, maps, 3D
+    this.getProjectionImage = null; // function to return a blittable image
+    this.stopProjectionSource = null; // function to turn off video stream etc.
+    this.continuousProjection = false; // turn ON for video
+    this.projectionCanvas = null;
+    this.projectionTransparency = 50;
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                myself.getProjectionImage = myself.getVideoImage;
+                myself.stopProjectionSource = myself.stopVideo;
+                myself.continuousProjection = true;
+                myself.projectionSource.srcObject = stream;
+                myself.projectionSource.play().catch(noCameraSupport);
+                myself.projectionSource.stream = stream;
+            })
+            .catch(noCameraSupport);
+    }
+
+    Cloud.prototype.knownDomains
+
+    // We dynamically determine the domain of the cloud server.
+    // This allows for easy mirrors and development servers.
+    // The domain is determined by:
+    // 1. <meta name='snap-cloud-domain' location="X"> in snap.html.
+    // 2. The current page's domain
+
+        */
+
         requestAnimationFrame(loop);
 
     });

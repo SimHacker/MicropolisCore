@@ -144,6 +144,8 @@ void Micropolis::simulate()
 
     short speedIndex = clamp((short)(simSpeed - 1), (short)0, (short)2);
 
+    //printf("simulate phaseCycle=%d initSimLoad %d\n", phaseCycle, initSimLoad);
+
     // The simulator has 16 different phases, which we cycle through
     // according to phaseCycle, which is incremented and wrapped at
     // the end of this switch.
@@ -285,6 +287,8 @@ void Micropolis::simulate()
  */
 void Micropolis::doSimInit()
 {
+    //printf("doSimInit initSimLoad: %d\n", initSimLoad);
+
     phaseCycle = 0;
     simCycle = 0;
 
@@ -293,10 +297,14 @@ void Micropolis::doSimInit()
         initSimMemory();
     }
 
+    //printf("doSimInit now 1 initSimLoad: %d\n", initSimLoad);
+
     if (initSimLoad == 1) {
         /* if city just loaded */
         simLoadInit();
     }
+
+    //printf("doSimInit now 2 initSimLoad: %d\n", initSimLoad);
 
     setValves();
     clearCensus();
@@ -398,6 +406,8 @@ void Micropolis::decRateOfGrowthMap()
 /* comefrom: doSimInit */
 void Micropolis::initSimMemory()
 {
+    //printf("initSimMemory\n");
+
     setCommonInits();
 
     for (short x = 0; x < 240; x++)  {
@@ -943,6 +953,8 @@ void Micropolis::updateFundEffects()
 void Micropolis::mapScan(int x1, int x2)
 {
     short x, y;
+
+    //printf("mapScan %d %d\n", x1, x2);
 
     for (x = x1; x < x2; x++) {
         for (y = 0; y < WORLD_H; y++) {

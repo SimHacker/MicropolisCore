@@ -90,6 +90,8 @@
  */
 void Micropolis::doZone(const Position &pos)
 {
+    //printf("doZone %d %d\n", pos.posX, pos.posY);
+    
     // Set Power Bit in Map from powerGridMap
     bool zonePowerFlag = setZonePower(pos);
 

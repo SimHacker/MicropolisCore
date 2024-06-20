@@ -1737,12 +1737,10 @@ public:
      */
     int terrainCreateIsland;
 
-
     /**
      * The seed of the most recently generated city.
      */
     int generatedCitySeed;
-
 
     void generateSomeRandomCity();
 
@@ -2043,8 +2041,7 @@ public:
     ////////////////////////////////////////////////////////////////////////
     // scan.cpp
 
-private:
-
+public:
 
     /** @todo Write-only variable, can be removed? */
     short newMap;
@@ -2132,7 +2129,7 @@ public:
 
     int mapSerial; ///< The invalidateMaps method increases the map serial number every time the maps changes.
 
-private:
+public:
 
     short resValve;
     short comValve;
@@ -2615,7 +2612,6 @@ private:
 
     short trafMaxX; ///< X coordinate of a position with heavy traffic
     short trafMaxY; ///< Y coordinate of a position with heavy traffic
-
 
     void addToTrafficDensityMap();
 

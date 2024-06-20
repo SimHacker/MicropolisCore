@@ -253,8 +253,9 @@ bool Micropolis::loadFileData(const std::string &filename)
       load_short(moneyHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(miscHist, MISC_HISTORY_LENGTH / sizeof(short), f) &&
       load_short((short *)mapBase, mapSizeShort, f) &&
-      (hasMop &&
-       load_short((short *)mopBase, mapSizeShort, f));
+      (hasMop 
+        ? load_short((short *)mopBase, mapSizeShort, f)
+        : true);
 
     //printf("mapSize: %d historySize: %d mapFileSize: %d mopFileSize: %d size: %d hasMop: %d isValid: %d result: %d\n", mapSize, historySize, mapFileSize, mopFileSize, size, hasMop, isValid, result);
 
@@ -546,6 +547,8 @@ bool Micropolis::loadCity(const std::string &filename)
 
         std::string newCityName = cityFileName.substr(pos, last - pos);
         setCityName(newCityName);
+
+        doSimInit();
 
         didLoadCity(filename);
 

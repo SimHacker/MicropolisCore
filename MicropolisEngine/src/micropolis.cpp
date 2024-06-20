@@ -697,6 +697,7 @@ void Micropolis::init()
     indLast = 0;
 
     simInit();
+    doSimInit();
 
 }
 
@@ -739,6 +740,8 @@ static bool testDirectory(const std::string& dir, const std::string &envVar)
 /** Initialize for a simulation */
 void Micropolis::simInit()
 {
+    //printf("simInit initSimLoad: %d\n", initSimLoad);
+
     setEnableSound(true); // Enable sound
     mustUpdateOptions = true; // Update options displayed at user
     scenario = SC_NONE;
