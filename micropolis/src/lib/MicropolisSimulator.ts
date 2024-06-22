@@ -82,19 +82,19 @@ export class MicropolisSimulator {
     }
 
     async initialize(callback: Callback | null = null, render: (() => void) | null) {
-        console.log("MicropolisSimulator: init: micropolis:", this.micropolis);
+        console.log("MicropolisSimulator: initialize");
 
         this.micropolisengine = await loadMicropolisEngine();
-        console.log("MicropolisSimulator: init: micropolisengine:", this.micropolisengine);
+        console.log("MicropolisSimulator: initialize: micropolisengine:", this.micropolisengine);
         if (this.micropolisengine === null) {
-            console.log("MicropolisSimulator: init: error loading micropolisengine.");
+            console.log("MicropolisSimulator: initialize: error loading micropolisengine.");
             return;
         }
     
         this.micropolis = new micropolisengine.Micropolis();
-        console.log("MicropolisSimulator: init: micropolis:", this.micropolis);
+        console.log("MicropolisSimulator: initialize: micropolis:", this.micropolis);
         if (this.micropolis === null) {
-            console.log("MicropolisSimulator: init: error creating micropolis.");
+            console.log("MicropolisSimulator: initialize: error creating micropolis.");
             return;
         }
 

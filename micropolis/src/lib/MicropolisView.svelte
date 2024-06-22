@@ -20,7 +20,11 @@
     console.log("MicropolisView: onMount: initializing micropolisengine...");
 
     micropolisSimulator = 
-      new MicropolisSimulator()
+      new MicropolisSimulator();
+
+    window.micropolisSimulator = micropolisSimulator;
+    window.micropolis = micropolisSimulator.micropolis;
+    window.micropolisengine = micropolisSimulator.micropolisengine;
 
     console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
 
@@ -38,6 +42,14 @@
 
     micropolisSimulator.setGameSpeed(
       micropolisSimulator.gameSpeed);
+
+    // Disable scrolling.
+    const scrollTop = 
+      window.pageYOffset || window.document.documentElement.scrollTop;
+    const scrollLeft = 
+      window.pageXOffset || window.document.documentElement.scrollLeft;
+    window.onscroll = 
+      () => window.scrollTo(scrollLeft, scrollTop);
 
   });
 

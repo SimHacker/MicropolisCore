@@ -14,7 +14,7 @@
   const tileHeight = 16;
   const tileCount = 960;
   let tileSetCount = 9;
-  let tileSet = 0;
+  let tileSet: number = 0;
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
@@ -48,37 +48,30 @@
   let micropolisSimulator: MicropolisSimulator | null = null;
 
   export async function initialize(micropolisSimulator_: MicropolisSimulator): Promise<void> {
-    console.log("TileView.svelte: init:", "micropolisSimulator:", micropolisSimulator_);
+    console.log("TileView.svelte: initialize:", "micropolisSimulator:", micropolisSimulator_);
   
     micropolisSimulator = micropolisSimulator_;
 
     // Create 3d canvas drawing context and tileRenderer.
     //console.log('TileView.svelte: onMount', 'canvasGL:', canvasGL);
     if (canvasGL == null) {
-      console.log('TileView.svelte: onMount: canvasGL is null!');
+      console.log('TileView.svelte: initialize: canvasGL is null!');
       return;
     }
 
     ctxGL = canvasGL.getContext('webgl2');
-    //console.log('TileView.svelte: onMount:', 'ctxGL:', ctxGL);
+    //console.log('TileView.svelte: initialize:', 'ctxGL:', ctxGL);
     if (ctxGL == null) {
-      console.log('TileView.svelte: onMount: no ctxGL!');
+      console.log('TileView.svelte: initialize: no ctxGL!');
       return;
     }
 
-    tileRenderer = new WebGLTileRenderer();
-    //console.log('TileView.svelte: onMount: tileRenderer:', tileRenderer);
+    window.tileRenderer = tileRenderer = new WebGLTileRenderer();
+    //console.log('TileView.svelte: initialize: tileRenderer:', tileRenderer);
     if (tileRenderer == null) {
-      console.log('TileView.svelte: onMount: no tileRenderer!');
+      console.log('TileView.svelte: initialize: no tileRenderer!');
       return;
     }
-
-    window.micropolisSimulator = micropolisSimulator;
-    window.micropolis = micropolisSimulator.micropolis;
-    window.micropolisengine = micropolisSimulator.micropolisengine;
-    window.tileRenderer = tileRenderer;
-
-    //console.log('TileView.svelte: onMount: initialize:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTileRetileRenderernderer);
 
     await tileRenderer.initialize(
       canvasGL, 
@@ -91,21 +84,13 @@
       tileHeight, 
       tileLayers);
 
-    //console.log('TileView.svelte: onMount: initialize: then:', 'canvasGL:', canvasGL, 'ctxGL:', ctxGL, 'tileRenderer:', webGLTiltileRenderereRenderer);
+    //console.log('TileView.svelte: initialize: initialized tile renderer.');
 
     tileRenderer.panTo(
       micropolisSimulator.micropolisengine.WORLD_W * 0.5, 
       micropolisSimulator.micropolisengine.WORLD_H * 0.5);
     tileRenderer.zoomTo(1.0);
     tileRenderer.tileLayer = 0;
-
-    // Disable scrolling.
-    const scrollTop = 
-      window.pageYOffset || window.document.documentElement.scrollTop;
-    const scrollLeft = 
-      window.pageXOffset || window.document.documentElement.scrollLeft;
-    window.onscroll = 
-      () => window.scrollTo(scrollLeft, scrollTop);
 
     canvasGL.addEventListener('wheel', onwheel, {passive: false});
 
@@ -132,7 +117,7 @@
     }
   }
 
-  function trackMouse(event: MouseEvent): TileRenderer<any> | null {
+  export function trackMouse(event: MouseEvent): TileRenderer<any> | null {
     screenPosLast = screenPos;
     tilePosLast = tilePos;
 
@@ -147,7 +132,7 @@
     }
   }
 
-  function onmousedown(event: MouseEvent): void {
+  export function onmousedown(event: MouseEvent): void {
     trackMouse(event);
 
     panning = true;
@@ -157,7 +142,7 @@
     //console.log('TileView.svelte: onmousedown: event:', event, 'target:', event.target, 'screenPos:', screenPos, 'panDown:', panDown);
   }
 
-  function onmousemove(event: MouseEvent): void {
+  export function onmousemove(event: MouseEvent): void {
     trackMouse(event);
 
     if (!panning) return;
@@ -175,7 +160,7 @@
     render();
   }
 
-  function onmouseup(event: MouseEvent): void {
+  export function onmouseup(event: MouseEvent): void {
     if (!panning) return;
 
     //console.log('TileView.svelte: onmouseup: event:', event, 'target:', event.target);
@@ -185,7 +170,7 @@
     render();
   }
 
-  function onkeydown(event: KeyboardEvent): void {
+  export function onkeydown(event: KeyboardEvent): void {
     //console.log('TileView.svelte: onkeydown: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
     const key = event.key;
     const keyCode = event.keyCode;
@@ -234,13 +219,13 @@
 
     } else if (key === '\\') {
 
-      micropolis.generateSomeRandomCity();
+      micropolisSimulator.micropolis.generateSomeRandomCity();
       micropolisSimulator.render();
 
     } else switch (keyCode) {
 
       case 32:
-        if (micropolis.heatSteps) {
+        if (micropolisSimulator.micropolis.heatSteps) {
           micropolisSimulator.rotateMapTiles(tileRenderer.tileRotate);
           tileRenderer.tileRotate = 0;
           micropolisSimulator.micropolis.heatSteps = 0;
@@ -292,17 +277,17 @@
         break;
 
       case 219:
-        micropolisSimulator.micropolis.setCityTax(Math.max(0, micropolis.cityTax - 1));
+        micropolisSimulator.micropolis.setCityTax(Math.max(0, micropolisSimulator.micropolis.cityTax - 1));
         break;
 
       case 221:
-        micropolisSimulator.micropolis.setCityTax(Math.min(20, micropolis.cityTax + 1));
+        micropolisSimulator.micropolis.setCityTax(Math.min(20, micropolisSimulator.micropolis.cityTax + 1));
         break;
 
     }
   }
 
-  function onkeyup(event: KeyboardEvent): void {
+  export function onkeyup(event: KeyboardEvent): void {
     //console.log('TileView.svelte: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
     const key = event.keyCode;
 
@@ -392,7 +377,7 @@
 
   }
 
-  function onwheel(event: WheelEvent): void {
+  export function onwheel(event: WheelEvent): void {
 
     event.preventDefault();
     
@@ -405,7 +390,7 @@
     micropolisSimulator.render();
   }
 
-  function setTileSet(index) {
+  export function setTileSet(index) {
     
     tileSet = index;
     if (micropolisSimulator) {
@@ -415,13 +400,13 @@
     micropolisSimulator.render();
   }
   
-  function setTileLayer(index) {
+  export function setTileLayer(index) {
     //console.log('setTileLayer:', index);
     tileRenderer.tileLayer = index;
     micropolisSimulator.render();
   }
   
-  function refocusCanvas() {
+  export function refocusCanvas() {
     if (canvasGL && 
         (document.activeElement !== canvasGL)) {
       canvasGL.focus();
