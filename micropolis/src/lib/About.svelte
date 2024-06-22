@@ -6,69 +6,69 @@ let {
 
 </script>
 
-<div class="fullscreen mouseless">
+<div id="about" class="fullscreen mouseless">
 
-    <div
-      class="text-shadow about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
-      onclick="{(event) => showAbout = !showAbout}"
-    >{showAbout ? "X" : "+"}</div>
-  
-    {#if showAbout}
-  
-      <div class="text-shadow about-div">
-  
-        <b>This is Micropolis in WebAssembly!</b><br/>
-        Based on the original SimCity Classic from Maxis,<br/>
-        designed by Will Wright, ported by Don Hopkins.<br/>
-        This is just an unfinished evolving scrappy fiddle.<br/>
-        Please support its further development via
+  <div
+    class="text-shadow about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
+    onclick="{(event) => showAbout = !showAbout}"
+  >{showAbout ? "X" : "+"}</div>
+
+  {#if showAbout}
+
+    <div class="text-shadow about-div">
+
+      <b>This is Micropolis in WebAssembly!</b><br/>
+      Based on the original SimCity Classic from Maxis,<br/>
+      designed by Will Wright, ported by Don Hopkins.<br/>
+      This is just an unfinished evolving scrappy fiddle.<br/>
+      Please support its further development via
+      <a
+        target="_new"
+        href="https://www.patreon.com/DonHopkins"
+      >Patreon</a>.<br/>
+      GitHub: <a
+        target="_new"
+        href="https://github.com/SimHacker/MicropolisCore"
+      >https://github.com/SimHacker/MicropolisCore</a>.<br/>
+      YouTube: <a
+        target="_new"
+        href="https://www.youtube.com/watch?v=wlHGfNlE8Os"
+      >"MicropolisWeb Demo 1"</a> and<br/>
+        <a
+        target="_new"
+        href="https://www.youtube.com/watch?v=BBVyCpmVQew"
+      >"Space Inventory Cellular Automata Music 1"</a>.<br/>
+      More Info: <a
+        target="_new"
+        href="https://mitpress.mit.edu/9780262547482/building-simcity/"
+        >Chaim Gingold's book "Building SimCity"</a><br/>
+        and <a
+        target="_new"
+        href="https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams.pdf"
+        >Chaim Gingold's "SimCity Reverse Diagrams"</a>.<br/>
+      Drag left button to pan, spin mouse wheel to zoom.<br/>
+      Arrow keys pan, comma and period keys zoom.<br/>
+      Letter keys load various cities, \ to generate.<br/>
+      Numeric keys set the speed, 0 toggles pause.<br/>
+      The brackets lower and raise the tax rate.<br/>
+      The - and = keys switch between tile sets!<br/>
+      Click the "<div class="about-show-opened-text">X</div>" button above to hide this window.<br/>
+      More features and easter eggs on the way...<br/>
+      <em>
+        WARNING: <u>DO NOT</u> hit the space bar,<br/>
+        because that will open up the 
         <a
           target="_new"
-          href="https://www.patreon.com/DonHopkins"
-        >Patreon</a>.<br/>
-        GitHub: <a
-          target="_new"
-          href="https://github.com/SimHacker/MicropolisCore"
-        >https://github.com/SimHacker/MicropolisCore</a>.<br/>
-        YouTube: <a
-          target="_new"
-          href="https://www.youtube.com/watch?v=wlHGfNlE8Os"
-        >"MicropolisWeb Demo 1"</a> and<br/>
-          <a
-          target="_new"
-          href="https://www.youtube.com/watch?v=BBVyCpmVQew"
-        >"Space Inventory Cellular Automata Music 1"</a>.<br/>
-       More Info: <a
-          target="_new"
-          href="https://mitpress.mit.edu/9780262547482/building-simcity/"
-          >Chaim Gingold's book "Building SimCity"</a><br/>
-          and <a
-          target="_new"
-          href="https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams.pdf"
-          >Chaim Gingold's "SimCity Reverse Diagrams"</a>.<br/>
-        Drag left button to pan, spin mouse wheel to zoom.<br/>
-        Arrow keys pan, comma and period keys zoom.<br/>
-        Letter keys load various cities, \ to generate.<br/>
-        Numeric keys set the speed, 0 toggles pause.<br/>
-        The brackets lower and raise the tax rate.<br/>
-        The - and = keys switch between tile sets!<br/>
-        Click the "<div class="about-show-opened-text">X</div>" button above to hide this window.<br/>
-        More features and easter eggs on the way...<br/>
-        <em>
-          WARNING: <u>DO NOT</u> hit the space bar,<br/>
-          because that will open up the 
-          <a
-            target="_new"
-            href="https://www.youtube.com/watch?v=WPMeWas4kXM"
-          >Space Inventory</a> !<br/>
-        </em>
-  
-      </div>
-  
-    {/if}
-  
-  </div>
-  
+          href="https://www.youtube.com/watch?v=WPMeWas4kXM"
+        >Space Inventory</a> !<br/>
+      </em>
+
+    </div>
+
+  {/if}
+
+</div>
+
 
 <style>
 
@@ -77,9 +77,13 @@ let {
     }
   
     .fullscreen {
+      display: block;
       position: absolute;
       width: 100%;
       height: 100%;
+      z-index: 100;
+      top: 0px;
+      left: 0px;
     }
   
     .text-shadow {
@@ -94,7 +98,6 @@ let {
       position: absolute;
       left: 0px;
       top: 0px;
-      z-index: 25;
       pointer-events: auto;
       cursor: pointer;
       margin-left: 3px;
@@ -143,7 +146,6 @@ let {
       font-size: 16px;
       line-height: 1.25em;
       color: white;
-      z-index: 20
       pointer-events: none;
       user-select: none;
       background: #00000080;

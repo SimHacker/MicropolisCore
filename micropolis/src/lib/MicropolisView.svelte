@@ -65,13 +65,12 @@
   bind:this={tileView}
 />
 
-<!--
 <About showAbout={true}/>
 
 <SnapView
   bind:this={snapView}
 />
--->
+
 <!--
 <PieMenu
   bind:this={rootPie}
@@ -82,7 +81,7 @@
 
 .fullscreen {
   display: block;
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
   top: 0;
