@@ -257,7 +257,7 @@ bool Micropolis::loadFileData(const std::string &filename)
         ? load_short((short *)mopBase, mapSizeShort, f)
         : true);
 
-    //printf("mapSize: %d historySize: %d mapFileSize: %d mopFileSize: %d size: %d hasMop: %d isValid: %d result: %d\n", mapSize, historySize, mapFileSize, mopFileSize, size, hasMop, isValid, result);
+    //printf("loadFileData: mapSize: %d historySize: %d mapFileSize: %d mopFileSize: %d size: %ld hasMop: %d isValid: %d result: %d\n", mapSize, historySize, mapFileSize, mopFileSize, size, hasMop, isValid, result);
 
     if (!hasMop) {
         memset(mopBase, 0, WORLD_W * WORLD_H * sizeof(short));
@@ -275,6 +275,7 @@ bool Micropolis::loadFileData(const std::string &filename)
  */
 bool Micropolis::loadFile(const std::string &filename)
 {
+    //printf("loadFile: mapBase: %p\n", mapBase);
     long n;
 
     if (!loadFileData(filename)) {

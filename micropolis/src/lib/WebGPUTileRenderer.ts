@@ -6,6 +6,7 @@ import { TileRenderer } from './TileRenderer';
 
 
 class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
+    
     public context: GPUCanvasContext;
     public device: GPUDevice;
     public tileTexture: GPUTexture;
@@ -42,7 +43,9 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         tileHeight: number,
         tileTextureURLs: string[],
     ): Promise<void> {
+
         await super.initialize(canvas, this.context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
+
         this.context = canvas.getContext('webgpu') as GPUCanvasContext;
         if (!this.context) {
             throw new Error('WebGPU is not supported.');

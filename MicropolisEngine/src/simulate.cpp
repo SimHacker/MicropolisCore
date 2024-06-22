@@ -287,8 +287,6 @@ void Micropolis::simulate()
  */
 void Micropolis::doSimInit()
 {
-    //printf("doSimInit initSimLoad: %d\n", initSimLoad);
-
     phaseCycle = 0;
     simCycle = 0;
 
@@ -297,14 +295,10 @@ void Micropolis::doSimInit()
         initSimMemory();
     }
 
-    //printf("doSimInit now 1 initSimLoad: %d\n", initSimLoad);
-
     if (initSimLoad == 1) {
         /* if city just loaded */
         simLoadInit();
     }
-
-    //printf("doSimInit now 2 initSimLoad: %d\n", initSimLoad);
 
     setValves();
     clearCensus();

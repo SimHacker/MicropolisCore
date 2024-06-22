@@ -141,7 +141,7 @@ abstract class TileRenderer<TContext> {
      * @param tileTextureURLs The URLs of the tile texture images to be loaded.
      * @returns A promise that resolves when the renderer is fully initialized and the texture is loaded.
      */
-    initialize(
+    async initialize(
         canvas: HTMLCanvasElement,
         context: TContext,
         mapData: Uint16Array,
@@ -166,11 +166,6 @@ abstract class TileRenderer<TContext> {
         this.panYMax = this.mapHeight;
     
         // Perform any other common setup here.
-
-        // Since this is a default implementation, we just resolve immediately.
-        // Subclasses will extend this to perform async tasks like loading textures.
-
-        return Promise.resolve();
     }
 
     /**

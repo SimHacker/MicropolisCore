@@ -11,11 +11,11 @@ export default defineConfig({
       // Copy the built webassembly module and data into place.
       targets: [
         {
-          src: "src/micropolisengine.wasm",
+          src: "src/lib/micropolisengine.wasm",
           dest: ".",
         },
         {
-          src: "src/micropolisengine.data",
+          src: "src/lib/micropolisengine.data",
           dest: ".",
         },
       ]

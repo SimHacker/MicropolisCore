@@ -113,12 +113,14 @@ void Micropolis::initMapArrays()
     pollutionHist = (short *)newPtr(HISTORY_LENGTH);
     crimeHist = (short *)newPtr(HISTORY_LENGTH);
     miscHist = (short *)newPtr(MISC_HISTORY_LENGTH);
+
 }
 
 
 /** Free all map arrays */
 void Micropolis::destroyMapArrays()
 {
+    printf("destroyMapArrays: mapBase: %p\n", mapBase);
 
     if (mapBase != NULL) {
         freePtr(mapBase);

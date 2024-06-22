@@ -103,14 +103,15 @@ Micropolis::Micropolis() :
         policeStationEffectMap(0),
         comRateMap(0)
 {
+    initMapArrays();
 }
 
 
 /** Simulator destructor. */
 Micropolis::~Micropolis()
 {
-    setCallback(NULL, emscripten::val::null());
     destroy();
+    setCallback(NULL, emscripten::val::null());
 }
 
 
@@ -127,7 +128,8 @@ void Micropolis::setCallback(Callback *callback0, emscripten::val callbackVal0)
 /** Initialize simulator variables to a sane default. */
 void Micropolis::init()
 {
-
+    printf("init");
+    
     ////////////////////////////////////////////////////////////////////////
     // allocate.cpp
 
@@ -224,9 +226,6 @@ void Micropolis::init()
     // short startingYear;
     startingYear = 0;
 
-    // short *map[WORLD_W];
-    memset(map, 0, sizeof(short *) * WORLD_W);
-
     // short resHist10Max;
     resHist10Max = 0;
 
@@ -291,30 +290,6 @@ void Micropolis::init()
     policeStationMap.clear();
     policeStationEffectMap.clear();
     comRateMap.clear();
-
-    // unsigned short *mapBase;
-    mapBase = NULL;
-
-    // short *resHist;
-    resHist = NULL;
-
-    // short *comHist;
-    comHist = NULL;
-
-    // short *indHist;
-    indHist = NULL;
-
-    // short *moneyHist;
-    moneyHist = NULL;
-
-    // short *pollutionHist;
-    pollutionHist = NULL;
-
-    // short *crimeHist;
-    crimeHist = NULL;
-
-    // short *miscHist;
-    miscHist = NULL;
 
 
     ////////////////////////////////////////////////////////////////////////
@@ -740,8 +715,6 @@ static bool testDirectory(const std::string& dir, const std::string &envVar)
 /** Initialize for a simulation */
 void Micropolis::simInit()
 {
-    //printf("simInit initSimLoad: %d\n", initSimLoad);
-
     setEnableSound(true); // Enable sound
     mustUpdateOptions = true; // Update options displayed at user
     scenario = SC_NONE;
@@ -760,7 +733,6 @@ void Micropolis::simInit()
     simLoops = 0;
     initSimLoad = 2;
 
-    initMapArrays();
     initGraphs();
     initFundingLevel();
     resetMapState();

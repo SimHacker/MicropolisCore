@@ -118,7 +118,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
      * @param tileTextureURLs The URLs of the tile texture images to be loaded.
      * @returns A promise that resolves when the renderer is fully initialized and the texture is loaded.
      */
-    initialize(
+    async initialize(
         canvas: HTMLCanvasElement,
         context: WebGL2RenderingContext,
         mapData: Uint16Array,
@@ -130,26 +130,18 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         tileTextureURLs: (string | null)[],
     ): Promise<void> {
     
-        return super.initialize(canvas, context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs)
-            .then(async () => {
-                //console.log('WebGLTileRenderer: initialize: this:', this, "canvas:", canvas, "context:", context, "mapData:", mapData, "mopData:", mopData, "mapWidth:", mapWidth, "mapHeight:", mapHeight, "tileWidth:", tileWidth, "tileHeight:", tileHeight, "tileTextureURLs:", tileTextureURLs);
-                this.context = context;
-                this.zoom = 1; // Adjust initial zoom level to fit more tiles on screen
-    
-                this.tileProgramInfo = this.createShaderProgram();
-                this.tileBufferInfo = this.createBuffers();
-                this.mapTexture = this.createMapTexture(mapData, mapWidth, mapHeight);
-                this.mopTexture = this.createMapTexture(mopData, mapWidth, mapHeight);
-    
-                await this.loadTextures(tileTextureURLs);
-            })
-            .then(() => {
-                // Texture loaded successfully.
-            })
-            .catch((error) => {
-                // Texture loading failed.
-                throw error; // Rethrow to be caught by the caller.
-            });
+        await super.initialize(canvas, context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
+
+        this.context = context;
+        this.zoom = 1; // Adjust initial zoom level to fit more tiles on screen
+
+        this.tileProgramInfo = this.createShaderProgram();
+        this.tileBufferInfo = this.createBuffers();
+        this.mapTexture = this.createMapTexture(mapData, mapWidth, mapHeight);
+        this.mopTexture = this.createMapTexture(mopData, mapWidth, mapHeight);
+
+        await this.loadTextures(tileTextureURLs);
+
     }
     
     /**
@@ -401,13 +393,13 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
                 int cellValue = 0;
                 vec2 cellUV;
+                bool outOfBounds = false;
 
                 // Check if the screen tile coordinate is out of the map bounds.
                 // u_mapSize is the map size in tiles in column-major order so x is rows and y is columns
                 if (screenTileColRow.x <  0.0         || screenTileColRow.y <  0.0 || 
                     screenTileColRow.x >= u_mapSize.y || screenTileColRow.y >= u_mapSize.x) {
-                    //fragColor = color_brown;
-                    //return;
+                    outOfBounds = true;
                 } else {
 
                     // Calculate cell column and row
@@ -457,10 +449,12 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 int setRow =
                     (tileSet % setsPerTexture) * rowsPerSet;
 
-                int cellRotatedValue = 
-                    (cellValue & 0x03ff) + 
-                    tileRotate +
-                    (10 * tilesPerSet);
+                int cellRotatedValue =
+                    outOfBounds
+                        ? cellValue
+                        : ((cellValue & 0x03ff) + 
+                           tileRotate +
+                           (10 * tilesPerSet));
                 int tileValue =
                     int(mod(float(cellRotatedValue), float(tilesPerSet)));
 

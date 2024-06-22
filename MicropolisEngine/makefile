@@ -160,10 +160,8 @@ $(LIBRARY): $(OBJECTS)
 		-o $@
 
 install: all
-	#rm -rf ../micropolis/src/lib/micropolisengine
-	#mkdir -p ../micropolis/src/lib/micropolisengine
-	#cp -r build/* ../micropolis/src/lib/micropolisengine
-	cp -r build/* ../micropolis/src
+	cp build/micropolisengine.{wasm,data,js} ../micropolis/src/lib
+	cp build/micropolisengine.d.ts ../micropolis/src/types
 
 clean:
 	rm -rf \
