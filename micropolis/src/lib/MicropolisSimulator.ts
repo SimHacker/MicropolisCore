@@ -24,7 +24,7 @@ export async function loadMicropolisEngine(): Promise<any> {
             const fullPath =
                 capacitorApp
                     ? path
-                    : (prefix + path);
+                    : path;
             console.log(`micropolisengine: initModule: locateFile: prefix: ${prefix} path: ${path} capacitorApp: ${capacitorApp} fullPath ${fullPath}`);
             return fullPath;
         },
