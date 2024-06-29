@@ -160,6 +160,10 @@ $(LIBRARY): $(OBJECTS)
 		-o $@
 
 install: all
+	echo "MicropolisEngine: makefile: make install"
+	pwd
+	ls -la .
+	ls -la build
 	cp build/micropolisengine.{wasm,data,js} ../micropolis/src/lib
 	cp build/micropolisengine.d.ts ../micropolis/src/types
 
