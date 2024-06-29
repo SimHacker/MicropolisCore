@@ -37,6 +37,7 @@ jobs:
 
       - name: Build
         run: |
+          echo ".github/workflows/emscripten_build.yaml: Running Build step:"
           emcc --version
           node --version
           make install

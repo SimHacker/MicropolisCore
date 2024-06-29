@@ -164,7 +164,9 @@ install: all
 	pwd
 	ls -la .
 	ls -la build
-	cp build/micropolisengine.{wasm,data,js} ../micropolis/src/lib
+	cp build/micropolisengine.wasm ../micropolis/src/lib
+	cp build/micropolisengine.data ../micropolis/src/lib
+	cp build/micropolisengine.js ../micropolis/src/lib
 	cp build/micropolisengine.d.ts ../micropolis/src/types
 
 clean:
