@@ -5,6 +5,11 @@ import initModule from "$lib/micropolisengine.js";
 
 export let micropolisengine: any;
 
+let capacitorApp: boolean = 
+    (typeof window != 'undefined') &&
+    (window.location.href == 'capacitor://localhost');
+console.log(`MicropolisSimulator.ts: capacitorApp: ${capacitorApp}`);
+
 export async function loadMicropolisEngine(): Promise<any> {
 
     if (micropolisengine) {
@@ -16,9 +21,12 @@ export async function loadMicropolisEngine(): Promise<any> {
         printErr: (message: string) => console.error("micropolisengine: ERROR: ", message),
         setStatus: (status: string) => console.log("micropolisengine: initModule: status:", status),
         locateFile: (path: string, prefix: string) => {
-          console.log("micropolisengine: initModule: locateFile:", "prefix:", prefix, "path:", path);
-          //return prefix + path; // This breaks capacitor which gets a funky prefix.
-          return path;
+            const fullPath =
+                capacitorApp
+                    ? '/_app/' + path
+                    : (prefix + path);
+            console.log(`micropolisengine: initModule: locateFile: prefix: ${prefix} path: ${path} capacitorApp: ${capacitorApp} fullPath ${fullPath}`);
+            return fullPath;
         },
         onRuntimeInitialized: () => console.log("micropolisengine: onRuntimeInitialized:"),
       };
