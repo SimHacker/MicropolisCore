@@ -68,7 +68,7 @@ all: build_MicropolisEngine build_micropolis build_doxygen
 install: all
 	mkdir -p build
 	cd MicropolisEngine ; make install
-	cp -r html build/doc
+	cp -r html micropolis/build/doc
 
 clean:
 	cd MicropolisEngine ; make clean
