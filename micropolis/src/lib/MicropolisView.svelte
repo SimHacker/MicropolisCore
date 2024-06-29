@@ -14,6 +14,9 @@
   let snapView: SnapView | null = null;
   let tileView: TileView | null = null;
   //let rootPie: PieMenu | null = null;
+  let initialTouchX = 0;
+  let initialTouchY = 0;
+  let disableScrolling = true;
 
   onMount(async () => {
 
@@ -22,11 +25,7 @@
     micropolisSimulator = 
       new MicropolisSimulator();
 
-    window.micropolisSimulator = micropolisSimulator;
-    window.micropolis = micropolisSimulator.micropolis;
-    window.micropolisengine = micropolisSimulator.micropolisengine;
-
-    console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
+      console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
 
     await micropolisSimulator.initialize(
         new MicropolisCallbackLog(),
@@ -43,19 +42,28 @@
     micropolisSimulator.setGameSpeed(
       micropolisSimulator.gameSpeed);
 
-    // Disable scrolling.
-    const scrollTop = 
-      window.pageYOffset || window.document.documentElement.scrollTop;
-    const scrollLeft = 
-      window.pageXOffset || window.document.documentElement.scrollLeft;
-    window.onscroll = 
-      () => window.scrollTo(scrollLeft, scrollTop);
 
+    if (typeof window != 'undefined') {
+
+      window.micropolisSimulator = micropolisSimulator;
+      window.micropolis = micropolisSimulator.micropolis;
+      window.micropolisengine = micropolisSimulator.micropolisengine;
+
+      if (disableScrolling) {
+        // Disable scrolling.
+        const scrollTop = 
+          window.pageYOffset || window.document.documentElement.scrollTop;
+        const scrollLeft = 
+          window.pageXOffset || window.document.documentElement.scrollLeft;
+        window.onscroll = 
+          () => window.scrollTo(scrollLeft, scrollTop);
+      }
+
+    }
   });
 
   onDestroy(() => {
     console.log('MicropolisView: onDestroy'); 
-    micropolisSimulator?.setFramesPerSecond(0);
   });
 
 </script>
@@ -67,9 +75,11 @@
 
 <About showAbout={true}/>
 
+<!--
 <SnapView
   bind:this={snapView}
 />
+-->
 
 <!--
 <PieMenu

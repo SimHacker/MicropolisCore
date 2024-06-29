@@ -17,7 +17,8 @@ export async function loadMicropolisEngine(): Promise<any> {
         setStatus: (status: string) => console.log("micropolisengine: initModule: status:", status),
         locateFile: (path: string, prefix: string) => {
           console.log("micropolisengine: initModule: locateFile:", "prefix:", prefix, "path:", path);
-          return prefix + path;
+          //return prefix + path; // This breaks capacitor which gets a funky prefix.
+          return path;
         },
         onRuntimeInitialized: () => console.log("micropolisengine: onRuntimeInitialized:"),
       };

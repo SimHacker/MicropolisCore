@@ -2,6 +2,7 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  import { pan, pinch } from 'svelte-gestures';
 
   // Tile Sets
   import tileLayer_all9 from '$lib/images/tilesets/all.png';
@@ -66,7 +67,12 @@
       return;
     }
 
-    window.tileRenderer = tileRenderer = new WebGLTileRenderer();
+    tileRenderer = new WebGLTileRenderer();
+
+    if (typeof window != "undefined") {
+      window.tileRenderer = tileRenderer;
+    }
+
     //console.log('TileView.svelte: initialize: tileRenderer:', tileRenderer);
     if (tileRenderer == null) {
       console.log('TileView.svelte: initialize: no tileRenderer!');
@@ -92,7 +98,9 @@
     tileRenderer.zoomTo(1.0);
     tileRenderer.tileLayer = 0;
 
-    canvasGL.addEventListener('wheel', onwheel, {passive: false});
+    if (typeof window != "undefined") {
+      canvasGL.addEventListener('wheel', onwheel, {passive: false});
+    }
 
     resizeCanvas();
     refocusCanvas();
@@ -110,7 +118,7 @@
       const ratio = window.devicePixelRatio || 1;
       canvasGL.width = canvasGL.clientWidth * ratio;
       canvasGL.height = canvasGL.clientHeight * ratio;
-      console.log("TileView.svelte: resizeCanvas:", "ratio:", ratio, "canvasGL.width:", canvasGL.width, "canvasGL.height:", canvasGL.height);
+      //console.log("TileView.svelte: resizeCanvas:", "ratio:", ratio, "canvasGL.width:", canvasGL.width, "canvasGL.height:", canvasGL.height);
       if (ctxGL) {
         ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
       }
@@ -413,14 +421,70 @@
     }
   }
 
+  function handleTouchStart(event: TouchEvent) {
+    const touch = event.touches[0];
+    initialTouchX = touch.clientX;
+    initialTouchY = touch.clientY;
+    console.log(`MicropolisView: handleTouchStart: event: ${event} initialTouchX": ${initialTouchX} initialTouchY: ${initialTouchY}`);
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - initialTouchX;
+    const deltaY = touch.clientY - initialTouchY;
+    console.log(`MicropolisView: handleTouchMove: event: ${event} deltaX": ${deltaX} deltaY: ${deltaY}`);
+  }
+
+  function handleTouchEnd(event: TouchEvent) {
+    console.log(`MicropolisView: handleTouchEnd: event: ${event}`);
+  }
+
+  function handlePan(detail) {
+    const { deltaX, deltaY } = detail;
+    console.log(`TileView: handlePan: event: ${event} deltaX: ${deltaX} deltaY: ${deltaY}`);
+  }
+
+  function handlePinch(detail) {
+    const { scale } = detail;
+    console.log(`TileView: handleScale: detail: ${detail}`);
+  }
+
+  function handleDeviceMotion(event: DeviceMotionEvent) {
+    if (event.rotationRate) {
+      const { alpha, beta, gamma } = event.rotationRate;
+      console.log(`TileView: handleDeviceMotion: event: ${event} alpha: ${alpha} beta: ${beta} gamma: ${gamma}`);
+    }
+  }
+
   onMount(async () => {
     console.log("TileView.svelte: onMount");
+
+    if (typeof window != 'undefined') {
+/*
+      // Touch event listeners
+      window.document.addEventListener('touchstart', handleTouchStart, false);
+      window.document.addEventListener('touchmove', handleTouchMove, false);
+      window.document.addEventListener('touchend', handleTouchEnd, false);
+*/
+      window.addEventListener('devicemotion', handleDeviceMotion, false);
+    }
+
   });
 
   onDestroy(() => {
     console.log('TileView.svelte: onDestroy');
+    
     stopAutoRepeat(null);
-  });
+
+    if (typeof window != 'undefined') {
+/*
+      window.document.removeEventListener('touchstart', handleTouchStart);
+      window.document.removeEventListener('touchmove', handleTouchMove);
+      window.document.removeEventListener('touchend', handleTouchEnd);
+*/
+      window.removeEventListener('devicemotion', handleDeviceMotion);
+    }
+});
 
 </script>
 
@@ -437,6 +501,8 @@
   onmouseup={onmouseup}
   onkeydown={onkeydown}
   onkeyup={onkeyup}
+  use:pan={{ onPan: ({ detail }) => handlePan(detail) }}
+  use:pinch={{ onPinch: ({ detail }) => handlePinch(detail) }}
 ></canvas>
 
 <style>

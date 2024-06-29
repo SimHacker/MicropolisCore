@@ -1,7 +1,7 @@
 <script>
 
 let { 
-    showAbout
+    showAbout,
   } = $props();
 
 </script>
