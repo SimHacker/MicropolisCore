@@ -5,16 +5,16 @@
   import { pan, pinch } from 'svelte-gestures';
 
   // Tile Sets
-  import tileLayer_all9 from '$lib/images/tilesets/all.png';
+  import tileLayer_all10 from '$lib/images/tilesets/all.png';
 
   const tileLayers = [
-    tileLayer_all9,
+    tileLayer_all10,
   ];
 
   const tileWidth = 16;
   const tileHeight = 16;
   const tileCount = 960;
-  let tileSetCount = 9;
+  let tileSetCount = 10;
   let tileSet: number = 0;
 
   let canvasGL: HTMLCanvasElement | null = null;

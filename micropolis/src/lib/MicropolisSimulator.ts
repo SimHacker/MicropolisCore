@@ -81,7 +81,7 @@ export class MicropolisSimulator {
     gameSpeed = 3;
     keyFramesPerSecondValues = [ 1, 5, 10, 30, 60, 120, 120, 120, 120 ];
     keyPassesValues =          [ 1, 1, 1,  1,  1,  1,   4,   10,  50  ];
-    tickIntervalId: number | null = null;
+    tickIntervalId: number | NodeJS.Timeout | null = null;
     framesPerSecond: number = 0;
     pausedFramesPerSecond: number = 0;
     paused: boolean = false;
