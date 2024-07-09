@@ -2,7 +2,7 @@
 	"name": "micropolis",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "concurrently --raw npm:dev:vite npm:dev:engine",
+		"dev": "concurrently -n vite,make npm:dev:vite npm:dev:engine",
 		"dev:vite": "vite dev",
 		"dev:engine": "chokidar \"../MicropolisEngine/src/*.cpp\" \"../MicropolisEngine/src/*.h\" --initial --silent --command \"cd ../MicropolisEngine && make install\"",
 		"build": "mkdir -p build ; vite build",
