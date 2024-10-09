@@ -42,7 +42,6 @@
     micropolisSimulator.setGameSpeed(
       micropolisSimulator.gameSpeed);
 
-
     if (typeof window != 'undefined') {
 
       window.micropolisSimulator = micropolisSimulator;

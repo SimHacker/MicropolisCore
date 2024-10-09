@@ -1,5 +1,9 @@
 <script>
 
+/*
+
+    // https://imfeld.dev/writing/svelte_domless_components
+    
     const directionNames: Record<string, number> = {
         'E': 0,
         'East': 0,
@@ -1595,6 +1599,7 @@
         notifyPieItem('onpieitemselectdisabled', onpieitemselectdisabled, event, pie, slice, item);
     }
 
+*/
 
 </script>
 
