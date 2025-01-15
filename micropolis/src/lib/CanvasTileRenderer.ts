@@ -17,7 +17,10 @@ import { TileRenderer } from './TileRenderer';
 
 class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
     
-    private tileImage: HTMLImageElement | null = null;
+    private imageData: ImageData | null = null;
+    private tileImageData: ImageData | null = null;
+    private tilesPerRow: number = 0;
+    private renderBuffer: Uint32Array | null = null;
 
     constructor() {
         super();
@@ -58,10 +61,19 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
             if (!this.context || !this.tileImage) {
                 throw new Error('Canvas context or tile image is not properly initialized.');
             }
-            this.tileImage.onload = () => resolve();
+            this.tileImage.onload = () => {
+                // Create temporary canvas to get tile image data
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = this.tileImage!.width;
+                tempCanvas.height = this.tileImage!.height;
+                const tempCtx = tempCanvas.getContext('2d')!;
+                tempCtx.drawImage(this.tileImage!, 0, 0);
+                this.tileImageData = tempCtx.getImageData(0, 0, this.tileImage!.width, this.tileImage!.height);
+                this.tilesPerRow = this.tilesWidth / this.tileWidth;
+                resolve();
+            };
             this.tileImage.onerror = () => reject(new Error(`Failed to load image at ${tileTextureURLs[0]}`));
         });
-
     }
 
     /**
@@ -70,76 +82,66 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
      * Only draws tiles that appear in the panned and zoomed screen.
      */
     render(): void {
-
-        //console.log('CanvasTileRenderer: render: this:', this);
-
-        if (!this.canvas || !this.context || !this.tileImage) {
-            throw new Error('The canvas, 2d context, or tile image are not properly initialized.');
+        if (!this.canvas || !this.context || !this.tileImageData) {
+            throw new Error('Canvas context or tile data not initialized');
         }
 
-        const screenWidth = this.canvas.width;
-        const screenHeight = this.canvas.height;
-        const anchorX = screenWidth * this.screenAnchorX;
-        const anchorY = screenHeight * this.screenAnchorY;
-        const screenTileWidth = this.tileWidth * this.zoom;
-        const screenTileHeight = this.tileHeight * this.zoom;
-
-        const upperLeft  = this.screenToTile([0, 0]);
-        const lowerRight = this.screenToTile([screenWidth, screenHeight]);
-        let left   = Math.max(0, Math.min(Math.floor(upperLeft [0]), this.mapWidth ));
-        let top    = Math.max(0, Math.min(Math.floor(upperLeft [1]), this.mapHeight));
-        let right  = Math.max(0, Math.min(Math.ceil (lowerRight[0]), this.mapWidth ));
-        let bottom = Math.max(0, Math.min(Math.ceil (lowerRight[1]), this.mapHeight));
-
-        left = 0;
-        top = 0;
-        right = this.mapWidth;
-        bottom = this.mapHeight;
-
-        this.setScreenSize(
-            screenWidth,
-            screenHeight);
-
-        // Fill the background with black
-        this.context.fillStyle = '#000000';
-        this.context.fillRect(
-            0,
-            0,
-            screenWidth,
-            screenHeight);
-
-        //console.log("CanvasTileRenderer:", this, "render:", "screenWidth:", screenWidth, "screenHeight:", screenHeight, "anchorX:", anchorX, "anchorY:", anchorY, "screenTileWidth:", screenTileWidth, "screenTileHeight:", screenTileHeight, "upperLeft:", upperLeft, "lowerRight:", lowerRight, "left:", left, "top:", top, "right:", right, "bottom:", bottom);
+        const width = this.canvas.width;
+        const height = this.canvas.height;
         
-        // Loop through each visible tile
-        for (let tileY = top; tileY < bottom; tileY++) {
-            for (let tileX = left; tileX < right; tileX++) {
+        // Create or resize imageData if needed
+        if (!this.imageData || this.imageData.width !== width || this.imageData.height !== height) {
+            this.imageData = this.context.createImageData(width, height);
+            // Update renderBuffer when imageData changes
+            this.renderBuffer = new Uint32Array(this.imageData.data.buffer);
+        }
+        
+        // Calculate visible region in screen pixels
+        const startY = Math.max(0, Math.floor(this.offsetY * this.zoom));
+        const startX = Math.max(0, Math.floor(this.offsetX * this.zoom));
+        const endY = Math.min(height, Math.ceil((this.offsetY + this.mapHeight * this.tileHeight) * this.zoom));
+        const endX = Math.min(width, Math.ceil((this.offsetX + this.mapWidth * this.tileWidth) * this.zoom));
 
-                // Get the index of the current tile.
-                // Map data is column major order, so the width is the second dimension.
-                const tileIndex = this.mapData[tileX * this.mapHeight + tileY];
-    
-                // Calculate the position to draw the tile on the canvas.
-                const tilePos = this.tileToScreen([tileX, tileY]);
-    
-                // Calculate the source coordinates of the tile in the tileset image.
-                const columns =            this.tileImage.width / this.tileWidth;
-                const srcX    =           (tileIndex % columns) * this.tileWidth;
-                const srcY    = Math.floor(tileIndex / columns) * this.tileHeight;
-    
-                // Draw the tile
-                this.context.drawImage(
-                    this.tileImage,
-                    srcX,
-                    srcY,
-                    this.tileWidth,
-                    this.tileHeight,
-                    tilePos[0],
-                    tilePos[1],
-                    screenTileWidth,
-                    screenTileHeight);
+        // Process each screen pixel in the visible region
+        for (let y = startY; y < endY; y++) {
+            const yOffset = y * width;
+            for (let x = startX; x < endX; x++) {
+                // Convert screen coordinates to map coordinates
+                const mapX = Math.floor((x / this.zoom + this.offsetX) / this.tileWidth);
+                const mapY = Math.floor((y / this.zoom + this.offsetY) / this.tileHeight);
+                
+                // Bounds check
+                if (mapX < 0 || mapX >= this.mapWidth || mapY < 0 || mapY >= this.mapHeight) {
+                    continue;
+                }
 
+                // Get tile index from map data (column-major order)
+                const tileIndex = this.mapData[mapX * this.mapWidth + mapY];
+                
+                // Calculate tile UV coordinates
+                const tileRow = Math.floor(tileIndex / this.tilesPerRow);
+                const tileCol = tileIndex % this.tilesPerRow;
+                
+                // Calculate source pixel in tile texture
+                const tilePixelX = Math.floor((x / this.zoom + this.offsetX) % this.tileWidth);
+                const tilePixelY = Math.floor((y / this.zoom + this.offsetY) % this.tileHeight);
+                const srcX = tileCol * this.tileWidth + tilePixelX;
+                const srcY = tileRow * this.tileHeight + tilePixelY;
+                
+                // Get color from tile texture
+                const srcIndex = (srcY * this.tilesWidth + srcX) * 4;
+                
+                // Pack RGBA into single 32-bit integer
+                const pixel = (this.tileImageData.data[srcIndex + 3] << 24) |
+                             (this.tileImageData.data[srcIndex + 2] << 16) |
+                             (this.tileImageData.data[srcIndex + 1] << 8) |
+                             this.tileImageData.data[srcIndex];
+                
+                this.renderBuffer![yOffset + x] = pixel;
             }
         }
+
+        this.context.putImageData(this.imageData, 0, 0);
     }
 }
 
