@@ -30,13 +30,13 @@
     await micropolisSimulator.initialize(
         new MicropolisCallbackLog(),
         () => {
-          tileView.render();
+          tileView!.render();
         });
 
-    await tileView.initialize(
+    await tileView!.initialize(
       micropolisSimulator);
 
-    micropolisSimulator.micropolis.loadCity(
+    micropolisSimulator!.micropolis!.loadCity(
       micropolisSimulator.cityFileName);
 
     micropolisSimulator.setGameSpeed(
@@ -44,9 +44,9 @@
 
     if (typeof window != 'undefined') {
 
-      window.micropolisSimulator = micropolisSimulator;
-      window.micropolis = micropolisSimulator.micropolis;
-      window.micropolisengine = micropolisSimulator.micropolisengine;
+      //window.micropolisSimulator = micropolisSimulator;
+      //window.micropolis = micropolisSimulator.micropolis;
+      //window.micropolisengine = micropolisSimulator.micropolisengine;
 
       if (disableScrolling) {
         // Disable scrolling.
@@ -68,7 +68,6 @@
 </script>
 
 <TileView
-  class="fullscreen"
   bind:this={tileView}
 />
 

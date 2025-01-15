@@ -3,6 +3,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
   import { pan, pinch } from 'svelte-gestures';
+  import { MicropolisSimulator } from '$lib/MicropolisSimulator';
 
   // Tile Sets
   import tileLayer_all10 from '$lib/images/tilesets/all.png';
@@ -19,11 +20,11 @@
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
-  let tileRenderer: TileRenderer | null = null;
+  let tileRenderer: TileRenderer<any> | null = null;
 
-  let autoRepeatIntervalId: number | null = null;
+  let autoRepeatIntervalId: any | null = null;
   let autoRepeatDelay = 1000 / 60; // 60 repeats per second
-  let autoRepeatKeys = [];
+  let autoRepeatKeys: string[] = [];
 
   let panning: boolean = false;
   let screenPos: [number, number] = [0, 0];
@@ -33,6 +34,8 @@
   let screenPosDown: [number, number] = [0, 0];
   let tilePosDown: [number, number] = [0, 0];
   let panDown: [number, number] = [0, 0];
+  let initialTouchX: number = 0;
+  let initialTouchY: number = 0;
   let leftKeyDown = false;
   let rightKeyDown = false;
   let upKeyDown = false;
@@ -53,6 +56,8 @@
   
     micropolisSimulator = micropolisSimulator_;
 
+    if (!micropolisSimulator || !canvasGL) return;
+
     // Create 3d canvas drawing context and tileRenderer.
     //console.log('TileView.svelte: onMount', 'canvasGL:', canvasGL);
     if (canvasGL == null) {
@@ -70,7 +75,7 @@
     tileRenderer = new WebGLTileRenderer();
 
     if (typeof window != "undefined") {
-      window.tileRenderer = tileRenderer;
+      //window.tileRenderer = tileRenderer;
     }
 
     //console.log('TileView.svelte: initialize: tileRenderer:', tileRenderer);
@@ -82,8 +87,8 @@
     await tileRenderer.initialize(
       canvasGL, 
       ctxGL, 
-      micropolisSimulator.mapData, 
-      micropolisSimulator.mopData, 
+      micropolisSimulator.mapData!,
+      micropolisSimulator.mopData!,
       micropolisSimulator.micropolisengine.WORLD_W,
       micropolisSimulator.micropolisengine.WORLD_H, 
       tileWidth, 
@@ -109,7 +114,7 @@
 
   export function render(): void {
     //console.log("TileView.svelte: render:"");
-    tileRenderer.render();
+    tileRenderer!.render();
   }
 
   // Function to resize the canvas to match the screen size.
@@ -125,7 +130,7 @@
     }
   }
 
-  export function trackMouse(event: MouseEvent): TileRenderer<any> | null {
+  export function trackMouse(event: MouseEvent) {
     screenPosLast = screenPos;
     tilePosLast = tilePos;
 
@@ -141,6 +146,9 @@
   }
 
   export function onmousedown(event: MouseEvent): void {
+
+    if (!tileRenderer) return;
+
     trackMouse(event);
 
     panning = true;
@@ -151,6 +159,9 @@
   }
 
   export function onmousemove(event: MouseEvent): void {
+
+    if (!tileRenderer) return;
+
     trackMouse(event);
 
     if (!panning) return;
@@ -180,12 +191,14 @@
 
   export function onkeydown(event: KeyboardEvent): void {
     //console.log('TileView.svelte: onkeydown: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
+
+    if (!micropolisSimulator || !micropolisSimulator.micropolis || !tileRenderer || !micropolisSimulator) return;
+
     const key = event.key;
-    const keyCode = event.keyCode;
 
-    if ((keyCode >= 48) && (keyCode <= 57)) { // digits
+    if ((key >= "0") && (key <= "9")) { // digits
 
-      const digit = keyCode - 48;
+      const digit = key.charCodeAt(0) - "0".charCodeAt(0);
       if (digit == 0) {
         micropolisSimulator.setPaused(!micropolisSimulator.paused);
       } else {
@@ -193,10 +206,10 @@
         micropolisSimulator.setPaused(false);
       }
 
-    } else if ((keyCode >= 64) && (keyCode <= 90)) { // letters
+    } else if ((key >= "a") && (key <= "z")) { // letters
 
-      const letter = keyCode - 64;
-      const city = micropolisSimulator.cityFileNames[letter % micropolisSimulator.cityFileNames.length];
+      const letter = key.charCodeAt(0) - "a".charCodeAt(0);
+      const city = micropolisSimulator.cityFileNames[letter % (micropolisSimulator.cityFileNames.length ?? 1)];
       //console.log("CITY", city);
       micropolisSimulator.micropolis.loadCity(city);
       micropolisSimulator.render();
@@ -230,9 +243,9 @@
       micropolisSimulator.micropolis.generateSomeRandomCity();
       micropolisSimulator.render();
 
-    } else switch (keyCode) {
+    } else switch (key) {
 
-      case 32:
+      case " ": // space
         if (micropolisSimulator.micropolis.heatSteps) {
           micropolisSimulator.rotateMapTiles(tileRenderer.tileRotate);
           tileRenderer.tileRotate = 0;
@@ -254,79 +267,79 @@
         micropolisSimulator.render();
         break;
 
-      case 37: 
+      case "ArrowLeft":
         leftKeyDown = true;
         startAutoRepeat(key);
         break;
 
-      case 39:
+      case "ArrowRight":
         rightKeyDown = true;
         startAutoRepeat(key);
         break;
 
-      case 38:
+      case "ArrowUp":
         upKeyDown = true;
         startAutoRepeat(key);
         break;
 
-      case 40:
+      case "ArrowDown":
         downKeyDown = true;
         startAutoRepeat(key);
         break;
 
-      case 188:
+      case ",":
         inKeyDown = true;
-        startAutoRepeat(key)
+        startAutoRepeat(key);
         break;
 
-      case 190:
+      case ".":
         outKeyDown = true;
         startAutoRepeat(key);
         break;
 
-      case 219:
+      case "[":
         micropolisSimulator.micropolis.setCityTax(Math.max(0, micropolisSimulator.micropolis.cityTax - 1));
         break;
 
-      case 221:
+      case "]":
         micropolisSimulator.micropolis.setCityTax(Math.min(20, micropolisSimulator.micropolis.cityTax + 1));
         break;
 
     }
-  }
+  }  
 
   export function onkeyup(event: KeyboardEvent): void {
-    //console.log('TileView.svelte: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
-    const key = event.keyCode;
+  //console.log('TileView.svelte: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
+    const key = event.key;
 
     switch (key) {
 
-      case 37: // left
+      case "ArrowLeft": // left
         leftKeyDown = false; 
         stopAutoRepeat(key);
         break;
 
-      case 39: // right 
+      case "ArrowRight": // right 
         rightKeyDown = false; 
         stopAutoRepeat(key);
         break;
 
-      case 38: // down
+      case "ArrowDown": // down
         upKeyDown = false;
         stopAutoRepeat(key);
         break;
 
-      case 40: // up
+      case "ArrowUp": // up
         downKeyDown = false;
         stopAutoRepeat(key);
         break;
 
-      case 188: // in ,
+      case ",": // in ,
         inKeyDown = false;
         stopAutoRepeat(key);
         break;
 
-      case 190: // out .
+      case ".": // out .
         outKeyDown = false;
         stopAutoRepeat(key);
         break;
@@ -334,7 +347,7 @@
     }
   }
 
-  function startAutoRepeat(key): void {
+  function startAutoRepeat(key: string): void {
     if (autoRepeatKeys.indexOf(key) < 0) {
       autoRepeatKeys.push(key);
     }
@@ -343,7 +356,7 @@
     }
   }
 
-  function stopAutoRepeat(key: number | null): void {
+  function stopAutoRepeat(key: string | null): void {
     if (key === null) {
       autoRepeatKeys = [];
     } else if (autoRepeatKeys.indexOf(key) >= 0) {
@@ -356,6 +369,8 @@
   }
 
   function handleAutoRepeat(): void {
+
+    if (!tileRenderer ||  !micropolisSimulator) return;
 
     if (leftKeyDown) {
       tileRenderer.panBy(-keyPanScale / tileRenderer.zoom, 0);
@@ -387,6 +402,8 @@
 
   export function onwheel(event: WheelEvent): void {
 
+    if (!tileRenderer || !micropolisSimulator) return;
+
     event.preventDefault();
     
     const delta = event.deltaY > 0 ? -wheelZoomScale : wheelZoomScale; // Change the multiplier as needed
@@ -398,17 +415,19 @@
     micropolisSimulator.render();
   }
 
-  export function setTileSet(index) {
+  export function setTileSet(index: number) {
     
+    if (!micropolisSimulator) return;
+
     tileSet = index;
-    if (micropolisSimulator) {
-      micropolisSimulator.fillMopTiles(tileSet);
-    }
+    micropolisSimulator.fillMopTiles(tileSet);
 
     micropolisSimulator.render();
   }
   
-  export function setTileLayer(index) {
+  export function setTileLayer(index: number) {
+    if (!tileRenderer || !micropolisSimulator) return;
+
     //console.log('setTileLayer:', index);
     tileRenderer.tileLayer = index;
     micropolisSimulator.render();
@@ -439,12 +458,12 @@
     console.log(`MicropolisView: handleTouchEnd: event: ${event}`);
   }
 
-  function handlePan(detail) {
+  function handlePan(detail: any) {
     const { deltaX, deltaY } = detail;
     console.log(`TileView: handlePan: event: ${event} deltaX: ${deltaX} deltaY: ${deltaY}`);
   }
 
-  function handlePinch(detail) {
+  function handlePinch(detail: any) {
     const { scale } = detail;
     console.log(`TileView: handleScale: detail: ${detail}`);
   }
@@ -501,9 +520,11 @@
   onmouseup={onmouseup}
   onkeydown={onkeydown}
   onkeyup={onkeyup}
-  use:pan={{ onPan: ({ detail }) => handlePan(detail) }}
-  use:pinch={{ onPinch: ({ detail }) => handlePinch(detail) }}
 ></canvas>
+<!--
+  use:pan={{ onPan: (any: any) => handlePan(any) }}
+  use:pinch={{ onPinch: (any: any) => handlePinch(any) }}
+-->
 
 <style>
 

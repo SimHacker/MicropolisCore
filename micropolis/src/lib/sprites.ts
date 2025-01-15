@@ -186,7 +186,7 @@ export enum SpriteBus {
 let frameX = 0;
 let frameY = 0;
 
-function layoutFrames(frameCount: number, width: number; height: number) {
+function layoutFrames(frameCount: number, width: number, height: number) {
     const frames: number[] = [];
     for (let i = 0; i < frameCount; i++) {
         frames.push(frameX);

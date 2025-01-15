@@ -46,6 +46,11 @@ let {
         target="_new"
         href="https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams.pdf"
         >Chaim Gingold's "SimCity Reverse Diagrams"</a>.<br/>
+      The name "Micropolis" used under the terms of the<br/>
+      <a
+        target="_new"
+        href="https://MicropolisCore/SimHacker/MicropolisCore/MicropolisPublicNameLicense.md"
+        >Micropolis Public Name License</a>.<br/>
       Drag left button to pan, spin mouse wheel to zoom.<br/>
       Arrow keys pan, comma and period keys zoom.<br/>
       Letter keys load various cities, \ to generate.<br/>

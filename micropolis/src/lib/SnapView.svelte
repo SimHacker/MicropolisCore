@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    let snapCanvas: HTMLCanvasElement;
-    let snapContext: CanvasRenderingContext2D;
+    let snapCanvas: HTMLCanvasElement | null;
+    let snapContext: CanvasRenderingContext2D | null;
     //let snapViewLeft = -1180;
     //let snapViewTop = 50;
     //let snapViewWidth = 1200;
@@ -32,7 +32,7 @@
     let startHeight = 0;
 
     function handleDragStart(event: MouseEvent) {
-        const outerFrame = snapCanvas.parentElement!.parentElement!;
+        const outerFrame = snapCanvas!.parentElement!.parentElement!;
         const rect = outerFrame.getBoundingClientRect();
 
         // Check if the mouse is within the margin area
@@ -82,7 +82,7 @@
     }
 
     function handleDraggingOrResizing(event: MouseEvent) {
-        const outerFrame = snapCanvas.parentElement!.parentElement!;
+        const outerFrame = snapCanvas!.parentElement!.parentElement!;
         const dx = event.clientX - downX;
         const dy = event.clientY - downY;
 
@@ -123,12 +123,12 @@
     }
 
     onMount(() => {
-        snapContext = snapCanvas.getContext('2d');
+        snapContext = snapCanvas!.getContext('2d');
 
         var FPS = 67,
             lastTime = 0,
 
-        loop = (timestamp) => {
+        loop = (timestamp: number) => {
             requestAnimationFrame(loop);
             if (timestamp - lastTime < 1000 / FPS) {
                 return;
@@ -143,12 +143,13 @@
         //if ('serviceWorker' in navigator) {
         //    navigator.serviceWorker.register('https://snap.berkeley.edu/snap/src/sw.js');
         //}
+/*
         snapWorld = window.snapWorld = new WorldMorph(snapCanvas, false);
         snapIde = window.snapIde = new IDE_Morph().openIn(snapWorld);
         snapScene = window.snapScene = snapIde.scenes.contents[0];
         snapStage = window.snapStage = snapScene.stage;
-
-        /*
+*/
+/*
 
     // projection layer - for video, maps, 3D extensions etc., transient
     this.projectionSource = null; // offscreen DOM element for video, maps, 3D
@@ -179,7 +180,7 @@
     // 1. <meta name='snap-cloud-domain' location="X"> in snap.html.
     // 2. The current page's domain
 
-        */
+*/
 
         requestAnimationFrame(loop);
 

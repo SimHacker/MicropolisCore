@@ -85,7 +85,7 @@ export class MicropolisSimulator {
     framesPerSecond: number = 0;
     pausedFramesPerSecond: number = 0;
     paused: boolean = false;
-    render: (() => void) | null = null;
+    render: (() => void) = () => {};
   
     constructor() {
     }
@@ -114,7 +114,7 @@ export class MicropolisSimulator {
             this.micropolis.setCallback(this.callback!, this);
         }
 
-        this.render = render;
+        this.render = render || (() => {});
 
         const mapStartAddress = this.micropolis.getMapAddress() / 2;
         const mapEndAddress = mapStartAddress + this.micropolis.getMapSize() / 2;
@@ -162,9 +162,7 @@ export class MicropolisSimulator {
         this.micropolis?.simTick();
         this.micropolis?.animateTiles();
 
-        if (this.render) {
-            this.render();
-        }
+        this.render();
     }
     
     setGameSpeed(speed: number) {
