@@ -7,7 +7,6 @@ var tool_8cpp =
     [ "fireStationBuilding", "tool_8cpp.html#a809a68f003a159d7d8083fb968e5e6f9", null ],
     [ "gCostOf", "tool_8cpp.html#ab33f8ae08ffce5e5b849d2f94a9f2f56", null ],
     [ "gToolSize", "tool_8cpp.html#ace713ae54e9c15c68163043c9329b58b", null ],
-    [ "idArray", "tool_8cpp.html#a9f3528bf8eea155671f2a23a69f013aa", null ],
     [ "industrialZoneBuilding", "tool_8cpp.html#a142c875828d36ea9d9f8a2e479c11228", null ],
     [ "nuclearPowerBuilding", "tool_8cpp.html#adc70ca097ae0e047f2c729e3b9ba7f36", null ],
     [ "policeStationBuilding", "tool_8cpp.html#ab5370220e6b2a0290c7c812e7e741327", null ],

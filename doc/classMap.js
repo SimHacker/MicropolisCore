@@ -7,7 +7,6 @@ var classMap =
     [ "fill", "classMap.html#ae1856080b40e3fb352fc97765e2f2d93", null ],
     [ "get", "classMap.html#ada18b1ae127dd6b6373a3b0cd09760bc", null ],
     [ "getBase", "classMap.html#ac4c3ab46c67c5086e3ea495e9c4502ea", null ],
-    [ "getTotalByteSize", "classMap.html#ace0e8e1555dd00ecf6c73ca216a2c46e", null ],
     [ "onMap", "classMap.html#aae28610259a82a70c7984300d177a463", null ],
     [ "operator=", "classMap.html#a8bcd7f8de96655dd622f300b43de6592", null ],
     [ "set", "classMap.html#a88bae500fceb367d8ded76be192cc8cf", null ],

@@ -17,5 +17,7 @@ var hierarchy =
     [ "Micropolis", "classMicropolis.html", null ],
     [ "Position", "classPosition.html", null ],
     [ "SimSprite", "classSimSprite.html", null ],
-    [ "ToolEffects", "classToolEffects.html", null ]
+    [ "ToolEffects", "classToolEffects.html", null ],
+    [ "Byte", "classByte.html", null ],
+    [ "const Byte", "classconst_01Byte.html", null ]
 ];

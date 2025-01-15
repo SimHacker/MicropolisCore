@@ -1,6 +1,6 @@
 var map__type_8h =
 [
-    [ "Map", "classMap.html", "classMap" ],
+    [ "Map< DATA, BLKSIZE >", "classMap.html", "classMap" ],
     [ "MapByte1", "map__type_8h.html#a8def5f732b2ba00f2749859456a89113", null ],
     [ "MapByte2", "map__type_8h.html#a5bd0e138337c1ab1e551ea56ea2f91af", null ],
     [ "MapByte4", "map__type_8h.html#a6b909610d7fe3e7a2e6c3d7b083df886", null ],

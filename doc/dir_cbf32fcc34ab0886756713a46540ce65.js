@@ -4,22 +4,15 @@ var dir_cbf32fcc34ab0886756713a46540ce65 =
     [ "animate.cpp", "animate_8cpp.html", "animate_8cpp" ],
     [ "budget.cpp", "budget_8cpp.html", null ],
     [ "callback.cpp", "callback_8cpp.html", null ],
-    [ "callback.h", "callback_8h.html", [
-      [ "Callback", "classCallback.html", "classCallback" ],
-      [ "ConsoleCallback", "classConsoleCallback.html", "classConsoleCallback" ]
-    ] ],
+    [ "callback.h", "callback_8h.html", "callback_8h" ],
     [ "connect.cpp", "connect_8cpp.html", "connect_8cpp" ],
-    [ "data_types.h", "data__types_8h.html", "data__types_8h" ],
+    [ "data_types.h", "data__types_8h.html", null ],
     [ "disasters.cpp", "disasters_8cpp.html", null ],
-    [ "emscripten.cpp", "emscripten_8cpp.html", "emscripten_8cpp" ],
+    [ "emscripten.cpp", "emscripten_8cpp.html", null ],
     [ "evaluate.cpp", "evaluate_8cpp.html", null ],
     [ "fileio.cpp", "fileio_8cpp.html", "fileio_8cpp" ],
     [ "frontendmessage.cpp", "frontendmessage_8cpp.html", null ],
-    [ "frontendmessage.h", "frontendmessage_8h.html", [
-      [ "FrontendMessage", "classFrontendMessage.html", "classFrontendMessage" ],
-      [ "FrontendMessageDidTool", "classFrontendMessageDidTool.html", "classFrontendMessageDidTool" ],
-      [ "FrontendMessageMakeSound", "classFrontendMessageMakeSound.html", "classFrontendMessageMakeSound" ]
-    ] ],
+    [ "frontendmessage.h", "frontendmessage_8h.html", "frontendmessage_8h" ],
     [ "generate.cpp", "generate_8cpp.html", null ],
     [ "graph.cpp", "graph_8cpp.html", null ],
     [ "initialize.cpp", "initialize_8cpp.html", null ],
@@ -35,12 +28,12 @@ var dir_cbf32fcc34ab0886756713a46540ce65 =
     [ "random.cpp", "random_8cpp.html", null ],
     [ "scan.cpp", "scan_8cpp.html", "scan_8cpp" ],
     [ "simulate.cpp", "simulate_8cpp.html", "simulate_8cpp" ],
-    [ "sprite.cpp", "sprite_8cpp.html", "sprite_8cpp" ],
+    [ "sprite.cpp", "sprite_8cpp.html", null ],
     [ "text.h", "text_8h.html", "text_8h" ],
     [ "tool.cpp", "tool_8cpp.html", "tool_8cpp" ],
     [ "tool.h", "tool_8h.html", "tool_8h" ],
     [ "traffic.cpp", "traffic_8cpp.html", null ],
     [ "update.cpp", "update_8cpp.html", null ],
     [ "utilities.cpp", "utilities_8cpp.html", null ],
-    [ "zone.cpp", "zone_8cpp.html", "zone_8cpp" ]
+    [ "zone.cpp", "zone_8cpp.html", null ]
 ];

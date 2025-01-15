@@ -1,7 +1,6 @@
 var classToolEffects =
 [
     [ "ToolEffects", "classToolEffects.html#aa65c78f2944bbcbc50f0326079c8441e", null ],
-    [ "~ToolEffects", "classToolEffects.html#a6187437418c2a587b47e173895075db3", null ],
     [ "addCost", "classToolEffects.html#a50b281d12acd10d74c7621a4bb3a87f6", null ],
     [ "addFrontendMessage", "classToolEffects.html#a2d9efbc22f95835640ce34708da18fe1", null ],
     [ "clear", "classToolEffects.html#a75543b2f81bd326767f7c9110d23ce23", null ],

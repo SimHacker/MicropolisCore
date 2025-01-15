@@ -1,29 +1,13 @@
 var classSimSprite =
 [
-    [ "accel", "classSimSprite.html#a444c32353014fed8b55fb0352883fbe1", null ],
-    [ "control", "classSimSprite.html#a41c2753edd8414a4865deab98956cbea", null ],
-    [ "count", "classSimSprite.html#abcb8905b464e93a69bcc3df299148f46", null ],
     [ "destX", "classSimSprite.html#a395260ef8e5d30c2ccb1955d35af7b12", null ],
     [ "destY", "classSimSprite.html#a87f26f696fe313b0b6427decc8d50402", null ],
-    [ "dir", "classSimSprite.html#a43e3499729a01fe47e356222928c6d3f", null ],
-    [ "flag", "classSimSprite.html#a1a3ba93b6493a6fd7af4f5a9175bc2ac", null ],
     [ "frame", "classSimSprite.html#aeca631659008c33d7d04db407d575c75", null ],
-    [ "height", "classSimSprite.html#ab756f9fed856c969b8fca308f997ac46", null ],
     [ "name", "classSimSprite.html#ad50f762a83413c0451eb25cfda4547ce", null ],
-    [ "newDir", "classSimSprite.html#ae818db9cb64543fe46c8c31df184e3aa", null ],
     [ "next", "classSimSprite.html#aa4e9778d43f38a912cbe560b893637bc", null ],
-    [ "origX", "classSimSprite.html#a9597c07c78606df71fe50ffc1996ed41", null ],
-    [ "origY", "classSimSprite.html#a08bfb4ec75cc2e7a714d72a1ed3f110a", null ],
-    [ "soundCount", "classSimSprite.html#a623b97f6165a6428d5586ea1b7ceaeca", null ],
-    [ "speed", "classSimSprite.html#a3fa74306df63340813b6e41d805d4ec9", null ],
-    [ "step", "classSimSprite.html#ace7bed0a23828267b6230a3fce8daff0", null ],
-    [ "turn", "classSimSprite.html#a2752bdba73b42e8af8e139bfd08a03ba", null ],
     [ "type", "classSimSprite.html#a5c8ac895626cad194a4ffa2a5a9eb79b", null ],
-    [ "width", "classSimSprite.html#a34436d27f4c38dfb32c315016f94fb4f", null ],
     [ "x", "classSimSprite.html#a0c2a65810a310e1e1fc95d00c3c6f394", null ],
     [ "xHot", "classSimSprite.html#af5d68ae91b32b04fbc26d88b82ef1ccc", null ],
-    [ "xOffset", "classSimSprite.html#ad6a8181936ec3445e3ee114d6a673cae", null ],
     [ "y", "classSimSprite.html#ae1600ecb4f1cb3899f7facc369c7e25e", null ],
-    [ "yHot", "classSimSprite.html#a4ee651480a2baf67fa98727f1e9edab5", null ],
-    [ "yOffset", "classSimSprite.html#a78b587ad42d3ee790f302addfb7ba16c", null ]
+    [ "yHot", "classSimSprite.html#a4ee651480a2baf67fa98727f1e9edab5", null ]
 ];
