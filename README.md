@@ -30,10 +30,5 @@ The Micropolis GPL-3 license.
 ## [Micropolis GPL License Notice](MicropolisGPLLicenseNotice.md) ##
 The Micropolis GPL-3 license.
 
-## [Micropolis Public Name License](../wiki/MicropolisPublicNameLicense.md) ##
-The name/term "MICROPOLIS" is a registered trademark owned by and
-exclusively licensed to Micropolis GmbH (Micropolis Corporation, the
-"licensor"). It is here (upstream) licensed to the authors/publishers of
-the "Micropolis" city simulation game and its source code (the project or
-"licensee(s)").
-
+## [Micropolis Public Name License](MicropolisPublicNameLicense.md) ##
+The name/term "MICROPOLIS" is a registered trademark of [Micropolis](https://www.micropolis.com) GmbH (Micropolis Corporation, the "licensor") and is licensed here to the authors/publishers of the "Micropolis" city simulation game and its source code (the project or "licensee(s)") as a courtesy of the owner.
