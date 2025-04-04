@@ -2,7 +2,9 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { loadMicropolisEngine, MicropolisSimulator } from '$lib/MicropolisSimulator';
-  import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  //import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  //import { TileRenderer, WebGPUTileRenderer } from '$lib/WebGPUTileRenderer';
+
   import initModule from "$lib/micropolisengine.js";
   import { MicropolisCallbackLog } from "$lib/MicropolisCallbackLog";
   import TileView from '$lib/TileView.svelte';
@@ -71,7 +73,7 @@
   bind:this={tileView}
 />
 
-<About showAbout={true}/>
+<About showAbout={false}/>
 
 <!--
 <SnapView

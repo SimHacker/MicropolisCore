@@ -45,7 +45,8 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
     ): Promise<void> {
 
         await super.initialize(canvas, this.context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
-
+        console.log({mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs})
+       
         this.context = canvas.getContext('webgpu') as GPUCanvasContext;
         if (!this.context) {
             throw new Error('WebGPU is not supported.');
@@ -66,6 +67,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
 
         // Load the tile texture
         const tileImage = await this.loadImage(tileTextureURLs[0]);
+        console.log("texture size",tileImage.width, tileImage.height);
         this.tileTexture = this.device.createTexture({
             size: [tileImage.width, tileImage.height, 1],
             format: 'rgba8unorm',
@@ -81,41 +83,33 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
             [tileImage.width, tileImage.height, 1]
         );
 
+       
         // Create the map texture
         this.mapTexture = this.device.createTexture({
-            size: [mapHeight, mapWidth, 1], // Map data is column major order, so the width is the second dimension.
-            format: 'r16uint',
+            size: [mapHeight, mapWidth], // Map data is column major order, so the width is the second dimension.
+            format:'r16uint',
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
         });
         this.mapTextureView = this.mapTexture.createView();
 
-        // Copy map data to texture
-         // Map data is column major order, so the width is the second dimension.
-        const bytesPerRow = Math.ceil(mapHeight * 2 / 256) * 256;
-        const bufferSize = bytesPerRow * mapWidth;
-        
-        const mapBuffer = this.device.createBuffer({
-            size: bufferSize,
-            usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
-            mappedAtCreation: true,
-        });
-        new Uint16Array(mapBuffer.getMappedRange()).set(mapData);
-        mapBuffer.unmap();
-        
-        const commandEncoder = this.device.createCommandEncoder();
-        commandEncoder.copyBufferToTexture(
-            { buffer: mapBuffer, bytesPerRow: bytesPerRow },
-            { texture: this.mapTexture },
-            [mapHeight, mapWidth, 1] // Map data is column major order, so the width is the second dimension.
-        );
-        this.device.queue.submit([commandEncoder.finish()]);
+
+        this.device.queue.writeTexture( {texture:this.mapTexture}, mapData,
+             {bytesPerRow:mapHeight * Uint16Array.BYTES_PER_ELEMENT}, { width: mapHeight, height:mapWidth });
+
         
         // Create the shader modules
         const vertexShaderModule = this.device.createShaderModule({
-            code: `@vertex
+            code: /*wgsl*/`
+
+            struct VertexOutput {
+                    @builtin(position) position: vec4<f32>,
+                    @location(0) fragCoord: vec2<f32>,
+            };
+
+            @vertex
             fn main(
                 @builtin(vertex_index) VertexIndex: u32
-            ) -> @builtin(position) vec4<f32> {
+            ) -> VertexOutput {
                 var positions = array<vec2<f32>, 6>(
                     vec2<f32>(-1.0,  1.0),
                     vec2<f32>( 1.0,  1.0),
@@ -124,16 +118,29 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     vec2<f32>(-1.0, -1.0),
                     vec2<f32>( 1.0, -1.0)
                 );
+
+                  var mapCoords = array<vec2<f32>, 6>(
+                    vec2<f32>(0.0, 0.0),
+                    vec2<f32>(120.0, 0.0),
+                    vec2<f32>(0.0, 120.0),
+                    vec2<f32>(120.0, 0.0),
+                    vec2<f32>(0.0, 120.0),
+                    vec2<f32>(120.0, 120.0)
+                );
+
                 let position = positions[VertexIndex];
-                return vec4<f32>(position, 0.0, 1.0);
+                return VertexOutput(vec4<f32>(position, 0.0, 1.0), mapCoords[VertexIndex]);
             }`,
         });
 
         const fragmentShaderModule = this.device.createShaderModule({
-            code: `
+            code: /*wgsl*/`
+               
                 @group(0) @binding(0) var tileTexture: texture_2d<f32>;
                 @group(0) @binding(1) var tileSampler: sampler;
                 @group(0) @binding(2) var mapTexture: texture_2d<u32>;
+                @group(0) @binding(3) var<uniform> uniforms: Uniforms;
+               
 
                 struct VertexOutput {
                     @builtin(position) position: vec4<f32>,
@@ -141,35 +148,33 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                 };
 
                 struct Uniforms {
-                    tileSize: vec2<f32>;
-                    tilesSize: vec2<f32>;
-                    mapSize: vec2<f32>;
+                    tileSize: vec2<f32>,
+                    tilesSize: vec2<f32>,
+                    mapSize: vec2<f32>
                 };
 
-                @group(0) @binding(3) var<uniform> uniforms: Uniforms;
-
-                fn getTileUV(tileIndex: u32, tileSize: vec2<f32>, textureSize: vec2<f32>) -> vec2<f32> {
-                    let tilesPerRow = textureSize.x / tileSize.x;
-                    let tileRow = f32(tileIndex) / tilesPerRow;
-                    let tileCol = f32(tileIndex) - tileRow * tilesPerRow;
-                    let uv = vec2<f32>(tileCol * tileSize.x, tileRow * tileSize.y) / textureSize;
-                    return uv;
-                }
-
+               
                 @fragment
-                fn main(input: VertexOutput) -> @location(0) vec4<f32> {
+                fn main(input: VertexOutput) -> @location(0) vec4f {
                     // Calculate the tile index from the map texture
-                    let mapCoord = vec2<i32>(input.fragCoord);
-                    let tileIndex = textureLoad(mapTexture, mapCoord, 0).x;
-
+                    let mapCoord = vec2<i32>(floor(input.fragCoord));
+                    let outOfMap = mapCoord.x <0 || mapCoord.x >= 120 || mapCoord.y <0 || mapCoord.y>=100;
+                    let tileIndex = select(textureLoad(mapTexture, vec2<i32>(mapCoord.y, mapCoord.x), 0).r & 0x03ff, 0 ,outOfMap);
+                    //DEBUG let tileIndex = select(u32(32+20), 0 ,outOfMap);
+                
                     // Calculate the UV coordinates for the tile texture
                     let tileSize = uniforms.tileSize;
                     let textureSize = uniforms.tilesSize;
-                    let tileUV = getTileUV(tileIndex, tileSize, textureSize);
-
+                   
+                
+                    // tile coordinate in tile unit
+                    let tileCoords = vec2<f32>(f32(tileIndex) % 32.0, floor(f32(tileIndex) / 32.0));
+                    let cTilePx = tileCoords * 16.0; // pixel position of tile in tile texture
+                    let dTilePx = fract(input.fragCoord)*16; // delta pixel position of current fragment                  
+                    let tileUV = (cTilePx + dTilePx)/512.0; // pixel position of current fragment over texture size
+            
                     // Sample the color from the tile texture
-                    let color = textureSample(tileTexture, tileSampler, tileUV);
-
+                    let color = textureSample(tileTexture, tileSampler, tileUV);                 
                     return color;
                 }`,
         });
@@ -196,6 +201,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     visibility: GPUShaderStage.FRAGMENT,
                     buffer: { type: 'uniform' },
                 },
+              
             ],
         });
         
@@ -222,8 +228,10 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
 
         // Add a sampler creation
         this.sampler = this.device.createSampler({
-            magFilter: 'linear',
-            minFilter: 'linear',
+            magFilter: 'nearest',
+            minFilter: 'nearest',
+            addressModeU: "clamp-to-edge",
+            addressModeV: "clamp-to-edge",
         });
 
         // Make sure the uniform buffer is created and populated correctly
@@ -233,7 +241,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
             mappedAtCreation: true,
         });
         // Map data is column major order, so the width is the second dimension.
-        new Float32Array(this.uniformBuffer.getMappedRange()).set([16.0, 16.0, 256.0, 256.0, mapHeight, mapWidth]);
+        new Float32Array(this.uniformBuffer.getMappedRange()).set([16.0, 16.0, 512.0, 512.0, mapHeight, mapWidth]);
         this.uniformBuffer.unmap();
 
         // Correct the bind group entries to ensure all resources are correctly specified
@@ -260,6 +268,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                         size: 6 * 4, // vec2<f32> for tileSize, tilesSize, and mapSize
                     },
                 },
+               
             ],
         });
     }
@@ -274,13 +283,18 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
     }
 
     render(): void {
+       // console.log('render', this.tileRotate, this.tileLayer);
+
         if (!this.canvas || !this.context || !this.pipeline || !this.bindGroup) {
             throw new Error('The canvas, WebGPU context, pipeline, or bind group are not properly initialized.');
         }
 
         this.setScreenSize(this.canvas.width, this.canvas.height);
 
-        const commandEncoder = this.device.createCommandEncoder();
+        // copy map data
+       this.device.queue.writeTexture( {texture:this.mapTexture}, this.mapData, {bytesPerRow:100 * Uint16Array.BYTES_PER_ELEMENT}, { width: 100, height:120 });
+
+        //
         const textureView = this.context.getCurrentTexture().createView();
 
         const renderPassDescriptor: GPURenderPassDescriptor = {
@@ -294,10 +308,11 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
             ],
         };
 
+        const commandEncoder = this.device.createCommandEncoder();
         const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
         passEncoder.setPipeline(this.pipeline);
         passEncoder.setBindGroup(0, this.bindGroup);
-        passEncoder.draw(6, 1, 0, 0);
+        passEncoder.draw(6);//, 1, 0, 0);
         passEncoder.end();
 
         this.device.queue.submit([commandEncoder.finish()]);

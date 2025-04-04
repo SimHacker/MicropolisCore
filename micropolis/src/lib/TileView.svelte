@@ -1,12 +1,13 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  //import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  import { TileRenderer, WebGPUTileRenderer } from '$lib/WebGPUTileRenderer';
   import { pan, pinch } from 'svelte-gestures';
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
 
   // Tile Sets
-  import tileLayer_all10 from '$lib/images/tilesets/all.png';
+  import tileLayer_all10 from '$lib/images/tilesets/classic.png';
 
   const tileLayers = [
     tileLayer_all10,
@@ -19,7 +20,8 @@
   let tileSet: number = 0;
 
   let canvasGL: HTMLCanvasElement | null = null;
-  let ctxGL: WebGL2RenderingContext | null = null;
+  //let ctxGL: WebGL2RenderingContext | null = null;
+  let ctxGL: GPUCanvasContext | null = null;
   let tileRenderer: TileRenderer<any> | null = null;
 
   let autoRepeatIntervalId: any | null = null;
@@ -65,14 +67,16 @@
       return;
     }
 
-    ctxGL = canvasGL.getContext('webgl2');
+    //ctxGL = canvasGL.getContext('webgl2');
+    ctxGL = canvasGL.getContext('webgpu');
     //console.log('TileView.svelte: initialize:', 'ctxGL:', ctxGL);
     if (ctxGL == null) {
       console.log('TileView.svelte: initialize: no ctxGL!');
       return;
     }
 
-    tileRenderer = new WebGLTileRenderer();
+    //tileRenderer = new WebGLTileRenderer();
+    tileRenderer = new WebGPUTileRenderer();
 
     if (typeof window != "undefined") {
       //window.tileRenderer = tileRenderer;
@@ -125,7 +129,7 @@
       canvasGL.height = canvasGL.clientHeight * ratio;
       //console.log("TileView.svelte: resizeCanvas:", "ratio:", ratio, "canvasGL.width:", canvasGL.width, "canvasGL.height:", canvasGL.height);
       if (ctxGL) {
-        ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
+      //  ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
       }
     }
   }
