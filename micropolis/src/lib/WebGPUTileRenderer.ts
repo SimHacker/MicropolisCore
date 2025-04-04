@@ -141,22 +141,25 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                
                 @fragment
                 fn main(input: VertexOutput) -> @location(0) vec4f {
+
+                    let tileSize = uniforms.tileSize;
+                    let textureSize = uniforms.tilesSize;
+                    let mapSize = uniforms.mapSize;
+
                     // Calculate the tile index from the map texture
                     let mapCoord = vec2<i32>(floor(input.fragCoord));
-                    let outOfMap = mapCoord.x <0 || mapCoord.x >= 120 || mapCoord.y <0 || mapCoord.y>=100;
+                    let outOfMap = mapCoord.x <0 || mapCoord.x >= i32(mapSize.y) || mapCoord.y <0 || mapCoord.y>=i32(mapSize.x);
                     let tileIndex = select(textureLoad(mapTexture, vec2<i32>(mapCoord.y, mapCoord.x), 0).r & 0x03ff, 0 ,outOfMap);
                     //DEBUG let tileIndex = select(u32(32+20), 0 ,outOfMap);
                 
-                    // Calculate the UV coordinates for the tile texture
-                    let tileSize = uniforms.tileSize;
-                    let textureSize = uniforms.tilesSize;
-                   
-                
+                    // Calculate the UV coordinates for the tile texture (assuming tiles and texture are squares)
+        
+                    let tilesPerRow = textureSize.x / tileSize.x;
                     // tile coordinate in tile unit
-                    let tileCoords = vec2<f32>(f32(tileIndex) % 32.0, floor(f32(tileIndex) / 32.0));
-                    let cTilePx = tileCoords * 16.0; // pixel position of tile in tile texture
-                    let dTilePx = fract(input.fragCoord)*16; // delta pixel position of current fragment                  
-                    let tileUV = (cTilePx + dTilePx)/512.0; // pixel position of current fragment over texture size
+                    let tileCoords = vec2<f32>(f32(tileIndex) % tilesPerRow, floor(f32(tileIndex) / tilesPerRow));
+                    let cTilePx = tileCoords * tileSize.x; // pixel position of tile in tile texture
+                    let dTilePx = fract(input.fragCoord) * tileSize.x; // delta pixel position of current fragment                  
+                    let tileUV = (cTilePx + dTilePx)/textureSize.x; // pixel position of current fragment over texture size
             
                     // Sample the color from the tile texture
                     let color = textureSample(tileTexture, tileSampler, tileUV);                 
