@@ -17,6 +17,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
     public bindGroup: GPUBindGroup;
     public sampler: GPUSampler;
     public uniformBuffer: GPUBuffer;
+    public verticeBuffer;
 
     constructor() {
         super();
@@ -30,6 +31,8 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         this.bindGroup = {} as GPUBindGroup;
         this.sampler = {} as GPUSampler;
         this.uniformBuffer = {} as GPUBuffer;
+
+        this.verticeBuffer = {}  as GPUBuffer;
     }
 
     async initialize(
@@ -64,6 +67,8 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
             device: this.device,
             format: 'bgra8unorm',
         });
+
+        this.verticeBuffer = this.squareVerticeBuffer();
 
         // Load the tile texture
         const tileImage = await this.loadImage(tileTextureURLs[0]);
@@ -108,28 +113,8 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
 
             @vertex
             fn main(
-                @builtin(vertex_index) VertexIndex: u32
-            ) -> VertexOutput {
-                var positions = array<vec2<f32>, 6>(
-                    vec2<f32>(-1.0,  1.0),
-                    vec2<f32>( 1.0,  1.0),
-                    vec2<f32>(-1.0, -1.0),
-                    vec2<f32>( 1.0,  1.0),
-                    vec2<f32>(-1.0, -1.0),
-                    vec2<f32>( 1.0, -1.0)
-                );
-
-                  var mapCoords = array<vec2<f32>, 6>(
-                    vec2<f32>(0.0, 0.0),
-                    vec2<f32>(120.0, 0.0),
-                    vec2<f32>(0.0, 120.0),
-                    vec2<f32>(120.0, 0.0),
-                    vec2<f32>(0.0, 120.0),
-                    vec2<f32>(120.0, 120.0)
-                );
-
-                let position = positions[VertexIndex];
-                return VertexOutput(vec4<f32>(position, 0.0, 1.0), mapCoords[VertexIndex]);
+                @location(0) position : vec4f, @location(1) mapCoord : vec2f) -> VertexOutput {
+                return VertexOutput(position, mapCoord);
             }`,
         });
 
@@ -211,6 +196,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
             vertex: {
                 module: vertexShaderModule,
                 entryPoint: 'main',
+                buffers: [verticesDescription()],
             },
             fragment: {
                 module: fragmentShaderModule,
@@ -308,16 +294,81 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
             ],
         };
 
+        this.verticeBuffer = this.squareVerticeBuffer();
+
         const commandEncoder = this.device.createCommandEncoder();
         const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
         passEncoder.setPipeline(this.pipeline);
+        passEncoder.setVertexBuffer(0, this.verticeBuffer);
         passEncoder.setBindGroup(0, this.bindGroup);
         passEncoder.draw(6);//, 1, 0, 0);
         passEncoder.end();
 
         this.device.queue.submit([commandEncoder.finish()]);
     }
+
+    squareVerticeBuffer() {
+        var px = this.panX * this.tileWidth;
+        var py = this.panY * this.tileHeight;
+        var z = 4 * this.zoom;
+    
+        var left =   (px - (this.screenWidth  / z)) / this.tileWidth;
+        var right =  (px + (this.screenWidth  / z)) / this.tileWidth;
+        var top =    (py - (this.screenHeight / z)) / this.tileHeight;
+        var bottom = (py + (this.screenHeight / z)) / this.tileHeight;
+
+       // console.log({left,right,top,bottom});
+
+        //
+        // C---D
+        // | \ |
+        // |  \|
+        // A---B
+        // prettier-ignore
+        const vertexArray = new Float32Array([
+            // float4 position,  float2 map cell coordinates,
+            -1, -1, 0, 1,   left, bottom,   //A
+             1, -1, 0, 1,   right, bottom,   //B
+            -1,  1, 0, 1,   left, top,   //C
+          
+            -1,  1, 0, 1,   left, top,   //C
+             1, -1, 0, 1 ,  right, bottom,   //B
+             1,  1, 0, 1,   right, top    //D
+          ]);
+      
+  
+        const verticeBuffer = this.device.createBuffer({
+          size: vertexArray.byteLength,
+          usage: GPUBufferUsage.VERTEX,
+          mappedAtCreation: true,
+        });
+        new Float32Array(verticeBuffer.getMappedRange()).set(vertexArray);
+        verticeBuffer.unmap();
+        return verticeBuffer;
+      }
+      
 }
+
+
+ function verticesDescription(): GPUVertexBufferLayout{
+    return {
+      arrayStride: 6 * 4,
+      attributes: [
+        {
+          // position
+          shaderLocation: 0,
+          offset: 0,
+          format: "float32x4",
+        },
+        {
+          // map coordinates
+          shaderLocation: 1,
+          offset: 4 * 4,
+          format: "float32x2",
+        },
+      ],
+    };
+  }
 
 
 export { TileRenderer, WebGPUTileRenderer };
