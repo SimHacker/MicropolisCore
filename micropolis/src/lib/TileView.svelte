@@ -7,7 +7,7 @@
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
 
   // Tile Sets
-  import tileLayer_all10 from '$lib/images/tilesets/classic.png';
+  import tileLayer_all10 from '$lib/images/tilesets/all.png';
 
   const tileLayers = [
     tileLayer_all10,

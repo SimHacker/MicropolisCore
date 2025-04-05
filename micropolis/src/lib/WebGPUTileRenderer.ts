@@ -126,7 +126,6 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                 @group(0) @binding(2) var mapTexture: texture_2d<u32>;
                 @group(0) @binding(3) var<uniform> uniforms: Uniforms;
                
-
                 struct VertexOutput {
                     @builtin(position) position: vec4<f32>,
                     @location(0) fragCoord: vec2<f32>,
@@ -135,7 +134,8 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                 struct Uniforms {
                     tileSize: vec2<f32>,
                     tilesSize: vec2<f32>,
-                    mapSize: vec2<f32>
+                    mapSize: vec2<f32>,
+                    tileRotate: vec2<f32>
                 };
 
                
@@ -145,10 +145,11 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     let tileSize = uniforms.tileSize;
                     let textureSize = uniforms.tilesSize;
                     let mapSize = uniforms.mapSize;
-
+                    let tileSet = uniforms.tileRotate.y; // tileSet index in a given tileset texture
+                   
                     // Calculate the tile index from the map texture
                     let mapCoord = vec2<i32>(floor(input.fragCoord));
-                    let outOfMap = mapCoord.x <0 || mapCoord.x >= i32(mapSize.y) || mapCoord.y <0 || mapCoord.y>=i32(mapSize.x);
+                    let outOfMap = mapCoord.x < 0 || mapCoord.x >= i32(mapSize.y) || mapCoord.y < 0 || mapCoord.y >= i32(mapSize.x);
                     let tileIndex = select(textureLoad(mapTexture, vec2<i32>(mapCoord.y, mapCoord.x), 0).r & 0x03ff, 0 ,outOfMap);
                     //DEBUG let tileIndex = select(u32(32+20), 0 ,outOfMap);
                 
@@ -157,9 +158,10 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     let tilesPerRow = textureSize.x / tileSize.x;
                     // tile coordinate in tile unit
                     let tileCoords = vec2<f32>(f32(tileIndex) % tilesPerRow, floor(f32(tileIndex) / tilesPerRow));
-                    let cTilePx = tileCoords * tileSize.x; // pixel position of tile in tile texture
-                    let dTilePx = fract(input.fragCoord) * tileSize.x; // delta pixel position of current fragment                  
-                    let tileUV = (cTilePx + dTilePx)/textureSize.x; // pixel position of current fragment over texture size
+                    let cTilePx = tileCoords * tileSize.x; // top left corner pixel position in tile texture
+                    let dTilePx = fract(input.fragCoord) * tileSize.x; // delta pixel position of current fragment    
+                    // magic number 10 is the number of tilesets in tile texture              
+                    let tileUV = (cTilePx + dTilePx + vec2f(0, tileSet * textureSize.y)) /vec2f(textureSize.x, textureSize.y * 10); // pixel position of current fragment over texture size
             
                     // Sample the color from the tile texture
                     let color = textureSample(tileTexture, tileSampler, tileUV);                 
@@ -225,13 +227,10 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
 
         // Make sure the uniform buffer is created and populated correctly
         this.uniformBuffer = this.device.createBuffer({
-            size: 6 * 4, // size for three vec2<f32>
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-            mappedAtCreation: true,
+            size: 8 * 4, // size for three vec2<f32>
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,           
         });
-        // Map data is column major order, so the width is the second dimension.
-        new Float32Array(this.uniformBuffer.getMappedRange()).set([16.0, 16.0, 512.0, 512.0, mapHeight, mapWidth]);
-        this.uniformBuffer.unmap();
+        this.setUniforms();
 
         // Correct the bind group entries to ensure all resources are correctly specified
         this.bindGroup = this.device.createBindGroup({
@@ -254,7 +253,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     resource: {
                         buffer: this.uniformBuffer,
                         offset: 0,
-                        size: 6 * 4, // vec2<f32> for tileSize, tilesSize, and mapSize
+                        size: 8 * 4, // vec2<f32> for tileSize, tilesSize, and mapSize, tileRotate
                     },
                 },
                
@@ -280,6 +279,9 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
 
         this.setScreenSize(this.canvas.width, this.canvas.height);
 
+        this.setUniforms();
+
+       
         // copy map data
        this.device.queue.writeTexture( {texture:this.mapTexture}, this.mapData, {bytesPerRow:100 * Uint16Array.BYTES_PER_ELEMENT}, { width: 100, height:120 });
 
@@ -308,6 +310,16 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         passEncoder.end();
 
         this.device.queue.submit([commandEncoder.finish()]);
+    }
+
+    setUniforms() {
+       // console.log(this.tileLayer, this.tileRotate, this.mopData[0]);
+        // Map data is column major order, so the width is the second dimension.
+        const data = new Float32Array(8);
+        // uniforms are : Tile size, Texture size, rotate, tileset index
+        // Hardcoded texture size works for all10.png ... thanks to some magic values in fragment shader
+        data.set([16.0, 16.0, 512.0, 512.0, this.mapHeight, this.mapWidth,this.tileRotate, this.mopData[0]]);
+        this.device.queue.writeBuffer(this.uniformBuffer, 0, data);      
     }
 
     squareVerticeBuffer() {
