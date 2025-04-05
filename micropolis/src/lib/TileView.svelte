@@ -1,7 +1,8 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  import { TileRenderer as glTileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  import { TileRenderer as gpuTileRenderer, WebGPUTileRenderer } from '$lib/WebGPUTileRenderer';
   import { pan, pinch } from 'svelte-gestures';
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
 
@@ -18,9 +19,9 @@
   let tileSetCount = 10;
   let tileSet: number = 0;
 
-  let canvasGL: HTMLCanvasElement | null = null;
-  let ctxGL: WebGL2RenderingContext | null = null;
-  let tileRenderer: TileRenderer<any> | null = null;
+  let canvas: HTMLCanvasElement | null = null;
+  let ctx: GPUCanvasContext | WebGL2RenderingContext | null = null;
+  let tileRenderer: glTileRenderer<any> | gpuTileRenderer<any> | null = null;
 
   let autoRepeatIntervalId: any | null = null;
   let autoRepeatDelay = 1000 / 60; // 60 repeats per second
@@ -56,23 +57,31 @@
   
     micropolisSimulator = micropolisSimulator_;
 
-    if (!micropolisSimulator || !canvasGL) return;
+    if (!micropolisSimulator || !canvas) return;
 
     // Create 3d canvas drawing context and tileRenderer.
     //console.log('TileView.svelte: onMount', 'canvasGL:', canvasGL);
-    if (canvasGL == null) {
+    if (canvas == null) {
       console.log('TileView.svelte: initialize: canvasGL is null!');
       return;
     }
 
-    ctxGL = canvasGL.getContext('webgl2');
-    //console.log('TileView.svelte: initialize:', 'ctxGL:', ctxGL);
-    if (ctxGL == null) {
-      console.log('TileView.svelte: initialize: no ctxGL!');
-      return;
+    ctx = canvas.getContext('webgpu');
+    if (ctx == null) {
+      console.log('TileView.svelte: WebGPU not available. Fallback to webgl2.');
+      ctx = canvas.getContext('webgl2');
+      if (ctx==null) {
+        console.log('TileView.svelte: webgl2 not available');
+        return;
+      }
+      console.log('TileView.svelte: webgl2 rendering');
+      tileRenderer = new WebGLTileRenderer();
+    }
+    else {
+      console.log('TileView.svelte: WebGPU rendering');
+      tileRenderer = new WebGPUTileRenderer();
     }
 
-    tileRenderer = new WebGLTileRenderer();
 
     if (typeof window != "undefined") {
       //window.tileRenderer = tileRenderer;
@@ -85,8 +94,8 @@
     }
 
     await tileRenderer.initialize(
-      canvasGL, 
-      ctxGL, 
+      canvas, 
+      ctx, 
       micropolisSimulator.mapData!,
       micropolisSimulator.mopData!,
       micropolisSimulator.micropolisengine.WORLD_W,
@@ -104,7 +113,7 @@
     tileRenderer.tileLayer = 0;
 
     if (typeof window != "undefined") {
-      canvasGL.addEventListener('wheel', onwheel, {passive: false});
+      canvas.addEventListener('wheel', onwheel, {passive: false});
     }
 
     resizeCanvas();
@@ -119,13 +128,14 @@
 
   // Function to resize the canvas to match the screen size.
   function resizeCanvas() {
-    if (canvasGL) {
+    if (canvas) {
       const ratio = window.devicePixelRatio || 1;
-      canvasGL.width = canvasGL.clientWidth * ratio;
-      canvasGL.height = canvasGL.clientHeight * ratio;
+      canvas.width = canvas.clientWidth * ratio;
+      canvas.height = canvas.clientHeight * ratio;
       //console.log("TileView.svelte: resizeCanvas:", "ratio:", ratio, "canvasGL.width:", canvasGL.width, "canvasGL.height:", canvasGL.height);
-      if (ctxGL) {
-        ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
+      if (ctx && "viewport" in ctx) {
+        // only applies to webgl2 renderer
+        ctx.viewport(0, 0, canvas.width, canvas.height);
       }
     }
   }
@@ -434,9 +444,9 @@
   }
   
   export function refocusCanvas() {
-    if (canvasGL && 
-        (document.activeElement !== canvasGL)) {
-      canvasGL.focus();
+    if (canvas && 
+        (document.activeElement !== canvas)) {
+      canvas.focus();
     }
   }
 
@@ -513,7 +523,7 @@
 
 <canvas
   class="tileview-canvas"
-  bind:this={canvasGL}
+  bind:this={canvas}
   tabindex="0"
   onmousedown={onmousedown}
   onmousemove={onmousemove}
