@@ -1,9 +1,7 @@
-micropolis/src/lib/MicropolisView.svelte
-- set webgpu / opengl switch?
-
 
 micropolis/src/lib/TileView.svelte
-- allow webgpu / opengl switch
+-  webgpu / opengl fallback
+    if webgpu is not available, opengl is used
 - support of tileSets and tileLayers
     - tileLayer = Tile Image file
     - a tileLayer can contain several tileSets 
