@@ -133,8 +133,9 @@
       canvas.width = canvas.clientWidth * ratio;
       canvas.height = canvas.clientHeight * ratio;
       //console.log("TileView.svelte: resizeCanvas:", "ratio:", ratio, "canvasGL.width:", canvasGL.width, "canvasGL.height:", canvasGL.height);
-      if (ctx) {
-      //  ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
+      if (ctx && "viewport" in ctx) {
+        // only applies to webgl2 renderer
+        ctx.viewport(0, 0, canvas.width, canvas.height);
       }
     }
   }
