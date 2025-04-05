@@ -135,9 +135,11 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     tileSize: vec2<f32>,
                     tilesSize: vec2<f32>,
                     mapSize: vec2<f32>,
-                    tileRotate: vec2<f32>
+                    misc: vec2<f32>
                 };
-
+                // Magic Number : number of tileSets in provided texture
+                override tileSetCount = f32(10);
+          
                
                 @fragment
                 fn main(input: VertexOutput) -> @location(0) vec4f {
@@ -145,23 +147,24 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
                     let tileSize = uniforms.tileSize;
                     let textureSize = uniforms.tilesSize;
                     let mapSize = uniforms.mapSize;
-                    let tileSet = uniforms.tileRotate.y; // tileSet index in a given tileset texture
+                    let tileRotate = u32(uniforms.misc.x);
+                    let tileSet = uniforms.misc.y; // tileSet index in a given tileset texture
+                    let tileCount = u32((textureSize.x / tileSize.x) *  (textureSize.x / tileSize.x));
                    
                     // Calculate the tile index from the map texture
                     let mapCoord = vec2<i32>(floor(input.fragCoord));
                     let outOfMap = mapCoord.x < 0 || mapCoord.x >= i32(mapSize.y) || mapCoord.y < 0 || mapCoord.y >= i32(mapSize.x);
-                    let tileIndex = select(textureLoad(mapTexture, vec2<i32>(mapCoord.y, mapCoord.x), 0).r & 0x03ff, 0 ,outOfMap);
-                    //DEBUG let tileIndex = select(u32(32+20), 0 ,outOfMap);
+                    let tileIndex = select(((textureLoad(mapTexture, vec2<i32>(mapCoord.y, mapCoord.x), 0).r & 0x03ff) + tileRotate) % tileCount, 0 ,outOfMap);
+                   
                 
                     // Calculate the UV coordinates for the tile texture (assuming tiles and texture are squares)
-        
                     let tilesPerRow = textureSize.x / tileSize.x;
                     // tile coordinate in tile unit
                     let tileCoords = vec2<f32>(f32(tileIndex) % tilesPerRow, floor(f32(tileIndex) / tilesPerRow));
                     let cTilePx = tileCoords * tileSize.x; // top left corner pixel position in tile texture
                     let dTilePx = fract(input.fragCoord) * tileSize.x; // delta pixel position of current fragment    
-                    // magic number 10 is the number of tilesets in tile texture              
-                    let tileUV = (cTilePx + dTilePx + vec2f(0, tileSet * textureSize.y)) /vec2f(textureSize.x, textureSize.y * 10); // pixel position of current fragment over texture size
+                    // pixel position of current fragment over texture size                               
+                    let tileUV = (cTilePx + dTilePx + vec2f(0, tileSet * textureSize.y)) /vec2f(textureSize.x, textureSize.y * tileSetCount); 
             
                     // Sample the color from the tile texture
                     let color = textureSample(tileTexture, tileSampler, tileUV);                 
