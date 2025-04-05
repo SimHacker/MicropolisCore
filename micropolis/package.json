@@ -3,10 +3,18 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "mkdir -p build ; vite build",
+		"build:jekyll": "cd website && bundle exec jekyll build --config _config.yml,_config_headless.yml --destination ../_jekyll_content_build",
+		"build:svelte": "mkdir -p build ; vite build",
+		"build": "npm run build:jekyll && npm run build:svelte",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"micropolis": "node scripts/micropolis.js",
+		"micropolis:info": "node scripts/micropolis.js city info",
+		"micropolis:analyze": "node scripts/micropolis.js city analyze",
+		"micropolis:visualize": "node scripts/micropolis.js visualize ascii",
+		"micropolis:export": "node scripts/micropolis.js file export",
+		"micropolis:dump": "node scripts/micropolis.js file dump"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",
@@ -17,11 +25,13 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/webgl2": "^0.0.11",
 		"@webgpu/types": "^0.1.42",
+		"chalk": "^4.1.2",
 		"svelte": "5.0.0-next.152",
 		"svelte-check": "^3.6.0",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
-		"vite": "^5.0.3"
+		"vite": "^5.0.3",
+		"yargs": "^17.7.2"
 	},
 	"type": "module",
 	"dependencies": {

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>About | Micropolis Documentation</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="About" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An exploration of the history, concepts, creators, and influences behind the Micropolis simulation (based on SimCity Classic). 🧐" />
+<meta property="og:description" content="An exploration of the history, concepts, creators, and influences behind the Micropolis simulation (based on SimCity Classic). 🧐" />
+<link rel="canonical" href="https://a2deh.github.io/pages/about.html" />
+<meta property="og:url" content="https://a2deh.github.io/pages/about.html" />
+<meta property="og:site_name" content="Micropolis Documentation" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="About" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"An exploration of the history, concepts, creators, and influences behind the Micropolis simulation (based on SimCity Classic). 🧐","headline":"About","url":"https://a2deh.github.io/pages/about.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link type="application/atom+xml" rel="alternate" href="https://a2deh.github.io/feed.xml" title="Micropolis Documentation" /></head>
+<body>
+  <header>
+    <h1>About</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/pages/about/chaim-gingold">Chaim Gingold</a></li>
+        <li><a href="/pages/about/ben-shneiderman">Ben Shneiderman</a></li>
+        <li><a href="/pages/about/brett-victor">Brett Victor</a></li>
+        <li><a href="/pages/about/stone-librande">Stone Librande</a></li>
+        <li><a href="/pages/about/constructionist-education">Constructionist Education</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <h2 id="explore-topics">Explore Topics</h2>
+
+<p>Learn more about the people and ideas related to Micropolis:</p>
+
+<ul>
+  <li><a href="/pages/about/will-wright">Will Wright</a>: Meet the visionary game designer who originally created SimCity, Spore, and The Sims. 🎮️</li>
+  <li><a href="/pages/about/don-hopkins">Don Hopkins</a>: Learn about the hacker known for porting SimCity to Unix, developing its open-source version Micropolis, and pioneering pie menus. 🐧</li>
+  <li><a href="/pages/about/chaim-gingold">Chaim Gingold</a>: Dive into insights from “Building SimCity,” Chaim’s book detailing the game’s creation, alongside his revealing reverse-engineered diagrams. 📖️</li>
+  <li><a href="/pages/about/brett-victor">Brett Victor</a>: Explore the work of an influential designer and programmer focused on dynamic mediums for thought and creativity. ✨</li>
+  <li><a href="/pages/about/stone-librande">Stone Librande</a>: Discover the design philosophy of Stone Librande, known for his insightful one-page documents visualizing complex game systems. 📄</li>
+  <li><a href="/pages/about/ben-shneiderman">Ben Shneiderman</a>: Understand the principles championed by the computer scientist who coined “direct manipulation” and advanced information visualization.🖱️</li>
+  <li><a href="/pages/about/constructionist-education">Constructionist Education</a>: An overview of the learning theory developed by Seymour Papert, where knowledge is built through active creation and sharing. 🛠️</li>
+</ul>
+
+<p><em>(More introductory content can be added here…)</em></p>
+
+<h1 id="simcitys-technical-evolution-from-postscript-to-webassembly">SimCity’s Technical Evolution: From PostScript to WebAssembly</h1>
+
+<p>Over the past thirty years, I’ve had the fascinating opportunity to implement SimCity across a remarkable range of platforms and technologies - from NeWS/PostScript in 1992, to X11/TCL/Tk for Unix, then Python/GTK when EA open-sourced it for the One Laptop Per Child project, later Flash/OpenLaszlo for early web browsers, and now WebAssembly/SvelteKit for modern web standards. Each implementation has been like a different lens revealing new possibilities while preserving the brilliance of Will Wright’s original simulation.</p>
+
+<blockquote>
+  <p>“I can’t just design the interface after the game’s done, or design the game in isolation from the interface. Each one of these supports the other.” — <a href="/pages/about/will-wright#the-anatomy-of-simulation-games">Will Wright</a></p>
+</blockquote>
+
+<h2 id="simulation-architecture">Simulation Architecture</h2>
+
+<p>SimCity’s core design represents a masterclass in efficient simulation architecture. By studying these diagrams (reverse-engineered by Chaim Gingold), we can appreciate the elegant solutions that enable a complex, believable urban simulation on limited hardware.</p>
+
+<blockquote>
+  <p>“When we’re designing a model we’re not necessarily designing a computer model. Our real end product is the mental model in the player’s head.” — <a href="/pages/about/will-wright#the-anatomy-of-simulation-games">Will Wright</a></p>
+</blockquote>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png" alt="SimCity Simulation Loop" /></p>
+
+<h3 id="multi-resolution-map-data">Multi-Resolution Map Data</h3>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png" alt="Map Data Architecture" /></p>
+
+<p>When I ported this architecture to more powerful platforms, I preserved this multi-resolution design rather than “simplifying” it with brute force computation. Good architecture transcends hardware generations.</p>
+
+<blockquote>
+  <p>“The exhaustively-researched illustrations are brilliant, and shockingly well printed in color–you can read them in depth.” — <a href="/pages/about/chaim-gingold#building-simcity-how-to-put-the-world-in-a-machine">Stewart Brand on Chaim Gingold’s work</a></p>
+</blockquote>
+
+<h3 id="pathfinding-and-traffic-simulation">Pathfinding and Traffic Simulation</h3>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png" alt="Traffic System" /></p>
+
+<p>SimCity’s traffic system is perhaps the most ingenious technical solution in the game:</p>
+
+<ul>
+  <li><strong>Statistical Abstraction</strong> - Each path represents many individual trips, not single vehicles—a fundamental abstraction that enables the entire system</li>
+  <li><strong>Randomized Pathfinding</strong> - A simple but effective stack-based randomized approach that creates realistic traffic patterns without requiring A* pathfinding</li>
+  <li><strong>Emergent Behavior</strong> - Road network quality naturally emerges from pathfinding success/failure, teaching players good urban design through direct experience</li>
+  <li><strong>Multi-Modal Transportation</strong> - Different handling of roads vs. rail creates meaningful gameplay choices with distinctive traffic patterns</li>
+</ul>
+
+<blockquote>
+  <p>“I just kind of optimized for game play.” — <a href="/pages/about/will-wright#reverse-over-engineering">Will Wright</a>, when asked which urban planning theory informed SimCity</p>
+</blockquote>
+
+<p>These diagrams expose the consistent philosophy across all of SimCity’s systems: elegant simplification, efficient data representation, careful orchestration, and emergent complexity from simple rules.</p>
+
+<h2 id="key-influences-and-inspirations">Key Influences and Inspirations</h2>
+
+<p>Throughout SimCity’s evolution, several key thinkers have profoundly influenced its design, visualization, and educational applications. Each has contributed unique perspectives that shape how we understand and interact with complex systems:</p>
+
+<ul>
+  <li>
+    <p><strong><a href="/pages/about/will-wright">Will Wright</a></strong> - Creator of SimCity and The Sims whose unique approach to game design and simulation has revolutionized how we think about interactive systems and learning through play.</p>
+
+    <blockquote>
+      <p>“One of the paradigms we’ve tried to use in designing these simulations is to think of them a little bit more as toys rather than games.” — <a href="/pages/about/will-wright#separating-simulation-from-game">Will Wright</a></p>
+    </blockquote>
+  </li>
+  <li>
+    <p><strong><a href="/pages/about/chaim-gingold">Chaim Gingold</a></strong> - His reverse engineering diagrams transformed SimCity’s architecture from opaque code into visually comprehensible systems, revealing the elegant design principles at its core.</p>
+
+    <blockquote>
+      <p>“This project took over a decade to research and write. The simple answer about the difference between ‘hoping for’ and ‘final’ product encompasses a lot of what makes software and game development interesting.” — <a href="/pages/about/chaim-gingold#chaims-decade-long-research-journey">Chaim Gingold</a></p>
+    </blockquote>
+  </li>
+  <li>
+    <p><strong><a href="/pages/about/ben-shneiderman">Ben Shneiderman</a></strong> - Pioneer of direct manipulation interfaces and dynamic queries, whose work directly influenced the development of pie menus and the Dynamic Zone Finder for SimCity.</p>
+
+    <blockquote>
+      <p>“Users rapidly learn to use the visual feedback to find where their solution is likely to be found.” — <a href="/pages/about/ben-shneiderman#dynamic-queries-and-the-dynamic-zone-finder">Ben Shneiderman</a></p>
+    </blockquote>
+  </li>
+  <li>
+    <p><strong><a href="/pages/about/brett-victor">Brett Victor</a></strong> - His revolutionary work on explorable explanations and interactive visualization has shaped how we approach making SimCity’s systems visible and manipulable.</p>
+
+    <blockquote>
+      <p>“Creators need an immediate connection to what they’re creating.” — <a href="/pages/about/brett-victor#revolutionary-approach-to-interface-design">Brett Victor</a></p>
+    </blockquote>
+  </li>
+  <li>
+    <p><strong><a href="/pages/about/stone-librande">Stone Librande</a></strong> - His one-page design philosophy transformed how we visualize and document complex systems, influencing both Chaim’s diagrams and our current interface design.</p>
+
+    <blockquote>
+      <p>“Why create a document with more than one page if most people only read the first page anyway?” — <a href="/pages/about/stone-librande#revolutionary-documentation-approach">Stone Librande</a></p>
+    </blockquote>
+  </li>
+  <li>
+    <p><strong>Doreen Nelson and Design-Based Learning</strong> - Doreen Nelson’s pioneering work on Design-Based Learning (previously City Building Education) created a critical bridge between physical city-building activities and SimCity’s digital simulation. See <a href="/pages/about/constructionist-education">Constructionist Education</a> for more details on her work.</p>
+
+    <blockquote>
+      <p>“The actual end product of SimCity is not the shallow model of the city running in the computer. More importantly, it’s the deeper model of the real world, and the intuitive understanding of complex dynamic systems, that people learn from playing it.” — <a href="/pages/about/will-wright#educational-impact">Will Wright</a></p>
+    </blockquote>
+  </li>
+</ul>
+
+<p>These thinkers and their approaches converge in our current WebAssembly implementation, where we’re working to make SimCity’s complex systems not just playable but genuinely understandable through direct manipulation and visual exploration.</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li><a href="/pdf/SimCityReverseDiagrams.pdf" target="_blank" rel="noopener noreferrer">Full SimCity Reverse Diagrams (PDF)</a></li>
+</ul>
+
+<h3 id="simulation-loop">Simulation Loop</h3>
+
+<p>Analysis and commentary on the reverse engineered SimCity source code.</p>
+
+<h2 id="key-figures-and-concepts">Key Figures and Concepts</h2>
+
+<p>Micropolis stands on the shoulders of giants and innovative ideas. Explore the individuals and theories that shaped its world:</p>
+
+<ul>
+  <li><a href="/pages/about/will-wright">Will Wright</a>: Meet the visionary game designer who originally created SimCity, Spore, and The Sims. 🎮️</li>
+  <li><a href="/pages/about/don-hopkins">Don Hopkins</a>: Learn about the hacker known for porting SimCity to Unix, developing its open-source version Micropolis, and pioneering pie menus. 🐧</li>
+  <li><a href="/pages/about/chaim-gingold">Chaim Gingold</a>: Dive into insights from “Building SimCity,” Chaim’s book detailing the game’s creation, alongside his revealing reverse-engineered diagrams. 📖️</li>
+  <li><a href="/pages/about/brett-victor">Brett Victor</a>: Explore the work of an influential designer and programmer focused on dynamic mediums for thought and creativity. ✨</li>
+  <li><a href="/pages/about/stone-librande">Stone Librande</a>: Discover the design philosophy of Stone Librande, known for his insightful one-page documents visualizing complex game systems. 📄</li>
+  <li><a href="/pages/about/ben-shneiderman">Ben Shneiderman</a>: Understand the principles championed by the computer scientist who coined “direct manipulation” and advanced information visualization.🖱️</li>
+  <li><a href="/pages/about/constructionist-education">Constructionist Education</a>: An overview of the learning theory where knowledge is built through active creation and sharing. 🛠️</li>
+</ul>
+
+<h2 id="influences-and-connections">Influences and Connections</h2>
+
+<p>Understanding Micropolis involves looking at the interplay of ideas:</p>
+
+<ul>
+  <li><strong>Direct Manipulation</strong> pioneered by <a href="/pages/about/ben-shneiderman">Ben Shneiderman</a> is fundamental to the SimCity interface, allowing intuitive control over the simulation.
+    <blockquote>
+      <p>“The appeal of direct manipulation lies in its ability to make complex systems understandable and controllable.” — Ben Shneiderman</p>
+    </blockquote>
+  </li>
+  <li><strong>Constructionism</strong>, developed by <a href="/pages/about/constructionist-education/seymour-papert">Seymour Papert</a> (inspired by <a href="/pages/about/constructionist-education/jean-piaget">Jean Piaget</a>), aligns with the open-ended, creative play encouraged by Micropolis. Players learn by building.
+    <blockquote>
+      <p>“The role of the teacher is to create the conditions for invention rather than provide ready-made knowledge.” — Seymour Papert</p>
+    </blockquote>
+  </li>
+  <li><strong>Systems Thinking</strong> is embodied in the simulation’s interconnectedness, visualized through <a href="/pages/about/stone-librande">Stone Librande</a>’s one-page design approach and echoing concepts from <a href="/pages/about/constructionist-education/marvin-minsky">Marvin Minsky</a>’s “Society of Mind.”
+    <blockquote>
+      <p>“The power of a one-page design lies in its ability to communicate the essence of a complex system clearly and concisely.” — Stone Librande</p>
+    </blockquote>
+  </li>
+  <li><strong>User Interface Innovation</strong>, from <a href="/pages/about/constructionist-education/alan-kay">Alan Kay</a>’s vision of the Dynabook to <a href="/pages/about/don-hopkins">Don Hopkins</a>’s pie menus, pushed the boundaries of how users interact with computers, influencing Micropolis’s design.
+    <blockquote>
+      <p>“The best way to predict the future is to invent it.” — Alan Kay</p>
+    </blockquote>
+  </li>
+  <li><strong>Design-Based Learning</strong>, championed by <a href="/pages/about/constructionist-education/doreen-nelson">Doreen Nelson</a>, emphasizes hands-on creation, mirroring the learning-through-doing experience of playing Micropolis.
+    <blockquote>
+      <p>“Design-Based Learning empowers students to become active creators, not just passive consumers of information.” — Doreen Nelson</p>
+    </blockquote>
+  </li>
+  <li><strong>Reverse Engineering as Learning</strong>, exemplified by <a href="/pages/about/chaim-gingold">Chaim Gingold</a>’s diagrams, shows how deconstructing complex systems like SimCity deepens understanding.
+    <blockquote>
+      <p>“The exhaustively-researched illustrations are brilliant, and shockingly well printed in color–you can read them in depth.” — <a href="/pages/about/chaim-gingold#building-simcity-how-to-put-the-world-in-a-machine">Stewart Brand on Chaim Gingold’s work</a></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="legacy-and-open-source">Legacy and Open Source</h2>
+
+<p>The release of the SimCity source code as “Micropolis” under the GPL ensures its availability for study, modification, and education, carrying forward the legacy of these pioneering ideas. Explore the <a href="/pages/micropolis-license">Micropolis Public Name License</a> for details.</p>
+
+<hr />
+
+<p><em>This overview connects the various figures and concepts detailed in the linked pages. Read individual pages for deeper dives.</em></p>
+
+  </main>
+  
+  <footer>
+    <p>Micropolis Core Documentation - <a href="https://github.com/a2deh/MicropolisCore">GitHub Repository</a></p>
+  </footer>
+</body>
+</html> 

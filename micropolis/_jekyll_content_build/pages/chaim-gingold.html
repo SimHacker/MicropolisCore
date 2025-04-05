@@ -1,0 +1,110 @@
+<h1 id="chaim-gingold-and-simcity-reverse-engineering">Chaim Gingold and SimCity Reverse Engineering</h1>
+
+<h2 id="simcity-reverse-engineering-analysis">SimCity Reverse Engineering Analysis</h2>
+
+<p>Chaim Gingold’s reverse engineering analysis represents a remarkable achievement in understanding and visualizing the complex architecture of Will Wright’s original SimCity. His work sits at the intersection of three innovative approaches to understanding complex systems:</p>
+
+<ol>
+  <li>
+    <p><strong>Stone Librande’s One-Page Designs (2010)</strong> - A revolutionary approach to game design documentation where complex systems are distilled into single, densely informative pages that capture both high-level architecture and critical details.</p>
+  </li>
+  <li>
+    <p><strong>Bret Victor’s Interactive Visualization (2013)</strong> - From his “Media for Thinking the Unthinkable” work at MIT Media Lab, Victor demonstrates how dynamic, interactive visualizations can make complex systems tangible and manipulable.</p>
+  </li>
+  <li>
+    <p><strong>Bruno Latour’s Visual Cognition (1986)</strong> - Theoretical foundation for how visualization serves as a cognitive tool, helping us understand complex systems by making them visually manipulable.</p>
+  </li>
+</ol>
+
+<p>Gingold’s work brilliantly synthesizes these approaches, creating diagrams that are both analytical (revealing SimCity’s architecture) and generative (providing a foundation for understanding and extending the system).</p>
+
+<h2 id="connection-to-will-wright-and-simcity">Connection to Will Wright and SimCity</h2>
+
+<p>Chaim’s work provides invaluable context for understanding <a href="/pages/about/will-wright">Will Wright</a>’s design philosophy. By reverse-engineering SimCity’s simulation loops and data structures, Chaim revealed the elegant architecture underlying the game’s emergent complexity.</p>
+
+<blockquote>
+  <p>“Looking at the design diagrams created by Chaim Gingold, we can appreciate just how elegantly structured Will’s simulation designs were.” — Quote from the <a href="/pages/about/will-wright#the-anatomy-of-simulation-games">Will Wright page</a>.</p>
+</blockquote>
+
+<p>Chaim’s diagrams, derived from his deep analysis, make the simulation’s inner workings visible, much like the diagrams pioneered by <a href="/pages/about/stone-librande">Stone Librande</a> at Maxis.</p>
+
+<blockquote>
+  <p>“Chaim’s diagrams…make the simulation’s inner workings visible, much like the diagrams pioneered by Stone Librande at Maxis.” — Derived from connections made on the <a href="/pages/about/stone-librande#influence-and-connections">Stone Librande page</a>.</p>
+</blockquote>
+
+<h2 id="building-simcity-how-to-put-the-world-in-a-machine">Building SimCity: How to Put the World in a Machine</h2>
+
+<p>Chaim’s magnum opus book, “Building SimCity: How to Put the World in a Machine” (MIT Press, 2024), is the culmination of years of research, including his time working with Will Wright at Maxis on Spore and the Spore Creature Creator. As someone who’s lived through much of the history documented in the book and who provided Chaim with source code and documentation to analyze, I can confidently say this is the most comprehensive, insightful exploration of SimCity ever written.</p>
+
+<p>What makes this book so special isn’t just that it documents the technical underpinnings of SimCity (though it does that brilliantly), but that it puts the game in its proper context - not just as a piece of software, but as a constellation of ideas about cities, simulations, and play.</p>
+
+<blockquote>
+  <p>“When we’re designing a model we’re not necessarily designing a computer model. Our real end product is the mental model in the player’s head.” — <a href="/pages/about/will-wright#the-anatomy-of-simulation-games">Will Wright</a></p>
+</blockquote>
+
+<p>Chaim’s analysis reveals how SimCity’s architecture elegantly supports this goal of building mental models—showing how the technical choices Will made were ultimately in service of creating an accessible, explorable simulation that could teach complex concepts through play.</p>
+
+<p>As a recent review by Computer Gaming Yesterday notes:</p>
+
+<blockquote>
+  <p>“The author Chaim Gingold really knows what he’s talking about… he worked on Spore, he worked with Will Wright himself so he has a lot of at least very close secondhand knowledge about SimCity and how it was developed, and he was able to talk to Will Wright himself to get his opinion… there is a lot of stuff in here that I’ve never heard of before, never seen published before, new information, and even information that is not necessarily new like how the game works is explained in a lot of detail and formatted in a way I’ve never seen before.”</p>
+</blockquote>
+
+<p>The book has received rave reviews, including this glowing endorsement from Stewart Brand (founder of the Whole Earth Catalog and The WELL):</p>
+
+<blockquote>
+  <p>“Brief book report: BUILDING SIM CITY: How to Put the World in a Machine, by Chaim Gingold, is an exhilarating read. It is one of the best origin stories ever told and the best account I’ve seen of how innovation actually occurs in computerdom.”</p>
+</blockquote>
+
+<p>Brand, who is very particular about accuracy and detail, further notes:</p>
+
+<blockquote>
+  <p>“Of course I checked the few moments where I intersected with the events in the story. They are tone-perfect, detail-perfect, and context-perfect. More so than I’ve ever seen before. I trust this book. It tells revelatory truth.”</p>
+</blockquote>
+
+<p>And of particular relevance to this document, Brand specifically praised the diagrams:</p>
+
+<blockquote>
+  <p>“The exhaustively-researched illustrations are brilliant, and shockingly well printed in color–you can read them in depth.”</p>
+</blockquote>
+
+<p>Those illustrations - especially the reverse diagrams - are what I’m most excited about bringing to life in the WebAssembly version of Micropolis. Chaim has kindly given me permission and encouragement to implement interactive versions of his reverse diagrams, which will dovetail perfectly with my implementation of the Dynamic Zone Finder (inspired by Ben Shneiderman’s Dynamic Home Finder).</p>
+
+<blockquote>
+  <p>“I just kind of optimized for game play.” — <a href="/pages/about/will-wright#reverse-over-engineering">Will Wright</a></p>
+</blockquote>
+
+<p>This simple statement from Will captures why Chaim’s reverse engineering work is so valuable—it reveals how deceptively sophisticated the simulation architecture is beneath its accessible surface. What appears to be a simple toy-like city simulator is actually a carefully crafted system with elegant solutions to complex computational problems.</p>
+
+<h3 id="chaims-decade-long-research-journey">Chaim’s Decade-Long Research Journey</h3>
+
+<p>Chaim’s relationship with SimCity is deep, spanning over a decade of research. He didn’t just play the game; he dissected it, interviewed its creators, and analyzed its cultural impact. His PhD dissertation, “<a href="https://pqdtopen.proquest.com/doc/304817380.html?FMT=AI">Play Design</a>”, is a seminal work in understanding SimCity’s design and player experience.</p>
+
+<p>He recently shared insights about <a href="/pages/about/doreen-nelson">Doreen Nelson</a>’s collaboration with Maxis on teacher guides, highlighting the long-standing connection between SimCity and education:</p>
+
+<blockquote>
+  <p>“She recently found a shrink wrapped copy of a teacher guide she coauthored with Michael Bremer and opened it (!) because we disagreed about what was in there, LOL. It’s destined now for her UCLA archive. Apparently she also wrote guides for many other Maxis titles but not all saw the light of day.”</p>
+</blockquote>
+
+<p>What’s remarkable about Chaim’s book is how it goes far beyond just the history and technical details of SimCity itself. The first half of the book explores the broader context that made SimCity possible - from city modeling for education to system dynamics, cellular automata, graphical interfaces, and the influence of institutions like the Santa Fe Institute. This is absolutely crucial for understanding not just how SimCity works, but why it works the way it does.</p>
+
+<blockquote>
+  <p>“The actual end product of SimCity is not the shallow model of the city running in the computer. More importantly, it’s the deeper model of the real world, and the intuitive understanding of complex dynamic systems, that people learn from playing it.” — <a href="/pages/about/will-wright#educational-impact">Will Wright</a></p>
+</blockquote>
+
+<p>This insight from Will makes clear why Chaim’s work is more than just academic analysis—it’s about uncovering the mechanisms through which SimCity achieves its educational impact.</p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png" alt="SimCity Simulation Loop Diagram" /></p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png" alt="SimCity Map Data Flow Diagram" /></p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png" alt="SimCity Maps Diagram" /></p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png" alt="SimCity Map Scan Diagram" /></p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png" alt="SimCity Make Traffic Diagram" /></p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png" alt="SimCity Animation Characters Diagram" /></p>
+
+<p>[… rest of content continues …]</p>
+ 

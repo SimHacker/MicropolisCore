@@ -17,6 +17,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
     public bindGroup: GPUBindGroup;
     public sampler: GPUSampler;
     public uniformBuffer: GPUBuffer;
+    public tileTextures: Map<string, GPUTexture>;
 
     constructor() {
         super();
@@ -30,6 +31,7 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         this.bindGroup = {} as GPUBindGroup;
         this.sampler = {} as GPUSampler;
         this.uniformBuffer = {} as GPUBuffer;
+        this.tileTextures = new Map();
     }
 
     async initialize(
@@ -301,6 +303,70 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         passEncoder.end();
 
         this.device.queue.submit([commandEncoder.finish()]);
+    }
+
+    // Replace individual uniforms with a structured uniform buffer
+    interface RenderUniforms {
+        tileSize: [number, number];     // vec2<f32>
+        tilesSize: [number, number];    // vec2<f32>
+        mapSize: [number, number];      // vec2<f32>
+        offset: [number, number];       // vec2<f32>
+        zoom: number;                   // f32
+        padding: number;                // for alignment
+    }
+
+    private updateUniforms(): void {
+        const uniformData = new Float32Array([
+            this.tileWidth, this.tileHeight,
+            this.tilesWidth, this.tilesHeight,
+            this.mapWidth, this.mapHeight,
+            this.offsetX, this.offsetY,
+            this.zoom, 0.0  // padding for alignment
+        ]);
+        this.device.queue.writeBuffer(this.uniformBuffer, 0, uniformData);
+    }
+
+    private async createResources(): Promise<void> {
+        // Create descriptor sets for different resource types
+        const textureDescriptor: GPUTextureDescriptor = {
+            size: [this.tilesWidth, this.tilesHeight, 1],
+            format: 'rgba8unorm',
+            usage: GPUTextureUsage.TEXTURE_BINDING | 
+                   GPUTextureUsage.COPY_DST | 
+                   GPUTextureUsage.RENDER_ATTACHMENT,
+            mipLevelCount: 4,  // Support mipmaps for better scaling
+        };
+
+        // Support multiple tile sets or overlay textures
+        this.tileTextures = new Map();
+        this.tileTextures.set('main', this.device.createTexture(textureDescriptor));
+    }
+
+    private validateDevice(): void {
+        const requiredFeatures = [
+            'texture-compression-bc',
+            'timestamp-query',
+        ] as GPUFeatureName[];
+
+        for (const feature of requiredFeatures) {
+            if (!this.device.features.has(feature)) {
+                console.warn(`Optional feature ${feature} not available`);
+            }
+        }
+    }
+
+    private createPipeline(): void {
+        const pipelineDescriptor: GPURenderPipelineDescriptor = {
+            // ... other settings ...
+            multisample: {
+                count: 4,  // MSAA support
+            },
+            primitive: {
+                topology: 'triangle-list',
+                cullMode: 'back',    // Better culling
+                frontFace: 'ccw',
+            }
+        };
     }
 }
 

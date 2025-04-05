@@ -1,0 +1,20 @@
+# docs/_config_headless.yml
+# Overrides for headless build
+
+# Use a layout that just outputs content
+defaults:
+  - scope:
+      path: "pages" # Or wherever your embeddable markdown files are
+    values:
+      layout: "headless"
+
+# Ensure unnecessary files aren't copied
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  # Exclude any Jekyll assets/css/js folders if they exist
+  - assets/
+  - css/
+  - js/
+
+# Destination is set via CLI (--destination)

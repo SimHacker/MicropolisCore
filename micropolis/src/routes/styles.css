@@ -7,8 +7,17 @@
 	--color-bg-0: rgb(202, 216, 228);
 	--color-bg-1: hsl(209, 36%, 86%);
 	--color-bg-2: hsl(224, 44%, 95%);
-	--color-theme-1: #ff3e00;
-	--color-theme-2: #4075a6;
+	--rci-dirt-bg: #b58a78;
+	--rci-text-light: #f0f0f0;
+	--rci-text-dark: #333;
+	--rci-R-green: #00a800;
+	--rci-C-blue: #0000ff;
+	--rci-I-yellow: #ffff00;
+	--rci-separator-R: var(--rci-R-green);
+	--rci-separator-C: var(--rci-C-blue);
+	--rci-separator-I: var(--rci-I-yellow);
+	--color-theme-1: var(--rci-R-green);
+	--color-theme-2: var(--rci-C-blue);
 	--color-text: rgba(0, 0, 0, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
@@ -19,8 +28,8 @@
 body {
 	min-height: 100vh;
 	margin: 0;
-	background-attachment: fixed;
 	background-color: var(--color-bg-1);
+	background-attachment: fixed;
 	background-size: 100vw 100vh;
 	background-image: radial-gradient(
 			50% 50% at 50% 50%,

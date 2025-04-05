@@ -18,7 +18,8 @@
     let snapScene: any;
     let snapStage: any;
 
-    // JavaScript for handling dragging and resizing
+    // Comment out unused event handling logic for now
+    /*
     let offsetX = 0;
     let offsetY = 0;
     let dragging = false;
@@ -121,6 +122,7 @@
         window.removeEventListener('mousemove', handleDraggingOrResizing);
         window.removeEventListener('mouseup', handleDragEnd);
     }
+    */
 
     onMount(() => {
         snapContext = snapCanvas!.getContext('2d');
@@ -191,7 +193,9 @@
 <div
     style="left: {snapViewLeft}px; top: {snapViewTop}px; width: {snapViewWidth}px; height: {snapViewHeight}px; display: {snapViewVisible ? 'block' : 'none'};"
     class="snap-frame-outer"
-    onmousedown={handleDragStart}
+    role="button"
+    tabindex="0"
+    aria-label="Draggable Snapshot"
 >
     <div
         class="snap-frame-inner"
@@ -206,6 +210,7 @@
     </div>
 </div>
 
+<div class="resize-handle"></div>
 
 <style>
 

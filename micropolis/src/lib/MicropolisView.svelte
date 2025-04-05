@@ -67,11 +67,13 @@
 
 </script>
 
-<TileView
-  bind:this={tileView}
-/>
+<div class="view-container">
+  <TileView
+    bind:this={tileView}
+  />
 
-<About showAbout={true}/>
+  <About showAbout={true}/>
+</div>
 
 <!--
 <SnapView
@@ -87,6 +89,14 @@
 
 <style>
 
+.view-container {
+  position: relative; /* Make this the positioning context */
+  width: 100%;      /* Ensure it takes up available space */
+  height: 100%;
+}
+
+/* Remove these styles */
+/*
 .fullscreen {
   display: block;
   position: relative;
@@ -102,5 +112,6 @@
   height: 100%;
   width: 100%;
 }
+*/
 
 </style>

@@ -2,7 +2,6 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
-  import { pan, pinch } from 'svelte-gestures';
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
 
   // Tile Sets
@@ -50,6 +49,9 @@
   let heatFlowRangeHigh = 100;
 
   let micropolisSimulator: MicropolisSimulator | null = null;
+
+  let isMounted = false;
+  let resizeObserver: ResizeObserver | null = null;
 
   export async function initialize(micropolisSimulator_: MicropolisSimulator): Promise<void> {
     console.log("TileView.svelte: initialize:", "micropolisSimulator:", micropolisSimulator_);
@@ -110,6 +112,33 @@
     resizeCanvas();
     refocusCanvas();
 
+    isMounted = true;
+
+    // Observe the canvas's PARENT element for size changes
+    const parentElement = canvasGL?.parentElement;
+    if (parentElement && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(entries => {
+        // We are only observing one element
+        // const entry = entries[0];
+        // console.log("ResizeObserver triggered", entry.contentRect);
+        requestAnimationFrame(resizeCanvas); // Debounce slightly with rAF
+      });
+      resizeObserver.observe(parentElement);
+      console.log("TileView.svelte: ResizeObserver attached to parent.");
+
+      // Initial size check
+       requestAnimationFrame(resizeCanvas);
+
+    } else {
+       console.warn("TileView.svelte: ResizeObserver not supported or parentElement not found. Falling back to window resize.");
+       // Fallback for older browsers or if parent isn't immediately available
+       if (typeof window !== 'undefined') {
+           window.addEventListener('resize', handleWindowResize);
+       }
+       // Initial size check
+       requestAnimationFrame(resizeCanvas);
+    }
+
   }
 
   export function render(): void {
@@ -119,14 +148,41 @@
 
   // Function to resize the canvas to match the screen size.
   function resizeCanvas() {
-    if (canvasGL) {
-      const ratio = window.devicePixelRatio || 1;
-      canvasGL.width = canvasGL.clientWidth * ratio;
-      canvasGL.height = canvasGL.clientHeight * ratio;
-      //console.log("TileView.svelte: resizeCanvas:", "ratio:", ratio, "canvasGL.width:", canvasGL.width, "canvasGL.height:", canvasGL.height);
-      if (ctxGL) {
-        ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
-      }
+    if (!isMounted || !canvasGL || !ctxGL || !tileRenderer) {
+        // console.log("TileView.svelte: resizeCanvas skipped (not ready)");
+      return;
+    }
+
+    // Get the size the browser is actually displaying the canvas element at
+    const displayWidth = canvasGL.clientWidth;
+    const displayHeight = canvasGL.clientHeight;
+
+    // Check if the canvas's drawing buffer size matches the display size (scaled by DPR)
+    const ratio = window.devicePixelRatio || 1;
+    const requiredWidth = Math.round(displayWidth * ratio);
+    const requiredHeight = Math.round(displayHeight * ratio);
+
+    // console.log(`Resize Check - Display: ${displayWidth}x${displayHeight}, Required Buffer: ${requiredWidth}x${requiredHeight}, Current Buffer: ${canvasGL.width}x${canvasGL.height}`);
+
+    // Only resize if needed to prevent flicker and unnecessary work
+    if (canvasGL.width !== requiredWidth || canvasGL.height !== requiredHeight) {
+      // Set the canvas drawing buffer size.
+      canvasGL.width = requiredWidth;
+      canvasGL.height = requiredHeight;
+
+      console.log(`TileView.svelte: Resized canvas drawing buffer to ${canvasGL.width}x${canvasGL.height}`);
+
+      // Update the WebGL viewport to match the new drawing buffer size
+      ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
+
+      // Tell the TileRenderer the new CSS display size
+      tileRenderer.setScreenSize(displayWidth, displayHeight);
+
+      // Re-render the scene with the new sizes
+      render();
+    } else {
+        // Even if buffer size is correct, CSS size might have changed, update renderer
+        tileRenderer.setScreenSize(displayWidth, displayHeight);
     }
   }
 
@@ -217,13 +273,13 @@
     } else if (key == '=') {
 
       // Next tile set
-      setTileSet((tileSet + 1) % tileSetCount);
+      setTileSet((tileRenderer.tileLayer + 1) % tileLayers.length);
       micropolisSimulator.render();
 
     } else if (key === '-') {
 
       // Previous tile set
-      setTileSet((tileSet + tileSetCount - 1) % tileSetCount);
+      setTileSet((tileRenderer.tileLayer + tileLayers.length - 1) % tileLayers.length);
       micropolisSimulator.render();
 
     } else if (key == '+') {
@@ -475,7 +531,7 @@
     }
   }
 
-  onMount(async () => {
+  onMount(() => {
     console.log("TileView.svelte: onMount");
 
     if (typeof window != 'undefined') {
@@ -503,23 +559,35 @@
 */
       window.removeEventListener('devicemotion', handleDeviceMotion);
     }
+
+    isMounted = false;
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+       console.log("TileView.svelte: ResizeObserver disconnected.");
+    }
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleWindowResize); // Clean up fallback listener
+        canvasGL?.removeEventListener('wheel', onwheel); // Clean up wheel listener
+    }
 });
 
-</script>
+   // Fallback resize handler
+   function handleWindowResize() {
+       requestAnimationFrame(resizeCanvas);
+   }
 
-<svelte:window
-  onresize={resizeCanvas}
-/>
+</script>
 
 <canvas
   class="tileview-canvas"
   bind:this={canvasGL}
   tabindex="0"
-  onmousedown={onmousedown}
-  onmousemove={onmousemove}
-  onmouseup={onmouseup}
-  onkeydown={onkeydown}
-  onkeyup={onkeyup}
+  on:mousedown={onmousedown}
+  on:mousemove={onmousemove}
+  on:mouseup={onmouseup}
+  on:keydown={onkeydown}
+  on:keyup={onkeyup}
+  on:mouseleave={onmouseup}
 ></canvas>
 <!--
   use:pan={{ onPan: (any: any) => handlePan(any) }}
@@ -534,6 +602,12 @@
     height: 100%;
     background: none;
     image-rendering: pixelated;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .tileview-canvas:active {
+      cursor: grabbing;
   }
 
 </style>

@@ -21,12 +21,9 @@ export async function loadMicropolisEngine(): Promise<any> {
         printErr: (message: string) => console.error("micropolisengine: ERROR: ", message),
         setStatus: (status: string) => console.log("micropolisengine: initModule: status:", status),
         locateFile: (path: string, prefix: string) => {
-            const fullPath =
-                capacitorApp
-                    ? path
-                    : path;
-            console.log(`micropolisengine: initModule: locateFile: prefix: ${prefix} path: ${path} capacitorApp: ${capacitorApp} fullPath ${fullPath}`);
-            return fullPath;
+            const absolutePath = path.startsWith('/') ? path : `/${path}`;
+            console.log(`micropolisengine: initModule: locateFile: path: ${path}, prefix: ${prefix}, resolved to absolutePath: ${absolutePath}`);
+            return absolutePath;
         },
         onRuntimeInitialized: () => console.log("micropolisengine: onRuntimeInitialized:"),
       };

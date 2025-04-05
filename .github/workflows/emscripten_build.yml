@@ -41,10 +41,43 @@ jobs:
           emcc --version
           node --version
           make install
+      
+      # Setup and build Jekyll site
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      
+      - name: Install Jekyll and dependencies
+        run: |
+          gem install jekyll bundler
+          cd docs
+          bundle init
+          bundle add jekyll jekyll-theme-minimal jekyll-relative-links jekyll-optional-front-matter
+      
+      - name: Copy build artifacts to Jekyll
+        run: |
+          mkdir -p docs/app
+          cp -r micropolis/build/* docs/app/
+          
+      - name: Copy diagrams and PDF to Jekyll
+        run: |
+          mkdir -p docs/assets/images docs/assets/pdf
+          # Copy diagram images
+          cp Cursor/SimCityReverseDiagrams-Page-*.png docs/assets/images/
+          cp Cursor/SimCityReverseDiagrams-Note-*.png docs/assets/images/
+          # Copy PDF
+          cp Cursor/SimCityReverseDiagrams.pdf docs/assets/pdf/
+      
+      - name: Build Jekyll site
+        run: |
+          cd docs
+          bundle exec jekyll build
 
       - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/main' # Only deploy if build was successful and on main branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./micropolis/build
+          publish_dir: ./docs/_site  # Use Jekyll's output directory instead

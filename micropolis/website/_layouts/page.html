@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+{%- include head.html -%}
+<body>
+  <header>
+    <h1>{{ page.title | default: site.title }}</h1>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav">
+      <h3>Micropolis</h3>
+      <ul>
+        <li><a href="/">Play Micropolis</a></li> <!-- Assuming / is the game/home -->
+        <li><a href="/pages/about">About</a></li>
+      </ul>
+      
+      <h3>Documentation</h3>
+      <ul>
+        <li><a href="/pages/about/will-wright">Will Wright</a></li>
+        <li><a href="/pages/about/chaim-gingold">Chaim Gingold's Analysis</a></li>
+        <li><a href="/pages/about/ben-shneiderman">Ben Shneiderman</a></li>
+        <li><a href="/pages/about/brett-victor">Brett Victor</a></li>
+        <li><a href="/pages/about/stone-librande">Stone Librande</a></li>
+        <li><a href="/pages/about/constructionist-education">Constructionist Education</a></li>
+      </ul>
+
+      <h3>Resources</h3>
+      <ul>
+        <li><a href="/assets/pdf/SimCityReverseDiagrams.pdf" target="_blank" rel="noopener noreferrer">Full SimCity Diagrams (PDF)</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    {{ content }}
+  </main>
+</body>
+</html> 

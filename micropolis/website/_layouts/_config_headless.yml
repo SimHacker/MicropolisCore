@@ -1,0 +1,4 @@
+---
+# No layout wrapping needed
+---
+{{ content }}

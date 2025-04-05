@@ -1,0 +1,38 @@
+title: Micropolis Documentation
+description: Documentation and research about Micropolis/SimCity implementation
+baseurl: "" # Set to empty for SvelteKit integration
+url: "https://a2deh.github.io" # Your GitHub Pages URL (or leave empty if served by SvelteKit)
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+  - jekyll-feed
+  - jekyll-seo-tag
+
+relative_links:
+  enabled: true
+  collections: true
+
+# Front matter defaults
+defaults:
+  -
+    scope:
+      path: "" # All files in the project
+    values:
+      layout: "default"
+  -
+    scope:
+      path: "pages"
+    values:
+      layout: "page"
+      permalink: /pages/:path:output_ext
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - node_modules/
+  - README.md 

@@ -6,12 +6,15 @@ let {
 
 </script>
 
-<div id="about" class="fullscreen mouseless">
+<div id="about" class="about-overlay mouseless">
 
-  <div
-    class="text-shadow about-show {showAbout ? 'about-show-opened' : 'about-show-closed'}"
+  <button 
+    type="button"
+    class="text-shadow about-toggle {showAbout ? 'about-show-opened' : 'about-show-closed'}"
     onclick="{(event) => showAbout = !showAbout}"
-  >{showAbout ? "X" : "+"}</div>
+    aria-label={showAbout ? 'Close About Info' : 'Show About Info'} 
+    aria-expanded={showAbout}
+  >{showAbout ? "X" : "+"}</button>
 
   {#if showAbout}
 
@@ -81,7 +84,7 @@ let {
       pointer-events: none;
     }
   
-    .fullscreen {
+    .about-overlay {
       display: block;
       position: absolute;
       width: 100%;
@@ -99,7 +102,7 @@ let {
         1px -1px 0 black; /* Right and up */
     }
   
-    .about-show {
+    .about-toggle {
       position: absolute;
       left: 0px;
       top: 0px;
@@ -107,39 +110,28 @@ let {
       cursor: pointer;
       margin-left: 3px;
       margin-top: 3px;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border: 1px solid black;
+      display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16x;
-      display: flex;
-      padding-top: 2px;
+      padding: 0;
+      font-size: 18px;
       color: white;
       font-weight: bold;
+      background: #ffffff80;
+      border-radius: 3px;
     }
   
     .about-show-closed {
-      background: #ffffff80;
       color: #00ff00;
       font-size: 20px;
     }
   
     .about-show-opened {
-      background: #ffffff80;
       color: #ff0000;
-    }
-  
-    .about-show-opened-text {
-      background: #ffffff80;
-      color: #ff0000;
-      display: inline-flex;
-      width: 20px;
-      height: 20px;
-      border: 1px solid black;
-      align-items: center;
-      justify-content: center;
-      font-size: 16x;
+      font-size: 18px;
     }
   
     .about-div {
@@ -170,10 +162,10 @@ let {
     }
   
     .about-div a {
-      pointer-events: auto; /* Allows the link to be clickable */
-      user-select: auto; /* Allows the link to be selectable */
-      color: yellow; /* Optional: Different color for better visibility */
-      text-decoration: underline; /* Optional: Underline to indicate it's a link */
+      pointer-events: auto;
+      user-select: auto;
+      color: yellow;
+      text-decoration: underline;
     }
 
   </style>
