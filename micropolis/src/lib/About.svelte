@@ -168,5 +168,8 @@ let {
       text-decoration: underline;
     }
 
+    .about-show-opened-text {
+      display: inline-block;
+    }
   </style>
   

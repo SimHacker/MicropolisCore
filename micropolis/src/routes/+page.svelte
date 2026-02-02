@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
 	// src/routes/+page.svelte
-	// Renders a dynamic site index based on the siteStructure.
+	// Renders the home page with TileView component
+	import TileView from '$lib/TileView.svelte';
+	import MicropolisView from '$lib/MicropolisView.svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	/**
-	 * @typedef {import('$lib/navigationTree.js').siteStructure[0]} NavNode
+	 * @typedef {import('$lib/navigationTree').siteStructure[0]} NavNode
 	 */
 
 	/** @type {{ node: NavNode, fullPath: Array<NavNode>, siteStructure: Array<NavNode> }} */
@@ -11,14 +14,56 @@
 
 	// Extract title, header, description for the index page itself
 	let pageHeadTitle = '';
-	$: pageHeadTitle = data?.node?.title || 'Site Index'; // Fallback title
+	$: pageHeadTitle = data?.node?.title || 'Micropolis Web'; // Fallback title
 	let pageHeader = '';
 	$: pageHeader = data?.node?.header || pageHeadTitle; // Use header field, fallback to title
 	let pageDescription = '';
 	$: pageDescription = data?.node?.description || '';
-
-	// Placeholder: We will need a recursive component to render the list
-	// import NodeList from './_NodeList.svelte'; // Import will be needed later
+	
+	// Home page container element reference
+	let containerElement: HTMLDivElement;
+	let resizeListener: (() => void) | null = null;
+	
+	// Function to resize the game container to fill space between header and footer
+	function resizeGameContainer() {
+		if (!containerElement) return;
+		
+		// Get header and footer heights
+		const header = document.querySelector('.navigation-area');
+		const footer = document.querySelector('.site-footer');
+		
+		if (!header || !footer) return;
+		
+		const headerHeight = header.getBoundingClientRect().height;
+		const footerHeight = footer.getBoundingClientRect().height;
+		
+		// Calculate available height
+		const availableHeight = window.innerHeight - headerHeight - footerHeight;
+		
+		// Set container height to fill available space
+		containerElement.style.height = `${Math.max(availableHeight, 400)}px`;
+	}
+	
+	onMount(() => {
+		// Set up resize listener
+		if (typeof window !== 'undefined') {
+			resizeListener = () => {
+				requestAnimationFrame(resizeGameContainer);
+			};
+			
+			window.addEventListener('resize', resizeListener);
+			
+			// Initial resize after a short delay to ensure elements are rendered
+			setTimeout(resizeGameContainer, 100);
+		}
+	});
+	
+	onDestroy(() => {
+		// Clean up resize listener
+		if (typeof window !== 'undefined' && resizeListener) {
+			window.removeEventListener('resize', resizeListener);
+		}
+	});
 </script>
 
 <svelte:head>
@@ -28,53 +73,23 @@
 	{/if}
 </svelte:head>
 
-<!-- Render the page header and description -->
-<h1 class="content-title">{pageHeader}</h1>
-
-{#if pageDescription}
-	<p class="content-description">{pageDescription}</p>
-{/if}
-
-<!-- Render the dynamic site index -->
-<div class="site-index">
-	{#if data?.siteStructure && data.siteStructure.length > 0}
-		<p><em>Site Index rendering logic goes here...</em></p>
-		<!-- Later: <NodeList nodes={data.siteStructure} /> -->
-		<!-- Temporary dump for verification -->
-		<pre>{JSON.stringify(data.siteStructure.map(n => ({ url: n.url, title: n.title })), null, 2)}</pre>
-	{:else}
-		<p>Site structure not available or empty.</p>
-	{/if}
+<!-- Render the Micropolis TileView component -->
+<div class="micropolis-container" bind:this={containerElement}>
+	<MicropolisView />
 </div>
 
-<!-- Removed previous HTML rendering logic -->
-<!-- <div class="markdown-content">
-    {@html data?.pageContent || '<p>Welcome to Micropolis Web!</p>'}
-</div> -->
-
 <style>
-	.content-title {
-		margin-bottom: 0.25em;
-		border-bottom: 1px solid #ccc;
-		padding-bottom: 0.25em;
-	}
-	.content-description {
-		font-size: 1.1em;
-		color: #555;
-		margin-top: 0;
-		margin-bottom: 1.5em;
-		font-style: italic;
-	}
-	.site-index {
-		/* Add styling for the index container if needed */
-	}
-	/* Styles for the NodeList component would go in _NodeList.svelte */
-	pre {
-		background-color: #eee;
-		padding: 1em;
-		border-radius: 4px;
-		overflow-x: auto;
-		white-space: pre-wrap;
-		word-wrap: break-word;
+	.micropolis-container {
+		width: 100%;
+		height: calc(100vh - 180px); /* Default fallback calculation */
+		min-height: 500px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 0;
+		padding: 0;
+		overflow: visible;
+		position: relative;
+		flex-grow: 1; /* Allow container to expand and fill available space */
 	}
 </style>

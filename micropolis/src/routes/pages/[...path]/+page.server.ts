@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit';
-// Revert to using $lib alias and add .js extension
-import { findNodeByUrl, getPrerenderEntries } from '$lib/navigationTree.js';
+import { findNodeByUrl, getPrerenderEntries } from '$lib/navigationTree';
 import { getContentFilePath, readContentFile } from '$lib/server/jekyllContent.js';
 
 export const prerender = true;
@@ -43,16 +42,21 @@ export async function load({ params }) {
     const filePath = getContentFilePath(contentSlugForFile);
     console.log(`[load /pages] Attempting to load content: ${filePath}`);
 
-    const pageContent = await readContentFile(filePath, contentSlugForFile);
-    console.log(`[load /pages] Successfully loaded content for node: ${node.url}`);
-
-    // Return specific properties instead of the whole node object
-    return {
-        title: node.title,
-        header: node.header,
-        description: node.description,
-        children: node.children, // Pass children separately if needed by page/layout
-        fullPath,    // Keep fullPath for layout navigation
-        pageContent  // Keep pageContent
-    };
+    try {
+        const pageContent = await readContentFile(filePath, contentSlugForFile);
+        console.log(`[load /pages] Successfully loaded content for node: ${node.url}`);
+        
+        // Return specific properties instead of the whole node object
+        return {
+            title: node.title,
+            header: node.header || node.title,
+            description: node.description || '',
+            children: node.children || [], // Pass children separately if needed by page/layout
+            fullPath,    // Keep fullPath for layout navigation
+            pageContent  // Keep pageContent
+        };
+    } catch (err) {
+        console.error(`[load /pages] Failed to load content for '${contentSlugForFile}':`, err);
+        error(500, `Failed to load content for ${node.url}`);
+    }
 } 

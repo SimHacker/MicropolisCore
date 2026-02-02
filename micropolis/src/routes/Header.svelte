@@ -1,19 +1,36 @@
 <script>
 	import { page } from '$app/stores';
 	// Revert to using $lib alias
-	import { siteStructure } from '$lib/navigationTree.js';
+	import { siteStructure, findNodeByUrl } from '$lib/navigationTree';
 	// Placeholder for logo - replace path when available
 	// import logo from '$lib/images/micropolis-logo.svg';
 
     // Filter the site structure to get only top-level items for the main header
     // Exclude items explicitly marked as hidden from navigation
-    /** @type {Array<import('$lib/navigationTree.js').siteStructure[0]>} */
-    let headerNavItems = []; // Type the array correctly
+    /** @type {Array<any>} */
+    let headerNavItems = []; 
     $: headerNavItems = siteStructure.filter(
-        /** @param {import('$lib/navigationTree.js').siteStructure[0]} node */
-        node => !node.hideFromNav // Now TS knows node has hideFromNav
+        /** @param {any} node */
+        node => !node.hideFromNav
     );
 
+    // Determine the current path and active sections
+    $: currentNodeData = findNodeByUrl($page.url.pathname);
+    $: currentPath = currentNodeData?.fullPath || [];
+    
+    // Function to check if an item is active or has an active child
+    /**
+     * @param {any} item - Navigation item to check
+     * @returns {boolean} Whether the item is active or has an active child
+     */
+    function isActiveOrHasActiveChild(item) {
+        // Direct match
+        if ($page.url.pathname === item.url) return true;
+        // Prefix match for section
+        if (item.url !== '/' && $page.url.pathname.startsWith(item.url)) return true;
+        // Check if this item is in the current path
+        return currentPath.some(node => node.url === item.url);
+    }
 </script>
 
 <header>
@@ -41,7 +58,7 @@
                         </a>
                     </li>
                 {:else}
-                    {@const isActive = $page.url.pathname === item.url || (item.url !== '/' && $page.url.pathname.startsWith(item.url))}
+                    {@const isActive = isActiveOrHasActiveChild(item)}
                     <li aria-current={isActive ? 'page' : undefined}>
                         <a href={item.url} title={item.tooltip}>
                             <span class="tab-label">{@html item.title.replace(' ', '<br/>')}</span>
@@ -57,8 +74,8 @@
 	header {
 		display: flex;
 		align-items: center;
-		padding: 0.2em;
-		background-color: var(--rci-dirt-bg);
+		padding: 0.4em;
+		background-color: var(--rci-dirt-bg); /* Use CSS variable for consistent brown */
 		min-height: auto;
 		height: auto;
 		box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -67,14 +84,14 @@
 		border-radius: 0;
 	}
 	.logo-placeholder {
-		width: 3em;
-		height: 3em;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		height: 2.4em; /* EXACT FIXED HEIGHT with extra to accommodate taller text */
+		width: auto;
 	}
 	.logo-placeholder svg {
-		width: 100%;
+		width: auto;
 		height: 100%;
 		display: block;
 	}
@@ -125,15 +142,16 @@
 	nav.main-nav a.logo-link {
 		min-width: auto;
 		width: auto;
-		border: 3px solid white;
-		background-color: rgba(255, 255, 255, 0.05);
-		border-radius: 5px;
-		box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 1px 1px 2px rgba(0,0,0,0.2);
+		padding: 0.4em 0.8em; /* Same padding as other tabs */
+		border: 1px solid transparent;
+		background-color: var(--rci-dirt-bg); /* Use CSS variable for consistent brown */
+		border-radius: 4px; /* Same as other tabs */
+		box-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Same as other tabs */
 		color: inherit;
 	}
 	nav.main-nav a.logo-link:hover {
-		background-color: rgba(255, 255, 255, 0.15);
-		box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1), 1px 1px 4px rgba(0,0,0,0.3);
+		background-color: var(--rci-dirt-bg); /* Use CSS variable for consistent brown */
+		box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
 	}
 
 	.external-link-icon {
@@ -149,11 +167,11 @@
 	}
 
 	nav.main-nav a:hover .external-link-icon {
-		transform: translate(12px, -12px) scale(1.9);
+		transform: translate(16px, -12px) scale(1.9);
 	}
 
 	nav.main-nav li:not(.logo-item):not([aria-current='page']) a:hover {
-		background-color: rgba(255, 255, 255, 0.15);
+		background-color: var(--rci-dirt-bg); /* Use CSS variable for consistent brown */
 		color: #fff;
 		box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
 	}

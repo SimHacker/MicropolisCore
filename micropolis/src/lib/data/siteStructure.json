@@ -1,0 +1,277 @@
+[
+  {
+    "comment": "Root Page (Dynamically generated index)",
+    "url": "/",
+    "title": "Micropolis Web",
+    "header": "Site Index",
+    "description": "🏛️🌍🪢🗺️ An index of all pages on the Micropolis Web site.",
+    "tooltip": "Go to Micropolis Web Site Index"
+  },
+  {
+    "comment": "About Page",
+    "url": "/pages/about",
+    "title": "About Micropolis",
+    "header": "About Micropolis",
+    "contentSlug": "about",
+    "description": "🧐🏛️💡🧑‍💻 An exploration of the history, concepts, creators, and influences behind Micropolis.",
+    "tooltip": "Learn about Micropolis history and concepts",
+    "matchUrlPrefix": true,
+    "showSubTabs": true,
+    "children": [
+      {
+        "comment": "Will Wright Page",
+        "url": "/pages/about/will-wright",
+        "title": "Will Wright",
+        "header": "Will Wright: SimCity Creator",
+        "contentSlug": "about/will-wright",
+        "description": "🎮️🏙️🤖🧠 Meet the visionary game designer who originally created SimCity, Spore, and The Sims."
+      },
+      {
+        "comment": "Don Hopkins Page",
+        "url": "/pages/about/don-hopkins",
+        "title": "Don Hopkins",
+        "header": "Don Hopkins: Micropolis Developer",
+        "contentSlug": "about/don-hopkins",
+        "description": "🐧💻🖱️🍕 Learn about the developer who worked on The Sims, ported SimCity, and developed Micropolis.",
+        "matchUrlPrefix": true,
+        "children": [
+          {
+            "comment": "SimCity NeWS/HyperLook Version Page",
+            "url": "/pages/about/don-hopkins/simcity-news-hyperlook",
+            "title": "SimCity NeWS/HyperLook",
+            "header": "SimCity for NeWS/HyperLook (1991-1992)",
+            "contentSlug": "about/don-hopkins/simcity-news-hyperlook",
+            "description": "📜🖥️🅿️⚙️ Porting SimCity Classic to Sun's PostScript-based NeWS/HyperLook environment.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "SimCity X11/TCL/Tk Version Page",
+            "url": "/pages/about/don-hopkins/simcity-x11-tcltk",
+            "title": "SimCity X11/TCL/Tk",
+            "header": "SimCity for X11/TCL/Tk (1993)",
+            "contentSlug": "about/don-hopkins/simcity-x11-tcltk",
+            "description": "🇽🖥️⌨️🛠️ Developed the Unix version using X11 and TCL/Tk, featuring pie menus.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "SimCityNet Multiplayer Version Page",
+            "url": "/pages/about/don-hopkins/multiplayer-simcity-net",
+            "title": "SimCityNet Multiplayer",
+            "header": "Multiplayer SimCityNet (1993)",
+            "contentSlug": "about/don-hopkins/multiplayer-simcity-net",
+            "description": "🤝👥🌐🔌 Created a networked, cooperative multiplayer version based on the X11/TCL/Tk code.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "The Sims Contributions Page",
+            "url": "/pages/about/don-hopkins/the-sims",
+            "title": "The Sims",
+            "header": "The Sims Contributions (1997-2000)",
+            "contentSlug": "about/don-hopkins/the-sims",
+            "description": "🧑‍🤝‍🧑🏡🛠️👨‍💻 Details on core development, UI, tools, and user empowerment for The Sims 1.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "SimCity OLPC Version Page",
+            "url": "/pages/about/don-hopkins/olpc-simcity",
+            "title": "SimCity OLPC",
+            "header": "SimCity for OLPC (2007-2008)",
+            "contentSlug": "about/don-hopkins/olpc-simcity",
+            "description": "💻🧒🌍📖 Adapting and open-sourcing SimCity as Micropolis for the OLPC project.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "Micropolis C++/Python Integration Page",
+            "url": "/pages/about/don-hopkins/micropolis-cpp-python",
+            "title": "Micropolis C++/Python",
+            "header": "Micropolis C++/Python Integration",
+            "contentSlug": "about/don-hopkins/micropolis-cpp-python",
+            "description": "🐍⚙️🧩🔗 Refactoring the core SimCity engine into cleaner C++ integrated with Python via SWIG.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "Micropolis Linux PyGTK Version Page",
+            "url": "/pages/about/don-hopkins/micropolis-linux-pygtk",
+            "title": "Micropolis Linux PyGTK",
+            "header": "Micropolis Linux PyGTK Version (Deprecated)",
+            "contentSlug": "about/don-hopkins/micropolis-linux-pygtk",
+            "description": "🐧🖼️🖱️💿 A deprecated Linux desktop version using PyGTK, Cairo, and Pango, with pie menus.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "Micropolis Online Web Version Page",
+            "url": "/pages/about/don-hopkins/micropolis-online-turbogears-openlaszlo",
+            "title": "Micropolis Online",
+            "header": "Micropolis Online (TurboGears/OpenLaszlo - Deprecated)",
+            "contentSlug": "about/don-hopkins/micropolis-online-turbogears-openlaszlo",
+            "description": "🕸️🌐⚡💻 A deprecated web client/server version using Python/TurboGears and Flash/OpenLaszlo.",
+            "hideFromNav": true
+          },
+          {
+            "comment": "Micropolis WebAssembly Version Page",
+            "url": "/pages/about/don-hopkins/micropolis-web-wasm-webgl-sveltekit",
+            "title": "Micropolis Web",
+            "header": "Micropolis Web (WASM/WebGL/SvelteKit - Current)",
+            "contentSlug": "about/don-hopkins/micropolis-web-wasm-webgl-sveltekit",
+            "description": "🚀🕸️📊💻 The current WebAssembly port using SvelteKit, WebGL, and interactive diagrams.",
+            "hideFromNav": true
+          }
+        ]
+      },
+      {
+        "comment": "Chaim Gingold Page",
+        "url": "/pages/about/chaim-gingold",
+        "title": "Chaim Gingold",
+        "header": "Chaim Gingold: Building SimCity",
+        "contentSlug": "about/chaim-gingold",
+        "description": "📖️🏗️📊👨‍🔬 Dive into insights from \"Building SimCity,\" Chaim's book detailing the game's creation."
+      },
+      {
+        "comment": "Brett Victor Page",
+        "url": "/pages/about/brett-victor",
+        "title": "Brett Victor",
+        "header": "Brett Victor: Dynamic Mediums",
+        "contentSlug": "about/brett-victor",
+        "description": "✨💡🖼️💻 Explore the work of an influential designer focused on dynamic mediums for thought."
+      },
+      {
+        "comment": "Stone Librande Page",
+        "url": "/pages/about/stone-librande",
+        "title": "Stone Librande",
+        "header": "Stone Librande: One-Page Designs",
+        "contentSlug": "about/stone-librande",
+        "description": "📄🧩🎮💡 Discover the design philosophy of Stone Librande, known for his insightful one-page documents."
+      },
+      {
+        "comment": "Ben Shneiderman Page",
+        "url": "/pages/about/ben-shneiderman",
+        "title": "Ben Shneiderman",
+        "header": "Ben Shneiderman: Direct Manipulation",
+        "contentSlug": "about/ben-shneiderman",
+        "description": "🖱️👨‍🔬📊💡 Understand the principles championed by the computer scientist who coined \"direct manipulation\"."
+      },
+      {
+        "comment": "Constructionist Education Page",
+        "url": "/pages/about/constructionist-education",
+        "title": "Constructionist Education",
+        "header": "Constructionist Education",
+        "contentSlug": "constructionist-education",
+        "description": "🛠️🧱🧑‍🏫🧑‍🎓 An overview of the learning theory where knowledge is built through active creation and sharing.",
+        "matchUrlPrefix": true,
+        "showSubTabs": true,
+        "children": [
+          {
+            "comment": "Jean Piaget Page",
+            "url": "/pages/about/constructionist-education/jean-piaget",
+            "title": "Jean Piaget",
+            "header": "Jean Piaget: Cognitive Development",
+            "contentSlug": "constructionist-education/jean-piaget",
+            "description": "👶🤔🧠🇨🇭 Review the foundational theories of the Swiss psychologist on child cognitive development."
+          },
+          {
+            "comment": "Seymour Papert Page",
+            "url": "/pages/about/constructionist-education/seymour-papert",
+            "title": "Seymour Papert",
+            "header": "Seymour Papert: Constructionism & Logo",
+            "contentSlug": "constructionist-education/seymour-papert",
+            "description": "🐢🧱💻🧑‍🏫 Meet the MIT mathematician who pioneered AI, developed Logo, and founded Constructionism."
+          },
+          {
+            "comment": "Marvin Minsky Page",
+            "url": "/pages/about/constructionist-education/marvin-minsky",
+            "title": "Marvin Minsky",
+            "header": "Marvin Minsky: AI & Society of Mind",
+            "contentSlug": "constructionist-education/marvin-minsky",
+            "description": "🤖🧠🧩👥 Delve into the thinking of an AI founding father, co-founder of MIT's AI Lab."
+          },
+          {
+            "comment": "Alan Kay Page",
+            "url": "/pages/about/constructionist-education/alan-kay",
+            "title": "Alan Kay",
+            "header": "Alan Kay: Dynabook & OOP",
+            "contentSlug": "constructionist-education/alan-kay",
+            "description": "💻📖💡👨‍🏫 Learn about the computer scientist, key figure in OOP & GUIs, who envisioned the Dynabook."
+          },
+          {
+            "comment": "Doreen Nelson Page",
+            "url": "/pages/about/constructionist-education/doreen-nelson",
+            "title": "Doreen Nelson",
+            "header": "Doreen Nelson: Design-Based Learning",
+            "contentSlug": "constructionist-education/doreen-nelson",
+            "description": "🏗️🧱🧑‍🏫🪢 Explore Design-Based Learning (DBL), the hands-on educational methodology."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "comment": "Building SimCity Page",
+    "url": "/pages/building-simcity",
+    "title": "Building SimCity",
+    "header": "Building SimCity Book Excerpts",
+    "contentSlug": "building-simcity",
+    "description": "🏗️📖✍️🔍 Excerpts and info related to Chaim Gingold's book detailing SimCity's design history.",
+    "tooltip": "Read about the making of SimCity",
+    "excludeFromRss": true
+  },
+  {
+    "comment": "Reverse Diagrams Page",
+    "url": "/pages/reverse-diagrams",
+    "title": "Reverse Diagrams",
+    "header": "SimCity Reverse Diagrams",
+    "contentSlug": "reverse-diagrams",
+    "description": "📊✍️⚙️💡 Chaim Gingold's detailed diagrams visually reverse-engineering SimCity Classic's mechanics.",
+    "tooltip": "Explore SimCity Classic mechanics through visual diagrams",
+    "matchUrlPrefix": true,
+    "showSubTabs": false
+  },
+  {
+    "comment": "All Content Page",
+    "url": "/all",
+    "title": "All Content",
+    "header": "All Micropolis Content",
+    "description": "📚🗺️🔍📜 A comprehensive view of all Micropolis content on a single page.",
+    "tooltip": "View all content on a single page",
+    "hideFromNav": true
+  },
+  {
+    "comment": "Micropolis License Page",
+    "url": "/pages/micropolis-license",
+    "title": "Micropolis License",
+    "header": "Micropolis Licensing",
+    "contentSlug": "micropolis-license",
+    "description": "⚖️📜✍️🤓 Review the GPL and Public Name licenses that govern this project.",
+    "tooltip": "View licensing information for Micropolis",
+    "excludeFromAll": true,
+    "excludeFromRss": true,
+    "hideFromNav": false
+  },
+  {
+    "comment": "Game Page",
+    "url": "/game",
+    "title": "Game",
+    "header": "Micropolis Game",
+    "description": "🏙️🎮🖱️🚀 Interactive Micropolis game simulation.",
+    "tooltip": "Play Micropolis",
+    "matchUrlPrefix": true,
+    "hideFromNav": true
+  },
+  {
+    "comment": "Source Code External Link",
+    "url": "https://github.com/SimHacker/MicropolisCore",
+    "title": "Source Code",
+    "header": "Micropolis Source Code",
+    "description": "💻⌨️🐙👨‍💻 Explore the open-source MicropolisCore repository on GitHub. Contribute!",
+    "tooltip": "View MicropolisCore Source Code on GitHub",
+    "external": true
+  },
+  {
+    "comment": "Patreon Support External Link",
+    "url": "https://www.patreon.com/DonHopkins",
+    "title": "Please Support",
+    "header": "Please Support Don Hopkins",
+    "description": "🙏💖👍🪙 Help sustain Micropolis development by supporting Don Hopkins on Patreon.",
+    "tooltip": "Please Support Don Hopkins on Patreon",
+    "external": true
+  }
+]

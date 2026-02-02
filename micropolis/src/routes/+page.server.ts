@@ -1,11 +1,11 @@
 import { error } from '@sveltejs/kit';
-import { findNodeByUrl, siteStructure } from '$lib/navigationTree.js';
+import { findNodeByUrl, siteStructure } from '$lib/navigationTree';
+import type { PageServerLoad } from './$types';
 
 // This page cannot be prerendered as it dynamically generates the index
 export const prerender = false;
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export const load: PageServerLoad = async ({ params }) => {
     const requestedUrl = '/'; // Explicitly loading the root page
     console.log(`[load /] Loading dynamic site index: ${requestedUrl}`);
 
@@ -27,6 +27,6 @@ export async function load({ params }) {
         fullPath,   // Pass the path (just the root node)
         siteStructure // Pass the entire structure for index generation
     };
-}
+};
 
 // No entries function needed here. 

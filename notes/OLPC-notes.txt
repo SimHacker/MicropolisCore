@@ -3,12 +3,12 @@ By Don Hopkins (dhopkins@DonHopkins.com)
 
 Why is Micropolis such a great match for OLPC's Sugar interface?
 
-Constructivist education.
+Constructionist education.
   Children learn by doing and experiencing. 
   Playful learning (as opposed to edutainment).
   People learn effectively through making things. 
-  Micropolis is often mentioned as a great example of an educational,
-  constructivist game, in the academic literature and popular press.
+  Micropolis is often mentioned as a great example of a constructionist game,
+  in the academic literature and popular press.
 
 Multi player
   Sharing, collaborating, conferencing, voting. 

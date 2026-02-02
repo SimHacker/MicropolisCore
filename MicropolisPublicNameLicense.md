@@ -1,3 +1,10 @@
+---
+layout: default
+title: Micropolis Name License
+header: Micropolis Public Name License
+description: The license governing the use of the "Micropolis" name and trademark.
+---
+
 # "MICROPOLIS" PUBLIC NAME LICENSE
 
 Version 1, October 1st, 2024. Copyright (C) 2024 Micropolis GmbH.

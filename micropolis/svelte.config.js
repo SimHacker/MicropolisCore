@@ -11,10 +11,10 @@ const config = {
 			// these options are set automatically — see the documentation
 			pages: 'build', // This should be the folder where your built files will reside
 			assets: 'build', // This should be the folder where your built files will reside
-			fallback: null,
-			precompress: false
-		}),
-		// other options set here...
+			fallback: undefined,
+			precompress: false,
+			strict: true
+		})
 	}
 };
 

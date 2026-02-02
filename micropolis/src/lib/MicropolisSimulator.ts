@@ -4,6 +4,15 @@ import type { Micropolis, Callback, JSCallback } from '../types/micropolisengine
 import initModule from "$lib/micropolisengine.js";
 
 export let micropolisengine: any;
+let sharedSimulator: MicropolisSimulator | null = null;
+let viewCount = 0;
+const GLOBAL_KEY = '__MICROPOLIS_SINGLETON__';
+
+function getGlobalStore(): { simulator?: MicropolisSimulator | null; engine?: any; viewCount?: number } {
+  const g = (globalThis as any);
+  if (!g[GLOBAL_KEY]) g[GLOBAL_KEY] = { simulator: null, engine: null, viewCount: 0 };
+  return g[GLOBAL_KEY];
+}
 
 let capacitorApp: boolean = 
     (typeof window != 'undefined') &&
@@ -12,7 +21,14 @@ console.log(`MicropolisSimulator.ts: capacitorApp: ${capacitorApp}`);
 
 export async function loadMicropolisEngine(): Promise<any> {
 
+    const store = getGlobalStore();
+    if (store.engine) {
+        micropolisengine = store.engine;
+        return micropolisengine;
+    }
+
     if (micropolisengine) {
+        store.engine = micropolisengine;
         return micropolisengine;
     }
 
@@ -29,6 +45,7 @@ export async function loadMicropolisEngine(): Promise<any> {
       };
 
       await initModule(micropolisengine);
+      store.engine = micropolisengine;
 
       return micropolisengine;
 };
@@ -83,12 +100,21 @@ export class MicropolisSimulator {
     pausedFramesPerSecond: number = 0;
     paused: boolean = false;
     render: (() => void) = () => {};
+    private disposed: boolean = false;
+    private isInitialized: boolean = false;
+    private hasLoadedCity: boolean = false;
+    private renderCallbacks: Set<() => void> = new Set();
   
     constructor() {
     }
 
     async initialize(callback: Callback | null = null, render: (() => void) | null) {
         console.log("MicropolisSimulator: initialize");
+        // If this instance was previously used, clean it up defensively
+        if (this.micropolis || this.callback || this.tickIntervalId) {
+            try { this.dispose(); } catch {}
+        }
+        this.disposed = false;
 
         this.micropolisengine = await loadMicropolisEngine();
         console.log("MicropolisSimulator: initialize: micropolisengine:", this.micropolisengine);
@@ -122,6 +148,7 @@ export class MicropolisSimulator {
         this.mopData = this.micropolisengine.HEAPU16.subarray(mopStartAddress, mopEndAddress);
 
         this.micropolis.init();
+        this.isInitialized = true;
     }
 
     fillMopTiles(value: number) {
@@ -156,10 +183,20 @@ export class MicropolisSimulator {
 
     tick() {
         //console.log("MicropolisSimulator: tick");
+        if (this.disposed) return;
         this.micropolis?.simTick();
         this.micropolis?.animateTiles();
 
-        this.render();
+        // Fan out to all registered views (if any)
+        if (this.renderCallbacks.size > 0) {
+            for (const fn of this.renderCallbacks) {
+                try { fn(); } catch (e) { console.warn('MicropolisSimulator: view render failed:', e); }
+            }
+        } else {
+            try {
+                this.render();
+            } catch {}
+        }
     }
     
     setGameSpeed(speed: number) {
@@ -176,6 +213,7 @@ export class MicropolisSimulator {
     
       setFramesPerSecond(fps: number): void {
         console.log('setFramesPerSecond: fps:', fps);
+        if (this.disposed) return;
         this.framesPerSecond = fps;
     
         if (this.tickIntervalId !== null) {
@@ -211,5 +249,77 @@ export class MicropolisSimulator {
         this.tick();
       }
 
+      dispose() {
+        // Stop ticking and prevent further work
+        if (this.tickIntervalId !== null) {
+            clearInterval(this.tickIntervalId);
+            this.tickIntervalId = null;
+        }
+        this.disposed = true;
+        // Make render a no-op to avoid stale closures
+        this.render = () => {};
+        // Release wasm/embind objects
+        try { this.callback?.delete?.(); } catch {}
+        try { this.micropolis?.delete?.(); } catch {}
+        this.callback = null;
+        this.micropolis = null;
+        this.mapData = null;
+        this.mopData = null;
+        this.isInitialized = false;
+        this.hasLoadedCity = false;
+        this.renderCallbacks.clear();
+      }
+
+      registerRenderCallback(fn: () => void) {
+        if (fn) this.renderCallbacks.add(fn);
+      }
+      unregisterRenderCallback(fn: () => void) {
+        if (fn) this.renderCallbacks.delete(fn);
+      }
+      loadDefaultCityOnce() {
+        if (this.micropolis && !this.hasLoadedCity) {
+          console.log('MicropolisSimulator: loadDefaultCityOnce:', this.cityFileName);
+          this.micropolis.loadCity(this.cityFileName);
+          this.hasLoadedCity = true;
+        }
+      }
+}
+
+export async function getSharedSimulator(callback: Callback | null, render: (() => void) | null): Promise<MicropolisSimulator> {
+    const store = getGlobalStore();
+    if (store.simulator) {
+        sharedSimulator = store.simulator;
+    }
+
+    if (!sharedSimulator) {
+        sharedSimulator = new MicropolisSimulator();
+        await sharedSimulator.initialize(callback, render);
+        sharedSimulator.registerRenderCallback(render || (() => {}));
+        sharedSimulator.loadDefaultCityOnce();
+        store.simulator = sharedSimulator;
+    } else {
+        // Keep existing wasm/callbacks; just attach this view's render
+        sharedSimulator.registerRenderCallback(render || (() => {}));
+    }
+
+    // Attach view and resume ticking if needed
+    viewCount += 1;
+    store.viewCount = (store.viewCount || 0) + 1;
+    if (store.viewCount === 1) {
+        try { sharedSimulator.setPaused(false); } catch {}
+    }
+    return sharedSimulator;
+}
+
+export function releaseSharedSimulator(render?: () => void) {
+    const store = getGlobalStore();
+    if (store.simulator) {
+        if (render) store.simulator.unregisterRenderCallback(render);
+        store.viewCount = Math.max(0, (store.viewCount || 0) - 1);
+        viewCount = store.viewCount;
+        if (store.viewCount === 0) {
+            try { store.simulator.setPaused(true); } catch {}
+        }
+    }
 }
 

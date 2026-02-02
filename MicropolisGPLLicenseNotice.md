@@ -1,3 +1,10 @@
+---
+layout: default
+title: Micropolis GPL License
+header: Micropolis GPL License Notice
+description: The GPL license with additional terms from Electronic Arts for the Micropolis source code.
+---
+
 # Micropolis GPL License Notice #
 
 Micropolis, Unix Version. This game was released for the Unix platform in or about 1990 and has been modified for inclusion in the One Laptop Per Child program. Copyright (C) 1989 - 2007 Electronic Arts Inc. If you need assistance with this program, you may contact:

@@ -7,12 +7,12 @@
 	--color-bg-0: rgb(202, 216, 228);
 	--color-bg-1: hsl(209, 36%, 86%);
 	--color-bg-2: hsl(224, 44%, 95%);
-	--rci-dirt-bg: #b58a78;
+	--rci-dirt-bg: #cc7f66;
 	--rci-text-light: #f0f0f0;
 	--rci-text-dark: #333;
-	--rci-R-green: #00a800;
-	--rci-C-blue: #0000ff;
-	--rci-I-yellow: #ffff00;
+	--rci-R-green: #00c000;
+	--rci-C-blue: #0080ff;
+	--rci-I-yellow: #ffc800;
 	--rci-separator-R: var(--rci-R-green);
 	--rci-separator-C: var(--rci-C-blue);
 	--rci-separator-I: var(--rci-I-yellow);

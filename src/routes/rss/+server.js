@@ -1,26 +1,20 @@
 import { navigationTree } from '$lib/navigationTree.js';
+import { encode } from 'html-entities';
 
 export const prerender = true;
 
-// Basic XML escaping
+// Use the html-entities library for proper XML encoding with Unicode support
 function escapeXml(unsafe) {
     if (!unsafe) return '';
-    return unsafe.replace(/[<>&'"]/g, function (c) {
-        switch (c) {
-            case '<': return '&lt;';
-            case '>': return '&gt;';
-            case '&': return '&amp;';
-            case '\'': return '&apos;';
-            case '"': return '&quot;';
-        }
-    });
+    return encode(unsafe, { level: 'xml' });
+    // The 'xml' level ensures proper XML entity encoding while preserving Unicode characters
 }
 
 // Function to build the RSS feed XML
 async function buildRssFeed(origin) {
     const channelTitle = 'Micropolis Content';
     const channelLink = origin + '/pages'; // Link to the base content page
-    const channelDescription = 'Updates and information from the Micropolis project content pages.';
+    const channelDescription = 'Updates and information from the Micropolis project.';
     const pubDate = new Date().toUTCString(); // Use build time
 
     let itemsXml = '';
@@ -62,7 +56,7 @@ async function buildRssFeed(origin) {
         }
     }
 
-    // Construct the full RSS XML
+    // Construct the full RSS XML with explicit UTF-8 encoding
     return `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
@@ -82,10 +76,15 @@ export async function GET({ url }) {
     console.log('[GET /rss] Generating RSS feed...');
     try {
         const rssXml = await buildRssFeed(url.origin);
-        return new Response(rssXml, {
+        
+        // Use TextEncoder to ensure proper UTF-8 encoding
+        const encoder = new TextEncoder();
+        const utf8Content = encoder.encode(rssXml);
+        
+        return new Response(utf8Content, {
             headers: {
                 'Cache-Control': 'max-age=0, s-maxage=3600', // Cache for 1 hour on CDN
-                'Content-Type': 'application/rss+xml'
+                'Content-Type': 'application/rss+xml; charset=utf-8' // Explicitly specify UTF-8 charset
             }
         });
     } catch (e) {

@@ -1,59 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Diagrams | Micropolis Documentation</title>
-<meta name="generator" content="Jekyll v4.3.4" />
-<meta property="og:title" content="Diagrams" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Chaim Gingold’s detailed diagrams visually reverse-engineering the core simulation loops and mechanics of SimCity Classic. 📊" />
-<meta property="og:description" content="Chaim Gingold’s detailed diagrams visually reverse-engineering the core simulation loops and mechanics of SimCity Classic. 📊" />
-<link rel="canonical" href="https://a2deh.github.io/pages/reverse-diagrams.html" />
-<meta property="og:url" content="https://a2deh.github.io/pages/reverse-diagrams.html" />
-<meta property="og:site_name" content="Micropolis Documentation" />
-<meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Diagrams" />
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Chaim Gingold’s detailed diagrams visually reverse-engineering the core simulation loops and mechanics of SimCity Classic. 📊","headline":"Diagrams","url":"https://a2deh.github.io/pages/reverse-diagrams.html"}</script>
-<!-- End Jekyll SEO tag -->
-<link type="application/atom+xml" rel="alternate" href="https://a2deh.github.io/feed.xml" title="Micropolis Documentation" /></head>
-<body>
-  <header>
-    <h1>Diagrams</h1>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/pages/about/chaim-gingold">Chaim Gingold</a></li>
-        <li><a href="/pages/about/ben-shneiderman">Ben Shneiderman</a></li>
-        <li><a href="/pages/about/brett-victor">Brett Victor</a></li>
-        <li><a href="/pages/about/stone-librande">Stone Librande</a></li>
-        <li><a href="/pages/about/constructionist-education">Constructionist Education</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <main>
-    <p><em>(Content for Reverse Diagrams goes here…)</em></p>
+<h2 id="diagrams-index">Diagrams Index</h2>
+
+<ul>
+  <li><a href="#simulation-loop">Simulation Loop (Simulate)</a></li>
+  <li><a href="#map-data-flow">Map Data Flow</a></li>
+  <li><a href="#maps">Maps</a></li>
+  <li><a href="#map-scan">Map Scan</a></li>
+  <li><a href="#make-traffic">Make Traffic</a></li>
+  <li><a href="#animation-characters">Animation Characters</a></li>
+</ul>
+
+<h2 id="simulation-loop">Simulation Loop</h2>
+
+<p>The main simulation loop is broken down into 16 steps. Each revolution advances the city time by 1. Every frame of the game, one of these 16 steps is performed.</p>
 
 <p><img src="/images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png" alt="SimCity Simulation Loop Diagram" /></p>
 
+<h2 id="map-data-flow">Map Data Flow</h2>
+
+<p>This diagram shows how data flows between different map layers and representations in the simulation.</p>
+
 <p><img src="/images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png" alt="SimCity Map Data Flow Diagram" /></p>
+
+<h2 id="maps">Maps</h2>
+
+<p>SimCity’s spatial data is modeled in multiple maps that can be conceptualized as overlaid upon one another. The main Map is 120x100 and encodes seven different data layers.</p>
 
 <p><img src="/images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png" alt="SimCity Maps Diagram" /></p>
 
+<h2 id="map-scan">Map Scan</h2>
+
+<p>The main tile map is scanned incrementally over eight simulation frames. One 15x100 column is scanned at a time (1/8th of the map). Tile map based processes and objects tallies are updated.</p>
+
 <p><img src="/images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png" alt="SimCity Map Scan Diagram" /></p>
+
+<h2 id="make-traffic">Make Traffic</h2>
+
+<p>Make Traffic can be invoked when Map Scan evaluates Residential, Commercial, and Industrial Zones. It returns either success (1: destination found), failure (0: destination not found), or hard failure (-1: no perimeter road found).</p>
 
 <p><img src="/images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png" alt="SimCity Make Traffic Diagram" /></p>
 
-<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png" alt="SimCity Animation Characters Diagram" /></p>
+<h2 id="animation-characters">Animation Characters</h2>
 
-  </main>
-  
-  <footer>
-    <p>Micropolis Core Documentation - <a href="https://github.com/a2deh/MicropolisCore">GitHub Repository</a></p>
-  </footer>
-</body>
-</html> 
+<p>SimCity uses various animation characters to bring the city to life, from power outages to bridge animations, airport radar, park fountains and telecommunications.</p>
+
+<p><img src="/images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png" alt="SimCity Animation Characters Diagram" /></p>
+ 

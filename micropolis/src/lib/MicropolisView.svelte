@@ -1,7 +1,7 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { loadMicropolisEngine, MicropolisSimulator } from '$lib/MicropolisSimulator';
+  import { getSharedSimulator, releaseSharedSimulator, MicropolisSimulator } from '$lib/MicropolisSimulator';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
   import initModule from "$lib/micropolisengine.js";
   import { MicropolisCallbackLog } from "$lib/MicropolisCallbackLog";
@@ -16,53 +16,33 @@
   //let rootPie: PieMenu | null = null;
   let initialTouchX = 0;
   let initialTouchY = 0;
-  let disableScrolling = true;
+  let viewRenderRef: (() => void) | null = null;
 
   onMount(async () => {
 
     console.log("MicropolisView: onMount: initializing micropolisengine...");
 
-    micropolisSimulator = 
-      new MicropolisSimulator();
+    // Use shared singleton to avoid resetting wasm callback
+    viewRenderRef = () => { tileView?.render?.(); };
+    micropolisSimulator = await getSharedSimulator(new MicropolisCallbackLog(), viewRenderRef);
 
       console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
 
-    await micropolisSimulator.initialize(
-        new MicropolisCallbackLog(),
-        () => {
-          tileView!.render();
-        });
-
-    await tileView!.initialize(
-      micropolisSimulator);
-
-    micropolisSimulator!.micropolis!.loadCity(
-      micropolisSimulator.cityFileName);
-
-    micropolisSimulator.setGameSpeed(
-      micropolisSimulator.gameSpeed);
+    await tileView!.initialize(micropolisSimulator);
 
     if (typeof window != 'undefined') {
-
       //window.micropolisSimulator = micropolisSimulator;
       //window.micropolis = micropolisSimulator.micropolis;
       //window.micropolisengine = micropolisSimulator.micropolisengine;
 
-      if (disableScrolling) {
-        // Disable scrolling.
-        const scrollTop = 
-          window.pageYOffset || window.document.documentElement.scrollTop;
-        const scrollLeft = 
-          window.pageXOffset || window.document.documentElement.scrollLeft;
-        window.onscroll = 
-          () => window.scrollTo(scrollLeft, scrollTop);
-      }
-
+      // We no longer disable global scrolling
+      // Instead, we only handle events within our container
     }
   });
 
   onDestroy(() => {
     console.log('MicropolisView: onDestroy'); 
+    releaseSharedSimulator(viewRenderRef || undefined);
   });
 
 </script>
@@ -90,9 +70,11 @@
 <style>
 
 .view-container {
-  position: relative; /* Make this the positioning context */
-  width: 100%;      /* Ensure it takes up available space */
+  position: relative;
+  width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Remove these styles */

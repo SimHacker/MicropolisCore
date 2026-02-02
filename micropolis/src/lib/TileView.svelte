@@ -20,6 +20,7 @@
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
   let tileRenderer: TileRenderer<any> | null = null;
+  let initialized = false;
 
   let autoRepeatIntervalId: any | null = null;
   let autoRepeatDelay = 1000 / 60; // 60 repeats per second
@@ -59,6 +60,13 @@
     micropolisSimulator = micropolisSimulator_;
 
     if (!micropolisSimulator || !canvasGL) return;
+
+    // Prevent double-initialization when remounting/showing tab again
+    if (initialized && tileRenderer && ctxGL) {
+      console.log('TileView.svelte: initialize skipped (already initialized)');
+      resizeCanvas();
+      return;
+    }
 
     // Create 3d canvas drawing context and tileRenderer.
     //console.log('TileView.svelte: onMount', 'canvasGL:', canvasGL);
@@ -113,6 +121,19 @@
     refocusCanvas();
 
     isMounted = true;
+    initialized = true;
+
+    // Visibility-based pause/resume to avoid ticking when hidden
+    if (typeof document !== 'undefined') {
+      const onVis = () => {
+        const hidden = document.hidden;
+        if (micropolisSimulator) {
+          micropolisSimulator.setPaused(hidden);
+        }
+        if (!hidden) requestAnimationFrame(() => { resizeCanvas(); render(); });
+      };
+      document.addEventListener('visibilitychange', onVis);
+    }
 
     // Observe the canvas's PARENT element for size changes
     const parentElement = canvasGL?.parentElement;
@@ -142,8 +163,8 @@
   }
 
   export function render(): void {
-    //console.log("TileView.svelte: render:"");
-    tileRenderer!.render();
+    if (!tileRenderer) return;
+    tileRenderer.render();
   }
 
   // Function to resize the canvas to match the screen size.
@@ -162,13 +183,20 @@
     const requiredWidth = Math.round(displayWidth * ratio);
     const requiredHeight = Math.round(displayHeight * ratio);
 
-    // console.log(`Resize Check - Display: ${displayWidth}x${displayHeight}, Required Buffer: ${requiredWidth}x${requiredHeight}, Current Buffer: ${canvasGL.width}x${canvasGL.height}`);
-
     // Only resize if needed to prevent flicker and unnecessary work
-    if (canvasGL.width !== requiredWidth || canvasGL.height !== requiredHeight) {
+    // Or if sizes are very small, force a minimum size to prevent issues
+    if (canvasGL.width !== requiredWidth || 
+        canvasGL.height !== requiredHeight ||
+        requiredWidth < 100 ||
+        requiredHeight < 100) {
+      
+      // Ensure minimum reasonable size
+      const finalWidth = Math.max(requiredWidth, 100);
+      const finalHeight = Math.max(requiredHeight, 100);
+      
       // Set the canvas drawing buffer size.
-      canvasGL.width = requiredWidth;
-      canvasGL.height = requiredHeight;
+      canvasGL.width = finalWidth;
+      canvasGL.height = finalHeight;
 
       console.log(`TileView.svelte: Resized canvas drawing buffer to ${canvasGL.width}x${canvasGL.height}`);
 
@@ -181,8 +209,9 @@
       // Re-render the scene with the new sizes
       render();
     } else {
-        // Even if buffer size is correct, CSS size might have changed, update renderer
-        tileRenderer.setScreenSize(displayWidth, displayHeight);
+      // Even if buffer size is correct, CSS size might have changed, update renderer
+      tileRenderer.setScreenSize(displayWidth, displayHeight);
+      render(); // Always render to ensure display is updated
     }
   }
 
@@ -460,7 +489,10 @@
 
     if (!tileRenderer || !micropolisSimulator) return;
 
+    // Only prevent default within our canvas
+    // This keeps the event from propagating to the page
     event.preventDefault();
+    event.stopPropagation();
     
     const delta = event.deltaY > 0 ? -wheelZoomScale : wheelZoomScale; // Change the multiplier as needed
     const zoomFactor = 1 + delta; // Adjust the zoom factor based on the delta
@@ -542,6 +574,15 @@
       window.document.addEventListener('touchend', handleTouchEnd, false);
 */
       window.addEventListener('devicemotion', handleDeviceMotion, false);
+      
+      // Focus the canvas but don't trap all input
+      if (canvasGL) {
+        // Give focus only when mouse enters the canvas
+        const canvas = canvasGL; // Avoid TypeScript null check issues
+        canvas.addEventListener('mouseenter', () => {
+          canvas.focus();
+        });
+      }
     }
 
   });
@@ -558,16 +599,27 @@
       window.document.removeEventListener('touchend', handleTouchEnd);
 */
       window.removeEventListener('devicemotion', handleDeviceMotion);
+      
+      // Make sure wheel event listener is removed
+      if (canvasGL) {
+        const canvas = canvasGL; // Avoid TypeScript null check issues
+        canvas.removeEventListener('wheel', onwheel);
+        
+        // Also remove the mouseenter listener
+        canvas.removeEventListener('mouseenter', () => {
+          canvas.focus();
+        });
+      }
     }
 
     isMounted = false;
+    initialized = false;
     if (resizeObserver) {
       resizeObserver.disconnect();
-       console.log("TileView.svelte: ResizeObserver disconnected.");
+      console.log("TileView.svelte: ResizeObserver disconnected.");
     }
     if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', handleWindowResize); // Clean up fallback listener
-        canvasGL?.removeEventListener('wheel', onwheel); // Clean up wheel listener
+      window.removeEventListener('resize', handleWindowResize); // Clean up fallback listener
     }
 });
 
@@ -603,7 +655,11 @@
     background: none;
     image-rendering: pixelated;
     cursor: grab;
-    touch-action: none;
+    touch-action: none; /* This prevents touch events from scrolling the page */
+    position: relative;
+    z-index: 1;
+    /* Contain pointer events to this element */
+    pointer-events: auto;
   }
 
   .tileview-canvas:active {
