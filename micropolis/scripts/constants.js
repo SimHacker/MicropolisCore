@@ -35,7 +35,10 @@ export const World = {
     
     // Commonly used indices
     CENTER_X: Math.floor(120 / 2),
-    CENTER_Y: Math.floor(100 / 2)
+    CENTER_Y: Math.floor(100 / 2),
+    
+    // Time: cityYear = (cityTime / 48) + STARTING_YEAR
+    STARTING_YEAR: 1900
 };
 
 /**
@@ -111,8 +114,8 @@ export const TerrainTiles = {
     LASTRIVEDGE: 0x14,
     TREEBASE: 0x15,
     WOODS_LOW: 0x15,
+    WOODS_HIGH: 0x25,  // WOODS (0x25) is the last tree tile
     WOODS: 0x25,
-    WOODS_HIGH: 0x24,
     RUBBLE_START: 0x2C,
     RUBBLE_END: 0x2F,
     FLOOD_START: 0x30,
@@ -140,6 +143,7 @@ export const TransportTiles = {
     LIGHT_TRAFFIC_END: 0x6E,
     HEAVY_TRAFFIC_START: 0x90,
     HEAVY_TRAFFIC_END: 0xAE,
+    LASTROAD: 0xCE,  // Last road tile (206), per emscripten.cpp
     
     // Power lines
     HPOWER: 0xD0,

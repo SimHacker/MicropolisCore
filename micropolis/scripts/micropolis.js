@@ -34,6 +34,53 @@ import {
 } from './constants.js';
 
 /**
+ * Scenario metadata from fileio.cpp loadScenario().
+ * These are the values the C++ engine injects when playing a scenario,
+ * overriding whatever is in the .cty file's miscHist.
+ */
+const ScenarioDefaults = {
+    dullsville:     { name: 'Dullsville',      year: 1900, funds: 5000,  file: 'scenario_dullsville.cty' },
+    san_francisco:  { name: 'San Francisco',   year: 1906, funds: 20000, file: 'scenario_san_francisco.cty' },
+    hamburg:        { name: 'Hamburg',          year: 1944, funds: 20000, file: 'scenario_hamburg.cty' },
+    bern:           { name: 'Bern',             year: 1965, funds: 20000, file: 'scenario_bern.cty' },
+    tokyo:          { name: 'Tokyo',            year: 1957, funds: 20000, file: 'scenario_tokyo.cty' },
+    detroit:        { name: 'Detroit',          year: 1972, funds: 20000, file: 'scenario_detroit.cty' },
+    boston:          { name: 'Boston',           year: 2010, funds: 20000, file: 'scenario_boston.cty' },
+    rio:            { name: 'Rio de Janeiro',   year: 2047, funds: 20000, file: 'scenario_rio_de_janeiro.cty' },
+    // Common settings applied to all scenarios (fileio.cpp lines 504-506)
+    _common: { tax: 7, speed: 3, policePercent: 1.0, firePercent: 1.0, roadPercent: 1.0 }
+};
+
+/**
+ * Look up scenario defaults by filename.
+ * @param {string} filename - The basename of the .cty file
+ * @returns {Object|null} - Merged scenario+common defaults, or null if not a scenario
+ */
+function getScenarioDefaults(filename) {
+    const base = path.basename(filename);
+    for (const [key, scenario] of Object.entries(ScenarioDefaults)) {
+        if (key === '_common') continue;
+        if (scenario.file === base) {
+            const common = ScenarioDefaults._common;
+            return {
+                ...scenario,
+                cityTime: ((scenario.year - World.STARTING_YEAR) * 48) + 2,
+                cityTax: common.tax,
+                simSpeed: common.speed,
+                policePercent: common.policePercent,
+                firePercent: common.firePercent,
+                roadPercent: common.roadPercent,
+                autoBulldoze: true,
+                autoBudget: true,
+                autoGoto: true,
+                soundEnabled: true
+            };
+        }
+    }
+    return null;
+}
+
+/**
  * Utility functions for endianness conversion
  */
 const Endian = {
@@ -67,27 +114,85 @@ const Endian = {
     },
 
     /**
-     * Read a 32-bit big-endian value with SimCity-specific word order
+     * Read a 32-bit big-endian value from two consecutive shorts.
+     *
+     * The save file stores 32-bit values across two big-endian 16-bit shorts
+     * where the first short is the high word. On little-endian machines the
+     * C++ code applies half_swap_longs after swap_shorts to correct the word
+     * order; the net effect is a simple big-endian 32-bit read.
+     *
+     * See fileio.cpp loadFile():
+     *   n = *(Quad *)(miscHist + 50);
+     *   HALF_SWAP_LONGS(&n, 1);
+     *   setFunds(n);
+     *
      * @param {Buffer} buffer - The buffer to read from
      * @param {number} offset - The byte offset to read at
-     * @returns {number} - The 32-bit value in host byte order
+     * @returns {number} - The signed 32-bit value
      */
     readLong: (buffer, offset) => {
-        // SimCity stores 32-bit values in a way that requires half-word swapping
-        const highWord = buffer.readUInt16BE(offset);
-        const lowWord = buffer.readUInt16BE(offset + 2);
-        // In SimCity's format, we need to swap these words
-        return (lowWord << 16) | highWord;
+        return buffer.readInt32BE(offset);
     },
 
     /**
-     * Read a 32-bit IEEE-754 floating point value
+     * Read a funding percentage stored as a 32-bit fixed-point integer.
+     *
+     * The C++ engine stores funding percentages as (int)(percent * 65536)
+     * across two consecutive big-endian shorts. NOT an IEEE-754 float.
+     *
+     * See fileio.cpp loadFile():
+     *   n = *(Quad *)(miscHist + 58);
+     *   HALF_SWAP_LONGS(&n, 1);
+     *   policePercent = ((float)n) / ((float)65536);
+     *
+     * See fileio.cpp saveFile():
+     *   n = (int)(policePercent * 65536);
+     *
      * @param {Buffer} buffer - The buffer to read from
      * @param {number} offset - The byte offset to read at
-     * @returns {number} - The floating point value
+     * @returns {number} - The funding percentage as a float (0.0 to 1.0)
      */
-    readFloat: (buffer, offset) => {
-        return buffer.readFloatBE(offset);
+    readFundingPercent: (buffer, offset) => {
+        return buffer.readInt32BE(offset) / 65536.0;
+    },
+
+    /**
+     * Write a 16-bit big-endian value to a buffer.
+     * @param {Buffer} buffer - The buffer to write to
+     * @param {number} offset - The byte offset to write at
+     * @param {number} value - The 16-bit value to write
+     */
+    writeShort: (buffer, offset, value) => {
+        buffer.writeUInt16BE(value & 0xFFFF, offset);
+    },
+
+    /**
+     * Write a 32-bit big-endian value to a buffer (reverse of readLong).
+     * See fileio.cpp saveFile():
+     *   n = totalFunds;
+     *   HALF_SWAP_LONGS(&n, 1);
+     *   (*(Quad *)(miscHist + 50)) = n;
+     *
+     * @param {Buffer} buffer - The buffer to write to
+     * @param {number} offset - The byte offset to write at
+     * @param {number} value - The signed 32-bit value to write
+     */
+    writeLong: (buffer, offset, value) => {
+        buffer.writeInt32BE(value, offset);
+    },
+
+    /**
+     * Write a funding percentage as a 32-bit fixed-point integer (reverse of readFundingPercent).
+     * See fileio.cpp saveFile():
+     *   n = (int)(policePercent * 65536);
+     *
+     * @param {Buffer} buffer - The buffer to write to
+     * @param {number} offset - The byte offset to write at
+     * @param {number} percent - The funding percentage (0.0 to 1.0)
+     */
+    writeFundingPercent: (buffer, offset, percent) => {
+        const n = Math.round(percent * 65536);
+        buffer.writeInt32BE(n, offset);
     }
 };
 
@@ -129,8 +234,14 @@ class CityFile {
                 this.buffer = fs.readFileSync(this.filename);
             }
             
-            // Check file size to determine if it has MOP data
+            // Validate file size (matches C++ loadFileData: isValid = hasMop || size == mapFileSize)
             this.hasMopData = (this.buffer.length === SaveFile.EXTENDED_FILE_SIZE);
+            const isValidSize = this.hasMopData || (this.buffer.length === SaveFile.STANDARD_FILE_SIZE);
+            if (!isValidSize) {
+                console.error(`Error: Invalid file size ${this.buffer.length} bytes. ` +
+                    `Expected ${SaveFile.STANDARD_FILE_SIZE} (.cty) or ${SaveFile.EXTENDED_FILE_SIZE} (.mop).`);
+                return false;
+            }
             
             // Extract each section
             let offset = 0;
@@ -162,28 +273,46 @@ class CityFile {
 
         const miscHistSection = this.sections['Miscellaneous History'];
         
-        // Extract key settings
-        const cityTime = Endian.readLong(miscHistSection, History.CITY_TIME_INDEX * 2); 
+        // Extract key settings (see fileio.cpp loadFile)
+        const rawCityTime = Endian.readLong(miscHistSection, History.CITY_TIME_INDEX * 2); 
         const funds = Endian.readLong(miscHistSection, History.FUNDS_INDEX * 2);
         
-        // Game flags
+        // cityTime: 4 units/month, 48 units/year, relative to startingYear (1900)
+        // C++ clamps: cityTime = max(0, cityTime)
+        const cityTime = Math.max(0, rawCityTime);
+        const cityYear = Math.floor(cityTime / 48) + World.STARTING_YEAR;
+        
+        // Game flags (each stored as a 16-bit short, treated as boolean)
         const autoBulldoze = Endian.readShort(miscHistSection, History.AUTO_BULLDOZE_INDEX * 2);
         const autoBudget = Endian.readShort(miscHistSection, History.AUTO_BUDGET_INDEX * 2);
         const autoGoto = Endian.readShort(miscHistSection, History.AUTO_GOTO_INDEX * 2);
         const soundEnabled = Endian.readShort(miscHistSection, History.SOUND_ENABLE_INDEX * 2);
-        const cityTax = Endian.readShort(miscHistSection, History.TAX_RATE_INDEX * 2);
-        const simSpeed = Endian.readShort(miscHistSection, History.SIM_SPEED_INDEX * 2);
         
-        // Funding percentages (stored as floats)
-        const policePercent = Endian.readFloat(miscHistSection, History.POLICE_FUNDING_INDEX * 2);
-        const firePercent = Endian.readFloat(miscHistSection, History.FIRE_FUNDING_INDEX * 2);
-        const roadPercent = Endian.readFloat(miscHistSection, History.ROAD_FUNDING_INDEX * 2);
+        // Tax and speed: C++ validates these after loading (fileio.cpp lines 334-341)
+        const rawCityTax = Endian.readShort(miscHistSection, History.TAX_RATE_INDEX * 2);
+        const rawSimSpeed = Endian.readShort(miscHistSection, History.SIM_SPEED_INDEX * 2);
+        const cityTax = (rawCityTax > 20 || rawCityTax < 0) ? 7 : rawCityTax;
+        const simSpeed = (rawSimSpeed < 0 || rawSimSpeed > 3) ? 3 : rawSimSpeed;
+        const cityTaxClamped = cityTax !== rawCityTax;
+        const simSpeedClamped = simSpeed !== rawSimSpeed;
+        
+        // Funding percentages (stored as fixed-point int / 65536, NOT IEEE floats)
+        // Some city files have uninitialized data here; the C++ engine calls
+        // initFundingLevel() after loading to reset these at runtime.
+        const rawPolice = Endian.readFundingPercent(miscHistSection, History.POLICE_FUNDING_INDEX * 2);
+        const rawFire = Endian.readFundingPercent(miscHistSection, History.FIRE_FUNDING_INDEX * 2);
+        const rawRoad = Endian.readFundingPercent(miscHistSection, History.ROAD_FUNDING_INDEX * 2);
+        const clampFunding = (v) => (v < 0 || v > 1.0) ? null : v;
+        const policePercent = clampFunding(rawPolice);
+        const firePercent = clampFunding(rawFire);
+        const roadPercent = clampFunding(rawRoad);
         
         return {
             filename: this.filename === '-' ? 'stdin' : path.basename(this.filename),
             hasMopData: this.hasMopData,
             fileSize: this.buffer.length,
             cityTime,
+            cityYear,
             funds,
             gameFlags: {
                 autoBulldoze: !!autoBulldoze,
@@ -192,13 +321,86 @@ class CityFile {
                 soundEnabled: !!soundEnabled
             },
             cityTax,
+            cityTaxClamped,
             simSpeed,
+            simSpeedClamped,
             funding: {
                 police: policePercent,
                 fire: firePercent,
                 road: roadPercent
             }
         };
+    }
+
+    /**
+     * Write metadata fields back into the miscHist section buffer.
+     * Mirrors the C++ saveFile() logic in fileio.cpp.
+     *
+     * Only writes fields that are present in the updates object.
+     * @param {Object} updates - Fields to update
+     * @param {number} [updates.cityTime] - City time (raw ticks)
+     * @param {number} [updates.funds] - Total funds
+     * @param {number} [updates.cityTax] - Tax rate (0-20)
+     * @param {number} [updates.simSpeed] - Simulation speed (0-3)
+     * @param {boolean} [updates.autoBulldoze] - Auto-bulldoze flag
+     * @param {boolean} [updates.autoBudget] - Auto-budget flag
+     * @param {boolean} [updates.autoGoto] - Auto-goto flag
+     * @param {boolean} [updates.soundEnabled] - Sound enable flag
+     * @param {number} [updates.policePercent] - Police funding (0.0-1.0)
+     * @param {number} [updates.firePercent] - Fire funding (0.0-1.0)
+     * @param {number} [updates.roadPercent] - Road funding (0.0-1.0)
+     */
+    setMetadata(updates) {
+        if (!this.buffer) {
+            throw new Error('No file loaded');
+        }
+        const misc = this.sections['Miscellaneous History'];
+
+        if (updates.cityTime !== undefined) {
+            Endian.writeLong(misc, History.CITY_TIME_INDEX * 2, updates.cityTime);
+        }
+        if (updates.funds !== undefined) {
+            Endian.writeLong(misc, History.FUNDS_INDEX * 2, updates.funds);
+        }
+        if (updates.cityTax !== undefined) {
+            Endian.writeShort(misc, History.TAX_RATE_INDEX * 2, updates.cityTax);
+        }
+        if (updates.simSpeed !== undefined) {
+            Endian.writeShort(misc, History.SIM_SPEED_INDEX * 2, updates.simSpeed);
+        }
+        if (updates.autoBulldoze !== undefined) {
+            Endian.writeShort(misc, History.AUTO_BULLDOZE_INDEX * 2, updates.autoBulldoze ? 1 : 0);
+        }
+        if (updates.autoBudget !== undefined) {
+            Endian.writeShort(misc, History.AUTO_BUDGET_INDEX * 2, updates.autoBudget ? 1 : 0);
+        }
+        if (updates.autoGoto !== undefined) {
+            Endian.writeShort(misc, History.AUTO_GOTO_INDEX * 2, updates.autoGoto ? 1 : 0);
+        }
+        if (updates.soundEnabled !== undefined) {
+            Endian.writeShort(misc, History.SOUND_ENABLE_INDEX * 2, updates.soundEnabled ? 1 : 0);
+        }
+        if (updates.policePercent !== undefined) {
+            Endian.writeFundingPercent(misc, History.POLICE_FUNDING_INDEX * 2, updates.policePercent);
+        }
+        if (updates.firePercent !== undefined) {
+            Endian.writeFundingPercent(misc, History.FIRE_FUNDING_INDEX * 2, updates.firePercent);
+        }
+        if (updates.roadPercent !== undefined) {
+            Endian.writeFundingPercent(misc, History.ROAD_FUNDING_INDEX * 2, updates.roadPercent);
+        }
+    }
+
+    /**
+     * Save the city file to disk.
+     * The buffer is already in big-endian format (sections are subarray views
+     * into the original buffer), so we just write it out.
+     * @param {string} filename - Path to write to
+     */
+    save(filename) {
+        // Reassemble the buffer from sections in case setMetadata modified them
+        // (sections are subarrays of this.buffer, so writes go through)
+        fs.writeFileSync(filename, this.buffer);
     }
 
     /**
@@ -544,9 +746,9 @@ class CityFile {
                 // Police station - distinguish between zone center and edges
                 else if (tileId >= ZoneTiles.POLICESTATION_START && tileId <= ZoneTiles.POLICESTATION_END) {
                     if (isZoneCenter) {
-                        char = 'PP';  // Zone center
+                        char = 'QQ';  // Zone center (Q for poliQe, P taken by coal Power)
                     } else {
-                        char = 'pp';  // Zone edge
+                        char = 'qq';  // Zone edge
                     }
                 }
                 // Stadium - distinguish between zone center and edges
@@ -780,7 +982,7 @@ class CityFile {
                 // Rubble
                 else if (tileId >= TerrainTiles.RUBBLE_START && tileId <= TerrainTiles.RUBBLE_END) emoji = '🏚️';
                 
-                // Roads and traffic
+                // Roads and traffic (0x40-0xCE covers all road + traffic density tiles)
                 else if (tileId >= TransportTiles.HBRIDGE && tileId <= TransportTiles.LASTROAD) {
                     if (tileId >= TransportTiles.HEAVY_TRAFFIC_START && tileId <= TransportTiles.HEAVY_TRAFFIC_END) {
                         emoji = '🚗';
@@ -988,70 +1190,23 @@ class CityFile {
     }
 
     /**
-     * Apply dynamic filter to check if a tile matches specified conditions
+     * Apply dynamic filter to check if a tile matches specified conditions.
+     *
+     * NOT YET IMPLEMENTED: The overlay data (population density, traffic,
+     * pollution, crime, land value, police/fire coverage) lives in half-
+     * resolution maps computed by the simulation at runtime. These are not
+     * stored in .cty files. Implementing this requires either:
+     *   - Running the WASM engine to populate the overlay maps, or
+     *   - Reading .mop overlay data (which stores tile set indices, not
+     *     the simulation overlay data)
+     *
      * @param {Number} col - Column coordinate
      * @param {Number} row - Row coordinate
      * @param {Object} filters - Filter conditions 
-     * @returns {Boolean} - True if tile matches all filter conditions
+     * @returns {Boolean} - Always returns true (stub)
      */
     dynamicFilter(col, row, filters = {}) {
-        // TODO: Implement the full filtering logic
-        
-        // Sample implementation (just for placeholder)
-        // In the future, we'll extract actual data from city maps
-        const dummyData = {
-            populationDensity: ((col + row) % 255),
-            rateOfGrowth: ((col - row) % 512) - 256,  // Range from -256 to +255
-            trafficDensity: ((col * row) % 255),
-            pollutionDensity: ((col * 2 + row) % 255),
-            crimeRate: ((col + row * 3) % 255),
-            landValue: ((col * col + row) % 255),
-            policeEffect: (255 - ((col - 60) * (col - 60) + (row - 50) * (row - 50)) % 255),
-            fireEffect: (255 - ((col - 40) * (col - 40) + (row - 40) * (row - 40)) % 255),
-        };
-        
-        // Logic copied from Micropolis dynamicFilter function
-        return (
-            // Population density check
-            ((filters.populationMin > filters.populationMax) ||
-             (dummyData.populationDensity >= filters.populationMin) &&
-             (dummyData.populationDensity <= filters.populationMax)) &&
-            
-            // Rate of growth check
-            ((filters.growthRateMin > filters.growthRateMax) ||
-             (dummyData.rateOfGrowth >= filters.growthRateMin) &&
-             (dummyData.rateOfGrowth <= filters.growthRateMax)) &&
-            
-            // Traffic density check
-            ((filters.trafficMin > filters.trafficMax) ||
-             (dummyData.trafficDensity >= filters.trafficMin) &&
-             (dummyData.trafficDensity <= filters.trafficMax)) &&
-            
-            // Pollution check
-            ((filters.pollutionMin > filters.pollutionMax) ||
-             (dummyData.pollutionDensity >= filters.pollutionMin) &&
-             (dummyData.pollutionDensity <= filters.pollutionMax)) &&
-            
-            // Crime rate check
-            ((filters.crimeMin > filters.crimeMax) ||
-             (dummyData.crimeRate >= filters.crimeMin) &&
-             (dummyData.crimeRate <= filters.crimeMax)) &&
-            
-            // Land value check
-            ((filters.landValueMin > filters.landValueMax) ||
-             (dummyData.landValue >= filters.landValueMin) &&
-             (dummyData.landValue <= filters.landValueMax)) &&
-            
-            // Police effect check
-            ((filters.policeMin > filters.policeMax) ||
-             (dummyData.policeEffect >= filters.policeMin) &&
-             (dummyData.policeEffect <= filters.policeMax)) &&
-            
-            // Fire effect check
-            ((filters.fireMin > filters.fireMax) ||
-             (dummyData.fireEffect >= filters.fireMin) &&
-             (dummyData.fireEffect <= filters.fireMax))
-        );
+        return true;
     }
     
     /**
@@ -1106,8 +1261,9 @@ class CityFile {
                 break;
         }
         
-        // TODO: Actually implement filter-based highlighting
-        // For now, we're just returning the base map
+        // Filter-based highlighting requires simulation overlay data (population
+        // density, traffic, pollution, etc.) which is computed at runtime by the
+        // C++ engine and not stored in .cty files. Returning unfiltered base map.
         
         return baseMap;
     }
@@ -1317,10 +1473,10 @@ function setupCLI() {
                     // Text output
                     console.log(`=== City Information: ${metadata.filename} ===`);
                     console.log(`File Size: ${metadata.fileSize} bytes (${metadata.hasMopData ? 'with' : 'without'} map overlay data)`);
-                    console.log(`City Time: ${metadata.cityTime}`);
+                    console.log(`City Time: ${metadata.cityTime} (Year ${metadata.cityYear})`);
                     console.log(`Funds: $${metadata.funds}`);
-                    console.log(`Tax Rate: ${metadata.cityTax}%`);
-                    console.log(`Simulation Speed: ${metadata.simSpeed}`);
+                    console.log(`Tax Rate: ${metadata.cityTax}%${metadata.cityTaxClamped ? ' (clamped from invalid value)' : ''}`);
+                    console.log(`Simulation Speed: ${metadata.simSpeed}${metadata.simSpeedClamped ? ' (clamped from invalid value)' : ''}`);
                     console.log('');
                     
                     if (region.width !== World.WIDTH || region.height !== World.HEIGHT) {
@@ -1331,10 +1487,11 @@ function setupCLI() {
                         console.log('');
                     }
                     
+                    const fmtFunding = (v) => v === null ? 'N/A (uninitialized)' : `${(v * 100).toFixed(1)}%`;
                     console.log('=== Funding Levels ===');
-                    console.log(`Police: ${(metadata.funding.police * 100).toFixed(1)}%`);
-                    console.log(`Fire: ${(metadata.funding.fire * 100).toFixed(1)}%`);
-                    console.log(`Road: ${(metadata.funding.road * 100).toFixed(1)}%`);
+                    console.log(`Police: ${fmtFunding(metadata.funding.police)}`);
+                    console.log(`Fire: ${fmtFunding(metadata.funding.fire)}`);
+                    console.log(`Road: ${fmtFunding(metadata.funding.road)}`);
                     console.log('');
                     
                     console.log('=== Game Flags ===');
@@ -1465,21 +1622,210 @@ function setupCLI() {
                     console.log(`Power Connectivity: ${powerConnectivity}%`);
                     console.log('');
                     
+                    const fmtFund = (v) => v === null ? 'N/A' : `${(v * 100).toFixed(1)}%`;
                     console.log('=== Services ===');
                     console.log(`Police Stations: ${zoneCounts.police}`);
                     console.log(`Fire Stations: ${zoneCounts.fire}`);
-                    console.log(`Police Funding: ${(metadata.funding.police * 100).toFixed(1)}%`);
-                    console.log(`Fire Funding: ${(metadata.funding.fire * 100).toFixed(1)}%`);
+                    console.log(`Police Funding: ${fmtFund(metadata.funding.police)}`);
+                    console.log(`Fire Funding: ${fmtFund(metadata.funding.fire)}`);
                     console.log('');
                     
                     console.log('=== City Summary for LLM Analysis ===');
                     console.log(`City: ${metadata.filename}`);
-                    console.log(`City Time: ${metadata.cityTime}`);
+                    console.log(`City Time: ${metadata.cityTime} (Year ${metadata.cityYear})`);
                     console.log(`Funds: $${metadata.funds}`);
                     console.log(`RCI Balance: Residential ${resPercent}%, Commercial ${comPercent}%, Industrial ${indPercent}%`);
                     console.log(`Power: ${zoneCounts.coalPower} Coal Plants, ${zoneCounts.nuclearPower} Nuclear, ${powerConnectivity}% connected`);
                     console.log(`Services: ${zoneCounts.police} police stations, ${zoneCounts.fire} fire stations`);
                     console.log(`Transport: ${zoneCounts.seaport} seaports, ${zoneCounts.airport} airports`);
+                })
+                
+                .command('edit <file>', 'Edit city metadata and save', (yargs) => {
+                    return yargs
+                        .positional('file', {
+                            describe: 'City file path to edit (modified in place)',
+                            type: 'string'
+                        })
+                        .option('output', {
+                            alias: 'o',
+                            type: 'string',
+                            describe: 'Write to a different file instead of editing in place'
+                        })
+                        .option('funds', {
+                            type: 'number',
+                            describe: 'Set total funds'
+                        })
+                        .option('year', {
+                            type: 'number',
+                            describe: 'Set city year (converted to cityTime ticks)'
+                        })
+                        .option('city-time', {
+                            type: 'number',
+                            describe: 'Set raw city time ticks'
+                        })
+                        .option('tax', {
+                            type: 'number',
+                            describe: 'Set tax rate (0-20)'
+                        })
+                        .option('speed', {
+                            type: 'number',
+                            describe: 'Set simulation speed (0-3)'
+                        })
+                        .option('police-funding', {
+                            type: 'number',
+                            describe: 'Set police funding percentage (0-100)'
+                        })
+                        .option('fire-funding', {
+                            type: 'number',
+                            describe: 'Set fire funding percentage (0-100)'
+                        })
+                        .option('road-funding', {
+                            type: 'number',
+                            describe: 'Set road funding percentage (0-100)'
+                        })
+                        .option('auto-bulldoze', {
+                            type: 'boolean',
+                            describe: 'Set auto-bulldoze flag'
+                        })
+                        .option('auto-budget', {
+                            type: 'boolean',
+                            describe: 'Set auto-budget flag'
+                        })
+                        .option('auto-goto', {
+                            type: 'boolean',
+                            describe: 'Set auto-goto flag'
+                        })
+                        .option('sound', {
+                            type: 'boolean',
+                            describe: 'Set sound enabled flag'
+                        });
+                }, (argv) => {
+                    const city = new CityFile(argv.file);
+                    if (!city.load()) {
+                        console.error(`Could not load file: ${argv.file}`);
+                        return;
+                    }
+                    
+                    const updates = {};
+                    if (argv.funds !== undefined) updates.funds = argv.funds;
+                    if (argv.year !== undefined) updates.cityTime = ((argv.year - World.STARTING_YEAR) * 48) + 2;
+                    if (argv['city-time'] !== undefined) updates.cityTime = argv['city-time'];
+                    if (argv.tax !== undefined) {
+                        if (argv.tax < 0 || argv.tax > 20) {
+                            console.error('Tax rate must be 0-20');
+                            return;
+                        }
+                        updates.cityTax = argv.tax;
+                    }
+                    if (argv.speed !== undefined) {
+                        if (argv.speed < 0 || argv.speed > 3) {
+                            console.error('Speed must be 0-3');
+                            return;
+                        }
+                        updates.simSpeed = argv.speed;
+                    }
+                    if (argv['police-funding'] !== undefined) updates.policePercent = argv['police-funding'] / 100.0;
+                    if (argv['fire-funding'] !== undefined) updates.firePercent = argv['fire-funding'] / 100.0;
+                    if (argv['road-funding'] !== undefined) updates.roadPercent = argv['road-funding'] / 100.0;
+                    if (argv['auto-bulldoze'] !== undefined) updates.autoBulldoze = argv['auto-bulldoze'];
+                    if (argv['auto-budget'] !== undefined) updates.autoBudget = argv['auto-budget'];
+                    if (argv['auto-goto'] !== undefined) updates.autoGoto = argv['auto-goto'];
+                    if (argv.sound !== undefined) updates.soundEnabled = argv.sound;
+                    
+                    if (Object.keys(updates).length === 0) {
+                        console.error('No edits specified. Use --funds, --year, --tax, --speed, etc.');
+                        return;
+                    }
+                    
+                    city.setMetadata(updates);
+                    
+                    const outFile = argv.output || argv.file;
+                    city.save(outFile);
+                    
+                    // Show the result
+                    const meta = city.getMetadata();
+                    console.log(`Saved: ${path.basename(outFile)}`);
+                    for (const [key, value] of Object.entries(updates)) {
+                        console.log(`  ${key}: ${value}`);
+                    }
+                    console.log(`  → City Time: ${meta.cityTime} (Year ${meta.cityYear}), Funds: $${meta.funds}, Tax: ${meta.cityTax}%`);
+                })
+                
+                .command('patch-scenario <file>', 'Patch a scenario .cty with the values the engine would inject', (yargs) => {
+                    return yargs
+                        .positional('file', {
+                            describe: 'Scenario .cty file to patch',
+                            type: 'string'
+                        })
+                        .option('output', {
+                            alias: 'o',
+                            type: 'string',
+                            describe: 'Write to a different file instead of editing in place'
+                        })
+                        .option('dry-run', {
+                            type: 'boolean',
+                            default: false,
+                            describe: 'Show what would be changed without writing'
+                        });
+                }, (argv) => {
+                    const city = new CityFile(argv.file);
+                    if (!city.load()) {
+                        console.error(`Could not load file: ${argv.file}`);
+                        return;
+                    }
+                    
+                    const scenario = getScenarioDefaults(argv.file);
+                    if (!scenario) {
+                        console.error(`Not a recognized scenario file: ${path.basename(argv.file)}`);
+                        console.error('Known scenarios: ' + 
+                            Object.values(ScenarioDefaults)
+                                .filter(s => s.file)
+                                .map(s => s.file)
+                                .join(', '));
+                        return;
+                    }
+                    
+                    const beforeMeta = city.getMetadata();
+                    
+                    // Apply the same values loadScenario() would inject
+                    const updates = {
+                        cityTime: scenario.cityTime,
+                        funds: scenario.funds,
+                        cityTax: scenario.cityTax,
+                        simSpeed: scenario.simSpeed,
+                        autoBulldoze: scenario.autoBulldoze,
+                        autoBudget: scenario.autoBudget,
+                        autoGoto: scenario.autoGoto,
+                        soundEnabled: scenario.soundEnabled,
+                        policePercent: scenario.policePercent,
+                        firePercent: scenario.firePercent,
+                        roadPercent: scenario.roadPercent
+                    };
+                    
+                    console.log(`=== Patching Scenario: ${scenario.name} (${scenario.year}) ===`);
+                    console.log('');
+                    console.log('Before:');
+                    console.log(`  City Time: ${beforeMeta.cityTime} (Year ${beforeMeta.cityYear})`);
+                    console.log(`  Funds: $${beforeMeta.funds}`);
+                    console.log(`  Tax: ${beforeMeta.cityTax}%${beforeMeta.cityTaxClamped ? ' (was invalid)' : ''}`);
+                    console.log(`  Speed: ${beforeMeta.simSpeed}`);
+                    console.log('');
+                    console.log('After (from loadScenario):');
+                    console.log(`  City Time: ${updates.cityTime} (Year ${scenario.year})`);
+                    console.log(`  Funds: $${updates.funds}`);
+                    console.log(`  Tax: ${updates.cityTax}%`);
+                    console.log(`  Speed: ${updates.simSpeed}`);
+                    console.log(`  Funding: police=${(updates.policePercent*100)}%, fire=${(updates.firePercent*100)}%, road=${(updates.roadPercent*100)}%`);
+                    
+                    if (argv['dry-run']) {
+                        console.log('\n(dry run — no file written)');
+                        return;
+                    }
+                    
+                    city.setMetadata(updates);
+                    const outFile = argv.output || argv.file;
+                    city.save(outFile);
+                    console.log(`\nWritten to: ${outFile}`);
                 })
                 
                 .demandCommand(1, 'You need to specify a subcommand');
@@ -1794,10 +2140,9 @@ function setupCLI() {
                     }
                     
                     // Log filter settings
-                    console.log('Applied filters:');
-                    Object.entries(filters).forEach(([key, value]) => {
-                        console.log(`  ${key}: ${value}`);
-                    });
+                    console.warn('Note: Filtering requires simulation overlay data (population, traffic,');
+                    console.warn('pollution, etc.) which is computed at runtime and not stored in .cty files.');
+                    console.warn('Displaying unfiltered base map.\n');
                     
                     console.log(city.generateFilteredMap(bounds, filters, argv.style));
                 })
@@ -1820,6 +2165,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export {
     CityFile,
+    ScenarioDefaults,
+    getScenarioDefaults,
     // Export constants and utilities for use by other modules
     World,
     TileBits,
