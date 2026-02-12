@@ -165,7 +165,7 @@ Full details: [MOOLLM: A Microworld Operating System for LLM Orchestration](http
 | [constructionism](https://github.com/SimHacker/moollm/tree/main/skills/constructionism) | Educational philosophy -- learn by building microworlds (Papert, Kay) |
 | [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) | Room-based navigation -- directories are city districts, TinyMUD heritage |
 | [character](https://github.com/SimHacker/moollm/tree/main/skills/character) | AI tutor personalities with locations, inventory, relationships |
-| [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) | Personality modeling on Leary's Circumplex + Sims-style thought planes |
+| [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) | Sims-style personalities on Leary's Interpersonal Circumplex |
 | [simulation](https://github.com/SimHacker/moollm/tree/main/skills/simulation) | Turn system, party management, game state hub |
 | [schema-mechanism](https://github.com/SimHacker/moollm/tree/main/skills/schema-mechanism) | Drescher's causal learning -- agents discover cause and effect in the sim |
 | [experiment](https://github.com/SimHacker/moollm/tree/main/skills/experiment) | Systematic simulation: SIMULATE, EVALUATE, ITERATE, ANALYZE cycles |
@@ -193,7 +193,7 @@ Full details: [MOOLLM: A Microworld Operating System for LLM Orchestration](http
 
 ### The Bigger Picture
 
-MOOLLM is kind of like The Sims meets LambdaMOO in Cursor, then steals all the great ideas from Factorio. Micropolis is one microworld within that system. The [logistic-container](https://github.com/SimHacker/moollm/tree/main/skills/logistic-container) skill treats directories as Factorio logistics boxes. The [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) skill makes the filesystem a navigable space. The [character](https://github.com/SimHacker/moollm/tree/main/skills/character) and [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) skills give AI agents personalities modeled on The Sims characters and Timothy Leary's Circumplex. All of these compose with the micropolis skill to create MicropolisHub.
+MOOLLM is kind of like The Sims meets LambdaMOO in Cursor, then steals all the great ideas from Factorio. Micropolis is one microworld within that system. The [logistic-container](https://github.com/SimHacker/moollm/tree/main/skills/logistic-container) skill treats directories as Factorio logistics boxes. The [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) skill makes the filesystem a navigable space. The [character](https://github.com/SimHacker/moollm/tree/main/skills/character) and [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) skills give AI agents Sims-style personalities on Leary's Interpersonal Circumplex. All of these compose with the micropolis skill to create MicropolisHub.
 
 The full MOOLLM skill registry: [121 skills](https://github.com/SimHacker/moollm/blob/main/skills/INDEX.yml) | [Narrative index](https://github.com/SimHacker/moollm/blob/main/skills/INDEX.md)
 
