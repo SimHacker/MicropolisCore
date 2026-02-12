@@ -145,7 +145,7 @@ These aren't just observers. Following the DreamScape principle of "Users and Ag
 
 ### What MOOLLM Brings to Micropolis
 
-The micropolis skill is manifested in [MOOLLM](https://github.com/SimHacker/moollm) as an [Anthropic Skill](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching#prompt-structure) -- the native knowledge-injection format for Claude. But MOOLLM extends Anthropic's Skill specification with [eight architectural innovations](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md#moollm-extensions-beyond-basic-skills) that give Micropolis capabilities a basic skill can't provide:
+The micropolis skill is manifested in [MOOLLM](https://github.com/SimHacker/moollm) as an [Anthropic Skill](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching#prompt-structure) -- the native knowledge-injection format for Claude. But MOOLLM extends Anthropic's Skill specification with [eight architectural extensions](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md#moollm-extensions-beyond-basic-skills), drawing on Minsky's Society of Mind, Papert's Constructionism, Drescher's Schema Mechanism, and Will Wright's Sims architecture:
 
 1. **Instantiation** -- Skills as prototypes creating instances with their own state, not just static procedures
 2. **K-Lines** -- Minsky's semantic activation: saying "micropolis" activates a constellation of related concepts
