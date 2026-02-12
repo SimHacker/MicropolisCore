@@ -150,7 +150,7 @@ The micropolis skill is manifested in [MOOLLM](https://github.com/SimHacker/mool
 1. **Instantiation** -- Skills as prototypes creating instances with their own state, not just static procedures
 2. **K-Lines** -- Minsky's semantic activation: saying "micropolis" activates a constellation of related concepts
 3. **Empathic Templates** -- Smart generation based on semantic understanding, not string substitution
-4. **Three-Tier Persistence** -- Platform (ephemeral `.moollm/`), Narrative (append-only logs), State (editable game files)
+4. **Multi-Tier Persistence** -- Ephemeral scratch (`.moollm/`), append-only logs, editable state, plus the Semantic Image Pyramid: GLANCE.yml (5-70 lines), CARD.yml (50-200), SKILL.md (200-1000), README.md (500+), examples, templates -- read top-down, never load a lower level without loading the level above
 5. **Speed of Light** -- Many agent turns inside one LLM call, no round-trip latency
 6. **CARD.yml** -- Machine-readable interfaces with Sims-style advertisements: "what can I do here?"
 7. **Ethical Framing** -- Room-based inheritance of performance context for appropriate character behavior
