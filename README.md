@@ -145,24 +145,39 @@ These aren't just observers. Following the DreamScape principle of "Users and Ag
 
 ### What MOOLLM Brings to Micropolis
 
-[MOOLLM](https://github.com/SimHacker/moollm) is a microworld operating system for LLM orchestration -- a framework where the filesystem is navigable space, YAML comments carry semantic meaning, and skills are inheritable prototypes that agents instantiate. Micropolis is one of MOOLLM's core skills, and the integration gives it capabilities that a standalone game engine or Anthropic Skill can't provide.
+The micropolis skill is manifested in [MOOLLM](https://github.com/SimHacker/moollm) as an [Anthropic Skill](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching#prompt-structure) -- the native knowledge-injection format for Claude. But MOOLLM extends Anthropic's Skill specification with [eight architectural innovations](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md#moollm-extensions-beyond-basic-skills) that give Micropolis capabilities a basic skill can't provide:
+
+1. **Instantiation** -- Skills as prototypes creating instances with their own state, not just static procedures
+2. **K-Lines** -- Minsky's semantic activation: saying "micropolis" activates a constellation of related concepts
+3. **Empathic Templates** -- Smart generation based on semantic understanding, not string substitution
+4. **Three-Tier Persistence** -- Platform (ephemeral `.moollm/`), Narrative (append-only logs), State (editable game files)
+5. **Speed of Light** -- Many agent turns inside one LLM call, no round-trip latency
+6. **CARD.yml** -- Machine-readable interfaces with Sims-style advertisements: "what can I do here?"
+7. **Ethical Framing** -- Room-based inheritance of performance context for appropriate character behavior
+8. **Ambient Skills** -- Always-on behavioral shaping (the NO-AI hygiene suite prevents bad outputs without explicit invocation)
+
+Full details: [MOOLLM: A Microworld Operating System for LLM Orchestration](https://github.com/SimHacker/moollm/blob/main/designs/LEELA-MOOLLM-DEMO-TRANSCRIPT.md)
 
 **The micropolis skill** ([CARD.yml](https://github.com/SimHacker/moollm/blob/main/skills/micropolis/CARD.yml) | [SKILL.md](https://github.com/SimHacker/moollm/blob/main/skills/micropolis/SKILL.md) | [README.md](https://github.com/SimHacker/moollm/tree/main/skills/micropolis)) defines how MOOLLM agents interact with the simulation. It inherits from and composes with other skills:
 
 | MOOLLM Skill | What It Gives Micropolis |
 |-------------|--------------------------|
-| [constructionism](https://github.com/SimHacker/moollm/tree/main/skills/constructionism) | Educational philosophy -- learn by building microworlds |
-| [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) | Room-based navigation -- directories are city districts |
+| [constructionism](https://github.com/SimHacker/moollm/tree/main/skills/constructionism) | Educational philosophy -- learn by building microworlds (Papert, Kay) |
+| [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) | Room-based navigation -- directories are city districts, TinyMUD heritage |
 | [character](https://github.com/SimHacker/moollm/tree/main/skills/character) | AI tutor personalities with locations, inventory, relationships |
-| [simulation](https://github.com/SimHacker/moollm/tree/main/skills/simulation) | Turn system, party management, game state |
-| [schema-mechanism](https://github.com/SimHacker/moollm/tree/main/skills/schema-mechanism) | Drescher's causal learning -- agents discover cause and effect in the simulation |
-| [adversarial-committee](https://github.com/SimHacker/moollm/tree/main/skills/adversarial-committee) | Multi-perspective debate between AI tutors |
+| [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) | Personality modeling on Leary's Circumplex + Sims-style thought planes |
+| [simulation](https://github.com/SimHacker/moollm/tree/main/skills/simulation) | Turn system, party management, game state hub |
+| [schema-mechanism](https://github.com/SimHacker/moollm/tree/main/skills/schema-mechanism) | Drescher's causal learning -- agents discover cause and effect in the sim |
+| [experiment](https://github.com/SimHacker/moollm/tree/main/skills/experiment) | Systematic simulation: SIMULATE, EVALUATE, ITERATE, ANALYZE cycles |
+| [adversarial-committee](https://github.com/SimHacker/moollm/tree/main/skills/adversarial-committee) | Multi-perspective debate between AI tutors with incompatible values |
 | [sister-script](https://github.com/SimHacker/moollm/tree/main/skills/sister-script) | Doc-first CLI automation -- the micropolis.js tool follows this pattern |
 | [speed-of-light](https://github.com/SimHacker/moollm/tree/main/skills/speed-of-light) | Multiple agent turns inside a single LLM call, no round-trip latency |
 
-**Speed of Light vs Carrier Pigeon:** Most AI agent systems coordinate between LLM calls (500ms+ per hop, precision degrades each hop). MOOLLM skills can run multiple agents iterating dozens of times inside a single LLM generation -- instant latency, perfect precision, low cost. This means AI tutors can debate a zoning decision, explore alternatives, and reach a recommendation in one call rather than a slow chain of API round-trips. Full writeup: [Speed of Light vs Carrier Pigeon](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md).
+**Speed of Light vs Carrier Pigeon:** Most AI agent systems coordinate *between* LLM calls -- 500ms+ per hop, precision degrades each hop, every turn re-tokenizes the full context. MOOLLM skills run *during* one LLM call -- multiple agents iterating dozens of times inside a single generation, instant latency, perfect precision. AI tutors can debate a zoning decision, explore alternatives, and reach a recommendation in one call rather than a slow chain of API round-trips. Full writeup: [Speed of Light vs Carrier Pigeon](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md).
 
 **Schema Mechanism + LLMs:** Gary Drescher's [schema mechanism](https://github.com/SimHacker/moollm/tree/main/skills/schema-mechanism) discovers causal structure (context + action = result) while the LLM supplies meanings, explanations, and generalization. Applied to Micropolis: an agent can learn that "placing industrial zones near residential zones causes pollution complaints" not as a hardcoded rule but as a discovered schema grounded in actual simulation behavior. See: [MOOLLM Eval/Incarnate Framework](https://github.com/SimHacker/moollm/blob/main/designs/MOOLLM-EVAL-INCARNATE-FRAMEWORK.md).
+
+**Experiment Skill:** The [experiment](https://github.com/SimHacker/moollm/tree/main/skills/experiment) skill brings systematic evaluation to Micropolis. Define an experiment (e.g., "compare tax strategies"), run multiple simulations using speed-of-light, evaluate outcomes against rubrics, iterate with variations, and analyze patterns across runs. The experiment framework was proven with 5 tournament rounds, 20+ games, and 116+ turns in the Fluxx Championship -- the same SIMULATE/EVALUATE/ITERATE/ANALYZE cycle applies to city planning strategies. Inherits from: [simulation](https://github.com/SimHacker/moollm/tree/main/skills/simulation), [evaluator](https://github.com/SimHacker/moollm/tree/main/skills/evaluator), [rubric](https://github.com/SimHacker/moollm/tree/main/skills/rubric), [speed-of-light](https://github.com/SimHacker/moollm/tree/main/skills/speed-of-light).
 
 ### Design Documents
 
