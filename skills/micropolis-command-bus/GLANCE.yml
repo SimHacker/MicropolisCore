@@ -1,0 +1,64 @@
+# GLANCE.yml — micropolis-command-bus
+# Status: IMPLEMENTING
+# 🚌 "All roads to the simulator go through the bus."
+
+status: implementing
+
+what: |
+  Shared command layer for Micropolis UI, pie menus, keyboard shortcuts,
+  chat slash commands, MCP tools, CLI sister scripts, and LLM proposals.
+
+why: |
+  UI surfaces should not own behavior. They invoke named commands with context.
+  LLMs must preview/propose/approve through the same bus instead of silently
+  mutating simulator, workspace, or GitHub state.
+
+k_lines:
+  activates:
+    - MICROPOLIS-COMMAND-BUS
+    - COMMAND-BUS
+    - BLENDER-OPERATOR
+    - LLM-PROPOSAL
+    - MCP-TOOL
+    - SISTER-SCRIPT
+    - PIE-MENU-COMMAND
+
+interfaces:
+  bus: "micropolis/src/lib/CommandBus.ts"
+  registry: "micropolis/src/lib/micropolisCommands.ts"
+  mcp_service: "micropolis/src/lib/CommandMcpService.ts"
+  cli: "micropolis/scripts/commands.ts"
+
+policy:
+  safe: "LLM may dispatch directly"
+  reversible: "LLM should propose first"
+  destructive: "Preview + proposal + approval required"
+  external: "Explicit approval required"
+
+compose_with:
+  - micropolis
+  - sister-script
+  - action-queue
+  - advertisement
+  - card
+  - protocol
+  - github
+  - skill-snitch
+  - mooco
+  - speed-of-light
+
+invoke_when:
+  - "Wiring a UI action"
+  - "Adding a pie menu item"
+  - "Adding a chat slash command"
+  - "Letting an LLM propose a simulator action"
+  - "Exporting Micropolis commands via MCP"
+  - "Auditing unsafe direct simulator calls"
+
+see_also:
+  - CARD.yml
+  - SKILL.md
+  - README.md
+  - "../micropolis-command-bus"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/sister-script/CARD.yml"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/micropolis/CARD.yml"

@@ -1,0 +1,56 @@
+# GLANCE.yml — micropolis
+# Status: IMPLEMENTING
+# 🏙️ "The engine is the microworld. The CLI is the public gate."
+
+status: implementing
+
+what: |
+  Engine-level Micropolis skill for humans, LLMs, MCP tools, scripts,
+  and UI layers that need to inspect, analyze, visualize, simulate,
+  edit, decompose, compose, or command Micropolis cities.
+
+why: |
+  Micropolis should expose a stable, scriptable, documented surface
+  around the engine itself. Specific sub-skills handle specialized
+  capabilities like command dispatch, Git multiverse, overlays, agents,
+  UI workspaces, and AI tutors.
+
+k_lines:
+  activates:
+    - MICROPOLIS
+    - MICROPOLIS-ENGINE
+    - SIMCITY
+    - CITY-FILE
+    - CTY-FORMAT
+    - MICROPOLIS-CLI
+    - MICROWORLD
+    - CONSTRUCTIONISM
+
+interfaces:
+  cli: "micropolis/scripts/micropolis.js"
+  constants: "micropolis/scripts/constants.js"
+  engine: "MicropolisEngine/src"
+  wasm_wrapper: "micropolis/src/lib/MicropolisSimulator.ts"
+  command_bus: "skills/micropolis-command-bus"
+
+delegate_to:
+  command_bus: "Live UI, pie menu, chat, LLM proposal, MCP command dispatch"
+  sister_script: "CLI structure and doc-first automation"
+  github: "GitHub-as-MMORPG external operations"
+  experiment: "Batch simulation and evaluation loops"
+  constructionism: "Educational framing"
+
+invoke_when:
+  - "Working with Micropolis engine or city files"
+  - "Using the Micropolis CLI"
+  - "Designing save-file, batch simulation, or city-analysis tools"
+  - "Creating AI-accessible city commands"
+  - "Factoring Micropolis capabilities into sub-skills"
+
+see_also:
+  - CARD.yml
+  - SKILL.md
+  - README.md
+  - "../micropolis-command-bus"
+  - "../../micropolis/scripts/README.md"
+  - "../../README.md"

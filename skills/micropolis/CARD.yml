@@ -1,0 +1,856 @@
+# CARD.yml — Micropolis Engine
+# Ultra-dense interface card generated from:
+#   - micropolis/scripts/micropolis.js yargs command tree
+#   - micropolis/scripts/constants.js
+#   - micropolis/src/types/micropolisengine.d.ts
+#   - MicropolisEngine/src/emscripten.cpp
+#   - Cursor/city-save-files.md
+# Full protocol: SKILL.md | Human overview: README.md
+
+card:
+  id: micropolis
+  name: "Micropolis Engine"
+  type: [skill, simulation, engine, cli, save-file, wasm, education, microworld]
+  emoji: 🏙️
+  tier: 2
+  status: implementing
+  rarity: legendary
+  tagline: "The engine is the microworld. The CLI is the public gate."
+  description: |
+    Engine-level interface for MicropolisCore. Exposes the current, real
+    save-file CLI, static city-file analysis, terminal visualizations,
+    JSON export, metadata editing, scenario patching, the C++/WASM Embind
+    surface, and delegation boundaries for live commands, Git multiverse,
+    experiments, UI workspaces, and AI tutors.
+
+evidence:
+  cli_source: "../../micropolis/scripts/micropolis.js"
+  cli_docs: "../../micropolis/scripts/README.md"
+  constants_source: "../../micropolis/scripts/constants.js"
+  wasm_bindings: "../../MicropolisEngine/src/emscripten.cpp"
+  typescript_bindings: "../../micropolis/src/types/micropolisengine.d.ts"
+  save_file_reference: "../../Cursor/city-save-files.md"
+  checked_facts:
+    - "setupCLI() defines top-level yargs commands: city, visualize"
+    - "city subcommands: dump, export, info, analyze, edit, patch-scenario"
+    - "visualize subcommands: ascii, emoji, mono, map, filter"
+    - "CSV export prints 'CSV export not yet implemented'"
+    - "visualize map is labeled not yet implemented but renders by style"
+    - "visualize filter warns runtime overlay data is not stored in .cty files"
+    - "CityFile exports: CityFile, ScenarioDefaults, getScenarioDefaults, World, TileBits, Endian"
+    - "Save files: .cty 27,120 bytes, .mop 51,120 bytes"
+
+files:
+  docs: [GLANCE.yml, CARD.yml, SKILL.md, README.md]
+  cli:
+    - ../../micropolis/scripts/micropolis.js
+    - ../../micropolis/scripts/constants.js
+    - ../../micropolis/scripts/README.md
+  command_bus:
+    - ../../micropolis/src/lib/CommandBus.ts
+    - ../../micropolis/src/lib/micropolisCommands.ts
+    - ../../micropolis/src/lib/CommandMcpService.ts
+    - ../../micropolis/scripts/commands.ts
+  engine:
+    - ../../MicropolisEngine/src/micropolis.h
+    - ../../MicropolisEngine/src/micropolis.cpp
+    - ../../MicropolisEngine/src/emscripten.cpp
+    - ../../MicropolisEngine/src/fileio.cpp
+    - ../../MicropolisEngine/src/simulate.cpp
+    - ../../MicropolisEngine/src/tool.cpp
+    - ../../MicropolisEngine/src/budget.cpp
+    - ../../MicropolisEngine/src/map.cpp
+    - ../../MicropolisEngine/src/generate.cpp
+  frontend_bridge:
+    - ../../micropolis/src/lib/MicropolisSimulator.ts
+    - ../../micropolis/src/lib/micropolisStore.ts
+    - ../../micropolis/src/lib/ReactiveMicropolisCallback.ts
+    - ../../micropolis/src/lib/TileView.svelte
+  references:
+    - ../../Cursor/city-save-files.md
+    - ../../README.md
+    - ../../designs/command-path-collaboration-modes.md
+    - ../../designs/naming-conventions.md
+    - ../../designs/callback-interface-roadmap.md
+    - ../../designs/command-timeline-git-branches.md
+    - ../../designs/github-as-mmorpg-multiverse.md
+    - ../../designs/filesystem-object-model.md
+    - ../../designs/moollm-micropolis-integration.md
+    - ../../designs/collaborative-microworld-lineage.md
+    - ../../designs/multiplayer-browser-lessons.md
+    - ../../notes/UserInterfacePlan.txt
+    - ../../notes/MultiPlayerIdeas.txt
+
+k-lines:
+  activates:
+    - MICROPOLIS
+    - MICROPOLIS-ENGINE
+    - MICROPOLIS-CLI
+    - SIMCITY
+    - CITY-FILE
+    - CTY
+    - MOP
+    - MAP-DATA
+    - HISTORY-DATA
+    - TILE-BITS
+    - WASM-BRIDGE
+    - MICROWORLD
+    - CONSTRUCTIONISM
+    - GIT-MULTIVERSE
+  related:
+    - { ref: micropolis-command-bus, relation: "live action dispatch, UI commands, LLM proposal gate" }
+    - { ref: sister-script, relation: "CLI as sniffable documentation and LLM tool surface" }
+    - { ref: simulation, relation: "turns, state, replay, scenarios" }
+    - { ref: experiment, relation: "batch runs, metrics, evaluation loops" }
+    - { ref: github, relation: "branches as timelines, issues as discussions, PRs as decisions" }
+    - { ref: constructionism, relation: "learn by building microworlds" }
+    - { ref: schema-mechanism, relation: "discover causal relationships in sim state" }
+    - { ref: advertisement, relation: "tools, zones, agents advertise actions" }
+    - { ref: skill-snitch, relation: "audit direct mutations and declared interfaces" }
+    - { ref: skill, relation: "factor subcapabilities into sub-skills" }
+
+invoke_when:
+  - "Need to inspect, analyze, visualize, export, or edit a .cty/.mop file"
+  - "Need machine-readable Micropolis data for an LLM, MCP tool, script, or test"
+  - "Need to understand the current CLI surface exactly"
+  - "Need to locate engine/WASM bindings and callback surface"
+  - "Need to decide whether to delegate to command-bus, experiment, github, overlays, or save-format sub-skills"
+
+advertisements:
+  INSPECT-CITY:
+    score: 100
+    condition: "Need metadata, funds, time, tax, flags, funding, region, zone counts"
+    methods: [CITY-INFO, CITY-ANALYZE, FILE-DUMP]
+    primary_tool: "npm run micropolis -- city info <file> --format json"
+
+  EXPORT-FOR-AI:
+    score: 98
+    condition: "Need structured JSON for LLM analysis, scripts, tests, or ML"
+    methods: [CITY-EXPORT]
+    primary_tool: "npm run micropolis -- city export <file> --format json --include-map"
+    caveat: "CSV choice exists but is not implemented."
+
+  TERMINAL-MAP:
+    score: 95
+    condition: "Need a readable city preview in terminal/chat/markdown"
+    methods: [VISUALIZE-ASCII, VISUALIZE-MONO, VISUALIZE-EMOJI, VISUALIZE-MAP]
+    primary_tool: "npm run micropolis -- visualize ascii <file> --row R --col C --width W --height H"
+
+  FILTER-MAP:
+    score: 70
+    condition: "Need to express desired overlay filters over population/growth/traffic/pollution/crime/landvalue/police/fire"
+    methods: [VISUALIZE-FILTER]
+    caveat: |
+      .cty/.mop files store some evidence but not the full runtime overlay maps.
+      Saved main map tiles include terrain/zones/infrastructure plus visual traffic
+      tile variants and PWRBIT/CONDBIT/ZONEBIT/etc. History arrays include crime
+      and pollution time-series. .mop stores an extra 120x100 short map, currently
+      treated by the web renderer as mop/tile-layer data, not the simulator's
+      population/traffic/pollution/crime/landvalue/police/fire analysis maps.
+      Runtime maps must be regenerated by running simulator scans.
+
+  REGENERATE-RUNTIME-MAPS:
+    score: 82
+    condition: "Need overlay maps that depend on simulation history, smoothing, decay, or accumulated effects"
+    status: planned
+    caveat: |
+      Some runtime maps are not exact functions of one static .cty snapshot.
+      Traffic density, rate of growth, service effects, and other smoothed or
+      decayed maps may require rewinding to an earlier checkpoint and replaying
+      the edit/command timeline forward. Future CLI should support TiVo-style
+      rewind, fast-forward, differential snapshots, and edit-tree branch points.
+    delegate:
+      skill: experiment
+      reason: "Overlay regeneration is a replay experiment over a timeline."
+
+  COMPUTED-LAYER-CLI:
+    score: 88
+    condition: "Need to read, dump, export, or visualize computed simulator layers as easily as saved layers"
+    status: planned
+    methods: [LAYER-DUMP, LAYER-EXPORT, LAYER-VISUALIZE]
+    principle: |
+      CLI users should not care whether a layer is saved in .cty/.mop or
+      computed by the simulator. The CLI should provide one layer interface,
+      automatically call the minimal required analysis scans, and only fall
+      back to time-travel replay when exact reconstruction needs prior history.
+
+  EDIT-METADATA:
+    score: 80
+    condition: "Need to patch save-file metadata fields such as funds, time, tax, speed, flags, funding"
+    risk: reversible
+    methods: [CITY-EDIT, PATCH-SCENARIO]
+    advice: "Use --output for non-destructive edits; use --dry-run for patch-scenario."
+
+  LIVE-SIMULATION-ACTION:
+    score: 100
+    condition: "Need to mutate a running WASM simulation, UI view, workspace, command, or GitHub state"
+    delegate:
+      skill: micropolis-command-bus
+      reason: "Live actions require command preview/propose/approval."
+
+  ENGINE-BINDINGS:
+    score: 90
+    condition: "Need callable C++/WASM functions, properties, enums, callbacks"
+    methods: [WASM-SURFACE, CALLBACK-SURFACE, ENUM-SURFACE]
+
+  FACTOR-SUBSKILL:
+    score: 85
+    condition: "Capability is growing its own CLI, TypeScript module, data format, MCP tool, or protocol"
+    delegate:
+      skill: skill
+      reason: "Factor into a sub-skill with GLANCE/CARD/SKILL/README."
+
+runtime:
+  working_directory: "MicropolisCore/micropolis"
+  package_scripts:
+    micropolis: "node scripts/micropolis.js"
+    micropolis_info: "node scripts/micropolis.js city info"
+    micropolis_analyze: "node scripts/micropolis.js city analyze"
+    micropolis_visualize: "node scripts/micropolis.js visualize ascii"
+    micropolis_export: "node scripts/micropolis.js file export # package script is stale; CLI uses city export"
+    micropolis_dump: "node scripts/micropolis.js file dump # package script is stale; CLI uses city dump"
+    commands: "tsx scripts/commands.ts"
+  file_arguments:
+    stdin: "-"
+    examples_root: "../resources/cities"
+    scenario_example: "../resources/cities/scenario_tokyo.cty"
+  global_options:
+    verbose:
+      flags: [-v, --verbose]
+      type: boolean
+      meaning: "Run with verbose logging"
+  region_options:
+    applies_to: [city-export, city-info, city-analyze, visualize-ascii, visualize-emoji, visualize-mono, visualize-map, visualize-filter]
+    row: { flag: "--row", type: number, default: 0, range: "0..99", meaning: "Starting row/Y" }
+    col: { flag: "--col", type: number, default: 0, range: "0..119", meaning: "Starting column/X" }
+    width: { flag: "--width", type: number, default: 120, meaning: "Region width in tiles; clipped to map" }
+    height: { flag: "--height", type: number, default: 100, meaning: "Region height in tiles; clipped to map" }
+
+methods:
+  FILE-DUMP:
+    actual_command: "city dump [file]"
+    run: "cd micropolis && npm run micropolis -- city dump <file>"
+    file_default: "-"
+    options:
+      brief: { flags: [-b, --brief], type: boolean, default: false, meaning: "Show only summary information" }
+    output: "Section-by-section big-endian raw dump; samples first 160 bytes per section unless --brief"
+    source: "micropolis/scripts/micropolis.js:1317"
+
+  CITY-EXPORT:
+    actual_command: "city export [file]"
+    run: "cd micropolis && npm run micropolis -- city export <file> --format json"
+    file_default: "-"
+    options:
+      format: { flags: [-f, --format], choices: [json, csv], default: json, caveat: "csv prints not yet implemented" }
+      include_map: { flag: "--include-map", type: boolean, default: false, meaning: "Include region tile grid as map[][]" }
+      output: { flags: [-o, --output], type: string, meaning: "Write JSON to path instead of stdout" }
+      region: "*region_options"
+    output_schema:
+      metadata: "*metadata_schema"
+      region: { startRow: number, startCol: number, width: number, height: number }
+      zones: "*zone_counts_schema"
+      poweredBuildings: number
+      conductiveBuildings: number
+      flammableBuildings: number
+      zoneCount: number
+      map: "optional number[][] of tile values"
+    source: "micropolis/scripts/micropolis.js:1373,1151"
+
+  CITY-INFO:
+    actual_command: "city info [file]"
+    run: "cd micropolis && npm run micropolis -- city info <file> --format json"
+    file_default: "-"
+    options:
+      format: { flags: [-f, --format], choices: [text, json], default: text }
+      region: "*region_options"
+    output_json: { metadata: "*metadata_schema", region: object, zoneCounts: "*zone_counts_schema" }
+    output_text: "File size, city time/year, funds, tax, speed, funding, flags, zone counts"
+    source: "micropolis/scripts/micropolis.js:1426"
+
+  CITY-ANALYZE:
+    actual_command: "city analyze [file]"
+    run: "cd micropolis && npm run micropolis -- city analyze <file> --format json"
+    file_default: "-"
+    options:
+      format: { flags: [-f, --format], choices: [text, json], default: text }
+      region: "*region_options"
+    output_json:
+      metadata: "*metadata_schema"
+      region: object
+      rci: { residential: number, commercial: number, industrial: number }
+      power: { coalPlants: number, nuclearPlants: number, poweredTiles: number, conductiveTiles: number, connectivity: number }
+      services: { police: object, fire: object, transportation: object }
+    source: "micropolis/scripts/micropolis.js:1517"
+
+  CITY-EDIT:
+    actual_command: "city edit <file>"
+    risk: reversible
+    run: "cd micropolis && npm run micropolis -- city edit <file> --output <copy.cty> [edits]"
+    options:
+      output: { flags: [-o, --output], type: string, meaning: "Write to different file; safer than in-place" }
+      funds: { flag: "--funds", type: number }
+      year: { flag: "--year", type: number, meaning: "Converted to cityTime=((year-1900)*48)+2" }
+      city_time: { flag: "--city-time", type: number, meaning: "Raw city time ticks" }
+      tax: { flag: "--tax", type: number, range: "0..20" }
+      speed: { flag: "--speed", type: number, range: "0..3" }
+      police_funding: { flag: "--police-funding", type: number, range: "0..100", stored_as: "fixed 16.16 percent /100" }
+      fire_funding: { flag: "--fire-funding", type: number, range: "0..100" }
+      road_funding: { flag: "--road-funding", type: number, range: "0..100" }
+      auto_bulldoze: { flag: "--auto-bulldoze", type: boolean }
+      auto_budget: { flag: "--auto-budget", type: boolean }
+      auto_goto: { flag: "--auto-goto", type: boolean }
+      sound: { flag: "--sound", type: boolean }
+    output: "Writes file, then prints changed fields and summary"
+    source: "micropolis/scripts/micropolis.js:1643"
+
+  PATCH-SCENARIO:
+    actual_command: "city patch-scenario <file>"
+    risk: reversible
+    run: "cd micropolis && npm run micropolis -- city patch-scenario <file> --dry-run"
+    options:
+      output: { flags: [-o, --output], type: string }
+      dry_run: { flag: "--dry-run", type: boolean, default: false }
+    behavior: "Applies ScenarioDefaults + common settings matching C++ loadScenario behavior"
+    known_scenarios: [scenario_dullsville.cty, scenario_san_francisco.cty, scenario_hamburg.cty, scenario_bern.cty, scenario_tokyo.cty, scenario_detroit.cty, scenario_boston.cty, scenario_rio_de_janeiro.cty]
+    source: "micropolis/scripts/micropolis.js:1754"
+
+  VISUALIZE-ASCII:
+    actual_command: "visualize ascii [file]"
+    run: "cd micropolis && npm run micropolis -- visualize ascii <file>"
+    options: { region: "*region_options" }
+    output: "ASCII map from generateAsciiMapForRegion"
+    source: "micropolis/scripts/micropolis.js:1837"
+
+  VISUALIZE-EMOJI:
+    actual_command: "visualize emoji [file]"
+    run: "cd micropolis && npm run micropolis -- visualize emoji <file>"
+    options: { region: "*region_options" }
+    output: "Emoji map from generateEmojiMapForRegion"
+    source: "micropolis/scripts/micropolis.js:1871"
+
+  VISUALIZE-MONO:
+    actual_command: "visualize mono [file]"
+    run: "cd micropolis && npm run micropolis -- visualize mono <file>"
+    options: { region: "*region_options" }
+    output: "Monospace map from generateMonoMapForRegion"
+    source: "micropolis/scripts/micropolis.js:1905"
+
+  VISUALIZE-MAP:
+    actual_command: "visualize map [file]"
+    status: "partially implemented despite help saying not yet implemented"
+    run: "cd micropolis && npm run micropolis -- visualize map <file> --style ascii --overlay all"
+    options:
+      style: { choices: [ascii, emoji, mono], default: ascii }
+      overlay: { choices: [all, traffic, pollution, landvalue], default: all, caveat: "overlay option currently does not affect rendering" }
+      region: "*region_options"
+    output: "Delegates to ascii/emoji/mono generator by style"
+    source: "micropolis/scripts/micropolis.js:1939"
+
+  VISUALIZE-FILTER:
+    actual_command: "visualize filter [file]"
+    status: "documented stub; prints warning; dynamicFilter currently always true"
+    run: "cd micropolis && npm run micropolis -- visualize filter <file> --style ascii"
+    options:
+      style: { choices: [ascii, emoji, mono], default: ascii }
+      population_min: { flag: "--population-min", default: 0 }
+      population_max: { flag: "--population-max", default: 255 }
+      growth_min: { flag: "--growth-min", default: -256 }
+      growth_max: { flag: "--growth-max", default: 255 }
+      traffic_min: { flag: "--traffic-min", default: 0 }
+      traffic_max: { flag: "--traffic-max", default: 255 }
+      pollution_min: { flag: "--pollution-min", default: 0 }
+      pollution_max: { flag: "--pollution-max", default: 255 }
+      crime_min: { flag: "--crime-min", default: 0 }
+      crime_max: { flag: "--crime-max", default: 255 }
+      landvalue_min: { flag: "--landvalue-min", default: 0 }
+      landvalue_max: { flag: "--landvalue-max", default: 255 }
+      police_min: { flag: "--police-min", default: 0 }
+      police_max: { flag: "--police-max", default: 255 }
+      fire_min: { flag: "--fire-min", default: 0 }
+      fire_max: { flag: "--fire-max", default: 255 }
+      region: "*region_options"
+    caveat: |
+      Current implementation does not read or regenerate runtime analysis maps.
+      It returns the base map. However, some traffic is visible in saved road tile
+      variants, and crime/pollution histories are saved as graph data. Full
+      population/traffic/pollution/crime/landvalue/police/fire overlay filtering
+      needs a live or headless Micropolis engine pass to populate the runtime maps.
+    source: "micropolis/scripts/micropolis.js:1998,1192"
+
+  LAYER-DUMP:
+    actual_command: "layer dump [file] --layer <name>"
+    status: planned
+    run: "cd micropolis && npm run micropolis -- layer dump <file> --layer traffic --compute"
+    output: "Raw saved or computed layer values with region support"
+    note: "Unifies saved map/mop/history layers and computed runtime analysis maps."
+
+  LAYER-EXPORT:
+    actual_command: "layer export [file] --layer <name> --format json"
+    status: planned
+    run: "cd micropolis && npm run micropolis -- layer export <file> --layer pollution --format json --compute"
+    output: "JSON/CSV layer data for tools and LLMs"
+
+  LAYER-VISUALIZE:
+    actual_command: "layer visualize [file] --layer <name> --style ascii|emoji|mono"
+    status: planned
+    run: "cd micropolis && npm run micropolis -- layer visualize <file> --layer landvalue --style ascii --compute"
+    output: "Human-readable layer map"
+
+  COMMAND-BUS:
+    actual_command: "npm run commands -- <list|preview|propose|dispatch|proposals|approve|reject>"
+    delegate: micropolis-command-bus
+    status: "implemented"
+    output: "command metadata, preview, proposal, approval/rejection, or dispatch result"
+
+schemas:
+  save_file:
+    extensions:
+      cty:
+        size_bytes: 27120
+        sections: [history_3120, map_24000]
+      mop:
+        size_bytes: 51120
+        sections: [history_3120, map_24000, overlay_24000]
+    endian: big
+    world: { width: 120, height: 100, tile_count: 12000, tile_size_bytes: 2, starting_year: 1900 }
+    sections:
+      history:
+        size_bytes: 3120
+        arrays:
+          resHist: { bytes: 480, shorts: 240 }
+          comHist: { bytes: 480, shorts: 240 }
+          indHist: { bytes: 480, shorts: 240 }
+          crimeHist: { bytes: 480, shorts: 240 }
+          pollutionHist: { bytes: 480, shorts: 240 }
+          moneyHist: { bytes: 480, shorts: 240 }
+          miscHist: { bytes: 240, shorts: 120 }
+      map:
+        size_bytes: 24000
+        layout: "row-major 120x100 16-bit tiles"
+      overlay:
+        size_bytes: 24000
+        optional: true
+        name_in_engine: mop
+        note: "Extra 120x100 short map saved in .mop files; not the same as runtime analysis maps."
+    tile_bits:
+      LOMASK: { hex: "0x03ff", bit_range: "0..9", meaning: "base tile id 0..1023" }
+      ZONEBIT: { hex: "0x0400", bit: 10, meaning: "zone center" }
+      ANIMBIT: { hex: "0x0800", bit: 11, meaning: "animated" }
+      BULLBIT: { hex: "0x1000", bit: 12, meaning: "bulldozable" }
+      BURNBIT: { hex: "0x2000", bit: 13, meaning: "flammable" }
+      CONDBIT: { hex: "0x4000", bit: 14, meaning: "conducts power" }
+      PWRBIT: { hex: "0x8000", bit: 15, meaning: "powered" }
+    misc_history_indices:
+      city_time: { shorts: [8, 9], type: int32, formula_year: "floor(max(0, cityTime) / 48) + 1900" }
+      funds: { shorts: [50, 51], type: int32 }
+      auto_bulldoze: { short: 52, type: bool }
+      auto_budget: { short: 53, type: bool }
+      auto_goto: { short: 54, type: bool }
+      sound_enabled: { short: 55, type: bool }
+      city_tax: { short: 56, type: int16, runtime_clamp: "invalid -> 7" }
+      sim_speed: { short: 57, type: int16, runtime_clamp: "invalid -> 3" }
+      police_funding: { shorts: [58, 59], type: fixed_16_16_percent, valid_range: "0.0..1.0 else null in CLI metadata" }
+      fire_funding: { shorts: [60, 61], type: fixed_16_16_percent }
+      road_funding: { shorts: [62, 63], type: fixed_16_16_percent }
+
+  persistence_reality:
+    saved_directly:
+      - "resHist/comHist/indHist/crimeHist/pollutionHist/moneyHist time-series"
+      - "miscHist settings: cityTime, funds, options, tax, speed, funding"
+      - "main map[120][100]: tile id plus ZONEBIT/ANIMBIT/BULLBIT/BURNBIT/CONDBIT/PWRBIT"
+      - "traffic visual state encoded in road tile variants when map tiles have been updated from trafficDensityMap"
+      - ".mop optional mop[120][100] short map"
+    not_saved_as_runtime_maps:
+      - "populationDensityMap (MapByte2 60x50)"
+      - "trafficDensityMap (MapByte2 60x50)"
+      - "pollutionDensityMap (MapByte2 60x50)"
+      - "landValueMap (MapByte2 60x50)"
+      - "crimeRateMap (MapByte2 60x50)"
+      - "terrainDensityMap (MapByte4 30x25)"
+      - "powerGridMap (MapByte1 120x100)"
+      - "rateOfGrowthMap (MapShort8 15x13-ish/world blocksize 8)"
+      - "fireStationMap/fireStationEffectMap (MapShort8)"
+      - "policeStationMap/policeStationEffectMap (MapShort8)"
+      - "comRateMap (MapShort8)"
+    regeneratable_by_engine:
+      immediate_special_init:
+        source: "simulate.cpp doSimInit/SpecialInit path"
+        scans: [mapScan, doPowerScan, pollutionTerrainLandValueScan, crimeScan, populationDensityScan, fireAnalysis]
+        caveat: "Useful for approximate/current-state rebuilds; not guaranteed to reproduce historically accumulated runtime maps."
+      incremental_runtime:
+        source: "simulate.cpp simFrame phases"
+        scans:
+          traffic_decay: "decTrafficMap updates trafficDensityMap and marks traffic/road/all/res/com/ind/dynamic map flags"
+          power: "doPowerScan populates powerGridMap and later PWRBIT on conductive zones"
+          pollution_landvalue: "pollutionTerrainLandValueScan computes pollutionDensityMap, landValueMap, terrainDensityMap"
+          crime: "crimeScan computes crimeRateMap and policeStationEffectMap"
+          population_growth: "populationDensityScan computes populationDensityMap and rateOfGrowthMap"
+          fire: "fireAnalysis computes fireStationEffectMap"
+      historical_replay_needed:
+        why: |
+          Some overlay maps integrate over time or decay/update incrementally
+          after edits and simulation ticks. Exact regeneration may require
+          rewinding to a checkpoint and replaying the edit/command tree.
+        future_cli: "checkpoint -> replay edits/commands -> run sim fast -> materialize requested runtime maps"
+
+  layer_interface_roadmap:
+    status: planned
+    do_not_implement_yet: true
+    goal: "Computed layers should feel like saved layers."
+    layer_classes:
+      saved:
+        examples: [map, mop, resHist, comHist, indHist, crimeHist, pollutionHist, moneyHist, miscHist]
+        source: ".cty/.mop bytes"
+      extended_saved:
+        examples: [analysis-maps, chalk, annotations, signs, named-regions, routes, planned-work, behaviors, multiplayer-dialogs, llm-proposals, audit-logs]
+        source: "future layered save document around the classic city"
+      derived_from_saved_tiles:
+        examples: [zone-counts, traffic-tile-variants, power-flags, tile-bit-masks]
+        source: "main map tile ids and flags"
+      computed_current_state:
+        examples: [powerGridMap, populationDensityMap, pollutionDensityMap, landValueMap, crimeRateMap, fireStationEffectMap, policeStationEffectMap]
+        source: "load city into engine and run required scans"
+      computed_history_dependent:
+        examples: [trafficDensityMap, rateOfGrowthMap, decay/smoothing-sensitive views]
+        source: "checkpoint + edit log replay may be required for exact reconstruction"
+    dependency_planner:
+      purpose: "Map requested layer names to minimal engine scans."
+      examples:
+        traffic: [mapScan, "decTrafficMap?"]
+        power: [doPowerScan]
+        pollution: [pollutionTerrainLandValueScan]
+        landvalue: [pollutionTerrainLandValueScan]
+        crime: [pollutionTerrainLandValueScan, crimeScan]
+        population: [mapScan, populationDensityScan]
+        growth: [mapScan, populationDensityScan, replay_if_exact]
+        police: [mapScan, pollutionTerrainLandValueScan, crimeScan]
+        fire: [mapScan, fireAnalysis]
+    future_cli:
+      - "micropolis layer list [file]"
+      - "micropolis layer dump [file] --layer <name> [--compute] [--exact]"
+      - "micropolis layer export [file] --layer <name> --format json|csv [--compute] [--exact]"
+      - "micropolis layer visualize [file] --layer <name> --style ascii|emoji|mono [--compute] [--exact]"
+
+  extended_save_format_roadmap:
+    status: planned
+    do_not_implement_yet: true
+    goal: "Classic binary city plus extensible layered document."
+    principle: |
+      Preserve classic .cty/.mop compatibility, but allow a surrounding
+      document/package to capture dynamic state, user-authored layers,
+      multiplayer governance, AI tutor context, and replay metadata.
+    possible_shapes:
+      sidecar_directory: "city.cty + city.layers/..."
+      city_package_directory: "cities/<city-id>/ with CITY.yml, <city-id>.cty, layers/, timeline/, metadata.yml"
+      branch_object_store: "micropolis_<id> branch with MICROPOLIS.yml and plural collection namespaces such as cities/, macros/, blueprints/, tools/, issues/"
+      zip_bundle: "single shareable archive containing classic save and sidecars"
+      git_tree: "directory optimized for diffs, branches, PRs, and classroom ownership"
+    layer_types:
+      dynamic_analysis:
+        examples: [populationDensityMap, trafficDensityMap, pollutionDensityMap, landValueMap, crimeRateMap, powerGridMap, rateOfGrowthMap, fireStationEffectMap, policeStationEffectMap]
+        purpose: "Capture runtime maps directly instead of recomputing when appropriate."
+      user_layers:
+        examples: [chalk, labels, signs, annotations, named-regions, routes, screenshots, image-overlays]
+        purpose: "Let players and teachers author meaning on top of the city."
+      behavior_layers:
+        examples: [tool-scripts, agent-behaviors, zone-plugins, scenario-courseware, visual-programming-blocks]
+        purpose: "Move from player to author without patching engine core."
+      multiplayer_layers:
+        examples: [proposals, votes, unresolved-dialogs, role-assignments, permissions, chat-threads]
+        purpose: "Persist governance state, not just map state."
+      llm_layers:
+        examples: [tutor-messages, command-proposals, explanations, approvals, rejected-actions, skill-context, audit-logs]
+        purpose: "Make AI collaboration inspectable and replayable."
+      provenance_layers:
+        examples: [authors, timestamps, branch-ancestry, parent-checkpoints, learning-goals, citations]
+        purpose: "Support Git multiverse, classroom review, and scientific reproducibility."
+    compatibility:
+      read_classic_first: true
+      unknown_layers: "preserve and ignore by default"
+      write_policy: "do not mutate classic .cty unless explicitly requested"
+
+  metadata_schema:
+    filename: string
+    hasMopData: boolean
+    fileSize: number
+    cityTime: number
+    cityYear: number
+    funds: number
+    gameFlags: { autoBulldoze: boolean, autoBudget: boolean, autoGoto: boolean, soundEnabled: boolean }
+    cityTax: number
+    cityTaxClamped: boolean
+    simSpeed: number
+    simSpeedClamped: boolean
+    funding: { police: "number|null", fire: "number|null", road: "number|null" }
+
+  zone_counts_schema:
+    residential: number
+    commercial: number
+    industrial: number
+    police: number
+    fire: number
+    coalPower: number
+    nuclearPower: number
+    stadium: number
+    seaport: number
+    airport: number
+
+  cityfile_js_api:
+    class: CityFile
+    constructor: "new CityFile(filename)"
+    methods:
+      load: "() -> boolean; '-' means stdin"
+      getMetadata: "() -> metadata_schema"
+      setMetadata: "(updates) -> void"
+      save: "(filename) -> void"
+      calculateRegion: "(bounds) -> clipped region"
+      getZoneCountsInRegion: "(bounds) -> zone_counts_schema"
+      getZoneCounts: "() -> zone_counts_schema"
+      countTilesWithAttributeInRegion: "(mask,bounds) -> number"
+      getTile: "(x,y) -> 16-bit tile value"
+      toJSONForRegion: "(includeMap,bounds) -> export object"
+      generateAsciiMapForRegion: "(bounds) -> string"
+      generateMonoMapForRegion: "(bounds) -> string"
+      generateEmojiMapForRegion: "(bounds) -> string"
+      generateFilteredMap: "(bounds,filters,style) -> string"
+    exports: [CityFile, ScenarioDefaults, getScenarioDefaults, World, TileBits, Endian]
+
+wasm_surface:
+  module_constants:
+    world: [WORLD_W, WORLD_H, BITS_PER_TILE, BYTES_PER_TILE, WORLD_W_2, WORLD_H_2, WORLD_W_4, WORLD_H_4, WORLD_W_8, WORLD_H_8]
+    timing: [PASSES_PER_CITYTIME, CITYTIMES_PER_MONTH, CITYTIMES_PER_YEAR, HISTORY_LENGTH, MISC_HISTORY_LENGTH, HISTORY_COUNT]
+    limits: [POWER_STACK_SIZE, MAX_TRAFFIC_DISTANCE, MAX_ROAD_EFFECT, MAX_POLICE_STATION_EFFECT, MAX_FIRE_STATION_EFFECT]
+  enums:
+    EditingTool: [TOOL_RESIDENTIAL, TOOL_COMMERCIAL, TOOL_INDUSTRIAL, TOOL_FIRESTATION, TOOL_POLICESTATION, TOOL_QUERY, TOOL_WIRE, TOOL_BULLDOZER, TOOL_RAILROAD, TOOL_ROAD, TOOL_STADIUM, TOOL_PARK, TOOL_SEAPORT, TOOL_COALPOWER, TOOL_NUCLEARPOWER, TOOL_AIRPORT, TOOL_NETWORK, TOOL_WATER, TOOL_LAND, TOOL_FOREST]
+    ToolResult: [TOOLRESULT_NO_MONEY, TOOLRESULT_NEED_BULLDOZE, TOOLRESULT_FAILED, TOOLRESULT_OK]
+    MapType: [MAP_TYPE_ALL, MAP_TYPE_RES, MAP_TYPE_COM, MAP_TYPE_IND, MAP_TYPE_POWER, MAP_TYPE_ROAD, MAP_TYPE_POPULATION_DENSITY, MAP_TYPE_RATE_OF_GROWTH, MAP_TYPE_TRAFFIC_DENSITY, MAP_TYPE_POLLUTION, MAP_TYPE_CRIME, MAP_TYPE_LAND_VALUE, MAP_TYPE_FIRE_RADIUS, MAP_TYPE_POLICE_RADIUS, MAP_TYPE_DYNAMIC]
+    SpriteType: [SPRITE_TRAIN, SPRITE_HELICOPTER, SPRITE_AIRPLANE, SPRITE_SHIP, SPRITE_MONSTER, SPRITE_TORNADO, SPRITE_EXPLOSION, SPRITE_BUS]
+    Scenario: [SC_NONE, SC_DULLSVILLE, SC_SAN_FRANCISCO, SC_HAMBURG, SC_BERN, SC_TOKYO, SC_DETROIT, SC_BOSTON, SC_RIO]
+    GameLevel: [LEVEL_EASY, LEVEL_MEDIUM, LEVEL_HARD]
+    CityClass: [CC_VILLAGE, CC_TOWN, CC_CITY, CC_CAPITAL, CC_METROPOLIS, CC_MEGALOPOLIS]
+    CityVotingProblems: [CVP_CRIME, CVP_POLLUTION, CVP_HOUSING, CVP_TAXES, CVP_TRAFFIC, CVP_UNEMPLOYMENT, CVP_FIRE]
+  micropolis_methods:
+    lifecycle: [setCallback, init, loadCity, doNewGame, generateSomeRandomCity, generateMap, clearMap, delete]
+    ticking: [simTick, simUpdate, animateTiles, setSpeed, setPasses, pause, resume]
+    memory: [getMapAddress, getMapSize, getMopAddress, getMopSize]
+    settings: [setGameLevel, setCityName, setYear, setEnableDisasters, setAutoBudget, setAutoBulldoze, setAutoGoto, setEnableSound, setDoAnimation, setCityTax]
+    gameplay: [doTool, getTile, setTile, setFunds, updateFunds, updateMaps, updateGraphs, updateEvaluation, updateBudget]
+    disasters: [makeMeltdown, makeFireBombs, makeEarthquake, makeFire, makeFlood, setFire, fireBomb]
+    random: [simRandom, getRandom, getRandom16, getRandom16Signed, getERandom, randomlySeedRandom, seedRandom]
+    events: [sendMessage, makeSound]
+  micropolis_properties:
+    simulation: [simLoops, simSpeed, simPaused, simPausedSpeed, simPasses, simPass, gameLevel, scenario, doAnimation, disasterEvent, disasterWait]
+    city: [totalFunds, cityCenterX, cityCenterY, cityPop, cityTime, cityYear, cityMonth, cityYes, cityScore, cityClass, startingYear, cityFileName, cityName]
+    maps_and_averages: [mapSerial, trafficAverage, pollutionAverage, crimeAverage, landValueAverage, pollutionMaxX, pollutionMaxY, crimeMaxX, crimeMaxY]
+    demand_and_caps: [resValve, comValve, indValve, resCap, comCap, indCap, valveFlag]
+    counts: [roadTotal, railTotal, resPop, comPop, indPop, policeStationPop, fireStationPop, seaportPop, airportPop, hospitalPop, churchPop, stadiumPop, coalPowerPop, nuclearPowerPop, poweredZoneCount, unpoweredZoneCount]
+    budget: [cashFlow, externalMarket, cityTax, cityTaxAverage, roadEffect, policeEffect, fireEffect]
+    options: [autoGoto, autoBudget, autoBulldoze, enableSound, enableDisasters, doMessages, doNotices]
+  callback_methods:
+    lifecycle: [startGame, startScenario, newGame, didGenerateMap, didLoadCity, didLoadScenario, didSaveCity, didWinGame, didLoseGame, didntLoadCity, didntSaveCity, saveCityAs]
+    updates: [updateMap, updateFunds, updateDate, updateDemand, updateEvaluation, updateBudget, updateHistory, updateGraphsWindow, updateOptions, updateGameLevel, updateCityName, updateSpeed, updatePasses, updatePaused, updateTaxRate]
+    ui_events: [autoGoto, didTool, sendMessage, showBudgetAndWait, showZoneStatus, makeSound, startEarthquake, simulateRobots, simulateChurch]
+
+time_travel_roadmap:
+  status: planned
+  do_not_implement_yet: true
+  name: "TiVo for Micropolis"
+  principle: |
+    Treat every human, LLM, tool, or multiplayer edit command as a universe
+    branch point. Persist a tree of commands plus periodic differential
+    snapshots. Rewind to any checkpoint, replay forward astronomically fast,
+    pause at an edit point, and fork a new branch.
+  units:
+    command: "CommandBus command id + args + actor + reason + preview + result"
+    timestamped_command_file: "Sortable command record that Git can merge and Micropolis can replay"
+    leaf: "Coalesced command run stored inside save directory and committed periodically"
+    attribution_sidecar: "Post-commit file with same leaf prefix mapping command indices to effect commit hash"
+    edit_point: "A mutation command that can become a branch point"
+    checkpoint: "Full or differential snapshot of city/simulator state"
+    branch: "Alternate timeline beginning at a checkpoint or edit point"
+    replay: "Deterministic fast-forward from checkpoint through command log"
+    weave: "Combine command histories from multiple branches, then replay semantically"
+    blueprint: "Relative command stream with an anchor, transform, and replay policy"
+    macro_cursor: "Replay origin that can advance by a declared stride after playback"
+    visual_program: "Snap!/Logo/Scratch-like source that generates or transforms command streams"
+    overlay_materialization: "Run enough sim phases to reconstruct selected runtime maps"
+  live_play_model:
+    browser: "Runs the real-time simulator for interactive play and previews"
+    command_recorder: "Writes timestamped command files as players act"
+    player_branch: "Receives commits from one player or group during live play"
+    shared_branch: "May accept near-real-time merges or slower reviewed PRs"
+    github_actions: "Replays, validates, compares, materializes, and publishes branch state"
+    teaching_goal: "Teach Git world model and GitHub collaboration through branches, commits, rebases, merges, PRs, and issues"
+  git_model:
+    branch_pattern: "<type>_<id>"
+    example_branch: "micropolis_971987439573945"
+    world_state: "A Micropolis namespace/object store in a GitHub repository branch, rooted by MICROPOLIS.yml"
+    object_storage_rule: "A branch named <type>_<id> is a typed object storage scope; plural directories are collection namespaces"
+    branch_forms:
+      container_object: "micropolis_<id> branch rooted by MICROPOLIS.yml with plural collection namespaces"
+      naked_object: "city_<id>, macro_<id>, blueprint_<id>, catalog_<id>, or other typed branch rooted by that object's interface file"
+      naked_collection: "cities_<id>, macros_<id>, blueprints_<id>, or other plural collection branch rooted by INDEX.yml, CITIES.yml, MACROS.yml, BLUEPRINTS.yml, or a naked child-object directory"
+    collection_interfaces: [INDEX.yml, CITIES.yml, MACROS.yml, BLUEPRINTS.yml, CATALOG.yml]
+    manifest_role: "MANIFEST.yml imports, mounts, mirrors, vendors, or instantiates naked object or collection branches into container objects or catalogs"
+    import_modes: [reference, mirror, vendor, instantiate]
+    readme_convention: "Every meaningful object directory should usually have README.md as a GitHub-rendered human view generated from structured sources of truth"
+    readme_sources: [interface-yml, MANIFEST.yml, OBJECT.yml, metadata.yml, commands.jsonl, timeline, reports, previews, issue-links]
+    branch_interface: "MICROPOLIS.yml"
+    branch_collections: [cities, macros, blueprints, prototypes, tools, tutors, issues, reports, dialogs, policies]
+    city_namespace: "cities/"
+    city_local_collections: [timeline, layers, annotations, dialogs, proposals, behaviors, snapshots, reports, neighborhoods]
+    branch_scope_examples: [macros, blueprints, shared-tools, prototypes, tutors, policies, issue-objects, branch-reports]
+    global_scope_examples: [main-branch-defaults, course-repo-templates, public-blueprint-libraries, external-skill-repos, other-micropolis-branches]
+    city_interface: "CITY.yml"
+    city_name_mapping: "Classic SimCity save filename without suffix maps to cities/<name>/ within the branch"
+    city_payload: "Classic .cty/.mop payloads live inside their named city directory, not as generic root city.cty files"
+    commit_policy: "Coalesce cheap commands; force commits before consequential decisions"
+    internal_split: "Leaves preserve command boundaries so users can branch inside a coalesced commit by replaying up to the split command"
+    ex_post_facto_attribution: "Effect commit hashes are written in the next commit or final session-closing commit because commands cannot know their own future commit id"
+  coalescing_policy:
+    greedy: [road-drag, rail-drag, wire-drag, chalk-stroke, panning, zooming, repeated-tool-application, minor-ui-layout]
+    force_commit_before: [month-change, tax-change, budget-change, build-stadium, build-airport, build-seaport, build-power-plant, trigger-disaster, approve-proposal, merge-timeline, role-permission-change, llm-proposal-execution]
+    triggers: [max-command-count, max-real-time, idle-timeout, manual-checkpoint, before-consequential-command]
+  future_cli_methods:
+    TIMELINE-RECORD:
+      signature: "TIMELINE-RECORD [city] --command-log <jsonl>"
+      status: planned
+    TIMELINE-REPLAY:
+      signature: "TIMELINE-REPLAY [checkpoint] --edits <jsonl> --until <tick|edit-id>"
+      status: planned
+    TIMELINE-BRANCH:
+      signature: "TIMELINE-BRANCH [edit-id] --name <branch-name>"
+      status: planned
+    TIMELINE-MERGE:
+      signature: "TIMELINE-MERGE [city-dir] --ours <branch> --theirs <branch>"
+      status: planned
+      purpose: "Merge command files with Git, then replay to detect semantic conflicts"
+    TIMELINE-REBASE:
+      signature: "TIMELINE-REBASE [city-dir] --branch <experiment> --onto <base>"
+      status: planned
+      purpose: "Replay an experimental branch's commands on top of a newer world"
+    TIMELINE-WEAVE:
+      signature: "TIMELINE-WEAVE [city-dir] --inputs <branch...> --policy <policy.yml>"
+      status: planned
+      purpose: "Combine multiple command histories into an explicit proposed timeline"
+    TIMELINE-CONFLICTS:
+      signature: "TIMELINE-CONFLICTS [city-dir]"
+      status: planned
+      purpose: "List semantic conflicts produced by replay"
+    TIMELINE-RESOLVE:
+      signature: "TIMELINE-RESOLVE [city-dir] --conflict <id> --command <resolution.yml>"
+      status: planned
+      purpose: "Resolve a semantic timeline conflict by adding an explicit command"
+    TIMELINE-REWRITE:
+      signature: "TIMELINE-REWRITE [city-dir] --from <command-id> --script <rewrite.ts>"
+      status: planned
+      purpose: "Rewrite history visibly, preserving old ids, new ids, actor, reason, and audit trail"
+    TIMELINE-REPAIR-SIDECARS:
+      signature: "TIMELINE-REPAIR-SIDECARS [city-dir]"
+      status: planned
+      purpose: "Rebuild post-commit attribution sidecars by scanning Git history"
+    BLUEPRINT-RECORD:
+      signature: "BLUEPRINT-RECORD [city-dir] --from <command-id> --to <command-id> --origin <x,y> --name <name>"
+      status: planned
+      purpose: "Capture a relative command stream as a reusable blueprint or macro"
+    BLUEPRINT-PLAY:
+      signature: "BLUEPRINT-PLAY [city-dir] --blueprint <id> --at <x,y> --rotate <deg> --mode instant|animated --speed <factor>"
+      status: planned
+      purpose: "Replay a transformed command template as explicit command records"
+    BLUEPRINT-PREVIEW:
+      signature: "BLUEPRINT-PREVIEW [city-dir] --blueprint <id> --at <x,y> --rotate <deg>"
+      status: planned
+      purpose: "Preview transformed command playback before committing it"
+    MACRO-REPEAT:
+      signature: "MACRO-REPEAT [city-dir] --macro <id> --cursor <x,y> --count <n>"
+      status: planned
+      purpose: "Replay a macro repeatedly, advancing the cursor by its declared end offset or stride"
+    VISUAL-PROGRAM-GENERATE:
+      signature: "VISUAL-PROGRAM-GENERATE [city-dir] --source <snap|logo|blocks-file> --params <json> --output <blueprint-id>"
+      status: planned
+      purpose: "Run a visual/constructionist program that emits a parameterized command stream blueprint"
+    VISUAL-PROGRAM-TRANSFORM:
+      signature: "VISUAL-PROGRAM-TRANSFORM [city-dir] --blueprint <id> --program <snap|logo|blocks-file> --output <blueprint-id>"
+      status: planned
+      purpose: "Transform an existing recorded macro or blueprint with a visual program while preserving provenance"
+    SNAPSHOT-DIFF:
+      signature: "SNAPSHOT-DIFF [from] [to]"
+      status: planned
+    OVERLAY-REGENERATE:
+      signature: "OVERLAY-REGENERATE [checkpoint] --edits <jsonl> --map traffic|growth|pollution|crime|landvalue|police|fire"
+      status: planned
+
+map_taxonomy:
+  derived_from: "micropolis/scripts/constants.js"
+  world_dimensions: { width: 120, height: 100, half: "60x50", quarter: "30x25", eighth: "15x13" }
+  tile_ranges:
+    terrain: [DIRT, RIVER_START..RIVER, TREEBASE..WOODS, RUBBLE_START..RUBBLE_END, FLOOD_START..FLOOD_END, RADTILE, FIREBASE..LASTFIRE]
+    transport: [ROADS..LASTROAD, POWER_START..POWER_END, RAIL_START..RAIL_END]
+    zones: [RESZONE_START..RES_POPULATED_END, HOSPITAL_START..HOSPITAL_END, CHURCH_START..CHURCH_END, COMZONE_START..COM_POPULATED_END, INDZONE_START..IND_POPULATED_END, PORT_START..PORT_END, AIRPORT_START..AIRPORT_END, POWERPLANT_START..POWERPLANT_END, FIRESTATION_START..FIRESTATION_END, POLICESTATION_START..POLICESTATION_END, STADIUM_START..STADIUM_END, NUCLEAR_START..NUCLEAR_END]
+  map_overlays_declared: [all, residential, commercial, industrial, powergrid, transportation, populationdensity, rateofgrowth, trafficdensity, pollutiondensity, crimerate, landvalue, firecoverage, policecoverage]
+
+subskills:
+  command_bus:
+    path: ../micropolis-command-bus
+    owns: [live-actions, keyboard-dispatch, pie-menu-commands, chat-slash-commands, llm-proposals, mcp-command-service]
+    invoke_when: "Running simulation/UI/workspace/GitHub state may be mutated."
+  planned:
+    micropolis-save-format:
+      owns: [cty-schema, mop-schema, binary-editing, decompose-compose, mergeable-yaml]
+    micropolis-overlays:
+      owns: [runtime-overlay-maps, filter implementation, legends, dynamic-zone-finder]
+    micropolis-experiments:
+      owns: [headless-simulation, batch-runs, checkpointing, evaluation-rubrics]
+    micropolis-github-multiverse:
+      owns: [branches-as-timelines, commits-as-decisions, issues-as-discussions, prs-as-proposals]
+    micropolis-ui-workspace:
+      owns: [tabs, stacks, cards, spatial-outlines, views, workspace-presets]
+    micropolis-ai-tutors:
+      owns: [MOOLLM characters, tutor roles, debate, schema discovery]
+
+agent_usage:
+  choose_tool:
+    static_file_question: "Use city info/analyze/export/visualize."
+    live_mutation: "Delegate to micropolis-command-bus; preview/propose first."
+    compare_strategies: "Use experiment skill; export JSON inputs."
+    git_history_or_classroom: "Use github skill after city state becomes file-based."
+  preferred_outputs:
+    llm_analysis: "--format json"
+    quick_human_scan: "visualize ascii or emoji with region bounds"
+    compact_context: "Use --row/--col/--width/--height; do not dump full 120x100 map unless requested"
+  caveats:
+    - "Package scripts micropolis:export and micropolis:dump reference old 'file' command; current CLI uses 'city export' and 'city dump'."
+    - "visualize filter is a stub until runtime overlay maps are available."
+    - "CSV export choice exists but is not implemented."
+    - "Use ../resources/cities/*.cty when running from micropolis/ directory."
+
+tools:
+  required: [read_file, run_terminal_cmd]
+  optional: [write_file, MCP]
+
+see_also:
+  - SKILL.md
+  - GLANCE.yml
+  - README.md
+  - "../micropolis-command-bus/CARD.yml"
+  - "../../micropolis/scripts/README.md"
+  - "../../Cursor/city-save-files.md"
+  - "../../designs/command-path-collaboration-modes.md"
+  - "../../designs/naming-conventions.md"
+  - "../../designs/callback-interface-roadmap.md"
+  - "../../designs/command-timeline-git-branches.md"
+  - "../../designs/github-as-mmorpg-multiverse.md"
+  - "../../designs/filesystem-object-model.md"
+  - "../../designs/moollm-micropolis-integration.md"
+  - "../../designs/collaborative-microworld-lineage.md"
+  - "../../designs/multiplayer-browser-lessons.md"
+  - "../../README.md"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/micropolis/CARD.yml"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/sister-script/CARD.yml"
+
+credits:
+  lineage:
+    - "Will Wright — SimCity"
+    - "Don Hopkins — Unix/NeWS/HyperLook/SimCityNet/Micropolis ports"
+    - "Seymour Papert and Alan Kay — constructionist microworlds"
+    - "MOOLLM — skills as composable filesystem protocols"

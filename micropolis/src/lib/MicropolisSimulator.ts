@@ -2,6 +2,7 @@
 
 import type { Micropolis, Callback, JSCallback } from '../types/micropolisengine.d.js';
 import initModule from "$lib/micropolisengine.js";
+import { heapU16FromEmscriptenModule } from '$lib/wasmHeap';
 
 export let micropolisengine: any;
 let sharedSimulator: MicropolisSimulator | null = null;
@@ -139,13 +140,17 @@ export class MicropolisSimulator {
 
         this.render = render || (() => {});
 
-        const mapStartAddress = this.micropolis.getMapAddress() / 2;
-        const mapEndAddress = mapStartAddress + this.micropolis.getMapSize() / 2;
-        this.mapData = this.micropolisengine.HEAPU16.subarray(mapStartAddress, mapEndAddress);
-        
-        const mopStartAddress = this.micropolis.getMopAddress() / 2;
-        const mopEndAddress = mopStartAddress + this.micropolis.getMopSize() / 2;
-        this.mopData = this.micropolisengine.HEAPU16.subarray(mopStartAddress, mopEndAddress);
+        const heapU16 = heapU16FromEmscriptenModule(this.micropolisengine);
+        if (heapU16) {
+            const mapStartAddress = this.micropolis.getMapAddress() / 2;
+            const mapEndAddress = mapStartAddress + this.micropolis.getMapSize() / 2;
+            this.mapData = heapU16.subarray(mapStartAddress, mapEndAddress);
+            const mopStartAddress = this.micropolis.getMopAddress() / 2;
+            const mopEndAddress = mopStartAddress + this.micropolis.getMopSize() / 2;
+            this.mopData = heapU16.subarray(mopStartAddress, mopEndAddress);
+        } else {
+            console.warn('MicropolisSimulator: HEAPU16 view unavailable; mapData/mopData left null');
+        }
 
         this.micropolis.init();
         this.isInitialized = true;

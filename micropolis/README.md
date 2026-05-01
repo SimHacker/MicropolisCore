@@ -1,29 +1,37 @@
-# create-svelte
+# Micropolis SvelteKit App
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This is the SvelteKit frontend for MicropolisCore. It loads the C++ Micropolis engine compiled to WebAssembly with Emscripten/Embind, renders the city with WebGL, and exposes CLI scripts for save-file analysis, command bus experiments, and headless simulator smoke tests.
 
-## Creating a project
+## Prerequisites
 
-If you're seeing this, you've probably already done this step. Congrats!
+From the repository root, first build or refresh the WASM engine:
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+# Activate Emscripten first if needed.
+source ~/Developer/emsdk/emsdk_env.sh
 
-# create a new project in my-app
-npm create svelte@latest my-app
+cd ../MicropolisEngine
+make clean install
 ```
+
+That copies `micropolisengine.js`, `micropolisengine.wasm`, and `micropolisengine.data` into `src/lib/`.
+
+See the root `README.md` for Emscripten SDK setup.
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Install dependencies and start the app:
 
 ```bash
+cd micropolis
+npm install
 npm run dev
 
 # or start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
+
+The Vite config copies the generated `.wasm` and `.data` files into the served/build output so the browser can load them.
 
 ## Building
 
@@ -35,7 +43,44 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## CLI Scripts
+
+Static save-file analysis:
+
+```bash
+npm run micropolis -- city info ../resources/cities/haight.cty
+npm run micropolis -- visualize ascii ../resources/cities/haight.cty
+```
+
+Command bus and command recorder diagnostics:
+
+```bash
+npm run commands -- list
+npm run commands -- record-dispatch recorder.mark --args '{"message":"hello"}' --source script
+```
+
+Headless WASM simulator smoke test:
+
+```bash
+npm run sim:headless -- info
+npm run sim:headless -- smoke --ticks 10
+```
+
+If `sim:headless` says the engine was built for web only, rebuild the engine after activating Emscripten:
+
+```bash
+cd ../MicropolisEngine
+make clean install
+```
+
+## Tests
+
+Vitest loads the real WASM in Node (same artifacts as `sim:headless`) and exercises `micropolisReactive`, the heap helper, and basic engine APIs:
+
+```bash
+npm run test
+npm run test:watch
+```
 
 ## Content Management and Navigation
 

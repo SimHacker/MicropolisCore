@@ -3,6 +3,9 @@
   import { onMount, onDestroy } from 'svelte';
   import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
+  import { commandBus, shortcutFromKeyboardEvent } from '$lib/CommandBus';
+  import { commandRecorder } from '$lib/CommandRecorder';
+  import { registerMicropolisCommands, type MicropolisCommandContext } from '$lib/micropolisCommands';
 
   // Tile Sets
   import tileLayer_all10 from '$lib/images/tilesets/all.png';
@@ -53,6 +56,9 @@
 
   let isMounted = false;
   let resizeObserver: ResizeObserver | null = null;
+
+  registerMicropolisCommands();
+  commandRecorder.attach(commandBus);
 
   export async function initialize(micropolisSimulator_: MicropolisSimulator): Promise<void> {
     console.log("TileView.svelte: initialize:", "micropolisSimulator:", micropolisSimulator_);
@@ -281,117 +287,109 @@
 
     const key = event.key;
 
-    if ((key >= "0") && (key <= "9")) { // digits
-
-      const digit = key.charCodeAt(0) - "0".charCodeAt(0);
-      if (digit == 0) {
-        micropolisSimulator.setPaused(!micropolisSimulator.paused);
-      } else {
-        micropolisSimulator.setGameSpeed(digit - 1);
-        micropolisSimulator.setPaused(false);
-      }
-
-    } else if ((key >= "a") && (key <= "z")) { // letters
-
+    if ((key >= "a") && (key <= "z")) { // letters
+      event.preventDefault();
       const letter = key.charCodeAt(0) - "a".charCodeAt(0);
-      const city = micropolisSimulator.cityFileNames[letter % (micropolisSimulator.cityFileNames.length ?? 1)];
-      //console.log("CITY", city);
-      micropolisSimulator.micropolis.loadCity(city);
-      micropolisSimulator.render();
+      void commandBus.dispatch('city.load-by-letter', commandContext(event, { letter }));
+      return;
+    }
 
-    } else if (key == '=') {
-
-      // Next tile set
-      setTileSet((tileRenderer.tileLayer + 1) % tileLayers.length);
-      micropolisSimulator.render();
-
-    } else if (key === '-') {
-
-      // Previous tile set
-      setTileSet((tileRenderer.tileLayer + tileLayers.length - 1) % tileLayers.length);
-      micropolisSimulator.render();
-
-    } else if (key == '+') {
-
-      // Next tile layer
-      setTileLayer((tileRenderer.tileLayer + 1) % tileLayers.length);
-      micropolisSimulator.render();
-
-    } else if (key === '_') {
-
-      // Previous tile layer
-      setTileLayer((tileRenderer.tileLayer + tileLayers.length - 1) % tileLayers.length);
-      micropolisSimulator.render();
-
-    } else if (key === '\\') {
-
-      micropolisSimulator.micropolis.generateSomeRandomCity();
-      micropolisSimulator.render();
-
-    } else switch (key) {
+    switch (key) {
 
       case " ": // space
-        if (micropolisSimulator.micropolis.heatSteps) {
-          micropolisSimulator.rotateMapTiles(tileRenderer.tileRotate);
-          tileRenderer.tileRotate = 0;
-          micropolisSimulator.micropolis.heatSteps = 0;
-        } else {
-          tileRenderer.tileRotate = Math.floor(Math.random() * tileCount);
-          micropolisSimulator.rotateMapTiles(-tileRenderer.tileRotate);
-          micropolisSimulator.micropolis.heatSteps = 1;
-          if (Math.random() < 0.75) {
-            micropolisSimulator.micropolis.heatRule = 0;
-            micropolisSimulator.micropolis.heatFlow = 
-              Math.round(
-                ((Math.random() * 2.0) - 1.0) * 
-                ((Math.random() < 0.75) ? heatFlowRangeLow : heatFlowRangeHigh));
-          } else {
-            micropolisSimulator.micropolis.heatRule = 1;
-          }
-        }
-        micropolisSimulator.render();
+        event.preventDefault();
+        void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
         break;
 
       case "ArrowLeft":
-        leftKeyDown = true;
-        startAutoRepeat(key);
+        if (!leftKeyDown) {
+          leftKeyDown = true;
+          void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+          startAutoRepeat(key);
+        }
         break;
 
       case "ArrowRight":
-        rightKeyDown = true;
-        startAutoRepeat(key);
+        if (!rightKeyDown) {
+          rightKeyDown = true;
+          void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+          startAutoRepeat(key);
+        }
         break;
 
       case "ArrowUp":
-        upKeyDown = true;
-        startAutoRepeat(key);
+        if (!upKeyDown) {
+          upKeyDown = true;
+          void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+          startAutoRepeat(key);
+        }
         break;
 
       case "ArrowDown":
-        downKeyDown = true;
-        startAutoRepeat(key);
+        if (!downKeyDown) {
+          downKeyDown = true;
+          void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+          startAutoRepeat(key);
+        }
         break;
 
       case ",":
-        inKeyDown = true;
-        startAutoRepeat(key);
+        if (!inKeyDown) {
+          inKeyDown = true;
+          void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+          startAutoRepeat(key);
+        }
         break;
 
       case ".":
-        outKeyDown = true;
-        startAutoRepeat(key);
+        if (!outKeyDown) {
+          outKeyDown = true;
+          void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+          startAutoRepeat(key);
+        }
         break;
 
-      case "[":
-        micropolisSimulator.micropolis.setCityTax(Math.max(0, micropolisSimulator.micropolis.cityTax - 1));
+      case "+":
+        event.preventDefault();
+        void commandBus.dispatch('tile-layer.next', commandContext(event));
         break;
 
-      case "]":
-        micropolisSimulator.micropolis.setCityTax(Math.min(20, micropolisSimulator.micropolis.cityTax + 1));
+      case "_":
+        event.preventDefault();
+        void commandBus.dispatch('tile-layer.previous', commandContext(event));
         break;
 
+      default:
+        void commandBus.dispatchShortcut(shortcutFromKeyboardEvent(event), commandContext(event));
+        break;
     }
   }  
+
+  function commandContext(event: KeyboardEvent, args: Record<string, unknown> = {}): MicropolisCommandContext {
+    return {
+      source: 'keyboard',
+      event,
+      target: event.target,
+      simulator: micropolisSimulator,
+      tileRenderer,
+      tileLayersLength: tileLayers.length,
+      heatFlowRangeLow,
+      heatFlowRangeHigh,
+      args,
+    };
+  }
+
+  function autoRepeatCommandContext(): MicropolisCommandContext {
+    return {
+      source: 'keyboard',
+      simulator: micropolisSimulator,
+      tileRenderer,
+      tileLayersLength: tileLayers.length,
+      heatFlowRangeLow,
+      heatFlowRangeHigh,
+      args: { scale: keyPanScale },
+    };
+  }
 
   export function onkeyup(event: KeyboardEvent): void {
   //console.log('TileView.svelte: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
@@ -458,30 +456,28 @@
     if (!tileRenderer ||  !micropolisSimulator) return;
 
     if (leftKeyDown) {
-      tileRenderer.panBy(-keyPanScale / tileRenderer.zoom, 0);
+      void commandBus.dispatch('view.pan-left', autoRepeatCommandContext());
     }
 
     if (rightKeyDown) {
-      tileRenderer.panBy(keyPanScale / tileRenderer.zoom, 0);
+      void commandBus.dispatch('view.pan-right', autoRepeatCommandContext());
     }
 
     if (upKeyDown) {
-      tileRenderer.panBy(0, -keyPanScale / tileRenderer.zoom);
+      void commandBus.dispatch('view.pan-up', autoRepeatCommandContext());
     }
 
     if (downKeyDown) {
-      tileRenderer.panBy(0, keyPanScale / tileRenderer.zoom);
+      void commandBus.dispatch('view.pan-down', autoRepeatCommandContext());
     }
 
     if (inKeyDown) {
-      tileRenderer.zoomBy(1 + keyZoomScale);
+      void commandBus.dispatch('view.zoom-in', autoRepeatCommandContext());
     }
 
     if (outKeyDown) {
-      tileRenderer.zoomBy(1 - keyZoomScale);
+      void commandBus.dispatch('view.zoom-out', autoRepeatCommandContext());
     }
-
-    micropolisSimulator.render();
 
   }
 

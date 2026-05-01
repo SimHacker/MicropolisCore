@@ -69,16 +69,17 @@
 EMCC = em++
 
 EMCXXFLAGS = \
-    -std=c++11 \
+    -std=c++17 \
 	-fPIC
 
 EMLDFLAGS = \
     -s WASM=1 \
     -s MODULARIZE=1 \
     -s EXPORT_ES6=1 \
-    -s 'ENVIRONMENT=web,worker' \
+    -s 'ENVIRONMENT=web,worker,node' \
+    -s ALLOW_MEMORY_GROWTH=1 \
 	-lembind \
-	--embind-emit-tsd micropolisengine.d.ts \
+	--emit-tsd=micropolisengine.d.ts \
 	--shell-file src/micropolisengine_template.html \
 	--js-library src/micropolisengine_lib.js \
 	--preload-file ../resources/cities@cities/
@@ -167,7 +168,7 @@ install: all
 	cp build/micropolisengine.wasm ../micropolis/src/lib
 	cp build/micropolisengine.data ../micropolis/src/lib
 	cp build/micropolisengine.js ../micropolis/src/lib
-	cp build/micropolisengine.d.ts ../micropolis/src/types
+	if [ -f build/micropolisengine.d.ts ]; then cp build/micropolisengine.d.ts ../micropolis/src/types; else echo "micropolisengine.d.ts was not generated; keeping existing TypeScript bindings"; fi
 
 clean:
 	rm -rf \

@@ -1192,6 +1192,13 @@ class CityFile {
     /**
      * Apply dynamic filter to check if a tile matches specified conditions.
      *
+     * TODO(computed-layers): Make computed runtime layers as easy to read and
+     * dump as saved layers. The CLI should infer which simulator analysis maps
+     * a query needs, call only the required engine scans (or replay from a
+     * checkpoint when history-integrated layers require it), then expose the
+     * resulting data through the same dump/export/visualize/filter pathways as
+     * saved .cty/.mop layers.
+     *
      * NOT YET IMPLEMENTED: The overlay data (population density, traffic,
      * pollution, crime, land value, police/fire coverage) lives in half-
      * resolution maps computed by the simulation at runtime. These are not
@@ -1261,6 +1268,12 @@ class CityFile {
                 break;
         }
         
+        // TODO(computed-layers): Replace this base-map fallback with a lazy
+        // computed-layer provider. Given activeFilters, determine the minimum
+        // required maps (population, growth, traffic, pollution, crime,
+        // landValue, police, fire), populate them via the WASM/headless engine,
+        // and apply the same region clipping/output modes used for saved data.
+        //
         // Filter-based highlighting requires simulation overlay data (population
         // density, traffic, pollution, etc.) which is computed at runtime by the
         // C++ engine and not stored in .cty files. Returning unfiltered base map.
@@ -2139,6 +2152,14 @@ function setupCLI() {
                         console.log(`Region: (${region.startCol},${region.startRow}) to (${region.endCol - 1},${region.endRow - 1}), ${region.width}x${region.height} tiles`);
                     }
                     
+                    // TODO(computed-layers): Add a mode that treats computed
+                    // overlay maps like saved layers, e.g.:
+                    //   visualize layer <file> --layer traffic --compute
+                    //   city export <file> --include-layer traffic --compute
+                    // The implementation should run only the scans required by
+                    // the requested layer, and use time-travel replay when exact
+                    // reconstruction needs prior edit history.
+                    //
                     // Log filter settings
                     console.warn('Note: Filtering requires simulation overlay data (population, traffic,');
                     console.warn('pollution, etc.) which is computed at runtime and not stored in .cty files.');

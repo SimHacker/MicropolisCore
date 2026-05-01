@@ -233,12 +233,78 @@ His key trick: recursive weight-sharing in fractal convolutional blocks, where e
 
 ## Building
 
+### Prerequisites
+
+You need:
+
+- Node.js 20+ and npm.
+- Git.
+- Python 3.
+- GNU Make.
+- Emscripten SDK (`emcc`, `em++`, `emar`) for rebuilding the C++ engine to WebAssembly.
+
+On macOS, install the basic native tools first:
+
+```bash
+xcode-select --install
+```
+
+### Install Emscripten SDK
+
+The engine build uses Emscripten/Embind. If `emcc --version` does not work, install `emsdk`:
+
+```bash
+# Pick a parent directory for developer tools.
+mkdir -p ~/Developer
+cd ~/Developer
+
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+
+# Activate for the current shell.
+source ./emsdk_env.sh
+emcc --version
+```
+
+To make Emscripten available in future shells, add this to your shell startup file:
+
+```bash
+source ~/Developer/emsdk/emsdk_env.sh
+```
+
+If you prefer not to auto-activate it in every shell, run that `source` command only before rebuilding the engine.
+
+On macOS with Homebrew, this also works:
+
+```bash
+brew install emscripten
+emcc --version
+```
+
 ### WASM Engine
 
 ```bash
 cd MicropolisEngine
-make          # Requires Emscripten SDK
+make clean install
 ```
+
+`make install` builds the C++ engine and copies these generated artifacts into `micropolis/src/lib/`:
+
+```text
+micropolisengine.js
+micropolisengine.wasm
+micropolisengine.data
+```
+
+The checked-in makefile builds the engine for browser, worker, and Node environments:
+
+```text
+-s 'ENVIRONMENT=web,worker,node'
+```
+
+Node support is required for `npm run sim:headless`.
 
 ### SvelteKit App
 
@@ -249,11 +315,49 @@ npm run dev   # Development server
 npm run build # Production build
 ```
 
+The Vite config copies `micropolisengine.wasm` and `micropolisengine.data` from `src/lib/` into the app build output so the browser can load them.
+
 ### CLI Tool
 
 ```bash
 cd micropolis
 npm run micropolis -- --help
+```
+
+The `micropolis.js` CLI analyzes and edits `.cty`/`.mop` files without running the WASM simulator.
+
+### Headless Simulator CLI
+
+After rebuilding the engine with Emscripten:
+
+```bash
+cd micropolis
+npm run sim:headless -- info
+npm run sim:headless -- smoke --ticks 10
+```
+
+This loads the Emscripten/Embind WASM module in Node, instantiates `Micropolis`, loads a bundled city from the engine data package, runs ticks, and prints JSON state. It is the foundation for future GitHub Actions replay, command timeline validation, and agent-driven simulations.
+
+### Quick Full Setup
+
+From a fresh clone:
+
+```bash
+# 1. Activate Emscripten.
+source ~/Developer/emsdk/emsdk_env.sh
+
+# 2. Build the C++/WASM engine.
+cd MicropolisEngine
+make clean install
+
+# 3. Install app dependencies.
+cd ../micropolis
+npm install
+
+# 4. Verify static CLI, headless simulator, and web app.
+npm run micropolis -- city info ../resources/cities/haight.cty
+npm run sim:headless -- smoke --ticks 1
+npm run dev
 ```
 
 ## Links

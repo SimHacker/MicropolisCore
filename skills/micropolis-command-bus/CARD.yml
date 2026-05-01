@@ -1,0 +1,187 @@
+# CARD.yml — Micropolis Command Bus
+# Machine-readable MOOLLM interface.
+# Full protocol: SKILL.md | Human overview: README.md
+
+card:
+  id: micropolis-command-bus
+  name: "Micropolis Command Bus"
+  type: [skill, protocol, ui, mcp, safety, orchestration]
+  emoji: 🚌
+  tier: 2
+  status: implementing
+  rarity: rare
+  tagline: "All roads to the simulator go through the bus."
+
+  description: |
+    Shared command vocabulary for Micropolis. Pie menus, keyboard shortcuts,
+    buttons, chat slash commands, MCP calls, CLI sister scripts, and LLMs all
+    dispatch named command objects with context. LLMs use preview/propose/approve
+    flow for reversible, destructive, or external actions.
+
+files:
+  docs:
+    - GLANCE.yml
+    - CARD.yml
+    - SKILL.md
+    - README.md
+  code:
+    - ../../micropolis/src/lib/CommandBus.ts
+    - ../../micropolis/src/lib/micropolisCommands.ts
+    - ../../micropolis/src/lib/CommandMcpService.ts
+    - ../../micropolis/scripts/commands.ts
+
+k-lines:
+  activates:
+    - MICROPOLIS-COMMAND-BUS
+    - COMMAND-BUS
+    - COMMAND-PROPOSAL
+    - LLM-ACTION-GATE
+    - MCP-COMMAND-SERVICE
+    - BLENDER-OPERATOR
+    - PIE-MENU-COMMAND
+    - SISTER-SCRIPT
+  related:
+    - { ref: micropolis, relation: "domain model and educational platform" }
+    - { ref: sister-script, relation: "CLI wrapper pattern" }
+    - { ref: action-queue, relation: "pending proposals behave like queued actions" }
+    - { ref: advertisement, relation: "commands advertise actions to UI surfaces" }
+    - { ref: card, relation: "CARD.yml declares this interface" }
+    - { ref: github, relation: "external GitHub-as-MMORPG commands" }
+    - { ref: skill-snitch, relation: "audit command declarations vs behavior" }
+    - { ref: mooco, relation: "future orchestrator exports service as MCP" }
+    - { ref: speed-of-light, relation: "AI committees debate proposals in one call" }
+
+invoke_when:
+  - "Adding or wiring a Micropolis action"
+  - "Adding pie menu, keyboard, button, chat, MCP, or LLM command support"
+  - "Auditing direct simulator mutations"
+  - "Designing command proposal and approval flow"
+  - "Exporting Micropolis control surface to MCP or MOOCO"
+
+advertisements:
+  ROUTE-ACTION:
+    score: 95
+    condition: "A UI, LLM, chat, or MCP surface wants to perform a Micropolis action"
+    effect: "Dispatch or propose through CommandBus"
+
+  LLM-PROPOSE:
+    score: 100
+    condition: "An LLM wants to mutate simulator, workspace, GitHub, or persistent state"
+    effect: "Preview and create proposal instead of silent mutation"
+    methods: [PREVIEW, PROPOSE]
+
+  EXPORT-MCP:
+    score: 90
+    condition: "Need MCP tools for listing, previewing, proposing, approving, rejecting, or dispatching commands"
+    effect: "Use CommandMcpService descriptors and dispatcher"
+    methods: [TOOLS, LIST, PREVIEW, PROPOSE, APPROVE, REJECT, DISPATCH]
+
+  BUILD-PIE-MENU:
+    score: 85
+    condition: "Need command-backed pie menu slices"
+    effect: "Use command metadata and advertisements to build menu items"
+    delegate:
+      skill: advertisement
+      reason: "Commands advertise available actions"
+
+  SNIFF-DIRECT-MUTATIONS:
+    score: 80
+    condition: "Need to find simulator/view/window changes bypassing the bus"
+    delegate:
+      skill: skill-snitch
+      reason: "Audit declared command policies against actual code behavior"
+
+methods:
+  LIST:
+    signature: "LIST (context)"
+    description: "List command IDs, labels, contexts, shortcuts, and policies"
+    output: command[]
+    tool: "npm run commands -- list"
+
+  PREVIEW:
+    signature: "PREVIEW [command-id] (args) (actor) (reason)"
+    description: "Preview without executing"
+    output: CommandPreview
+    tool: "npm run commands -- preview <command-id> --args JSON --actor llm --reason WHY"
+
+  PROPOSE:
+    signature: "PROPOSE [command-id] (args) (actor) (reason)"
+    description: "Queue LLM-originated proposal for approval"
+    output: CommandProposal
+    tool: "npm run commands -- propose <command-id> --args JSON --actor llm --reason WHY"
+
+  DISPATCH:
+    signature: "DISPATCH [command-id] (args) (source)"
+    description: "Run command directly; risky LLM dispatch becomes proposal"
+    output: CommandResult
+    tool: "npm run commands -- dispatch <command-id> --args JSON --source SOURCE"
+
+  APPROVE:
+    signature: "APPROVE [proposal-id]"
+    description: "Approve and execute pending proposal"
+    output: CommandResult
+    tool: "npm run commands -- approve <proposal-id> --actor user"
+
+  REJECT:
+    signature: "REJECT [proposal-id] (reason)"
+    description: "Reject pending proposal"
+    output: CommandProposal
+    tool: "npm run commands -- reject <proposal-id> --reason WHY"
+
+state:
+  command:
+    fields: [id, label, icon, context, enabled, run, preview, undo, policy]
+  proposal:
+    fields: [id, commandId, actor, reason, context, preview, status, result]
+  risk:
+    values: [safe, reversible, destructive, external]
+
+tools:
+  required:
+    - read_file
+    - write_file
+  optional:
+    - run_terminal_cmd
+    - MCP
+
+policies:
+  safe: "LLM may dispatch directly"
+  reversible: "LLM should propose first unless user explicitly approves direct run"
+  destructive: "LLM must preview/propose; approval required"
+  external: "LLM must preview/propose; explicit approval required"
+
+interfaces:
+  in_app:
+    bus: "micropolis/src/lib/CommandBus.ts"
+    registry: "micropolis/src/lib/micropolisCommands.ts"
+  mcp:
+    service: "micropolis/src/lib/CommandMcpService.ts"
+    tools: [command_list, command_preview, command_propose, command_dispatch, command_proposal_list, command_proposal_approve, command_proposal_reject]
+  cli:
+    script: "micropolis/scripts/commands.ts"
+    run: "cd micropolis && npm run commands -- <subcommand>"
+
+future_composition:
+  pie_menus: "Slice definitions should reference command IDs"
+  tabbed_windows: "Tabs invoke window/workspace commands through bus"
+  chat: "Slash commands parse to command IDs and args"
+  github_multiverse: "Issues, PRs, commits, branches become external-risk commands"
+  moollm_tutors: "AI characters propose actions with reasons and previews"
+
+see_also:
+  - SKILL.md
+  - GLANCE.yml
+  - README.md
+  - "../micropolis/CARD.yml"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/sister-script/CARD.yml"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/action-queue/CARD.yml"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/advertisement/CARD.yml"
+  - "/Users/a2deh/GroundUp/Leela/git/moollm/kernel/tool-calling-protocol.md"
+
+credits:
+  inspiration:
+    - "Blender operators — data-driven UI operations"
+    - "The Sims advertisements — objects advertise actions"
+    - "Don Hopkins pie menus — spatial command invocation"
+    - "MOOLLM sister-script — script as sniffable interface"
+    - "MOOLLM skill-snitch — declaration/runtime consistency"

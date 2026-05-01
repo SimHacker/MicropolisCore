@@ -2,9 +2,7 @@
 
   import { onMount, onDestroy } from 'svelte';
   import { getSharedSimulator, releaseSharedSimulator, MicropolisSimulator } from '$lib/MicropolisSimulator';
-  import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
-  import initModule from "$lib/micropolisengine.js";
-  import { MicropolisCallbackLog } from "$lib/MicropolisCallbackLog";
+  import { micropolisReactive } from '$lib/MicropolisReactive.svelte';
   import TileView from '$lib/TileView.svelte';
   //import PieMenu from '$lib/PieMenu.svelte';
   import About from '$lib/About.svelte'
@@ -24,7 +22,8 @@
 
     // Use shared singleton to avoid resetting wasm callback
     viewRenderRef = () => { tileView?.render?.(); };
-    micropolisSimulator = await getSharedSimulator(new MicropolisCallbackLog(), viewRenderRef);
+    micropolisSimulator = await getSharedSimulator(micropolisReactive.engineCallback, viewRenderRef);
+    micropolisReactive.attach(micropolisSimulator);
 
       console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
 
@@ -41,7 +40,8 @@
   });
 
   onDestroy(() => {
-    console.log('MicropolisView: onDestroy'); 
+    console.log('MicropolisView: onDestroy');
+    micropolisReactive.detach();
     releaseSharedSimulator(viewRenderRef || undefined);
   });
 
