@@ -4,7 +4,7 @@
 
 Micropolis callbacks should be useful beyond the SvelteKit GUI: reactive world state, headless replay, command recording, LLM observation, automation, and debugging. The surface should evolve toward a stable **event** story (normalized payloads, shared envelope), not only ad hoc UI notifications.
 
-## UI bridge (preferred for Svelte and tooling)analyˀ´
+## UI bridge (preferred for Svelte and tooling)
 
 **`micropolis/src/lib/MicropolisReactive.svelte.ts`** exports **`micropolisReactive`**: Svelte 5 runes fed by a full **`JSCallback`** implementation, plus **`getSnapshot()`** for JSON/MCP/interop. **Attach** the shared `MicropolisSimulator` after `getSharedSimulator(..., micropolisReactive.engineCallback, ...)`; **detach** on unmount.
 
