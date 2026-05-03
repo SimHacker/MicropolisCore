@@ -216,10 +216,13 @@ function listCommands() {
   return commandBus.list().map((command) => ({
     id: command.id,
     label: command.label,
+    labelKey: command.labelKey,
     icon: command.icon,
     description: command.description,
+    descriptionKey: command.descriptionKey,
     context: command.context,
     group: command.group,
+    groupKey: command.groupKey,
     shortcut: command.shortcut,
     policy: command.policy,
   }));

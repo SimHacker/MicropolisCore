@@ -43,30 +43,24 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-## CLI Scripts
+## CLI
 
-Static save-file analysis:
+One CLI exposes city-file tools, terminal visualizations, the WASM simulator, and the command bus:
 
 ```bash
+npm run micropolis -- about --format yaml
+npm run micropolis -- api --format yaml
 npm run micropolis -- city info ../resources/cities/haight.cty
+npm run micropolis -- city info ../resources/cities/haight.cty --format yaml
+npm run micropolis -- city export ../resources/cities/haight.cty --include-map --format csv
 npm run micropolis -- visualize ascii ../resources/cities/haight.cty
+npm run micropolis -- sim info --format yaml
+npm run micropolis -- sim smoke --ticks 10 --format yaml
+npm run micropolis -- bus list --format yaml
+npm run micropolis -- bus record-dispatch recorder.mark --args '{"message":"hello"}' --source script --format yaml
 ```
 
-Command bus and command recorder diagnostics:
-
-```bash
-npm run commands -- list
-npm run commands -- record-dispatch recorder.mark --args '{"message":"hello"}' --source script
-```
-
-Headless WASM simulator smoke test:
-
-```bash
-npm run sim:headless -- info
-npm run sim:headless -- smoke --ticks 10
-```
-
-If `sim:headless` says the engine was built for web only, rebuild the engine after activating Emscripten:
+If `sim` cannot load the engine, rebuild after activating Emscripten:
 
 ```bash
 cd ../MicropolisEngine
@@ -75,7 +69,7 @@ make clean install
 
 ## Tests
 
-Vitest loads the real WASM in Node (same artifacts as `sim:headless`) and exercises `micropolisReactive`, the heap helper, and basic engine APIs:
+Vitest loads the real WASM in Node (same artifacts used by `micropolis sim`) and exercises `micropolisReactive`, the heap helper, and basic engine APIs:
 
 ```bash
 npm run test

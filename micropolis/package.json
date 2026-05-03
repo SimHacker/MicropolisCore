@@ -9,14 +9,7 @@
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"micropolis": "node scripts/micropolis.js",
-		"micropolis:info": "node scripts/micropolis.js city info",
-		"micropolis:analyze": "node scripts/micropolis.js city analyze",
-		"micropolis:visualize": "node scripts/micropolis.js visualize ascii",
-		"micropolis:export": "node scripts/micropolis.js file export",
-		"micropolis:dump": "node scripts/micropolis.js file dump",
-		"commands": "tsx scripts/commands.ts",
-		"sim:headless": "tsx scripts/headless-sim.ts",
+		"micropolis": "tsx cli/entry.ts",
 		"test": "vitest run",
 		"test:watch": "vitest"
 	},
@@ -25,13 +18,13 @@
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@sveltejs/kit": "^2.59.0",
+		"@sveltejs/vite-plugin-svelte": "^4.0.4",
 		"@types/webgl2": "^0.0.11",
 		"@webgpu/types": "^0.1.42",
 		"chalk": "^4.1.2",
-		"svelte": "5.0.0-next.152",
-		"svelte-check": "^3.6.0",
+		"svelte": "^5.55.5",
+		"svelte-check": "^4.4.7",
 		"tslib": "^2.4.1",
 		"tsx": "^4.21.0",
 		"typescript": "^5.0.0",
@@ -53,6 +46,7 @@
 		"vite-plugin-node-polyfills": "^0.22.0",
 		"vite-plugin-static-copy": "^1.0.5",
 		"vite-plugin-top-level-await": "^1.4.1",
-		"vite-plugin-wasm": "^3.3.0"
+		"vite-plugin-wasm": "^3.3.0",
+		"yaml": "^2.8.4"
 	}
 }

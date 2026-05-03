@@ -14,7 +14,7 @@ card:
 
   description: |
     Shared command vocabulary for Micropolis. Pie menus, keyboard shortcuts,
-    buttons, chat slash commands, MCP calls, CLI sister scripts, and LLMs all
+    buttons, chat slash commands, MCP calls, CLI commands, and LLMs all
     dispatch named command objects with context. LLMs use preview/propose/approve
     flow for reversible, destructive, or external actions.
 
@@ -28,7 +28,7 @@ files:
     - ../../micropolis/src/lib/CommandBus.ts
     - ../../micropolis/src/lib/micropolisCommands.ts
     - ../../micropolis/src/lib/CommandMcpService.ts
-    - ../../micropolis/scripts/commands.ts
+    - ../../micropolis/cli/bus/index.ts
 
 k-lines:
   activates:
@@ -39,10 +39,8 @@ k-lines:
     - MCP-COMMAND-SERVICE
     - BLENDER-OPERATOR
     - PIE-MENU-COMMAND
-    - SISTER-SCRIPT
   related:
     - { ref: micropolis, relation: "domain model and educational platform" }
-    - { ref: sister-script, relation: "CLI wrapper pattern" }
     - { ref: action-queue, relation: "pending proposals behave like queued actions" }
     - { ref: advertisement, relation: "commands advertise actions to UI surfaces" }
     - { ref: card, relation: "CARD.yml declares this interface" }
@@ -96,37 +94,37 @@ methods:
     signature: "LIST (context)"
     description: "List command IDs, labels, contexts, shortcuts, and policies"
     output: command[]
-    tool: "npm run commands -- list"
+    tool: "npm run micropolis -- bus list --format yaml"
 
   PREVIEW:
     signature: "PREVIEW [command-id] (args) (actor) (reason)"
     description: "Preview without executing"
     output: CommandPreview
-    tool: "npm run commands -- preview <command-id> --args JSON --actor llm --reason WHY"
+    tool: "npm run micropolis -- bus preview <command-id> --args JSON --actor llm --reason WHY --format yaml"
 
   PROPOSE:
     signature: "PROPOSE [command-id] (args) (actor) (reason)"
     description: "Queue LLM-originated proposal for approval"
     output: CommandProposal
-    tool: "npm run commands -- propose <command-id> --args JSON --actor llm --reason WHY"
+    tool: "npm run micropolis -- bus propose <command-id> --args JSON --actor llm --reason WHY --format yaml"
 
   DISPATCH:
     signature: "DISPATCH [command-id] (args) (source)"
     description: "Run command directly; risky LLM dispatch becomes proposal"
     output: CommandResult
-    tool: "npm run commands -- dispatch <command-id> --args JSON --source SOURCE"
+    tool: "npm run micropolis -- bus dispatch <command-id> --args JSON --source SOURCE --format yaml"
 
   APPROVE:
     signature: "APPROVE [proposal-id]"
     description: "Approve and execute pending proposal"
     output: CommandResult
-    tool: "npm run commands -- approve <proposal-id> --actor user"
+    tool: "npm run micropolis -- bus approve <proposal-id> --actor user --format yaml"
 
   REJECT:
     signature: "REJECT [proposal-id] (reason)"
     description: "Reject pending proposal"
     output: CommandProposal
-    tool: "npm run commands -- reject <proposal-id> --reason WHY"
+    tool: "npm run micropolis -- bus reject <proposal-id> --reason WHY --format yaml"
 
 state:
   command:
@@ -158,8 +156,8 @@ interfaces:
     service: "micropolis/src/lib/CommandMcpService.ts"
     tools: [command_list, command_preview, command_propose, command_dispatch, command_proposal_list, command_proposal_approve, command_proposal_reject]
   cli:
-    script: "micropolis/scripts/commands.ts"
-    run: "cd micropolis && npm run commands -- <subcommand>"
+    script: "micropolis/cli/bus/index.ts"
+    run: "cd micropolis && npm run micropolis -- bus <subcommand>"
 
 future_composition:
   pie_menus: "Slice definitions should reference command IDs"
@@ -173,7 +171,6 @@ see_also:
   - GLANCE.yml
   - README.md
   - "../micropolis/CARD.yml"
-  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/sister-script/CARD.yml"
   - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/action-queue/CARD.yml"
   - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/advertisement/CARD.yml"
   - "/Users/a2deh/GroundUp/Leela/git/moollm/kernel/tool-calling-protocol.md"
@@ -183,5 +180,5 @@ credits:
     - "Blender operators — data-driven UI operations"
     - "The Sims advertisements — objects advertise actions"
     - "Don Hopkins pie menus — spatial command invocation"
-    - "MOOLLM sister-script — script as sniffable interface"
+    - "MOOLLM skill system — compact file heads plus CLI introspection"
     - "MOOLLM skill-snitch — declaration/runtime consistency"

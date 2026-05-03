@@ -5,15 +5,14 @@
 status: implementing
 
 what: |
-  Engine-level Micropolis skill for humans, LLMs, MCP tools, scripts,
-  and UI layers that need to inspect, analyze, visualize, simulate,
-  edit, decompose, compose, or command Micropolis cities.
+  Parent MicropolisCore skill for humans, LLMs, CLI users, browser UI,
+  content tools, and adapters that need to inspect, analyze, visualize,
+  simulate, edit, render, package, or command Micropolis worlds.
 
 why: |
-  Micropolis should expose a stable, scriptable, documented surface
-  around the engine itself. Specific sub-skills handle specialized
-  capabilities like command dispatch, Git multiverse, overlays, agents,
-  UI workspaces, and AI tutors.
+  The unified `micropolis` CLI and its TypeScript modules are the public
+  gate into the microworld. Browser renderers, command bus, Git timelines,
+  content catalogs, and MOOLLM tutors compose around that gate.
 
 k_lines:
   activates:
@@ -23,27 +22,43 @@ k_lines:
     - CITY-FILE
     - CTY-FORMAT
     - MICROPOLIS-CLI
+    - MICROPOLIS-RENDERER
+    - CONTENT-CATALOG
+    - CLIENT-RENDERED-PREVIEW
     - MICROWORLD
     - CONSTRUCTIONISM
 
 interfaces:
-  cli: "micropolis/scripts/micropolis.js"
-  constants: "micropolis/scripts/constants.js"
+  cli: "micropolis/cli/entry.ts"
+  modules: "micropolis/cli"
+  constants: "micropolis/cli/constants/constants.js"
   engine: "MicropolisEngine/src"
   wasm_wrapper: "micropolis/src/lib/MicropolisSimulator.ts"
-  command_bus: "skills/micropolis-command-bus"
+  reactive_bridge: "micropolis/src/lib/MicropolisReactive.svelte.ts"
+  wasm_loaders: "micropolis/src/lib/wasm"
+  renderers: "micropolis/src/lib/*TileRenderer.ts"
+  renderer_roadmap: "designs/renderer-plugin-roadmap.md"
+  moollm_integration: "designs/moollm-micropolis-integration.md"
+  sim_ensemble_bridge: "/Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator"
+  vitamoo_typescript: "/Users/a2deh/GroundUp/Leela/git/SimObliterator_Suite/vitamoo/docs/OBLITERATOR-TYPESCRIPT.md"
+  command_bus: "micropolis/cli/bus/index.ts"
 
 delegate_to:
-  command_bus: "Live UI, pie menu, chat, LLM proposal, MCP command dispatch"
-  sister_script: "CLI structure and doc-first automation"
+  command_bus: "Live UI, pie menu, chat, LLM proposal, command dispatch"
   github: "GitHub-as-MMORPG external operations"
   experiment: "Batch simulation and evaluation loops"
   constructionism: "Educational framing"
+  mooco: "Future orchestration, catalog services, and adapter hosting"
+  sim_obliterator: "Sims save/object/character bridge, uplift/download, IFF layers"
+  character: "MOOLLM CHARACTER.yml and Sims personality bridge"
+  mind_mirror: "Personality modeling beyond The Sims trait surface"
 
 invoke_when:
   - "Working with Micropolis engine or city files"
   - "Using the Micropolis CLI"
   - "Designing save-file, batch simulation, or city-analysis tools"
+  - "Designing renderer plugins, catalog previews, or content-management workflows"
+  - "Connecting Micropolis with The Sims, VitaMoo, SimObliterator, or MOOLLM characters"
   - "Creating AI-accessible city commands"
   - "Factoring Micropolis capabilities into sub-skills"
 
@@ -52,5 +67,5 @@ see_also:
   - SKILL.md
   - README.md
   - "../micropolis-command-bus"
-  - "../../micropolis/scripts/README.md"
+  - "../../micropolis/README.md"
   - "../../README.md"

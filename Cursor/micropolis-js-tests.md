@@ -1,4 +1,4 @@
-# micropolis.js CLI Test Suite
+# Micropolis CLI Test Suite
 
 All commands run from the `micropolis/` directory:
 
@@ -12,13 +12,17 @@ CITIES="../resources/cities"
 ```bash
 # Top-level
 npm run micropolis -- --help
+npm run micropolis -- about --format yaml
+npm run micropolis -- api --format yaml
 
 # Subcommands
 npm run micropolis -- city --help
 npm run micropolis -- visualize --help
+npm run micropolis -- sim --help
+npm run micropolis -- bus --help
 ```
 
-Commands: `city` (dump, export, info, analyze, edit, patch-scenario) and `visualize` (ascii, emoji, mono, map, filter).
+Commands: `about`, `api`, `city` (dump, export, info, analyze, edit, patch-scenario), `visualize` (ascii, emoji, mono, map), `sim`, and `bus`.
 
 ## 2. city info
 
@@ -26,8 +30,8 @@ Commands: `city` (dump, export, info, analyze, edit, patch-scenario) and `visual
 # Text output
 npm run micropolis -- city info "$CITIES/scenario_tokyo.cty"
 
-# JSON output
-npm run micropolis -- city info --format json "$CITIES/radial.cty"
+# YAML output
+npm run micropolis -- city info --format yaml "$CITIES/radial.cty"
 
 # Region selection (20x20 tile region starting at col=40, row=30)
 npm run micropolis -- city info --row 30 --col 40 --width 20 --height 20 "$CITIES/scenario_boston.cty"
@@ -42,8 +46,8 @@ Validates: tax (0-20, clamps to 7), speed (0-3, clamps to 3), funding (0.0-1.0, 
 # Text output with LLM-friendly summary
 npm run micropolis -- city analyze "$CITIES/scenario_tokyo.cty"
 
-# JSON output
-npm run micropolis -- city analyze --format json "$CITIES/scenario_boston.cty"
+# YAML output
+npm run micropolis -- city analyze --format yaml "$CITIES/scenario_boston.cty"
 
 # Region analysis
 npm run micropolis -- city analyze --row 0 --col 0 --width 60 --height 50 "$CITIES/scenario_boston.cty"
@@ -74,6 +78,9 @@ npm run micropolis -- city export --format json --include-map "$CITIES/radial.ct
 
 # JSON with map for a small region
 npm run micropolis -- city export --format json --include-map --row 45 --col 55 --width 5 --height 5 "$CITIES/scenario_tokyo.cty"
+
+# CSV tile grid for a small region
+npm run micropolis -- city export --format csv --include-map --row 0 --col 0 --width 5 --height 5 "$CITIES/radial.cty"
 
 # Write to file
 npm run micropolis -- city export --format json -o /tmp/radial.json "$CITIES/radial.cty"
@@ -149,7 +156,16 @@ cat "$CITIES/scenario_detroit.cty" | npm run micropolis -- city info -
 cat "$CITIES/radial.cty" | npm run micropolis -- visualize emoji -
 ```
 
-## 12. Error handling
+## 12. sim and bus
+
+```bash
+npm run micropolis -- sim info --format yaml
+npm run micropolis -- sim smoke --ticks 10 --format yaml
+npm run micropolis -- bus list --format yaml
+npm run micropolis -- bus record-dispatch recorder.mark --args '{"message":"hello"}' --source script --format yaml
+```
+
+## 13. Error handling
 
 ```bash
 # Invalid file size

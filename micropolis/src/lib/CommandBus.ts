@@ -1,3 +1,5 @@
+import { commandTextKey } from './i18n/keys';
+
 export type CommandSource =
   | 'button'
   | 'chat'
@@ -22,13 +24,16 @@ export interface CommandContext {
 
 export interface CommandPreview {
   label?: string;
+  labelKey?: string;
   message?: string;
+  messageKey?: string;
   affectedObjects?: unknown[];
   data?: unknown;
 }
 
 export interface CommandUndo {
   label?: string;
+  labelKey?: string;
   run: (context: CommandContext) => void | Promise<void>;
 }
 
@@ -53,6 +58,7 @@ export interface CommandProposal {
   id: string;
   commandId: string;
   label: string;
+  labelKey?: string;
   icon?: string;
   actor?: string;
   reason?: string;
@@ -76,10 +82,13 @@ export type CommandPreviewer<Context extends CommandContext = CommandContext> =
 export interface Command<Context extends CommandContext = CommandContext> {
   id: string;
   label: string;
+  labelKey?: string;
   icon?: string;
   description?: string;
+  descriptionKey?: string;
   context?: string | string[];
   group?: string;
+  groupKey?: string;
   shortcut?: string | string[];
   policy?: CommandPolicy;
   enabled?: boolean | CommandPredicate<Context>;
@@ -108,8 +117,9 @@ export class CommandBus {
       throw new Error(`Command already registered: ${command.id}`);
     }
 
-    this.commands.set(command.id, command as Command);
-    this.registerShortcuts(command as Command);
+    const registeredCommand = withDefaultI18nKeys(command as Command);
+    this.commands.set(command.id, registeredCommand);
+    this.registerShortcuts(registeredCommand);
 
     return () => this.unregister(command.id);
   }
@@ -239,6 +249,7 @@ export class CommandBus {
       id: createProposalId(id),
       commandId: id,
       label: command.label,
+      labelKey: command.labelKey,
       icon: command.icon,
       actor: commandContext.actor,
       reason: commandContext.reason,
@@ -370,6 +381,15 @@ export function normalizeShortcut(shortcut: string): string {
     })
     .sort((a, b) => modifierOrder(a) - modifierOrder(b) || a.localeCompare(b))
     .join('+');
+}
+
+function withDefaultI18nKeys(command: Command): Command {
+  return {
+    ...command,
+    labelKey: command.labelKey ?? commandTextKey(command.id, 'label'),
+    descriptionKey: command.descriptionKey ?? (command.description ? commandTextKey(command.id, 'description') : undefined),
+    groupKey: command.groupKey ?? (command.group ? commandTextKey(command.id, 'group') : undefined),
+  };
 }
 
 export function shortcutFromKeyboardEvent(event: KeyboardEvent): string {

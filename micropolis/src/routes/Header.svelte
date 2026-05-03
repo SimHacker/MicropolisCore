@@ -7,9 +7,7 @@
 
     // Filter the site structure to get only top-level items for the main header
     // Exclude items explicitly marked as hidden from navigation
-    /** @type {Array<any>} */
-    let headerNavItems = []; 
-    $: headerNavItems = siteStructure.filter(
+    const headerNavItems = siteStructure.filter(
         /** @param {any} node */
         node => !node.hideFromNav
     );

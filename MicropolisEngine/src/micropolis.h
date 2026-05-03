@@ -102,8 +102,24 @@
 #include <vector>
 #include <map>
 
+#if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
 #include <emscripten/bind.h>
+#else
+// Native editors and static analyzers may parse the engine without an
+// Emscripten SDK installed. The C++ runtime still targets Emscripten/WASM for
+// JS bindings; this declaration only lets non-Emscripten tooling understand
+// signatures that carry callback context values.
+namespace emscripten {
+class val {
+public:
+    val() {}
+    template <typename T>
+    val(T) {}
+    static val null() { return val(); }
+};
+}
+#endif
 
 #include "data_types.h"
 #include "map_type.h"

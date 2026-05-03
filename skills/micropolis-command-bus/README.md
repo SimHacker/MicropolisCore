@@ -32,7 +32,7 @@ This is a MOOLLM extended skill:
 It composes with:
 
 - `micropolis` for domain semantics
-- `sister-script` for CLI shape
+- the unified `micropolis` CLI for terminal access
 - `tool-calling-protocol` for why/reason discipline
 - `action-queue` for proposal queues
 - `advertisement` for command-discovery and pie menus
@@ -47,15 +47,15 @@ Code:
 - `micropolis/src/lib/CommandBus.ts`
 - `micropolis/src/lib/micropolisCommands.ts`
 - `micropolis/src/lib/CommandMcpService.ts`
-- `micropolis/scripts/commands.ts`
+- `micropolis/cli/bus/index.ts`
 
 CLI:
 
 ```bash
 cd micropolis
-npm run commands -- list
-npm run commands -- preview city.generate-random --actor llm --reason "show a new terrain option"
-npm run commands -- propose city.generate-random --actor llm --reason "student asked for a fresh city"
+npm run micropolis -- bus list --format yaml
+npm run micropolis -- bus preview city.generate-random --actor llm --reason "show a new terrain option" --format yaml
+npm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml
 ```
 
 ## Next

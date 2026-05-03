@@ -1,8 +1,8 @@
 /// <reference path="../types/micropolisengine.d.ts" />
 
 import type { Micropolis, Callback, JSCallback } from '../types/micropolisengine.d.js';
-import initModule from "$lib/micropolisengine.js";
-import { heapU16FromEmscriptenModule } from '$lib/wasmHeap';
+import { loadMicropolisBrowserModule } from '$lib/wasm/browser';
+import { createMapMopViews } from '$lib/wasm/views';
 
 export let micropolisengine: any;
 let sharedSimulator: MicropolisSimulator | null = null;
@@ -33,19 +33,7 @@ export async function loadMicropolisEngine(): Promise<any> {
         return micropolisengine;
     }
 
-    micropolisengine = {
-        print: (message: string) => console.log("micropolisengine:", message),
-        printErr: (message: string) => console.error("micropolisengine: ERROR: ", message),
-        setStatus: (status: string) => console.log("micropolisengine: initModule: status:", status),
-        locateFile: (path: string, prefix: string) => {
-            const absolutePath = path.startsWith('/') ? path : `/${path}`;
-            console.log(`micropolisengine: initModule: locateFile: path: ${path}, prefix: ${prefix}, resolved to absolutePath: ${absolutePath}`);
-            return absolutePath;
-        },
-        onRuntimeInitialized: () => console.log("micropolisengine: onRuntimeInitialized:"),
-      };
-
-      await initModule(micropolisengine);
+      micropolisengine = await loadMicropolisBrowserModule();
       store.engine = micropolisengine;
 
       return micropolisengine;
@@ -140,14 +128,10 @@ export class MicropolisSimulator {
 
         this.render = render || (() => {});
 
-        const heapU16 = heapU16FromEmscriptenModule(this.micropolisengine);
-        if (heapU16) {
-            const mapStartAddress = this.micropolis.getMapAddress() / 2;
-            const mapEndAddress = mapStartAddress + this.micropolis.getMapSize() / 2;
-            this.mapData = heapU16.subarray(mapStartAddress, mapEndAddress);
-            const mopStartAddress = this.micropolis.getMopAddress() / 2;
-            const mopEndAddress = mopStartAddress + this.micropolis.getMopSize() / 2;
-            this.mopData = heapU16.subarray(mopStartAddress, mopEndAddress);
+        const views = createMapMopViews(this.micropolisengine, this.micropolis);
+        if (views) {
+            this.mapData = views.mapData;
+            this.mopData = views.mopData;
         } else {
             console.warn('MicropolisSimulator: HEAPU16 view unavailable; mapData/mopData left null');
         }

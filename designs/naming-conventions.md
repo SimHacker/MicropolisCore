@@ -113,7 +113,7 @@ The WASM boundary uses whatever symbols **`Callback` / `JSCallback`** export tod
 
 ### TypeScript Classes
 
-Use normal PascalCase for exported classes (for example `CommandRecorder`, `ReactiveMicropolisCallback` in this repo).
+Use normal PascalCase for exported classes (for example `CommandRecorder`, `MicropolisSimulator` in this repo).
 
 ### JSON Fields
 
@@ -155,7 +155,7 @@ The event type is the K-line. The payload carries details.
 
 ## Engine callbacks
 
-Authoritative method names are on **`Callback`** in `MicropolisEngine/src/callback.h` (wired through **`JSCallback`** in `MicropolisEngine/src/js_callback.h` and Embind). They still use the legacy surface (`didLoadCity`, `updateFunds`, …). When you rename them, update C++, Embind, TypeScript adapters, and any docs **in the same change**; do not maintain a speculative rename table in this file.
+Authoritative method names are on **`Callback`** in `MicropolisEngine/src/callback.h` (wired through **`JSCallback`** in `MicropolisEngine/src/js_callback.h` and Embind). When you rename them, update C++, Embind, TypeScript adapters, and any docs **in the same change**; do not maintain a speculative rename table in this file.
 
 ## Migration Strategy
 
@@ -166,9 +166,9 @@ Recommended order:
 1. Add the canonical names to `callback.h`, `ConsoleCallback`, `JSCallback`, and TypeScript callback implementations.
 2. Update C++ call sites from old names to canonical names.
 3. Regenerate Embind artifacts.
-4. Update `MicropolisCallbackLog`, `ReactiveMicropolisCallback`, and headless no-op callbacks.
+4. Update `MicropolisReactive.engineCallback` and shared headless callbacks.
 5. Normalize callback invocations into `MicropolisEvent` objects.
-6. Remove old compatibility names after the repo builds and browser/headless smoke tests pass.
+6. Remove compatibility names after the repo builds and browser/headless smoke tests pass.
 
 Do not keep long-term aliases unless there is a real outside dependency. There is not.
 

@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 
-let { 
-    showAbout,
-  } = $props();
+let {
+    showAbout = false,
+  }: { showAbout?: boolean } = $props();
 
 </script>
 

@@ -36,15 +36,19 @@ MicropolisEngine/          C++ simulation core
 
 micropolis/                SvelteKit application
   src/lib/
-    micropolisStore.ts     Svelte 5 runes state management
+    wasm/                  Browser/Node WASM loaders and heap helpers
+    i18n/                  Translation-key helpers for UI-facing metadata
+    MicropolisReactive.svelte.ts Reactive engine bridge
     WebGLTileRenderer.ts   WebGL2 tile renderer (gold standard)
-    CanvasTileRenderer.ts  Canvas 2D renderer (needs rewrite)
-    WebGPUTileRenderer.ts  WebGPU renderer (skeleton)
     TileView.svelte        Map display component
     MicropolisSimulator.ts WASM engine wrapper
-  scripts/
-    micropolis.js          CLI tool for .cty file analysis
-    constants.js           Tile definitions, world constants
+  cli/
+    entry.ts               Unified CLI entrypoint
+    city/                  Save-file analysis/editing modules
+    wasm/                  Headless WASM simulator commands
+    bus/                   Command-bus CLI commands
+    lib/format.ts          JSON/YAML/CSV output helpers
+    constants/             Tile definitions, world constants
 
 resources/cities/          Save files (.cty) including all 8 scenarios
 Cursor/                    Development docs and references
@@ -60,7 +64,7 @@ C++ Micropolis Core (WASM)
     calls callback
 Embind JSCallback Wrapper
     delegates
-ReactiveMicropolisCallback
+MicropolisReactive.engineCallback
     updates
 $state / $derived Runes
     triggers
@@ -71,7 +75,7 @@ UI Components + WebGL Renderer
 
 ## CLI Tool
 
-The `micropolis.js` CLI reads, analyzes, visualizes, edits, and patches .cty save files from the command line, independent of the WASM engine.
+The `micropolis` CLI reads, analyzes, visualizes, edits, and patches `.cty` save files, runs the WASM simulator headlessly, and exposes the command bus.
 
 ```bash
 cd micropolis
@@ -170,7 +174,7 @@ Full details: [MOOLLM: A Microworld Operating System for LLM Orchestration](http
 | [schema-mechanism](https://github.com/SimHacker/moollm/tree/main/skills/schema-mechanism) | Drescher's causal learning -- agents discover cause and effect in the sim |
 | [experiment](https://github.com/SimHacker/moollm/tree/main/skills/experiment) | Systematic simulation: SIMULATE, EVALUATE, ITERATE, ANALYZE cycles |
 | [adversarial-committee](https://github.com/SimHacker/moollm/tree/main/skills/adversarial-committee) | Multi-perspective debate between AI tutors with incompatible values |
-| [sister-script](https://github.com/SimHacker/moollm/tree/main/skills/sister-script) | Doc-first CLI automation -- the micropolis.js tool follows this pattern |
+| Micropolis CLI | Doc-first terminal automation through `npm run micropolis -- about --format yaml` and `api --format yaml` |
 | [speed-of-light](https://github.com/SimHacker/moollm/tree/main/skills/speed-of-light) | Multiple agent turns inside a single LLM call, no round-trip latency |
 
 **Speed of Light vs Carrier Pigeon:** Most AI agent systems coordinate *between* LLM calls -- 500ms+ per hop, precision degrades each hop, every turn re-tokenizes the full context. MOOLLM skills run *during* one LLM call -- multiple agents iterating dozens of times inside a single generation, instant latency, perfect precision. AI tutors can debate a zoning decision, explore alternatives, and reach a recommendation in one call rather than a slow chain of API round-trips. Full writeup: [Speed of Light vs Carrier Pigeon](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md).
@@ -304,7 +308,7 @@ The checked-in makefile builds the engine for browser, worker, and Node environm
 -s 'ENVIRONMENT=web,worker,node'
 ```
 
-Node support is required for `npm run sim:headless`.
+Node support is required for `npm run micropolis -- sim ...`.
 
 ### SvelteKit App
 
@@ -322,21 +326,21 @@ The Vite config copies `micropolisengine.wasm` and `micropolisengine.data` from 
 ```bash
 cd micropolis
 npm run micropolis -- --help
+npm run micropolis -- about --format yaml
+npm run micropolis -- api --format yaml
 ```
 
-The `micropolis.js` CLI analyzes and edits `.cty`/`.mop` files without running the WASM simulator.
-
-### Headless Simulator CLI
+The CLI is the main terminal surface for city files, visualization, headless WASM simulation, and command-bus operations. It supports text output where useful and structured `json`, `yaml`, and `csv` formats where appropriate.
 
 After rebuilding the engine with Emscripten:
 
 ```bash
 cd micropolis
-npm run sim:headless -- info
-npm run sim:headless -- smoke --ticks 10
+npm run micropolis -- sim info --format yaml
+npm run micropolis -- sim smoke --ticks 10 --format yaml
 ```
 
-This loads the Emscripten/Embind WASM module in Node, instantiates `Micropolis`, loads a bundled city from the engine data package, runs ticks, and prints JSON state. It is the foundation for future GitHub Actions replay, command timeline validation, and agent-driven simulations.
+The `sim` branch loads the Emscripten/Embind WASM module in Node, instantiates `Micropolis`, loads a bundled city from the engine data package, runs ticks, and prints structured state. It is the foundation for GitHub Actions replay, command timeline validation, and agent-driven simulations.
 
 ### Quick Full Setup
 
@@ -354,9 +358,9 @@ make clean install
 cd ../micropolis
 npm install
 
-# 4. Verify static CLI, headless simulator, and web app.
+# 4. Verify CLI, WASM simulator, and web app.
 npm run micropolis -- city info ../resources/cities/haight.cty
-npm run sim:headless -- smoke --ticks 1
+npm run micropolis -- sim smoke --ticks 1
 npm run dev
 ```
 

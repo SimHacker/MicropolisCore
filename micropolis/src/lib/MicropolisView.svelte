@@ -4,14 +4,10 @@
   import { getSharedSimulator, releaseSharedSimulator, MicropolisSimulator } from '$lib/MicropolisSimulator';
   import { micropolisReactive } from '$lib/MicropolisReactive.svelte';
   import TileView from '$lib/TileView.svelte';
-  //import PieMenu from '$lib/PieMenu.svelte';
   import About from '$lib/About.svelte'
-  import SnapView from '$lib/SnapView.svelte';
 
   let micropolisSimulator: MicropolisSimulator | null = null;
-  let snapView: SnapView | null = null;
   let tileView: TileView | null = null;
-  //let rootPie: PieMenu | null = null;
   let initialTouchX = 0;
   let initialTouchY = 0;
   let viewRenderRef: (() => void) | null = null;
@@ -54,18 +50,6 @@
 
   <About showAbout={true}/>
 </div>
-
-<!--
-<SnapView
-  bind:this={snapView}
-/>
--->
-
-<!--
-<PieMenu
-  bind:this={rootPie}
-/>
--->
 
 <style>
 

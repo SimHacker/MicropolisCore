@@ -58,7 +58,7 @@ updateSpeed
 updateTaxRate
 ```
 
-Implementations today include **`micropolisReactive.engineCallback`** (`MicropolisReactive.svelte.ts`), **`MicropolisCallbackLog`** (logging), the legacy **`ReactiveMicropolisCallback`** / **`micropolisStore`** path, and the headless no-op in `micropolis/scripts/headless-sim.ts`. Vitest integration tests live beside the bridge (`npm run test` in `micropolis/`).
+Implementations today include **`micropolisReactive.engineCallback`** (`MicropolisReactive.svelte.ts`) and the shared headless no-op callback in `micropolis/src/lib/wasm/callbacks.ts` used by `micropolis sim`. Vitest integration tests live beside the bridge (`npm run test` in `micropolis/`).
 
 ## Naming and events
 
@@ -73,7 +73,7 @@ Embind passes positional arguments today; JS/TS adapters should normalize into a
 ## Migration plan
 
 1. Change `callback.h` / `JSCallback` / call sites / generated `.d.ts` together when renaming.
-2. Update `MicropolisReactive`, `MicropolisCallbackLog`, `ReactiveMicropolisCallback`, headless callbacks, and any tests.
+2. Update `MicropolisReactive`, shared WASM callbacks, and any tests.
 3. Normalize invocations into `MicropolisEvent` where the app records or routes events.
 
 Skip compatibility aliases unless an external API forces them.

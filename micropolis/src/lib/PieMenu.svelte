@@ -1609,10 +1609,6 @@
 
 <style>
 
-    .mouseless {
-        pointer-events: none;
-    }
-
     .fullscreen {
         position: absolute;
         width: 100%;

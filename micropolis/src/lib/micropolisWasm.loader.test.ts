@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import {
 	assertWasmArtifactsPresent,
-	loadMicropolisMainModule,
-	createNoopJsCallback,
-	createMapMopViews
-} from './test-support/loadMicropolisWasm';
+	loadMicropolisMainModule
+} from './wasm/node';
+import { createNoopJsCallback } from './wasm/callbacks';
+import { createMapMopViews } from './wasm/views';
 
 describe('Micropolis WASM loader', () => {
 	it('finds wasm + data artifacts', () => {

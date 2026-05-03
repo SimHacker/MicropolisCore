@@ -6,7 +6,7 @@ status: implementing
 
 what: |
   Shared command layer for Micropolis UI, pie menus, keyboard shortcuts,
-  chat slash commands, MCP tools, CLI sister scripts, and LLM proposals.
+  chat slash commands, MCP tools, CLI commands, and LLM proposals.
 
 why: |
   UI surfaces should not own behavior. They invoke named commands with context.
@@ -20,14 +20,13 @@ k_lines:
     - BLENDER-OPERATOR
     - LLM-PROPOSAL
     - MCP-TOOL
-    - SISTER-SCRIPT
     - PIE-MENU-COMMAND
 
 interfaces:
   bus: "micropolis/src/lib/CommandBus.ts"
   registry: "micropolis/src/lib/micropolisCommands.ts"
   mcp_service: "micropolis/src/lib/CommandMcpService.ts"
-  cli: "micropolis/scripts/commands.ts"
+  cli: "micropolis/cli/bus/index.ts"
 
 policy:
   safe: "LLM may dispatch directly"
@@ -37,7 +36,6 @@ policy:
 
 compose_with:
   - micropolis
-  - sister-script
   - action-queue
   - advertisement
   - card
@@ -60,5 +58,4 @@ see_also:
   - SKILL.md
   - README.md
   - "../micropolis-command-bus"
-  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/sister-script/CARD.yml"
   - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/micropolis/CARD.yml"

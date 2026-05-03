@@ -8,9 +8,9 @@
  * Attach once per shared simulator (`attach` / `detach` around the MicropolisView lifecycle).
  */
 
-import type { EditingTool, GameLevel, Micropolis, JSCallback, ToolResult } from './types/micropolisengine.d.js';
+import type { EditingTool, GameLevel, Micropolis, JSCallback, ToolResult } from '../types/micropolisengine.d.js';
 import type { MicropolisSimulator } from './MicropolisSimulator';
-import { heapU16FromEmscriptenModule } from './wasmHeap';
+import { heapU16FromEmscriptenModule } from './wasm/heap';
 
 // --- Attached simulator (not exported; drives sync + optional actions) ---
 let attachedSimulator = $state<MicropolisSimulator | null>(null);

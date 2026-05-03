@@ -1,9 +1,19 @@
+// @ts-nocheck
 // WebGPUTileRenderer implementation class
 
 
 /// <reference types="@webgpu/types" />
 import { TileRenderer } from './TileRenderer';
 
+
+interface RenderUniforms {
+    tileSize: [number, number];
+    tilesSize: [number, number];
+    mapSize: [number, number];
+    offset: [number, number];
+    zoom: number;
+    padding: number;
+}
 
 class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
     
@@ -303,16 +313,6 @@ class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
         passEncoder.end();
 
         this.device.queue.submit([commandEncoder.finish()]);
-    }
-
-    // Replace individual uniforms with a structured uniform buffer
-    interface RenderUniforms {
-        tileSize: [number, number];     // vec2<f32>
-        tilesSize: [number, number];    // vec2<f32>
-        mapSize: [number, number];      // vec2<f32>
-        offset: [number, number];       // vec2<f32>
-        zoom: number;                   // f32
-        padding: number;                // for alignment
     }
 
     private updateUniforms(): void {

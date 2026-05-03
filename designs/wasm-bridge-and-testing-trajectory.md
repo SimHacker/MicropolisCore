@@ -18,10 +18,10 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 |------|--------|
 | **Vitest** | **`npm run test`** / **`npm run test:watch`** in **`micropolis/`**; **`vitest.config.ts`** — Node env, **`pool: 'forks'`**, **`fileParallelism: false`**, long timeouts for WASM load/init. |
 | **Bridge filename** | **`MicropolisReactive.svelte.ts`** so runes are valid under the test runner; **`MicropolisView.svelte`** imports **`$lib/MicropolisReactive.svelte`**. |
-| **Heap helper** | **`src/lib/wasmHeap.ts`** — **`heapU16FromEmscriptenModule(module)`** with **try/catch** around **`wasmMemory.buffer`** / **`HEAPU16`**. |
+| **Heap helper** | **`src/lib/wasm/heap.ts`** — **`heapU16FromEmscriptenModule(module)`** with **try/catch** around **`wasmMemory.buffer`** / **`HEAPU16`**. |
 | **Simulator** | **`MicropolisSimulator`** uses the helper for map/mop views; if no view, warns and leaves **`mapData`/`mopData`** null (graceful degradation). |
-| **Test support** | **`src/lib/test-support/loadMicropolisWasm.ts`** — shared WASM + asset loading pattern aligned with **`scripts/headless-sim.ts`**; noop **`JSCallback`**, **`createMapMopViews`** (may return **null**). |
-| **Tests** | **`micropolisWasm.loader.test.ts`** — artifacts, **`WORLD_*`**, map/mop byte sizes, optional buffer checks, **`loadCity`**. **`MicropolisReactive.integration.test.ts`** — attach simulator-shaped object, **`wasmModule`**, **`memory`**, **`syncFromEngine`**, **`peek`**, **`getSnapshot`**, **`poke`**. **`wasmHeap.test.ts`** — null module and throwing getters. |
+| **Node/browser loaders** | **`src/lib/wasm/node.ts`** and **`src/lib/wasm/browser.ts`** — shared WASM + asset loading for **`micropolis sim`**, Vitest, and browser startup; **`callbacks.ts`** and **`views.ts`** provide noop callbacks and map/mop views. |
+| **Tests** | **`micropolisWasm.loader.test.ts`** — artifacts, **`WORLD_*`**, map/mop byte sizes, optional buffer checks, **`loadCity`**. **`MicropolisReactive.integration.test.ts`** — attach simulator-shaped object, **`wasmModule`**, **`memory`**, **`syncFromEngine`**, **`peek`**, **`getSnapshot`**, **`poke`**. **`wasm/heap.test.ts`** — null module and throwing getters. |
 | **Docs** | **`micropolis/README.md`** — Tests section. **`callback-interface-roadmap.md`** — Vitest pointer. |
 
 ## Goals this unlocks
@@ -33,9 +33,9 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 ## What is left to do (near term)
 
 - **Broader bridge coverage** — e.g. **`poke.doTool`**, scenario loads, pause/speed paths, and any new **`JSCallback`** methods as they land.
-- **`MicropolisCallbackLog`** / alternate **`JSCallback`** implementations — unit or integration tests where behavior matters for replay or debugging.
+- **Callback capture** — add a recorder-oriented callback implementation when replay/debugging needs persisted event streams.
 - **CI** — run **`micropolis`** **`npm run test`** (and **`check`**) on PRs once CI exists or is extended for this package.
-- **DRY CLI vs tests** — **`scripts/headless-sim.ts`** could import **`loadMicropolisWasm`** (or vice versa) to avoid two loaders drifting apart.
+- **CLI coverage** — keep **`micropolis sim`** smoke checks aligned with **`src/lib/wasm/node.ts`** so terminal and test paths exercise the same loader.
 - **Root README** — optional cross-link from repo **`README.md`** to **`micropolis`** testing if contributors land here first.
 
 ## Trajectory (medium term)

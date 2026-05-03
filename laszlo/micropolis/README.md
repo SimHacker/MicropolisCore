@@ -77,12 +77,12 @@ It's fascinating to see how core OL concepts resurface, refined and turbocharged
 *   **OL Declarative XML => Svelte Templates (Compiled to HTML/JS):** Svelte's familiar HTML-like templates (`<Component prop={value}>`, `{#if ...}`) provide the declarative structure OL aimed for with XML, but with the full power of JavaScript expressions seamlessly integrated. The compiler turns this into efficient JS DOM manipulation functions.
 *   **OL Data Replication => Svelte `#each` Blocks (Compiled JS):** Displaying lists? Svelte's `#each` block is the direct successor to OL's data replication, compiled into optimized JavaScript loops for creating, updating, and removing elements as the underlying data array changes.
 *   **OL Instance Structure Inheritance => Svelte Snippets (`{@render ...}`):** Need to pass around reusable chunks of UI structure? Svelte 5's **snippets** offer a flexible, compile-time optimized way to achieve the kind of UI composition OL enabled with prototype inheritance.
-*   **OL AMF Bridge => Wasm Bridge (`micropolisStore`, `ReactiveMicropolisCallback`):** The clunky AMF network bridge is replaced by a clean, reactive interface (`micropolisStore`) that communicates directly with the WebAssembly C++ engine, often via zero-copy shared memory access – a night-and-day difference in performance and simplicity. Details of this efficient Wasm integration are a whole topic in themselves!
+*   **OL AMF Bridge => Wasm Bridge (`MicropolisReactive.svelte.ts`):** The clunky AMF network bridge is replaced by a clean, reactive interface that communicates directly with the WebAssembly C++ engine, often via zero-copy shared memory access – a night-and-day difference in performance and simplicity. Details of this efficient Wasm integration are a whole topic in themselves!
 
 **Architectural Shift: Wasm Obliterates Old Bottlenecks**
 
 *   **The Game Changer:** Remember that client-side animation hack forced by network latency? WebAssembly running in the same process as the JavaScript UI, communicating via **shared memory**, fundamentally changes the game. The network bottleneck is *gone*.
-*   **Simplification Wins:** The rationale for client-side animation vanishes. We can now happily **re-enable tile animation within the C++ engine** itself. The engine calculates the exact frame, the `micropolisStore` exposes it, and the Svelte views just... draw it. Simple!
+*   **Simplification Wins:** The rationale for client-side animation vanishes. We can now happily **re-enable tile animation within the C++ engine** itself. The engine calculates the exact frame, the reactive bridge exposes it, and the Svelte views just... draw it. Simple!
 *   **Cleaner Code:** This dramatically simplifies the Svelte/**WebGL** view components. No more client-side timers or frame logic needed for basic tile rendering. While fancy client-side rendering in WebGL shaders is still possible for effects, centralizing the core animation logic in the C++ engine leads to much cleaner view code and guaranteed consistency. It perfectly illustrates how removing architectural constraints (like network latency) enables more elegant and maintainable designs. The tight Wasm<->JS<->WebGL path is a joy compared to the old ways.
 
 **Achieving Advanced Reactivity with Svelte 5**
@@ -98,10 +98,10 @@ Svelte 5 lets us achieve that original vision: a highly declarative, easy-to-und
 
 We'll rebuild the Micropolis UI using idiomatic Svelte 5, taking advantage of its strengths:
 
-*   **Reactive Core (`micropolisStore.ts`):** The central nervous system, using runes to hold all simulation state received from Wasm and UI state derived from it.
+*   **Reactive Core (`MicropolisReactive.svelte.ts`):** The central nervous system, using runes to hold all simulation state received from Wasm and UI state derived from it.
 *   **Reusable Panels (`Panel.svelte`):** Generic draggable, resizable containers using snippets for maximum flexibility.
-*   **Specialized Panels:** `ToolPalettePanel`, `InfoPanel`, `BudgetPanel`, etc., all reacting directly to the `micropolisStore`. Imagine how much easier implementing the complex `BudgetPanel` graphs becomes with `$derived` compared to manual updates!
-*   **Enhanced `DisasterPanel.svelte`:** A great example of Svelte's power. Instead of static buttons, it dynamically appears based on `micropolisStore.activeDisasters`, includes a mini-map automatically centered on the disaster via `$derived` coordinates, and shows context-specific tools. It becomes a truly interactive incident command center.
+*   **Specialized Panels:** `ToolPalettePanel`, `InfoPanel`, `BudgetPanel`, etc., all reacting directly to the shared reactive bridge. Imagine how much easier implementing the complex `BudgetPanel` graphs becomes with `$derived` compared to manual updates!
+*   **Enhanced `DisasterPanel.svelte`:** A great example of Svelte's power. Instead of static buttons, it dynamically appears based on reactive disaster state, includes a mini-map automatically centered on the disaster via `$derived` coordinates, and shows context-specific tools. It becomes a truly interactive incident command center.
 *   **Map Views:** Efficiently rendering potentially huge amounts of tile data from the store, handling input, and displaying dynamic overlays. Integrating tightly with WebGL for rendering performance is key here.
 
 **Why Svelte 5 + Wasm is the Right Choice Now:**

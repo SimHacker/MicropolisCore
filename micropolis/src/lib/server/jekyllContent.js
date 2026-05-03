@@ -18,7 +18,7 @@ export async function readContentFile(filePath, slug) {
         const contentHtml = await fs.readFile(filePath, 'utf-8');
         return contentHtml;
     } catch (err) {
-        if (err.code === 'ENOENT') {
+        if (err && typeof err === 'object' && 'code' in err && err.code === 'ENOENT') {
             console.error(`Content file not found for slug '${slug}': ${filePath}`);
             error(404, `Content not found for ${slug}`);
         } else {

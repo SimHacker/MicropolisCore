@@ -81,18 +81,43 @@
 
 ////////////////////////////////////////////////////////////////////////
 
+/*
+ * Classic SimCity/Micropolis save files are big-endian on disk.
+ *
+ * The original game came from Macintosh/Motorola systems, and the file format
+ * remains a stream of big-endian 16-bit words. Runtime memory may be big-endian
+ * or little-endian depending on the target. WebAssembly is specified to use
+ * little-endian linear memory, so Emscripten/WASM correctly takes the
+ * little-endian branch below. This is not pretending to be a different CPU; it
+ * is compiling to a virtual architecture whose memory byte order is defined.
+ *
+ * Boundary rule:
+ *   file bytes:    big-endian 16-bit words
+ *   host memory:   target-dependent; WASM/x86/ARM64 are little-endian here
+ *   load/save:     convert explicitly at this file boundary
+ */
+
 
 #if !defined(__BIG_ENDIAN__)
 
 /**
- * Convert an array of short values between MAC and Intel endian formats.
+ * Convert an array of 16-bit values between the save-file byte order and
+ * the host byte order.
+ *
+ * Classic city files are written as big-endian 16-bit words. Little-endian
+ * hosts, including WebAssembly, swap every short after read and before write.
  * @param buf Array with shorts.
  * @param len Number of short values in the array.
  */
 #define SWAP_SHORTS(buf, len)        swap_shorts(buf, len)
 
 /**
- * Convert an array of long values between MAC and Intel endian formats.
+ * Swap the 16-bit halves of 32-bit values stored inside short arrays.
+ *
+ * Some miscHist fields are 32-bit values packed as two big-endian 16-bit
+ * words. After SWAP_SHORTS has made each word host-endian on little-endian
+ * targets, the pair still has big-endian word order in memory. HALF_SWAP_LONGS
+ * changes that word order so a cast to Quad/long yields the intended number.
  * @param buf Array with longs.
  * @param len Number of long values in the array.
  */
@@ -124,7 +149,8 @@ static void half_swap_longs(long *buf, int len)
 {
     int i;
 
-    /* Flip bytes in each long! */
+    /* Flip 16-bit words in each 32-bit value. The bytes inside each word have
+       already been handled by SWAP_SHORTS. */
     for (i = 0; i < len; i++) {
         long l = *buf;
         *buf =
@@ -139,20 +165,21 @@ static void half_swap_longs(long *buf, int len)
 
 
 /**
- * Convert an array of short values between MAC and MAC endian formats.
+ * Big-endian host: the file's 16-bit words are already in host order.
  * @param buf Array with shorts.
  * @param len Number of short values in the array.
- * @note This version does not change anything since the data is already in the
- *       correct format.
+ * @note This version does not change anything since the data is already in host
+ *       order after read, and already in file order before write.
  */
 #define SWAP_SHORTS(buf, len)
 
 /**
- * Convert an array of long values between MAC and MAC endian formats.
+ * Big-endian host: 32-bit values packed in miscHist short pairs already have
+ * host word order.
  * @param buf Array with longs.
  * @param len Number of long values in the array.
- * @note This version does not change anything since the data is already in the
- *       correct format.
+ * @note This version does not change anything since the data is already in host
+ *       order after read, and already in file order before write.
  */
 #define HALF_SWAP_LONGS(buf, len)
 
@@ -176,7 +203,7 @@ static bool load_short(short *buf, int len, FILE *f)
          return false;
     }
 
-    SWAP_SHORTS(buf, len);        /* to intel */
+    SWAP_SHORTS(buf, len);        /* file big-endian -> host order */
 
     return true;
 }
@@ -193,13 +220,13 @@ static bool load_short(short *buf, int len, FILE *f)
  */
 static bool save_short(short *buf, int len, FILE *f)
 {
-    SWAP_SHORTS(buf, len);        /* to MAC */
+    SWAP_SHORTS(buf, len);        /* host order -> file big-endian */
 
     if ((int)fwrite(buf, sizeof(short), len, f) != len) {
         return false;
     }
 
-    SWAP_SHORTS(buf, len);        /* back to intel */
+    SWAP_SHORTS(buf, len);        /* restore host order in memory */
 
     return true;
 }
@@ -252,6 +279,12 @@ bool Micropolis::loadFileData(const std::string &filename)
       load_short(pollutionHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(moneyHist, HISTORY_LENGTH / sizeof(short), f) &&
       load_short(miscHist, MISC_HISTORY_LENGTH / sizeof(short), f) &&
+      /*
+       * Map memory is not row-major by screen row. The engine addresses tiles as
+       * map[x][y], and the contiguous linear order is x * WORLD_H + y: each
+       * column stores all rows before the next column begins. Keep save/load in
+       * that order so files match live mapBase/WASM memory exactly.
+       */
       load_short((short *)mapBase, mapSizeShort, f) &&
       (hasMop 
         ? load_short((short *)mopBase, mapSizeShort, f)
@@ -282,9 +315,16 @@ bool Micropolis::loadFile(const std::string &filename)
         return false;
     }
 
-    /* total funds is a long.....    miscHist is array of shorts */
-    /* total funds is being put in the 50th & 51th word of miscHist */
-    /* find the address, cast the ptr to a longPtr, take contents */
+    /*
+     * 32-bit miscHist fields are stored as pairs of big-endian 16-bit words in
+     * the file. loadFileData has already converted each 16-bit word to host byte
+     * order, so HALF_SWAP_LONGS fixes the remaining word order before reading the
+     * pair as a Quad.
+     *
+     * This applies to funds (50/51), cityTime (8/9), and the fixed-point funding
+     * percentages (58/59, 60/61, 62/63). The funding values are not IEEE floats:
+     * they are int(percent * 65536).
+     */
 
     n = *(Quad *)(miscHist + 50);
     HALF_SWAP_LONGS(&n, 1);
@@ -303,8 +343,6 @@ bool Micropolis::loadFile(const std::string &filename)
     setSpeed(3); // Naw let's reset the speed to 3 after loading a city.
     changeCensus();
     mustUpdateOptions = true;
-
-    /* yayaya */
 
     n = *(Quad *)(miscHist + 58);
     HALF_SWAP_LONGS(&n, 1);
@@ -371,9 +409,11 @@ bool Micropolis::saveFile(const std::string &filename)
         return false;
     }
 
-    /* total funds is a long.....    miscHist is array of ints */
-    /* total funds is bien put in the 50th & 51th word of miscHist */
-    /* find the address, cast the ptr to a longPtr, take contents */
+    /*
+     * Store 32-bit values back into miscHist as big-endian word pairs. We write
+     * the host-order Quad after HALF_SWAP_LONGS so the following save_short()
+     * byte swap emits the classic Mac/network-order file bytes.
+     */
 
     n = totalFunds;
     HALF_SWAP_LONGS(&n, 1);
@@ -389,8 +429,6 @@ bool Micropolis::saveFile(const std::string &filename)
     miscHist[55] = enableSound;    // flag for the sound on/off
     miscHist[57] = simSpeed;
     miscHist[56] = cityTax;        /* post release */
-
-    /* yayaya */
 
     n = (int)(policePercent * 65536);
     HALF_SWAP_LONGS(&n, 1);
@@ -412,6 +450,11 @@ bool Micropolis::saveFile(const std::string &filename)
         save_short(pollutionHist, HISTORY_LENGTH / 2, f) &&
         save_short(moneyHist, HISTORY_LENGTH / 2, f) &&
         save_short(miscHist, MISC_HISTORY_LENGTH / 2, f) &&
+        /*
+         * Save the map in the engine's native linear order: map[x][y] with
+         * linear index x * WORLD_H + y. This is column-major relative to city
+         * coordinates, and is the same order exposed to JavaScript/WASM tools.
+         */
         save_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f) &&
         save_short(((short *)&mop[0][0]), WORLD_W * WORLD_H, f);
 

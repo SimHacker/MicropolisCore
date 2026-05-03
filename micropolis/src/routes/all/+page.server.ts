@@ -104,7 +104,8 @@ async function fetchAllContentAndRewriteLinks(
                 contentMap.set(node.contentSlug, html);
             }
         } catch (err) {
-            console.error(`[fetchAllContent /all] Failed to read/process content for slug '${node.contentSlug}':`, err.message);
+            const message = err instanceof Error ? err.message : String(err);
+            console.error(`[fetchAllContent /all] Failed to read/process content for slug '${node.contentSlug}':`, message);
             contentMap.set(node.contentSlug, `<p style="color:red;">Error loading content for ${node.contentSlug}</p>`);
         }
     }

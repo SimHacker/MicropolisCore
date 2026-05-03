@@ -5,7 +5,7 @@ license: GPL-3.0
 tier: 2
 protocol: MICROPOLIS-COMMAND-BUS
 allowed-tools: [read_file, write_file, run_terminal_cmd]
-related: [micropolis, moollm, mooco, sister-script, skill, card, advertisement, action-queue, protocol, github, skill-snitch, speed-of-light, planning, simulation, constructionism]
+related: [micropolis, moollm, mooco, skill, card, advertisement, action-queue, protocol, github, skill-snitch, speed-of-light, planning, simulation, constructionism]
 tags: [micropolis, command-bus, mcp, llm-actions, operator-model, sveltekit, safety]
 ---
 
@@ -15,7 +15,7 @@ tags: [micropolis, command-bus, mcp, llm-actions, operator-model, sveltekit, saf
 
 ## What It Is
 
-The Micropolis command bus is the shared operation layer for humans, UI widgets, pie menus, keyboard shortcuts, chat slash commands, MCP tools, sister scripts, and MOOLLM characters.
+The Micropolis command bus is the shared operation layer for humans, UI widgets, pie menus, keyboard shortcuts, chat slash commands, MCP tools, CLI commands, and MOOLLM characters.
 
 It is the Micropolis equivalent of Blender operators, extended with MOOLLM-style proposal, preview, approval, and audit semantics.
 
@@ -41,7 +41,7 @@ Never load a lower layer without reading the layer above it first.
 | `micropolis/src/lib/CommandBus.ts` | Core bus: commands, dispatch, preview, undo, proposals |
 | `micropolis/src/lib/micropolisCommands.ts` | Micropolis command registry |
 | `micropolis/src/lib/CommandMcpService.ts` | MCP-style service wrapper |
-| `micropolis/scripts/commands.ts` | Sister-script CLI |
+| `micropolis/cli/bus/index.ts` | Unified CLI command-bus branch |
 | `skills/micropolis-command-bus/CARD.yml` | MOOLLM card interface |
 | `skills/micropolis-command-bus/GLANCE.yml` | Tiny mipmap summary |
 
@@ -74,7 +74,7 @@ All surfaces dispatch the same command IDs:
 - Buttons
 - Chat slash commands
 - MCP tools
-- CLI sister scripts
+- CLI commands
 - LLM proposals
 - Future tab/window/workspace controls
 
@@ -96,20 +96,20 @@ All surfaces dispatch the same command IDs:
 5. Dispatch only after approval or when policy allows direct execution.
 6. Log the result in the conversation or session log when available.
 
-## CLI Sister Script
+## CLI
 
 Run from `MicropolisCore/micropolis`:
 
 ```bash
-npm run commands -- list
-npm run commands -- preview <command-id> --args '{"key":"value"}' --actor llm --reason "why"
-npm run commands -- propose <command-id> --args '{}' --actor llm --reason "why"
-npm run commands -- proposals --status pending
-npm run commands -- approve <proposal-id> --actor user
-npm run commands -- reject <proposal-id> --reason "why"
+npm run micropolis -- bus list --format yaml
+npm run micropolis -- bus preview <command-id> --args '{"key":"value"}' --actor llm --reason "why" --format yaml
+npm run micropolis -- bus propose <command-id> --args '{}' --actor llm --reason "why" --format yaml
+npm run micropolis -- bus proposals --status pending --format yaml
+npm run micropolis -- bus approve <proposal-id> --actor user --format yaml
+npm run micropolis -- bus reject <proposal-id> --reason "why" --format yaml
 ```
 
-This follows the `sister-script` pattern: the CLI is a sniffable tool surface for humans and LLMs. The top of the script should explain the API; `--help` and command definitions are documentation.
+The command-bus branch is one module of the unified CLI. `--help`, `about`, and `api` are the terminal-facing documentation.
 
 ## MCP Service
 
@@ -132,7 +132,7 @@ This skill deliberately composes with:
 | Skill | How |
 |-------|-----|
 | `micropolis` | Domain model, simulation, Git multiverse, educational purpose |
-| `sister-script` | CLI wrapper pattern for `scripts/commands.ts` |
+| `micropolis` | Unified CLI and module surface |
 | `tool-calling-protocol` | `why`/reason discipline and safe tool execution |
 | `action-queue` | Pending command proposals are action-queue entries |
 | `advertisement` | Commands advertise capabilities and map naturally to pie menus |

@@ -1,14 +1,15 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { micropolisReactive } from './MicropolisReactive.svelte';
 import type { MicropolisSimulator } from './MicropolisSimulator';
-import { loadMicropolisMainModule, createMapMopViews } from './test-support/loadMicropolisWasm';
-import type { MainModule } from './types/micropolisengine.d.js';
-import type { Micropolis } from './types/micropolisengine.d.js';
+import { loadMicropolisMainModule } from './wasm/node';
+import { createMapMopViews } from './wasm/views';
+import type { MainModule } from '../types/micropolisengine.d.js';
+import type { JSCallback, Micropolis } from '../types/micropolisengine.d.js';
 
 describe('micropolisReactive bridge', () => {
 	let engine: MainModule;
 	let micropolis: Micropolis;
-	let jsCallbackWrapper: { delete(): void };
+	let jsCallbackWrapper: JSCallback;
 
 	beforeAll(async () => {
 		engine = await loadMicropolisMainModule();
