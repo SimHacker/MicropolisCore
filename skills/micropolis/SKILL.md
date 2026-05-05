@@ -72,12 +72,12 @@ Important commands:
 ```bash
 npm run micropolis -- about --format yaml
 npm run micropolis -- api --format yaml
-npm run micropolis -- city info ../resources/cities/scenario_tokyo.cty
-npm run micropolis -- city analyze ../resources/cities/scenario_boston.cty
-npm run micropolis -- city export --format yaml --include-map ../resources/cities/radial.cty
-npm run micropolis -- city export --format csv --include-map ../resources/cities/radial.cty
-npm run micropolis -- visualize ascii ../resources/cities/radial.cty
-npm run micropolis -- visualize emoji ../resources/cities/scenario_tokyo.cty
+npm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
+npm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty
+npm run micropolis -- city export --format yaml --include-map ../../content/micropolis/cities/radial.cty
+npm run micropolis -- city export --format csv --include-map ../../content/micropolis/cities/radial.cty
+npm run micropolis -- visualize ascii ../../content/micropolis/cities/radial.cty
+npm run micropolis -- visualize emoji ../../content/micropolis/cities/scenario_tokyo.cty
 npm run micropolis -- sim smoke --ticks 10 --format yaml
 npm run micropolis -- bus list --format yaml
 ```
@@ -337,10 +337,10 @@ The future interface should let humans and LLMs ask for a layer by name without 
 Planned shape:
 
 ```bash
-npm run micropolis -- layer list ../resources/cities/haight.cty
-npm run micropolis -- layer dump ../resources/cities/haight.cty --layer traffic --compute
-npm run micropolis -- layer export ../resources/cities/haight.cty --layer pollution --format json --compute
-npm run micropolis -- layer visualize ../resources/cities/haight.cty --layer landvalue --style ascii --compute
+npm run micropolis -- layer list ../../content/micropolis/cities/haight.cty
+npm run micropolis -- layer dump ../../content/micropolis/cities/haight.cty --layer traffic --compute
+npm run micropolis -- layer export ../../content/micropolis/cities/haight.cty --layer pollution --format json --compute
+npm run micropolis -- layer visualize ../../content/micropolis/cities/haight.cty --layer landvalue --style ascii --compute
 ```
 
 The CLI should infer the minimum required simulator scans from the requested layer. For exact reconstruction of history-integrated layers, it may need time-travel replay.

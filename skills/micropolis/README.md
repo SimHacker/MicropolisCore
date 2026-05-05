@@ -16,10 +16,10 @@ It centers the unified `micropolis` CLI and the modules it exposes: save files, 
 From `MicropolisCore/micropolis`:
 
 ```bash
-npm run micropolis -- city info ../resources/cities/scenario_tokyo.cty
-npm run micropolis -- city analyze ../resources/cities/scenario_boston.cty --format yaml
-npm run micropolis -- city export ../resources/cities/radial.cty --format csv --include-map
-npm run micropolis -- visualize ascii ../resources/cities/radial.cty
+npm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
+npm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty --format yaml
+npm run micropolis -- city export ../../content/micropolis/cities/radial.cty --format csv --include-map
+npm run micropolis -- visualize ascii ../../content/micropolis/cities/radial.cty
 npm run micropolis -- sim smoke --ticks 10 --format yaml
 npm run micropolis -- bus list --format yaml
 npm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml

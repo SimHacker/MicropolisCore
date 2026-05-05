@@ -8,7 +8,7 @@ that points into `micropolis/`, `vitamoo/`, `yoot/`, and `shared/`.
 
 | Path | Purpose |
 |------|---------|
-| **`micropolis/`** | City/scenario/site copy, educator materials, city-adjacent assets tied to the WASM sim. |
+| **`micropolis/`** | Bundled sim assets: **`cities/`** (.cty saves), **`data/`** (XML/strings), **`images/`**, **`sounds/`**, **`tilesets/`** — consumed by the WASM preload, CLI samples, and Laszlo refs. |
 | **`vitamoo/`** | VitaMoo-facing packs: exchange manifests, asset indexes, static references (googlable project name; avoid trademarked franchise names in paths and public URLs). |
 | **`yoot/`** | Tower-vertical empire lineage: scenarios, plug-in/tower-kit-style manifests, fictionalized assets—named for **Yoot** as creator umbrella (not Maxis/EA/other retail marks). See `content/yoot/README.md`. |
 | **`shared/`** | Branding, legal, i18n, or hub copy used by more than one vertical. |

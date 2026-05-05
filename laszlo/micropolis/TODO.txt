@@ -141,7 +141,7 @@ classes/mytooltip.lzx
 
 Resources
 
-resources/images/tool_stadium.png
+content/micropolis/images/tool_stadium.png
   Icon is highlighted, but should be dark.
 
 ------------------------------------------------------------------------

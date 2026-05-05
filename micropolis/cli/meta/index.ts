@@ -52,8 +52,8 @@ const aboutPayload = {
 	],
 	examples: [
 		'npm run micropolis -- about --format yaml',
-		'npm run micropolis -- city info ../resources/cities/haight.cty --format yaml',
-		'npm run micropolis -- city export ../resources/cities/haight.cty --include-map --format csv',
+		'npm run micropolis -- city info ../content/micropolis/cities/haight.cty --format yaml',
+		'npm run micropolis -- city export ../content/micropolis/cities/haight.cty --include-map --format csv',
 		'npm run micropolis -- sim smoke --ticks 10 --format yaml',
 		'npm run micropolis -- bus list --format yaml'
 	]

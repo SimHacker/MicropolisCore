@@ -82,7 +82,7 @@ EMLDFLAGS = \
 	--emit-tsd=micropolisengine.d.ts \
 	--shell-file src/micropolisengine_template.html \
 	--js-library src/micropolisengine_lib.js \
-	--preload-file ../resources/cities@cities/
+	--preload-file ../content/micropolis/cities@cities/
 
 
 ########################################################################

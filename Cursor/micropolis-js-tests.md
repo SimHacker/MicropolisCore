@@ -4,7 +4,7 @@ All commands run from the `micropolis/` directory:
 
 ```bash
 cd MicropolisCore/micropolis
-CITIES="../resources/cities"
+CITIES="../content/micropolis/cities"
 ```
 
 ## 1. Help

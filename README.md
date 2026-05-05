@@ -50,7 +50,8 @@ packages/tile-renderer/    Shared tile renderers (Canvas 2D, WebGL2, WebGPU, sof
     lib/format.ts          JSON/YAML/CSV output helpers
     constants/             Tile definitions, world constants
 
-resources/cities/          Save files (.cty) including all 8 scenarios
+content/micropolis/        Sim bundled assets (`cities/`, `data/`, `images/`, `sounds/`, `tilesets/`)
+  cities/                  Save files (.cty) including all 8 scenarios
 Cursor/                    Development docs and references
 notes/                     Design notes and plans
 ```
@@ -83,19 +84,19 @@ Run from the `micropolis/` package directory after `pnpm install` at the repo ro
 cd micropolis
 
 # City information and analysis
-pnpm run micropolis -- city info resources/cities/scenario_tokyo.cty
-pnpm run micropolis -- city analyze resources/cities/scenario_boston.cty
-pnpm run micropolis -- city analyze --format json resources/cities/radial.cty
+pnpm run micropolis -- city info content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- city analyze content/micropolis/cities/scenario_boston.cty
+pnpm run micropolis -- city analyze --format json content/micropolis/cities/radial.cty
 
 # Visualize as ASCII, emoji, or monospace
-pnpm run micropolis -- visualize ascii --row 20 --col 30 --width 30 --height 15 resources/cities/scenario_tokyo.cty
-pnpm run micropolis -- visualize emoji resources/cities/radial.cty
+pnpm run micropolis -- visualize ascii --row 20 --col 30 --width 30 --height 15 content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- visualize emoji content/micropolis/cities/radial.cty
 
 # Edit city metadata
 pnpm run micropolis -- city edit city.cty --funds 50000 --tax 9 --year 1960
 
 # Patch scenario files with the values the engine injects at runtime
-pnpm run micropolis -- city patch-scenario resources/cities/scenario_tokyo.cty --dry-run
+pnpm run micropolis -- city patch-scenario content/micropolis/cities/scenario_tokyo.cty --dry-run
 
 # Export to JSON (with optional tile map data)
 pnpm run micropolis -- city export --format json --include-map city.cty
@@ -389,7 +390,7 @@ cd ..
 pnpm install
 
 # 4. Verify CLI, WASM simulator, and web app.
-pnpm --filter micropolis run micropolis -- city info ../resources/cities/haight.cty
+pnpm --filter micropolis run micropolis -- city info ../content/micropolis/cities/haight.cty
 pnpm --filter micropolis run micropolis -- sim smoke --ticks 1
 pnpm --filter micropolis dev
 ```
