@@ -1,8 +1,41 @@
-# Micropolis in OpenLaszlo: Hacking RIAs with Constraints & Prototypes Before It Was Cool
+# OpenLaszlo Micropolis (archive)
+
+This tree holds the **historic OpenLaszlo (`*.lzx`)** Micropolis front-end: **`micropolis/`** (locale entrypoints), **`classes/`**, and **`resources/`**. It is reference-only; the active app is **`apps/micropolis/`** (SvelteKit + Wasm).
+
+## Self-contained snapshot
+
+All **`src=` paths are relative** to each compile unit and use **`../resources/...`** — i.e. this directory’s **`resources/`** (`data/`, `images/`, `sounds/`, tiles, SWFs). You can copy **`documentation/openlaszlo-micropolis/`** elsewhere and inspect or compile without referencing repo-root **`content/micropolis/`**.
+
+Optional merge **into** the canonical bundle the Wasm app loads:
+
+```bash
+# from MicropolisCore repo root
+rsync -av documentation/openlaszlo-micropolis/resources/ content/micropolis/
+```
+
+## Companion files (scratchpads)
+
+Plain-text artifacts from the TurboGears / Flash / Facebook era — kept as-is; summarized here so they are discoverable.
+
+| File | What it is |
+|------|------------|
+| **`NOTES.txt`** | Client/server tile engine: view bounding boxes per client, lazy tile buffers, animation groups mapped to base tiles to save bandwidth. |
+| **`ASSETS.txt`** | UI inventory (choose-city dialog, tools, notices, overlays, etc.). |
+| **`TODO.txt`** | Roadmap notes: Facebook/social integration, UI shells, config-over-the-wire, **city save trees** (mutable leaf vs immutable branches), multiplayer chat/channels/voting, bots — ideas that **foreshadow** collaborative/world mechanics explored later in **`designs/github-as-mmorpg-multiverse.md`** (Git-as-multiverse, branches as worlds). |
+
+OLPC-specific and other platform docs are indexed from **`designs/platform-lineage-index.md`** so historical write-ups stay linked without duplicating them here.
+
+## Documentation vs `designs/`
+
+- **`designs/`** — durable rationale for **current** MicropolisCore directions (Wasm bridge, command path, multiplayer metaphors).
+- **`documentation/`** — manuals, talks, **frozen snapshots** (like this tree). Designs are a *kind* of documentation; we separate them so “what we are building” stays easy to grep without wading through archives. See **`designs/README.md`** (“Documentation vs designs”).
+
+---
+## Micropolis in OpenLaszlo: Hacking RIAs with Constraints & Prototypes Before It Was Cool
 
 Imagine trying to cram SimCity into a web browser back in the mid-2000s. Standard HTML? Barely interactive. JavaScript? Still finding its legs. It was a *huge* challenge! How could you possibly build that rich, graphical, constantly-updating simulation? Enter **OpenLaszlo (OL)** – a seriously clever, open-source platform designed to build what we called Rich Internet Applications (RIAs). Think desktop app power, but running *inside* the browser, mostly using the **Adobe Flash Player** plugin (then Macromedia Flash). This article dives into how I built the Micropolis client with OL, leveraging the fantastic OpenLaszlo platform (kudos to the whole OL team!), with constraint machinery **similar** to systems such as the **Garnet User Interface Development Environment** (major hat tip to its creator, **Professor Brad Myers** at Carnegie Mellon University, and his Lisp hacking skills!). We'll unpack the cool tech that made it possible – a smart **compiler**, powerful **constraints**, and a slick **prototype-based object system**. It was frankly revolutionary for its time! And the fascinating part? The core ideas I wrestled with back then are *still* shaping how we build the *best* web experiences today, including the brand-new **Svelte 5** + **WebAssembly (Wasm)** version of Micropolis. Let's explore this piece of web history and see what lessons it holds!
 
-## Historical Context: From Workstations to the Web
+### Historical Context: From Workstations to the Web
 
 So, where did this OpenLaszlo client fit into the sprawling history of SimCity/Micropolis? It wasn't the first time the simulation escaped its original Mac/Amiga confines – far from it! Earlier adventures involved bringing it to powerful Unix workstations, resulting in versions like the **NeWS (Network extensible Window System)** client, which leveraged the fascinating capabilities of **Display PostScript**, and another distinct implementation using **TCL/Tk (Tool Command Language / Toolkit)** for the **X11 window system**. Each of these ports presented unique technical challenges and opportunities, particularly around user interface toolkits and inter-process communication, experiences worth exploring in their own right.
 
@@ -17,11 +50,11 @@ The OpenLaszlo version, however, aimed for the web browser, specifically targeti
 
 Getting all these disparate pieces – C++, Python, TurboGears, AMF, Flash, and OpenLaszlo's LZX/**ActionScript** (the scripting language of Flash) – to dance together efficiently was a significant engineering puzzle, quite different from the challenges faced in the more tightly integrated NeWS or TCL/Tk environments. This OL client represents a specific moment in web history, striving for desktop application richness using the best (and sometimes only) tools available at the time. Its design choices, driven by these constraints, offer valuable lessons as we build the modern Micropolis using WebAssembly and Svelte 5, aiming for similar richness but on an open, standardized platform.
 
-## Analysis: OpenLaszlo's Secret Sauce
+### Analysis: OpenLaszlo's Secret Sauce
 
 So what made OpenLaszlo tick? What was its magic for building complex, data-driven UIs like Micropolis back then? It boiled down to a few killer ideas that, while rooted in earlier academic work, OL packaged effectively for web developers:
 
-### 1. Compiler-Driven Constraint-Based Reactivity
+#### 1. Compiler-Driven Constraint-Based Reactivity
 
 *   **The Core Idea:** This was OL's defining feature, **similar in spirit** to research systems like Garnet (a powerful UI toolkit built in **Common Lisp**). Instead of manually writing code to update `B` whenever `A` changed, you could declaratively state that `B`'s value *depends* on `A` (using simple `${...}` formula syntax). The real wizardry was the OL Compiler. It parsed the LZX code, figured out all these dependencies automatically, and generated optimized JavaScript/ActionScript bytecode. The runtime then used this compiled knowledge to magically keep everything in sync when data changed.
 *   **Garnet vs. OL Constraints: Pull vs. Push (An Engineering Trade-off):** OL's constraint system **resembled** Garnet's in several ways — not necessarily by direct influence. Having worked extensively on both systems, the key practical difference lay in their primary evaluation strategy. OL adopted a primarily **"push"-based** (eager) model, driven by the need for efficient implementation within the Flash/ActionScript runtime. Garnet utilized a **"pull"-based** (lazy) model, where values were typically recalculated only when requested.
@@ -29,32 +62,32 @@ So what made OpenLaszlo tick? What was its magic for building complex, data-driv
     *   **Push Pragmatism (OL):** Push systems feel snappy for simple cases and avoid recalculation delays on first read. This felt like the right trade-off for the Flash runtime OL targeted, especially with the compiler optimizing the dependency flow.
 *   **The Beauty:** Regardless of pull or push, the **compiler** hid the complexity! Developers wrote simple formulas, the system handled the intricate update logic. Less boilerplate, more reliability – essential for managing complex UI state. Modern reactive frameworks, including Svelte, owe a significant debt to these pioneering constraint systems.
 
-### 2. Prototype-Based Object System (Like Self, But for the Web)
+#### 2. Prototype-Based Object System (Like Self, But for the Web)
 
 *   **Ditching Rigid Classes:** Remember wrestling with endless class hierarchies just for minor UI variations? OL embraced a more flexible **prototype-based** approach, similar to the **Self programming language** or Garnet's **KR (Knowledge Representation)** object system. Components inherited properties from prototypes (`<button extends="basebutton">`), but instances could easily override things or add new properties, methods, or even nested components *without* needing a new formal class definition.
 *   **Why It Was Awesome:** Perfect for GUIs! Think of all those slightly different buttons. Prototypes allowed massive reuse while making instance-specific customization trivial. No need for thousands of tiny subclasses – just tweak the instance! This concept resonates strongly with how modern component-based frameworks encourage composition over deep inheritance.
 
-### 3. Declarative Programming (Say *What*, Not *How*)
+#### 3. Declarative Programming (Say *What*, Not *How*)
 
 *   **The Philosophy:** OL strongly encouraged defining the UI structure (in **XML**), relationships (via constraints), and behavior (event handlers) declaratively. You described *what* the UI should look like and how it should react, rather than writing step-by-step imperative code to build and manipulate it.
 *   **The Synergy:** This declarative style worked beautifully with constraints and prototypes, leading to code that was often more concise, easier to understand, and less prone to bugs caused by manual state management.
 
-### 4. Instance-First Development (Enabled by the Instance Substitution Principle)
+#### 4. Instance-First Development (Enabled by the Instance Substitution Principle)
 
 *   **The Big Idea (Oliver Steele's Instance Substitution Principle):** This principle, clearly articulated by **Oliver Steele** during OL's development and crucial to its usability, is key. It basically states: *An instance of a class can be replaced by the inline definition of that instance, without changing the program semantics, and vice-versa.* In OpenLaszlo, this meant if you defined `<class name="coolbutton" extends="button">...</class>`, you could use `<coolbutton/>` interchangeably with the original inline `<button>...</button>` definition wherever it appeared. The syntax for instantiation and definition were parallel.
 *   **Why it Rocked (Instance-First Development):** This **Instance Substitution Principle (ISP)** directly enabled a super-productive workflow called **Instance-First Development**. You didn't have to start by designing abstract classes. Instead, you could just start *building*! You'd create a specific, one-off piece of UI directly in place using basic tags (`<view>`, `<button>`, `<text>`) and configure it with unique constraints, event handlers, and nested parts. Get it working first! *Then*, if you realized you needed another one like it, you could easily **refactor** that working instance definition into a reusable `<class>` definition. Thanks to the ISP, you could just swap the original inline definition with the new class tag (`<mycoolwidget/>`) without breaking anything around it.
 *   **The Payoff:** This made prototyping incredibly fast and reduced upfront abstraction anxiety. You built concrete things first and generalized *only when necessary*, based on real needs, leading to cleaner, more practical abstractions. It perfectly matched the often bespoke nature of UI elements. The ease of refactoring from instance to component is a quality highly valued in modern frameworks like Svelte.
 
-### 5. Data Replication / Binding (Taming Lists)
+#### 5. Data Replication / Binding (Taming Lists)
 
 *   **Handling Dynamic Data:** Need to show a list of items from some data source? OL could automatically create UI components (like list items or table rows) based on XML datasets. It cleverly bound attributes of the created UI instances to the corresponding data elements, making dynamic lists and tables much easier to manage than manual DOM manipulation. Changes in the data automatically updated the UI.
 
-### 6. Rich Component Model & Multiple Coordinated Views
+#### 6. Rich Component Model & Multiple Coordinated Views
 
 *   **Building Blocks:** OL provided a solid library of built-in UI components, and the Micropolis client used them extensively to recreate the classic SimCity interface: maps, data panels, tool palettes, dialogs, even little autonomous robots wandering the map!
 *   **Seeing the Whole Picture:** Like its predecessors on NeWS and other platforms, the OL version embraced **multiple coordinated views**. The main map, mini-map, RCI indicators, graphs – all potentially showing different facets of the same underlying simulation state, kept in sync automatically through constraints and data binding. This multi-view approach is fundamental to understanding complex systems like Micropolis.
 
-### 7. Architectural Trade-offs: The Client-Side Animation Hack
+#### 7. Architectural Trade-offs: The Client-Side Animation Hack
 
 *   **The Network Bottleneck Problem:** Okay, check out this classic client-server dilemma. Micropolis has tons of animated tiles (traffic, fires, smoke). The C++ engine knows the *state*, but animating requires cycling through frames. Sending the *correctly animated frame* for every tile across the network on every update? Way too slow! Remember, this was before WebSockets and efficient binary protocols were standard browser features.
 *   **The Clever Hack:** The solution involved a deliberate trade-off, pushing work to the client to save precious bandwidth:
@@ -62,7 +95,7 @@ So what made OpenLaszlo tick? What was its magic for building complex, data-driv
     *   The **OpenLaszlo client**'s rendering code got slightly smarter. When it saw an animated base tile ID, *it* calculated the correct frame to display based on a timer.
 *   **Why Do It?** It added a little complexity to the client but *slashed* network traffic and server load. In a world constrained by network latency (unlike today's Wasm shared-memory scenario), this was a non-negotiable optimization for playability. It's a prime example of how architectural constraints shape design.
 
-## Svelte 5 Roadmap: Lessons Learned, Modern Tools
+### Svelte 5 Roadmap: Lessons Learned, Modern Tools
 
 So, that was then. How does this deep dive into OpenLaszlo's guts help us build the *future* Micropolis with Svelte 5 and WebAssembly? Turns out, a LOT! The fundamental challenges of managing complex UI state and efficiently connecting it to a simulation core haven't vanished, but our tools and the underlying web platform have evolved dramatically.
 
@@ -113,39 +146,39 @@ We'll rebuild the Micropolis UI using idiomatic Svelte 5, taking advantage of it
 
 By learning from the pioneering work on OpenLaszlo, Garnet, and even earlier systems like NeWS, and combining those lessons with the power of Svelte 5's compiler and WebAssembly's performance, we're building a Micropolis that's not just a port, but a significant leap forward in web-based simulation interfaces.
 
-## Peeking Under the Hood (OpenLaszlo Version)
+### Peeking Under the Hood (OpenLaszlo Version)
 
 *(Note: This section describes details specific to the OL/Flash implementation)*
 
-### Animation System (`anitiles.lzx`)
+#### Animation System (`anitiles.lzx`)
 This defined all the tile animation sequences used in the game – traffic, fires, chimney smoke, evolving buildings, etc. – specifying the frames and timing.
 
-### Tile Rendering (Client-Side Focus)
+#### Tile Rendering (Client-Side Focus)
 The OL tile rendering needed specific optimizations for its client-server context:
 *   Tracking viewport changes to redraw only visible areas.
 *   Lazily requesting map tile data via AMF from the Python server as the user panned.
 *   **Performing tile animation cycles locally** in Flash based on base tile IDs received from the server – the crucial bandwidth-saving hack discussed earlier.
 *   Managing rendering buffers efficiently within the Flash player.
 
-### Tool System (`toolpalette.lzx`)
+#### Tool System (`toolpalette.lzx`)
 Handled the classic SimCity tool palette:
 *   Visual selection and feedback.
 *   Displaying tool costs.
 *   Validating placement rules before allowing the user to build.
 
-### Autonomous Agents (`robot.lzx`, etc.)
+#### Autonomous Agents (`robot.lzx`, etc.)
 Even included simple autonomous agents (robots based on characters from The Sims):
 *   Basic movement logic.
 *   Simple pathfinding.
 *   Context menus for interaction.
 
-## Notes on Development (OpenLaszlo Version)
+### Notes on Development (OpenLaszlo Version)
 
 This codebase was developed for OpenLaszlo, an XML-based development platform that compiled to Flash or DHTML. Its strengths lay in its powerful constraint system, prototype-based objects, and support for declarative, instance-first development, making it highly effective for complex UIs like Micropolis at the time. As Flash is now deprecated, this code primarily serves as a historical reference and an illustration of these valuable architectural concepts.
 
 Its core ideas find echoes in modern frameworks like Svelte. Both rely on **compilers** to translate high-level declarative syntax into efficient runtime code. Svelte 5's runes (`$state`, `$derived`, `$effect`) provide a highly optimized, compiler-driven evolution of constraint-based reactivity. Svelte's component model, combined with runes enabling state and logic directly within component instances, strongly supports the instance-first development philosophy. Modern JavaScript replaces OL's prototype system, and WebGL/Canvas replaces Flash for rendering.
 
-## Conclusion: OpenLaszlo's Legacy – Still Inspiring Cool Web Tech
+### Conclusion: OpenLaszlo's Legacy – Still Inspiring Cool Web Tech
 
 So, was the OpenLaszlo Micropolis client perfect? Tied to Flash, its time has passed. But *man*, was it a feat of engineering for its era! It showed what was possible when you pushed the web's boundaries. OpenLaszlo tackled the "rich interactive UI" problem head-on with some brilliant tools:
 *   **A Compiler Doing the Heavy Lifting:** Like having a super-smart assistant figure out *exactly* what needs updating, making code cleaner and faster. Genius!
@@ -155,6 +188,6 @@ So, was the OpenLaszlo Micropolis client perfect? Tied to Flash, its time has pa
 
 These weren't just academic ideas; they were practical solutions that let us build something as complex as Micropolis for the web. And here's the kicker: these concepts are alive and well! Look at Svelte 5 – its compiler, its reactive runes (think next-gen constraints!), its component model – it's like the spiritual successor, taking those core principles and making them work beautifully on the *modern*, plugin-free web with technologies like WebAssembly. Understanding the ingenuity of the OpenLaszlo version isn't just a history lesson; it gives us a deeper appreciation for how far we've come and directly inspires how we're building the fastest, coolest Micropolis yet. That journey of innovation? That's the really exciting part!
 
-## License
+### License
 
 Micropolis is licensed under GPLv3, as indicated in the file headers. 

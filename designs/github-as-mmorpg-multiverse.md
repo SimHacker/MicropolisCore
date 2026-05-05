@@ -6,6 +6,8 @@ MicropolisHub can use GitHub as a multiplayer world server without pretending Gi
 
 Git already provides durable timelines, branching, merging, diffs, authorship, review, comments, permissions, automation, CI/CD, bots, webhooks, Actions, artifacts, and public/private sharing. Those are exactly the primitives needed for a collaborative constructionist microworld where cities branch into alternate histories.
 
+Historical scratchpads in **`documentation/openlaszlo-micropolis/TODO.txt`** sketched overlapping ideas (mutable vs immutable city saves, branching, multiplayer votes, social integration) on the TurboGears/Flash stack — useful as receipts for where those themes came from, without implying GitHub was the original target platform.
+
 The mapping should be deliberate:
 
 - Git branch = universe.

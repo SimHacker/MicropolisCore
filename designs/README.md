@@ -2,6 +2,12 @@
 
 This directory captures design rationale that should outlive chat context.
 
+## Documentation vs designs
+
+**`documentation/`** holds manuals, talks, HTML bundles, and **frozen snapshots** — for example the OpenLaszlo archive **`documentation/openlaszlo-micropolis/`** (`*.lzx`, scratchpads like **`TODO.txt`**). **`designs/`** is for **ongoing** intent: Wasm bridge, command path, multiplayer metaphors. Designs are documentation in a narrow sense; splitting them keeps “what we ship next” grep-friendly without losing archives.
+
+When an older note foreshadows current work (city branching, social play, Git-as-multiverse), prefer a **link** from the archive into **`designs/`** instead of duplicating prose — see **`platform-lineage-index.md`**.
+
 Read these alongside:
 
 - `notes/PIE-TAB-WINDOWS.md`
@@ -11,6 +17,7 @@ Read these alongside:
 
 ## Documents
 
+- `platform-lineage-index.md` — Platform eras (NeWS, X11, OLPC, OpenLaszlo, Wasm) and where each layer’s docs live; relates **`documentation/`** to **`designs/`**.
 - `collaborative-microworld-lineage.md` — Engelbart, Kay, Papert, Piaget, SimCityNet, and constructionist multiplayer.
 - `multiplayer-browser-lessons.md` — Lessons from Sail/Muddy and the Hacker News discussion for MicropolisHub.
 - `command-path-collaboration-modes.md` — End-to-end command path, live/async collaboration modes, object placement, manifests, and source-of-truth rules.
