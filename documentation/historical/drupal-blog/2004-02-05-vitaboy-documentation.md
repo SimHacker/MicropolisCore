@@ -22,9 +22,11 @@ The Access database tells the exporter which skeletons, skills and suits are def
 
 The Drupal entry embedded a **very long** Word-exported manual: step-by-step installation of the CMX exporter (`maxiscrp.dlx`, `maxis-maxscript.ms`), database cache workflows, exhaustive note-track tag vocabulary for skeletons/suits/skills, mesh export rules, internal file formats (CMX/BCF/SKN/BMF/BIN/CFP/NDX/FAR), and extensive C++ class descriptions (`Skeleton.cpp`, `VitaBoy.cpp`, `SAnimator.cpp`, `CMXExporter.cpp`, etc.).
 
-That full text is preserved on the Internet Archive capture of the daily page:
+That full text is preserved on the Internet Archive capture of the daily page (same anchor under **Pie Menus** or **Game Design**):
 
-- **Full VitaBoy / exporter documentation (Wayback):**  
+- **Full VitaBoy / exporter documentation (Wayback, Pie Menus daily page):**  
+  https://web.archive.org/web/20040423032002/http://www.donhopkins.com/categories/pieMenus/2004/02/05.html#a73  
+- **Alternate capture (Game Design daily page):**  
   https://web.archive.org/web/20040317155006/http://www.donhopkins.com/categories/gameDesign/2004/02/05.html#a73  
 
 For related extracts already split out in this folder, see:
@@ -37,5 +39,7 @@ For related extracts already split out in this folder, see:
 
 ## Source
 
-- Blog permalink: `http://www.donhopkins.com/categories/gameDesign/2004/02/05.html#a73`  
-- Wayback category page: https://web.archive.org/web/20040317155006/http://www.donhopkins.com/blog/categories/gameDesign/
+- Blog permalink (also filed under **Pie Menus**): `http://www.donhopkins.com/categories/pieMenus/2004/02/05.html#a73`  
+- Same post under Game Design: `http://www.donhopkins.com/categories/gameDesign/2004/02/05.html#a73`  
+- Wayback — Pie Menus category: https://web.archive.org/web/20040423032002/http://www.donhopkins.com/blog/categories/pieMenus/  
+- Wayback — Game Design category: https://web.archive.org/web/20040317155006/http://www.donhopkins.com/blog/categories/gameDesign/

@@ -1,6 +1,6 @@
 # Drupal blog archives (RadiOMatic / Drupal)
 
-Migrated posts from Don Hopkins’ RadiOMatic / Drupal-era blog, grouped by the **category pages** that listed them on the original site (**Game Design**, **The Sims Objects**, **RSS Programming**). Figures live under **`images/`** where Wayback or upstream hosts still provide bytes.
+Migrated posts from Don Hopkins’ RadiOMatic / Drupal-era blog, grouped by the **category pages** that listed them on the original site (**Game Design**, **The Sims Objects**, **RSS Programming**, **Pie Menus**). Figures live under **`images/`** where Wayback or upstream hosts still provide bytes.
 
 ## “Game Design” category
 
@@ -70,9 +70,22 @@ This listing mixed **syndication / tooling / satire** posts with the same *Sims*
 | 2004-01-08 | [`2004-01-08-greatest-object-ever-elsim-parody.md`](2004-01-08-greatest-object-ever-elsim-parody.md) | El Sim “greatest object” parody |
 | 2004-01-08 | [`2004-01-08-palm-house-kew-gardens-sims-build.md`](2004-01-08-palm-house-kew-gardens-sims-build.md) | Palm House (Kew) Sims build |
 
+## “Pie Menus” category
+
+**Wayback snapshot of the category page:**  
+https://web.archive.org/web/20040423032002/http://www.donhopkins.com/blog/categories/pieMenus/
+
+This listing paired **pie-menu essays** with **long *Sims* / VitaBoy technical dumps** that also appeared elsewhere on the blog (see **Game Design** for the same files).
+
+| Date | File | Topic |
+|------|------|--------|
+| 2004-02-12 | — | Dave Winer — standards vs open formats at Microsoft (**not migrated**; same Feb 12 essay as on RSS Programming) |
+| 2004-02-05 | [`2004-02-05-xml-pie-menus.md`](2004-02-05-xml-pie-menus.md) | XML / JavaScript pie menus (reply to Chris, *Sacrifice*, ActiveX vs DHTML) |
+| 2004-02-05 | [`2004-02-05-vitaboy-documentation.md`](2004-02-05-vitaboy-documentation.md) | VitaBoy / CMX exporter documentation (intro + link to full manual on Wayback) |
+
 ## Scope notes
 
-- **Dave Winer / Feb 12, 2004 Microsoft talk:** appears on the RSS Programming category page but is **not** migrated as a standalone file in this archive (syndication-politics / speaker-focused content). Original: Wayback [`.../rssProgramming/2004/02/12.html#a81`](https://web.archive.org/web/20040329181024/http://www.donhopkins.com/categories/rssProgramming/2004/02/12.html#a81).
+- **Dave Winer / Feb 12, 2004 Microsoft talk:** appears on the **RSS Programming** and **Pie Menus** category pages but is **not** migrated as a standalone file in this archive (syndication-politics / speaker-focused content). Original: Wayback [`.../rssProgramming/2004/02/12.html#a81`](https://web.archive.org/web/20040329181024/http://www.donhopkins.com/categories/rssProgramming/2004/02/12.html#a81) or [`.../pieMenus/2004/02/12.html#a81`](https://web.archive.org/web/20040423032002/http://www.donhopkins.com/categories/pieMenus/2004/02/12.html#a81).
 - **`thesimstransmogrifier.com`:** historical product and download pages are best viewed via [Wayback captures](https://web.archive.org/web/*/http://www.thesimstransmogrifier.com/) of the live site.
 
 Images were retrieved from Wayback or bundled tutorials where possible and stored under **`images/`**.

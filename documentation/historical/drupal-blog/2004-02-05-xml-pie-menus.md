@@ -8,7 +8,7 @@ Chris, a computer science student from [digipen.edu](https://web.archive.org/web
 
 > First, were you happy with The Sims' implementation of pie menus? It seems as though it doesn't necessarily provide all of the great features of an ideal pie. The targets aren't infinitely 'deep' -- the user needs to click directly on the button. Perhaps more importantly, the targets aren't in predictable locations (they items are dynamic based on a very complex set of inputs.) Don't misunderstand; I loved the game and felt the the interface worked well. I am interested in the design decisions that were made.
 >
-> The other thing I wanted ato ask was, have you any opinions on the game Sacrifice? I was very drawn to its pie system, and am always surprised that there has really never been much mention of it when it comes to discussion of pies, and pies in games. Thank you for your time,
+> The other thing I wanted to ask was, have you any opinions on the game Sacrifice? I was very drawn to its pie system, and am always surprised that there has really never been much mention of it when it comes to discussion of pies, and pies in games. Thank you for your time,
 >
 > Chris
 
@@ -57,5 +57,7 @@ I haven't seen Sacrifice, but thanks for pointing it out to me -- I'll look it u
 
 ## Source
 
-- Blog permalink: `http://www.donhopkins.com/categories/gameDesign/2004/02/05.html#a69`  
-- Wayback category page: https://web.archive.org/web/20040317155006/http://www.donhopkins.com/blog/categories/gameDesign/
+- Blog permalink (also filed under **Pie Menus**): `http://www.donhopkins.com/categories/pieMenus/2004/02/05.html#a69`  
+- Same post under Game Design: `http://www.donhopkins.com/categories/gameDesign/2004/02/05.html#a69`  
+- Wayback — Pie Menus category: https://web.archive.org/web/20040423032002/http://www.donhopkins.com/blog/categories/pieMenus/  
+- Wayback — Game Design category: https://web.archive.org/web/20040317155006/http://www.donhopkins.com/blog/categories/gameDesign/
