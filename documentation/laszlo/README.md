@@ -2,17 +2,13 @@
 
 This tree is an **archived** OpenLaszlo (`*.lzx`) Micropolis front-end. It lives under **`documentation/`** for reference and is not part of the active SvelteKit app (**`apps/micropolis/`**).
 
-## Where the assets live
+## Self-contained snapshot
 
-- **Archival originals** stay here under **`documentation/laszlo/micropolis/resources/`** (`data/`, `images/`, `sounds/`, tile art, SWFs, etc.). Do not strip this tree as “duplicate”; it keeps the Laszlo-era layout intact next to the sources.
+All **`src=` paths in the LZX files are relative to each compile unit** and point at **`../resources/...`** — i.e. **`documentation/laszlo/micropolis/resources/`** (`data/`, `images/`, `sounds/`, tile PNGs, SWFs, etc.). You can copy **only** `documentation/laszlo/micropolis/` (classes, micropolis entrypoints, resources) elsewhere and build or inspect OpenLaszlo without touching repo-root **`content/micropolis/`**.
 
-- **Canonical bundle** for the engine preload and web app is **`content/micropolis/`**. Any asset that appears under the Laszlo **`resources/`** tree should also exist there (same relative paths under `data/`, `images/`, `sounds/`, …) so WASM and tooling share one copy.
-
-- **LZX `src` paths** point at **`../../../../content/micropolis/...`** from `documentation/laszlo/micropolis/...` — i.e. the repo-root bundle, not sibling paths under `resources/`.
-
-To refresh **`content/micropolis`** from the archived **`resources/`** copy (merge only; does not delete extra files already in `content/micropolis`):
+The live engine and WASM preload still use **`content/micropolis/`**. When those bundles change, refresh the archival copy if you want them to stay in sync:
 
 ```bash
-# from MicropolisCore repo root
+# from MicropolisCore repo root — merge Laszlo archive into canonical bundle (optional)
 rsync -av documentation/laszlo/micropolis/resources/ content/micropolis/
 ```

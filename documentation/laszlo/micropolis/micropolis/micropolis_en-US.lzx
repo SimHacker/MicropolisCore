@@ -6,7 +6,7 @@
 >
 
     <dataset name="ds_strings" id="ds_strings"
-        src="../../../../content/micropolis/data/strings_en-US.xml"
+        src="../resources/data/strings_en-US.xml"
     />
 
     <include href="../classes/main.lzx"/>
