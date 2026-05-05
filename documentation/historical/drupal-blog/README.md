@@ -1,6 +1,8 @@
-# Drupal blog — “Game Design” category (archived)
+# Drupal blog archives (RadiOMatic / Drupal)
 
-Posts migrated from Don Hopkins’ RadiOMatic / Drupal-era **`categories/gameDesign`** listing. Each file is one original item; figures live under **`images/`**.
+Migrated posts from Don Hopkins’ RadiOMatic / Drupal-era blog, grouped by the **category pages** that listed them on the original site. Figures live under **`images/`** where Wayback or upstream hosts still provide bytes.
+
+## “Game Design” category
 
 **Wayback snapshot of the category page:**  
 https://web.archive.org/web/20040317155006/http://www.donhopkins.com/blog/categories/gameDesign/
@@ -18,10 +20,49 @@ https://web.archive.org/web/20040317155006/http://www.donhopkins.com/blog/catego
 | 2004-02-07 | [`2004-02-07-educational-simcity-linux-proposal.md`](2004-02-07-educational-simcity-linux-proposal.md) | Educational multiplayer SimCity for Linux |
 | 2004-02-07 | [`2004-02-07-bsml-trademark-satire.md`](2004-02-07-bsml-trademark-satire.md) | BSML page & trademark letter |
 | 2004-02-07 | [`2004-02-07-aiml-artificial-intelligence-marketing-language.md`](2004-02-07-aiml-artificial-intelligence-marketing-language.md) | AIML parody + Lem |
-| 2004-02-12 | [`2004-02-12-dave-winer-open-formats-microsoft.md`](2004-02-12-dave-winer-open-formats-microsoft.md) | Dave Winer — open formats vs “standards” |
 | 2004-02-12 | [`2004-02-12-alphaville-herald-interview.md`](2004-02-12-alphaville-herald-interview.md) | Alphaville Herald interview (TSO / SafeTMog) |
 | 2004-02-19 | [`2004-02-19-maxscript-sims-animation-pipeline.md`](2004-02-19-maxscript-sims-animation-pipeline.md) | MaxScript pipeline (reply to John Wainwright) |
 | 2004-02-21 | [`2004-02-21-chris-trottier-tuned-emergence.md`](2004-02-21-chris-trottier-tuned-emergence.md) | Chris Trottier interview — tuned emergence |
 | 2004-02-22 | [`2004-02-22-inside-the-stupid-fun-club-sdmagazine.md`](2004-02-22-inside-the-stupid-fun-club-sdmagazine.md) | *SD Magazine* — Stupid Fun Club / robots |
 
-Images were retrieved from the same Wayback capture where possible and stored under **`images/`**.
+## “The Sims Objects” category (*The Sims* / Maxis tooling)
+
+**Wayback snapshot of the category page:**  
+https://web.archive.org/web/20040329181128/http://www.donhopkins.com/blog/categories/theSimsObjects/
+
+Several long essays also appeared under **Game Design** (cross-listed here for discovery):
+
+| Date | File | Topic |
+|------|------|--------|
+| 2004-02-19 | [`2004-02-19-maxscript-sims-animation-pipeline.md`](2004-02-19-maxscript-sims-animation-pipeline.md) | MaxScript / Maxis animation pipeline |
+| 2004-02-05 | [`2004-02-05-third-party-sims-content-tools-proposal.md`](2004-02-05-third-party-sims-content-tools-proposal.md) | Third-party tools proposal → Transmogrifier |
+| 2004-01-21 | [`2004-01-21-rugomatic-tutorial.md`](2004-01-21-rugomatic-tutorial.md) | RugOMatic + Transmogrifier 2.0 |
+
+Posts whose primary home on the old blog was the **downloadable-object** stream:
+
+| Date | File | Topic |
+|------|------|--------|
+| 2004-01-25 | [`2004-01-25-chiabot-misty-wonder-bot-sims-objects.md`](2004-01-25-chiabot-misty-wonder-bot-sims-objects.md) | Will Wright’s ChiaBot / Misty the Wonder Bot objects |
+| 2004-01-22 | [`2004-01-22-moon-footprint-apollo-rug-sims-object.md`](2004-01-22-moon-footprint-apollo-rug-sims-object.md) | Apollo moon-footprint rug |
+
+The Jan 23, 2004 listing also contained **picture-rug** objects (Mars Express imagery, Edward Burtynsky photos, Captain Kangaroo obit rug, etc.). Those are not expanded into separate files here; see the Wayback daily page for that date under the same category.
+
+## Related posts (RSS Programming category, Sims / Maxis only)
+
+Same-era tooling notes lived under **`categories/rssProgramming/`** on the original site. These were migrated for *The Sims* / EA / tooling context (no syndication-politics essays):
+
+| Date | File | Topic |
+|------|------|--------|
+| 2004-01-12 | [`2004-01-12-the-sims-exchange-storytelling.md`](2004-01-12-the-sims-exchange-storytelling.md) | The Sims Exchange & storytelling |
+| 2004-01-09 | [`2004-01-09-free-martian-rugs-the-sims.md`](2004-01-09-free-martian-rugs-the-sims.md) | Martian rugs pipeline (RugOMatic / publishing) |
+| 2004-01-08 | [`2004-01-08-rss20-sims-module-mysims-radio-userland.md`](2004-01-08-rss20-sims-module-mysims-radio-userland.md) | RSS Sims module & MySims for Radio UserLand |
+| 2004-01-08 | [`2004-01-08-showntell-activex-sims-object-preview.md`](2004-01-08-showntell-activex-sims-object-preview.md) | ShowNTell ActiveX previews |
+| 2004-01-08 | [`2004-01-08-greatest-object-ever-elsim-parody.md`](2004-01-08-greatest-object-ever-elsim-parody.md) | El Sim “greatest object” parody |
+| 2004-01-08 | [`2004-01-08-palm-house-kew-gardens-sims-build.md`](2004-01-08-palm-house-kew-gardens-sims-build.md) | Palm House (Kew) Sims build |
+
+## Scope notes
+
+- **Dave Winer / RSS politics:** not indexed here (the former standalone migration of the Feb 12, 2004 talk post has been removed from this tree).
+- **`thesimstransmogrifier.com`:** historical product and download pages are best viewed via [Wayback captures](https://web.archive.org/web/*/http://www.thesimstransmogrifier.com/) of the live site.
+
+Images were retrieved from Wayback or bundled tutorials where possible and stored under **`images/`**.
