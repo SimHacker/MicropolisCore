@@ -39,8 +39,8 @@ micropolis/                SvelteKit application
     wasm/                  Browser/Node WASM loaders and heap helpers
     i18n/                  Translation-key helpers for UI-facing metadata
     MicropolisReactive.svelte.ts Reactive engine bridge
-    WebGLTileRenderer.ts   WebGL2 tile renderer (gold standard)
     TileView.svelte        Map display component
+packages/tile-renderer/    Shared tile renderers (Canvas 2D, WebGL2, WebGPU, software)
     MicropolisSimulator.ts WASM engine wrapper
   cli/
     entry.ts               Unified CLI entrypoint
@@ -77,29 +77,31 @@ UI Components + WebGL Renderer
 
 The `micropolis` CLI reads, analyzes, visualizes, edits, and patches `.cty` save files, runs the WASM simulator headlessly, and exposes the command bus.
 
+Run from the `micropolis/` package directory after `pnpm install` at the repo root (or prefix with `pnpm --filter micropolis run` from the MicropolisCore root).
+
 ```bash
 cd micropolis
 
 # City information and analysis
-npm run micropolis -- city info resources/cities/scenario_tokyo.cty
-npm run micropolis -- city analyze resources/cities/scenario_boston.cty
-npm run micropolis -- city analyze --format json resources/cities/radial.cty
+pnpm run micropolis -- city info resources/cities/scenario_tokyo.cty
+pnpm run micropolis -- city analyze resources/cities/scenario_boston.cty
+pnpm run micropolis -- city analyze --format json resources/cities/radial.cty
 
 # Visualize as ASCII, emoji, or monospace
-npm run micropolis -- visualize ascii --row 20 --col 30 --width 30 --height 15 resources/cities/scenario_tokyo.cty
-npm run micropolis -- visualize emoji resources/cities/radial.cty
+pnpm run micropolis -- visualize ascii --row 20 --col 30 --width 30 --height 15 resources/cities/scenario_tokyo.cty
+pnpm run micropolis -- visualize emoji resources/cities/radial.cty
 
 # Edit city metadata
-npm run micropolis -- city edit city.cty --funds 50000 --tax 9 --year 1960
+pnpm run micropolis -- city edit city.cty --funds 50000 --tax 9 --year 1960
 
 # Patch scenario files with the values the engine injects at runtime
-npm run micropolis -- city patch-scenario resources/cities/scenario_tokyo.cty --dry-run
+pnpm run micropolis -- city patch-scenario resources/cities/scenario_tokyo.cty --dry-run
 
 # Export to JSON (with optional tile map data)
-npm run micropolis -- city export --format json --include-map city.cty
+pnpm run micropolis -- city export --format json --include-map city.cty
 
 # Pipe from stdin
-cat city.cty | npm run micropolis -- city info -
+cat city.cty | pnpm run micropolis -- city info -
 ```
 
 Full test suite and command reference: [Cursor/micropolis-js-tests.md](Cursor/micropolis-js-tests.md)
@@ -174,7 +176,7 @@ Full details: [MOOLLM: A Microworld Operating System for LLM Orchestration](http
 | [schema-mechanism](https://github.com/SimHacker/moollm/tree/main/skills/schema-mechanism) | Drescher's causal learning -- agents discover cause and effect in the sim |
 | [experiment](https://github.com/SimHacker/moollm/tree/main/skills/experiment) | Systematic simulation: SIMULATE, EVALUATE, ITERATE, ANALYZE cycles |
 | [adversarial-committee](https://github.com/SimHacker/moollm/tree/main/skills/adversarial-committee) | Multi-perspective debate between AI tutors with incompatible values |
-| Micropolis CLI | Doc-first terminal automation through `npm run micropolis -- about --format yaml` and `api --format yaml` |
+| Micropolis CLI | Doc-first terminal automation through `pnpm run micropolis -- about --format yaml` and `api --format yaml` |
 | [speed-of-light](https://github.com/SimHacker/moollm/tree/main/skills/speed-of-light) | Multiple agent turns inside a single LLM call, no round-trip latency |
 
 **Speed of Light vs Carrier Pigeon:** Most AI agent systems coordinate *between* LLM calls -- 500ms+ per hop, precision degrades each hop, every turn re-tokenizes the full context. MOOLLM skills run *during* one LLM call -- multiple agents iterating dozens of times inside a single generation, instant latency, perfect precision. AI tutors can debate a zoning decision, explore alternatives, and reach a recommendation in one call rather than a slow chain of API round-trips. Full writeup: [Speed of Light vs Carrier Pigeon](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md).
@@ -237,11 +239,33 @@ His key trick: recursive weight-sharing in fractal convolutional blocks, where e
 
 ## Building
 
+### MicropolisHub setup (Cursor + MOOLLM)
+
+**MicropolisHub** ties this repository to [MOOLLM](https://github.com/SimHacker/moollm) — the microworld skill framework where the **micropolis** skill, AI tutors, and related designs live. To work across engine code, the SvelteKit app, and MOOLLM skills in one flow:
+
+1. **Clone both repositories** (sibling directories work well):
+
+   ```bash
+   git clone https://github.com/SimHacker/MicropolisCore.git
+   git clone https://github.com/SimHacker/moollm.git
+   ```
+
+2. **Add both folders to the same Cursor workspace** so indexing, rules, and agents can see MicropolisCore and MOOLLM together: use **File → Add Folder to Workspace…** (or your OS equivalent) and include both repo roots, or open a multi-root `.code-workspace` file that lists both paths.
+
+3. **Follow MOOLLM’s setup and install instructions first** (clone is already done if you used step 1):
+
+   - [MOOLLM README — Quick Start](https://github.com/SimHacker/moollm#quick-start)
+   - [MOOLLM QUICKSTART.md](https://github.com/SimHacker/moollm/blob/main/QUICKSTART.md) — open the repo in Cursor and wait until **Settings → Cursor Settings → Indexing → Codebase Indexing** reaches **100%**, as in MOOLLM’s quickstart.
+
+4. **Then** install and build MicropolisCore using the prerequisites and commands below (Emscripten, `pnpm`, WASM engine, `micropolis` app).
+
+MOOLLM does not replace the Node/pnpm toolchain here; it complements this repo for skills, YAML Jazz, and agent orchestration alongside the engine and web app.
+
 ### Prerequisites
 
 You need:
 
-- Node.js 20+ and npm.
+- Node.js 20+ and [pnpm](https://pnpm.io/installation) (this repo uses `pnpm` at the root; enable Corepack with `corepack enable` if you use the version pinned in the root `package.json`).
 - Git.
 - Python 3.
 - GNU Make.
@@ -308,15 +332,16 @@ The checked-in makefile builds the engine for browser, worker, and Node environm
 -s 'ENVIRONMENT=web,worker,node'
 ```
 
-Node support is required for `npm run micropolis -- sim ...`.
+Node support is required for `pnpm --filter micropolis run micropolis -- sim ...` (or `cd micropolis && pnpm run micropolis -- sim ...`).
 
 ### SvelteKit App
 
+From the **MicropolisCore** repository root (monorepo):
+
 ```bash
-cd micropolis
-npm install
-npm run dev   # Development server
-npm run build # Production build
+pnpm install
+pnpm --filter micropolis dev    # Development server
+pnpm --filter micropolis build  # Production build (includes Jekyll step as configured)
 ```
 
 The Vite config copies `micropolisengine.wasm` and `micropolisengine.data` from `src/lib/` into the app build output so the browser can load them.
@@ -324,10 +349,10 @@ The Vite config copies `micropolisengine.wasm` and `micropolisengine.data` from 
 ### CLI Tool
 
 ```bash
-cd micropolis
-npm run micropolis -- --help
-npm run micropolis -- about --format yaml
-npm run micropolis -- api --format yaml
+cd micropolis   # or from repo root: pnpm --filter micropolis run micropolis -- ...
+pnpm run micropolis -- --help
+pnpm run micropolis -- about --format yaml
+pnpm run micropolis -- api --format yaml
 ```
 
 The CLI is the main terminal surface for city files, visualization, headless WASM simulation, and command-bus operations. It supports text output where useful and structured `json`, `yaml`, and `csv` formats where appropriate.
@@ -336,8 +361,8 @@ After rebuilding the engine with Emscripten:
 
 ```bash
 cd micropolis
-npm run micropolis -- sim info --format yaml
-npm run micropolis -- sim smoke --ticks 10 --format yaml
+pnpm run micropolis -- sim info --format yaml
+pnpm run micropolis -- sim smoke --ticks 10 --format yaml
 ```
 
 The `sim` branch loads the Emscripten/Embind WASM module in Node, instantiates `Micropolis`, loads a bundled city from the engine data package, runs ticks, and prints structured state. It is the foundation for GitHub Actions replay, command timeline validation, and agent-driven simulations.
@@ -354,15 +379,17 @@ source ~/Developer/emsdk/emsdk_env.sh
 cd MicropolisEngine
 make clean install
 
-# 3. Install app dependencies.
-cd ../micropolis
-npm install
+# 3. Install monorepo dependencies (micropolis app, shared packages, vitamoo workspace).
+cd ..
+pnpm install
 
 # 4. Verify CLI, WASM simulator, and web app.
-npm run micropolis -- city info ../resources/cities/haight.cty
-npm run micropolis -- sim smoke --ticks 1
-npm run dev
+pnpm --filter micropolis run micropolis -- city info ../resources/cities/haight.cty
+pnpm --filter micropolis run micropolis -- sim smoke --ticks 1
+pnpm --filter micropolis dev
 ```
+
+For MicropolisHub-style development with MOOLLM, follow **MicropolisHub setup (Cursor + MOOLLM)** at the top of this section before or alongside these steps.
 
 ## Links
 
