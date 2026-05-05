@@ -12,6 +12,10 @@ vitamoo:
   # Future: paths under content/vitamoo/ (exchange snippets, pack metadata)
   include: []
 
+yoot:
+  # Future: paths under content/yoot/ (tower-lineage packs, scenarios)
+  include: []
+
 shared:
   # Future: paths under content/shared/ (branding, legal, shared i18n)
   include: []
