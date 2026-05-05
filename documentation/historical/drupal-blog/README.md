@@ -1,6 +1,6 @@
 # Drupal blog archives (RadiOMatic / Drupal)
 
-Migrated posts from Don Hopkins’ RadiOMatic / Drupal-era blog, grouped by the **category pages** that listed them on the original site. Figures live under **`images/`** where Wayback or upstream hosts still provide bytes.
+Migrated posts from Don Hopkins’ RadiOMatic / Drupal-era blog, grouped by the **category pages** that listed them on the original site (**Game Design**, **The Sims Objects**, **RSS Programming**). Figures live under **`images/`** where Wayback or upstream hosts still provide bytes.
 
 ## “Game Design” category
 
@@ -47,22 +47,32 @@ Posts whose primary home on the old blog was the **downloadable-object** stream:
 
 The Jan 23, 2004 listing also contained **picture-rug** objects (Mars Express imagery, Edward Burtynsky photos, Captain Kangaroo obit rug, etc.). Those are not expanded into separate files here; see the Wayback daily page for that date under the same category.
 
-## Related posts (RSS Programming category, Sims / Maxis only)
+## “RSS Programming” category
 
-Same-era tooling notes lived under **`categories/rssProgramming/`** on the original site. These were migrated for *The Sims* / EA / tooling context (no syndication-politics essays):
+**Wayback snapshot of the category page:**  
+https://web.archive.org/web/20040329181024/http://www.donhopkins.com/blog/categories/rssProgramming/
+
+This listing mixed **syndication / tooling / satire** posts with the same *Sims*-focused essays that also appeared under **Game Design**. One row (**Dave Winer** at Microsoft) is intentionally not migrated here — see scope notes.
 
 | Date | File | Topic |
 |------|------|--------|
-| 2004-01-12 | [`2004-01-12-the-sims-exchange-storytelling.md`](2004-01-12-the-sims-exchange-storytelling.md) | The Sims Exchange & storytelling |
-| 2004-01-09 | [`2004-01-09-free-martian-rugs-the-sims.md`](2004-01-09-free-martian-rugs-the-sims.md) | Martian rugs pipeline (RugOMatic / publishing) |
-| 2004-01-08 | [`2004-01-08-rss20-sims-module-mysims-radio-userland.md`](2004-01-08-rss20-sims-module-mysims-radio-userland.md) | RSS Sims module & MySims for Radio UserLand |
+| 2004-02-12 | — | Dave Winer — standards vs open formats (**not migrated**) |
+| 2004-02-07 | [`2004-02-07-aiml-artificial-intelligence-marketing-language.md`](2004-02-07-aiml-artificial-intelligence-marketing-language.md) | AIML parody + Lem |
+| 2004-02-07 | [`2004-02-07-bsml-trademark-satire.md`](2004-02-07-bsml-trademark-satire.md) | BSML satire & trademark letter |
+| 2004-02-05 | [`2004-02-05-xml-pie-menus.md`](2004-02-05-xml-pie-menus.md) | XML / JavaScript pie menus |
+| 2004-02-05 | [`2004-02-05-third-party-sims-content-tools-proposal.md`](2004-02-05-third-party-sims-content-tools-proposal.md) | Third-party Sims authoring tools proposal |
+| 2004-02-05 | [`2004-02-05-sims-proposals.md`](2004-02-05-sims-proposals.md) | Sims proposals & community tools |
+| 2004-01-21 | [`2004-01-21-rugomatic-tutorial.md`](2004-01-21-rugomatic-tutorial.md) | RugOMatic documentation & tutorial |
+| 2004-01-12 | [`2004-01-12-the-sims-exchange-storytelling.md`](2004-01-12-the-sims-exchange-storytelling.md) | The Sims Exchange & SimCity storytelling |
+| 2004-01-09 | [`2004-01-09-free-martian-rugs-the-sims.md`](2004-01-09-free-martian-rugs-the-sims.md) | Martian rugs (RugOMatic / publishing) |
+| 2004-01-08 | [`2004-01-08-rss20-sims-module-mysims-radio-userland.md`](2004-01-08-rss20-sims-module-mysims-radio-userland.md) | RSS 2.0 Sims module & MySims (Radio UserLand) |
 | 2004-01-08 | [`2004-01-08-showntell-activex-sims-object-preview.md`](2004-01-08-showntell-activex-sims-object-preview.md) | ShowNTell ActiveX previews |
 | 2004-01-08 | [`2004-01-08-greatest-object-ever-elsim-parody.md`](2004-01-08-greatest-object-ever-elsim-parody.md) | El Sim “greatest object” parody |
 | 2004-01-08 | [`2004-01-08-palm-house-kew-gardens-sims-build.md`](2004-01-08-palm-house-kew-gardens-sims-build.md) | Palm House (Kew) Sims build |
 
 ## Scope notes
 
-- **Dave Winer / RSS politics:** not indexed here (the former standalone migration of the Feb 12, 2004 talk post has been removed from this tree).
+- **Dave Winer / Feb 12, 2004 Microsoft talk:** appears on the RSS Programming category page but is **not** migrated as a standalone file in this archive (syndication-politics / speaker-focused content). Original: Wayback [`.../rssProgramming/2004/02/12.html#a81`](https://web.archive.org/web/20040329181024/http://www.donhopkins.com/categories/rssProgramming/2004/02/12.html#a81).
 - **`thesimstransmogrifier.com`:** historical product and download pages are best viewed via [Wayback captures](https://web.archive.org/web/*/http://www.thesimstransmogrifier.com/) of the live site.
 
 Images were retrieved from Wayback or bundled tutorials where possible and stored under **`images/`**.
