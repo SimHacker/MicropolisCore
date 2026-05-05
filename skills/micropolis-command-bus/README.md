@@ -44,15 +44,15 @@ It composes with:
 
 Code:
 
-- `micropolis/src/lib/CommandBus.ts`
-- `micropolis/src/lib/micropolisCommands.ts`
-- `micropolis/src/lib/CommandMcpService.ts`
-- `micropolis/cli/bus/index.ts`
+- `apps/micropolis/src/lib/CommandBus.ts`
+- `apps/micropolis/src/lib/micropolisCommands.ts`
+- `apps/micropolis/src/lib/CommandMcpService.ts`
+- `apps/micropolis/cli/bus/index.ts`
 
 CLI:
 
 ```bash
-cd micropolis
+cd apps/micropolis
 npm run micropolis -- bus list --format yaml
 npm run micropolis -- bus preview city.generate-random --actor llm --reason "show a new terrain option" --format yaml
 npm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml

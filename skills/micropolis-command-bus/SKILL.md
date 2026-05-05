@@ -38,10 +38,10 @@ Never load a lower layer without reading the layer above it first.
 
 | File | Role |
 |------|------|
-| `micropolis/src/lib/CommandBus.ts` | Core bus: commands, dispatch, preview, undo, proposals |
-| `micropolis/src/lib/micropolisCommands.ts` | Micropolis command registry |
-| `micropolis/src/lib/CommandMcpService.ts` | MCP-style service wrapper |
-| `micropolis/cli/bus/index.ts` | Unified CLI command-bus branch |
+| `apps/micropolis/src/lib/CommandBus.ts` | Core bus: commands, dispatch, preview, undo, proposals |
+| `apps/micropolis/src/lib/micropolisCommands.ts` | Micropolis command registry |
+| `apps/micropolis/src/lib/CommandMcpService.ts` | MCP-style service wrapper |
+| `apps/micropolis/cli/bus/index.ts` | Unified CLI command-bus branch |
 | `skills/micropolis-command-bus/CARD.yml` | MOOLLM card interface |
 | `skills/micropolis-command-bus/GLANCE.yml` | Tiny mipmap summary |
 

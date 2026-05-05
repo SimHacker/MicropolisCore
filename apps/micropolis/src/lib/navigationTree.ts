@@ -1,4 +1,4 @@
-// micropolis/src/lib/navigationTree.ts
+// apps/micropolis/src/lib/navigationTree.ts
 // Loads the site structure from JSON and provides helper functions.
 
 import siteStructureData from './data/siteStructure.json';

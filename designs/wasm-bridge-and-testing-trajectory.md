@@ -8,7 +8,7 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 
 2. **Make heap access defensive** — Emscripten builds may expose **`Module.wasmMemory`**, **`HEAPU16`**, or neither until initialization; some stubs **throw** when read too early. Centralizing reads in **`heapU16FromEmscriptenModule`** keeps **`MicropolisSimulator`** and tests from crashing on missing or aborting getters.
 
-3. **Run tests where the app runs** — Vitest uses the same **SvelteKit + Vite** pipeline as **`micropolis/`**, so **Svelte 5 runes** in **`MicropolisReactive.svelte.ts`** compile correctly (plain **`.ts`** breaks with **`$state is not defined`** in Node).
+3. **Run tests where the app runs** — Vitest uses the same **SvelteKit + Vite** pipeline as **`apps/micropolis/`**, so **Svelte 5 runes** in **`MicropolisReactive.svelte.ts`** compile correctly (plain **`.ts`** breaks with **`$state is not defined`** in Node).
 
 4. **Do not fight Embind lifetimes in tests** — Teardown order matters: deleting certain Embind wrappers before **`Micropolis`** can trigger **`RuntimeError`** in destructors. Loader tests destroy **`Micropolis`** first and avoid patterns that abort during shutdown (documented in test comments).
 
@@ -16,13 +16,13 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 
 | Area | Detail |
 |------|--------|
-| **Vitest** | **`npm run test`** / **`npm run test:watch`** in **`micropolis/`**; **`vitest.config.ts`** — Node env, **`pool: 'forks'`**, **`fileParallelism: false`**, long timeouts for WASM load/init. |
+| **Vitest** | **`npm run test`** / **`npm run test:watch`** in **`apps/micropolis/`**; **`vitest.config.ts`** — Node env, **`pool: 'forks'`**, **`fileParallelism: false`**, long timeouts for WASM load/init. |
 | **Bridge filename** | **`MicropolisReactive.svelte.ts`** so runes are valid under the test runner; **`MicropolisView.svelte`** imports **`$lib/MicropolisReactive.svelte`**. |
 | **Heap helper** | **`src/lib/wasm/heap.ts`** — **`heapU16FromEmscriptenModule(module)`** with **try/catch** around **`wasmMemory.buffer`** / **`HEAPU16`**. |
 | **Simulator** | **`MicropolisSimulator`** uses the helper for map/mop views; if no view, warns and leaves **`mapData`/`mopData`** null (graceful degradation). |
 | **Node/browser loaders** | **`src/lib/wasm/node.ts`** and **`src/lib/wasm/browser.ts`** — shared WASM + asset loading for **`micropolis sim`**, Vitest, and browser startup; **`callbacks.ts`** and **`views.ts`** provide noop callbacks and map/mop views. |
 | **Tests** | **`micropolisWasm.loader.test.ts`** — artifacts, **`WORLD_*`**, map/mop byte sizes, optional buffer checks, **`loadCity`**. **`MicropolisReactive.integration.test.ts`** — attach simulator-shaped object, **`wasmModule`**, **`memory`**, **`syncFromEngine`**, **`peek`**, **`getSnapshot`**, **`poke`**. **`wasm/heap.test.ts`** — null module and throwing getters. |
-| **Docs** | **`micropolis/README.md`** — Tests section. **`callback-interface-roadmap.md`** — Vitest pointer. |
+| **Docs** | **`apps/micropolis/README.md`** — Tests section. **`callback-interface-roadmap.md`** — Vitest pointer. |
 
 ## Goals this unlocks
 

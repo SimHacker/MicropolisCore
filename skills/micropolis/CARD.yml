@@ -16,11 +16,11 @@ card:
     descriptions, client-side previews, and intentional uploads.
 
 evidence:
-  cli_entry: "../../micropolis/cli/entry.ts"
-  cli_modules: "../../micropolis/cli"
-  constants_source: "../../micropolis/cli/constants/constants.js"
+  cli_entry: "../../apps/micropolis/cli/entry.ts"
+  cli_modules: "../../apps/micropolis/cli"
+  constants_source: "../../apps/micropolis/cli/constants/constants.js"
   wasm_bindings: "../../MicropolisEngine/src/emscripten.cpp"
-  typescript_bindings: "../../micropolis/src/types/micropolisengine.d.ts"
+  typescript_bindings: "../../apps/micropolis/src/types/micropolisengine.d.ts"
   save_file_reference: "../../Cursor/city-save-files.md"
   checked_facts:
     - "CLI top-level commands: about, api, city, visualize, sim, bus"
@@ -55,21 +55,21 @@ status:
 files:
   docs: [GLANCE.yml, CARD.yml, SKILL.md, README.md]
   cli:
-    - ../../micropolis/cli/entry.ts
-    - ../../micropolis/cli/lib/format.ts
-    - ../../micropolis/cli/city/register.ts
-    - ../../micropolis/cli/city/visualize.ts
-    - ../../micropolis/cli/city/city-file.js
-    - ../../micropolis/cli/city/scenario.js
-    - ../../micropolis/cli/city/endian.js
-    - ../../micropolis/cli/wasm/sim.ts
-    - ../../micropolis/cli/bus/index.ts
-    - ../../micropolis/cli/meta/index.ts
-    - ../../micropolis/cli/constants/constants.js
+    - ../../apps/micropolis/cli/entry.ts
+    - ../../apps/micropolis/cli/lib/format.ts
+    - ../../apps/micropolis/cli/city/register.ts
+    - ../../apps/micropolis/cli/city/visualize.ts
+    - ../../apps/micropolis/cli/city/city-file.js
+    - ../../apps/micropolis/cli/city/scenario.js
+    - ../../apps/micropolis/cli/city/endian.js
+    - ../../apps/micropolis/cli/wasm/sim.ts
+    - ../../apps/micropolis/cli/bus/index.ts
+    - ../../apps/micropolis/cli/meta/index.ts
+    - ../../apps/micropolis/cli/constants/constants.js
   command_bus:
-    - ../../micropolis/src/lib/CommandBus.ts
-    - ../../micropolis/src/lib/micropolisCommands.ts
-    - ../../micropolis/src/lib/CommandMcpService.ts
+    - ../../apps/micropolis/src/lib/CommandBus.ts
+    - ../../apps/micropolis/src/lib/micropolisCommands.ts
+    - ../../apps/micropolis/src/lib/CommandMcpService.ts
   engine:
     - ../../MicropolisEngine/src/micropolis.h
     - ../../MicropolisEngine/src/micropolis.cpp
@@ -77,19 +77,19 @@ files:
     - ../../MicropolisEngine/src/fileio.cpp
     - ../../MicropolisEngine/src/simulate.cpp
   frontend_bridge:
-    - ../../micropolis/src/lib/MicropolisSimulator.ts
-    - ../../micropolis/src/lib/MicropolisReactive.svelte.ts
-    - ../../micropolis/src/lib/wasm/browser.ts
-    - ../../micropolis/src/lib/wasm/node.ts
-    - ../../micropolis/src/lib/wasm/heap.ts
-    - ../../micropolis/src/lib/wasm/views.ts
-    - ../../micropolis/src/lib/wasm/callbacks.ts
-    - ../../micropolis/src/lib/i18n/keys.ts
+    - ../../apps/micropolis/src/lib/MicropolisSimulator.ts
+    - ../../apps/micropolis/src/lib/MicropolisReactive.svelte.ts
+    - ../../apps/micropolis/src/lib/wasm/browser.ts
+    - ../../apps/micropolis/src/lib/wasm/node.ts
+    - ../../apps/micropolis/src/lib/wasm/heap.ts
+    - ../../apps/micropolis/src/lib/wasm/views.ts
+    - ../../apps/micropolis/src/lib/wasm/callbacks.ts
+    - ../../apps/micropolis/src/lib/i18n/keys.ts
   renderers:
-    - ../../micropolis/src/lib/WebGLTileRenderer.ts
-    - ../../micropolis/src/lib/CanvasTileRenderer.ts
-    - ../../micropolis/src/lib/WebGPUTileRenderer.ts
-    - ../../micropolis/src/lib/PieMenu.svelte
+    - ../../apps/micropolis/src/lib/WebGLTileRenderer.ts
+    - ../../apps/micropolis/src/lib/CanvasTileRenderer.ts
+    - ../../apps/micropolis/src/lib/WebGPUTileRenderer.ts
+    - ../../apps/micropolis/src/lib/PieMenu.svelte
     - ../../designs/renderer-plugin-roadmap.md
   content_management:
     - ../../designs/filesystem-object-model.md

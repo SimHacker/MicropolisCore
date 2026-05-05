@@ -25,10 +25,10 @@ files:
     - SKILL.md
     - README.md
   code:
-    - ../../micropolis/src/lib/CommandBus.ts
-    - ../../micropolis/src/lib/micropolisCommands.ts
-    - ../../micropolis/src/lib/CommandMcpService.ts
-    - ../../micropolis/cli/bus/index.ts
+    - ../../apps/micropolis/src/lib/CommandBus.ts
+    - ../../apps/micropolis/src/lib/micropolisCommands.ts
+    - ../../apps/micropolis/src/lib/CommandMcpService.ts
+    - ../../apps/micropolis/cli/bus/index.ts
 
 k-lines:
   activates:
@@ -150,14 +150,14 @@ policies:
 
 interfaces:
   in_app:
-    bus: "micropolis/src/lib/CommandBus.ts"
-    registry: "micropolis/src/lib/micropolisCommands.ts"
+    bus: "apps/micropolis/src/lib/CommandBus.ts"
+    registry: "apps/micropolis/src/lib/micropolisCommands.ts"
   mcp:
-    service: "micropolis/src/lib/CommandMcpService.ts"
+    service: "apps/micropolis/src/lib/CommandMcpService.ts"
     tools: [command_list, command_preview, command_propose, command_dispatch, command_proposal_list, command_proposal_approve, command_proposal_reject]
   cli:
-    script: "micropolis/cli/bus/index.ts"
-    run: "cd micropolis && npm run micropolis -- bus <subcommand>"
+    script: "apps/micropolis/cli/bus/index.ts"
+    run: "cd apps/micropolis && npm run micropolis -- bus <subcommand>"
 
 future_composition:
   pie_menus: "Slice definitions should reference command IDs"

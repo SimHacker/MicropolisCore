@@ -6,7 +6,7 @@ Micropolis callbacks should be useful beyond the SvelteKit GUI: reactive world s
 
 ## UI bridge (preferred for Svelte and tooling)
 
-**`micropolis/src/lib/MicropolisReactive.svelte.ts`** exports **`micropolisReactive`**: Svelte 5 runes fed by a full **`JSCallback`** implementation, plus **`getSnapshot()`** for JSON/MCP/interop. **Attach** the shared `MicropolisSimulator` after `getSharedSimulator(..., micropolisReactive.engineCallback, ...)`; **detach** on unmount.
+**`apps/micropolis/src/lib/MicropolisReactive.svelte.ts`** exports **`micropolisReactive`**: Svelte 5 runes fed by a full **`JSCallback`** implementation, plus **`getSnapshot()`** for JSON/MCP/interop. **Attach** the shared `MicropolisSimulator` after `getSharedSimulator(..., micropolisReactive.engineCallback, ...)`; **detach** on unmount.
 
 - **Callbacks first** — handlers should rely on engine events and reactive fields; most UI does not need raw WASM.
 - **`memory`** — `mapU16`, `mopU16`, optional full `heapU16`, byte addresses and linear tile indexing for renderers and bulk tools.
@@ -18,7 +18,7 @@ Prefer these APIs over importing `Micropolis` or touching heap in UI code; exten
 
 ## Authoritative API (WASM / Embind)
 
-Embind and TypeScript see the methods declared on **`Callback`** in `MicropolisEngine/src/callback.h` (same names on `JSCallback` in `MicropolisEngine/src/js_callback.h` and `micropolis/src/types/micropolisengine.d.ts`). Current symbols:
+Embind and TypeScript see the methods declared on **`Callback`** in `MicropolisEngine/src/callback.h` (same names on `JSCallback` in `MicropolisEngine/src/js_callback.h` and `apps/micropolis/src/types/micropolisengine.d.ts`). Current symbols:
 
 ```text
 autoGoto
@@ -58,7 +58,7 @@ updateSpeed
 updateTaxRate
 ```
 
-Implementations today include **`micropolisReactive.engineCallback`** (`MicropolisReactive.svelte.ts`) and the shared headless no-op callback in `micropolis/src/lib/wasm/callbacks.ts` used by `micropolis sim`. Vitest integration tests live beside the bridge (`npm run test` in `micropolis/`).
+Implementations today include **`micropolisReactive.engineCallback`** (`MicropolisReactive.svelte.ts`) and the shared headless no-op callback in `apps/micropolis/src/lib/wasm/callbacks.ts` used by `micropolis sim`. Vitest integration tests live beside the bridge (`npm run test` in `apps/micropolis/`).
 
 ## Naming and events
 

@@ -12,7 +12,7 @@
             "env": {
                 "NODE_ENV": "development"
             },
-            "cwd": "${workspaceFolder}/micropolis",
+            "cwd": "${workspaceFolder}/apps/micropolis",
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "Localhost server is ready on port (\\d+).",
@@ -25,7 +25,7 @@
             "type": "pwa-chrome",
             "request": "attach",
             "port": 9222,
-            "webRoot": "${workspaceFolder}/micropolis/src",
+            "webRoot": "${workspaceFolder}/apps/micropolis/src",
             "pathMapping": {
                 "/": "${webRoot}"
             }

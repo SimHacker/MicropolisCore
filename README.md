@@ -34,7 +34,7 @@ MicropolisEngine/          C++ simulation core
     simulate.cpp           Simulation loop
     zone.cpp, traffic.cpp, power.cpp, budget.cpp, ...
 
-micropolis/                SvelteKit application
+apps/micropolis/           SvelteKit application
   src/lib/
     wasm/                  Browser/Node WASM loaders and heap helpers
     i18n/                  Translation-key helpers for UI-facing metadata
@@ -78,25 +78,25 @@ UI Components + WebGL Renderer
 
 The `micropolis` CLI reads, analyzes, visualizes, edits, and patches `.cty` save files, runs the WASM simulator headlessly, and exposes the command bus.
 
-Run from the `micropolis/` package directory after `pnpm install` at the repo root (or prefix with `pnpm --filter micropolis run` from the MicropolisCore root).
+Run from the `apps/micropolis/` package directory after `pnpm install` at the repo root (or prefix with `pnpm --filter micropolis run` from the MicropolisCore root).
 
 ```bash
-cd micropolis
+cd apps/micropolis
 
-# City information and analysis
-pnpm run micropolis -- city info content/micropolis/cities/scenario_tokyo.cty
-pnpm run micropolis -- city analyze content/micropolis/cities/scenario_boston.cty
-pnpm run micropolis -- city analyze --format json content/micropolis/cities/radial.cty
+# City information and analysis (paths relative to this directory)
+pnpm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty
+pnpm run micropolis -- city analyze --format json ../../content/micropolis/cities/radial.cty
 
 # Visualize as ASCII, emoji, or monospace
-pnpm run micropolis -- visualize ascii --row 20 --col 30 --width 30 --height 15 content/micropolis/cities/scenario_tokyo.cty
-pnpm run micropolis -- visualize emoji content/micropolis/cities/radial.cty
+pnpm run micropolis -- visualize ascii --row 20 --col 30 --width 30 --height 15 ../../content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- visualize emoji ../../content/micropolis/cities/radial.cty
 
 # Edit city metadata
 pnpm run micropolis -- city edit city.cty --funds 50000 --tax 9 --year 1960
 
 # Patch scenario files with the values the engine injects at runtime
-pnpm run micropolis -- city patch-scenario content/micropolis/cities/scenario_tokyo.cty --dry-run
+pnpm run micropolis -- city patch-scenario ../../content/micropolis/cities/scenario_tokyo.cty --dry-run
 
 # Export to JSON (with optional tile map data)
 pnpm run micropolis -- city export --format json --include-map city.cty
@@ -324,7 +324,7 @@ cd MicropolisEngine
 make clean install
 ```
 
-`make install` builds the C++ engine and copies these generated artifacts into `micropolis/src/lib/`:
+`make install` builds the C++ engine and copies these generated artifacts into `apps/micropolis/src/lib/`:
 
 ```text
 micropolisengine.js
@@ -338,7 +338,7 @@ The checked-in makefile builds the engine for browser, worker, and Node environm
 -s 'ENVIRONMENT=web,worker,node'
 ```
 
-Node support is required for `pnpm --filter micropolis run micropolis -- sim ...` (or `cd micropolis && pnpm run micropolis -- sim ...`).
+Node support is required for `pnpm --filter micropolis run micropolis -- sim ...` (or `cd apps/micropolis && pnpm run micropolis -- sim ...`).
 
 ### SvelteKit App
 
@@ -355,7 +355,7 @@ The Vite config copies `micropolisengine.wasm` and `micropolisengine.data` from 
 ### CLI Tool
 
 ```bash
-cd micropolis   # or from repo root: pnpm --filter micropolis run micropolis -- ...
+cd apps/micropolis   # or from repo root: pnpm --filter micropolis run micropolis -- ...
 pnpm run micropolis -- --help
 pnpm run micropolis -- about --format yaml
 pnpm run micropolis -- api --format yaml
@@ -366,7 +366,7 @@ The CLI is the main terminal surface for city files, visualization, headless WAS
 After rebuilding the engine with Emscripten:
 
 ```bash
-cd micropolis
+cd apps/micropolis
 pnpm run micropolis -- sim info --format yaml
 pnpm run micropolis -- sim smoke --ticks 10 --format yaml
 ```
@@ -390,7 +390,7 @@ cd ..
 pnpm install
 
 # 4. Verify CLI, WASM simulator, and web app.
-pnpm --filter micropolis run micropolis -- city info ../content/micropolis/cities/haight.cty
+pnpm --filter micropolis run micropolis -- city info ../../content/micropolis/cities/haight.cty
 pnpm --filter micropolis run micropolis -- sim smoke --ticks 1
 pnpm --filter micropolis dev
 ```

@@ -17,23 +17,23 @@
     <!-- Built-in datasets. -->
 
     <dataset name="ds_cities" id="ds_cities"
-        src="../../../content/micropolis/data/cities.xml"
+        src="../../../../content/micropolis/data/cities.xml"
     />
 
     <dataset name="ds_disasters" id="ds_disasters"
-        src="../../../content/micropolis/data/disasters.xml"
+        src="../../../../content/micropolis/data/disasters.xml"
     />
 
     <dataset name="ds_notices" id="ds_notices"
-        src="../../../content/micropolis/data/notices.xml"
+        src="../../../../content/micropolis/data/notices.xml"
     />
 
     <dataset name="ds_overlays" id="ds_overlays"
-        src="../../../content/micropolis/data/overlays.xml"
+        src="../../../../content/micropolis/data/overlays.xml"
     />
 
     <dataset name="ds_scenarios" id="ds_scenarios"
-        src="../../../content/micropolis/data/scenarios.xml"
+        src="../../../../content/micropolis/data/scenarios.xml"
     />
 
 

@@ -27,14 +27,14 @@ npm run micropolis -- bus propose city.generate-random --actor llm --reason "stu
 
 ## Current Modules
 
-- `micropolis/cli/entry.ts`: one terminal entrypoint.
-- `micropolis/cli/city/`: city files, scenario metadata, terminal visualization.
-- `micropolis/cli/wasm/`: headless WASM simulator.
-- `micropolis/cli/bus/`: command-bus workflows.
-- `micropolis/cli/meta/`: `about` and `api` self-description.
-- `micropolis/src/lib/wasm/`: browser/node WASM loaders and shared heap/callback helpers.
-- `micropolis/src/lib/MicropolisReactive.svelte.ts`: current reactive bridge.
-- `micropolis/src/lib/*TileRenderer.ts`: WebGL current renderer, Canvas/WebGPU retained work-in-progress renderers.
+- `apps/micropolis/cli/entry.ts`: one terminal entrypoint.
+- `apps/micropolis/cli/city/`: city files, scenario metadata, terminal visualization.
+- `apps/micropolis/cli/wasm/`: headless WASM simulator.
+- `apps/micropolis/cli/bus/`: command-bus workflows.
+- `apps/micropolis/cli/meta/`: `about` and `api` self-description.
+- `apps/micropolis/src/lib/wasm/`: browser/node WASM loaders and shared heap/callback helpers.
+- `apps/micropolis/src/lib/MicropolisReactive.svelte.ts`: current reactive bridge.
+- `apps/micropolis/src/lib/*TileRenderer.ts`: WebGL current renderer, Canvas/WebGPU retained work-in-progress renderers.
 - `designs/renderer-plugin-roadmap.md`: renderer plugin, client-rendered previews, and headless-browser batch rendering direction.
 
 ## Status
@@ -79,7 +79,7 @@ Example classroom flow: a player proposes a nuclear power plant at a specific ti
 Use this skill for static engine and file work. Delegate live or specialized behavior:
 
 - `micropolis-command-bus`: live UI/simulator commands, LLM proposals
-- `micropolis/cli`: CLI structure
+- `apps/micropolis/cli`: CLI structure
 - `experiment`: batch simulation and comparisons
 - `github`: GitHub-as-MMORPG
 - `constructionism`: educational framing

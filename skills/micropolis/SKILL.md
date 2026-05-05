@@ -245,17 +245,17 @@ Candidate sub-skills:
 | Embind/WASM | `MicropolisEngine/src/emscripten.cpp` |
 | Save/load | `MicropolisEngine/src/fileio.cpp` |
 | Tools | `MicropolisEngine/src/tool.cpp` |
-| CLI entry | `micropolis/cli/entry.ts` |
-| CLI modules | `micropolis/cli/` |
-| Constants | `micropolis/cli/constants/constants.js` |
-| WASM wrapper | `micropolis/src/lib/MicropolisSimulator.ts` |
-| Svelte bridge | `micropolis/src/lib/MicropolisReactive.svelte.ts` |
-| WASM loaders/helpers | `micropolis/src/lib/wasm/` |
-| I18n keys | `micropolis/src/lib/i18n/keys.ts` |
-| WebGL renderer | `micropolis/src/lib/WebGLTileRenderer.ts` |
-| Canvas renderer | `micropolis/src/lib/CanvasTileRenderer.ts` |
-| WebGPU renderer | `micropolis/src/lib/WebGPUTileRenderer.ts` |
-| Pie menus | `micropolis/src/lib/PieMenu.svelte` |
+| CLI entry | `apps/micropolis/cli/entry.ts` |
+| CLI modules | `apps/micropolis/cli/` |
+| Constants | `apps/micropolis/cli/constants/constants.js` |
+| WASM wrapper | `apps/micropolis/src/lib/MicropolisSimulator.ts` |
+| Svelte bridge | `apps/micropolis/src/lib/MicropolisReactive.svelte.ts` |
+| WASM loaders/helpers | `apps/micropolis/src/lib/wasm/` |
+| I18n keys | `apps/micropolis/src/lib/i18n/keys.ts` |
+| WebGL renderer | `apps/micropolis/src/lib/WebGLTileRenderer.ts` |
+| Canvas renderer | `apps/micropolis/src/lib/CanvasTileRenderer.ts` |
+| WebGPU renderer | `apps/micropolis/src/lib/WebGPUTileRenderer.ts` |
+| Pie menus | `apps/micropolis/src/lib/PieMenu.svelte` |
 | Renderer roadmap | `designs/renderer-plugin-roadmap.md` |
 | Collaboration lineage | `designs/collaborative-microworld-lineage.md` |
 | Multiplayer browser lessons | `designs/multiplayer-browser-lessons.md` |

@@ -23,10 +23,10 @@ k_lines:
     - PIE-MENU-COMMAND
 
 interfaces:
-  bus: "micropolis/src/lib/CommandBus.ts"
-  registry: "micropolis/src/lib/micropolisCommands.ts"
-  mcp_service: "micropolis/src/lib/CommandMcpService.ts"
-  cli: "micropolis/cli/bus/index.ts"
+  bus: "apps/micropolis/src/lib/CommandBus.ts"
+  registry: "apps/micropolis/src/lib/micropolisCommands.ts"
+  mcp_service: "apps/micropolis/src/lib/CommandMcpService.ts"
+  cli: "apps/micropolis/cli/bus/index.ts"
 
 policy:
   safe: "LLM may dispatch directly"

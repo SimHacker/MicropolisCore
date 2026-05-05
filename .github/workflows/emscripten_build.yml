@@ -44,7 +44,7 @@ jobs:
 
       - name: Install Dependencies with pnpm
         run: |
-          cd micropolis
+          cd apps/micropolis
           pnpm install
 
       - name: Build (WASM + optional Doxygen)
@@ -72,7 +72,7 @@ jobs:
       - name: Copy build artifacts to Jekyll
         run: |
           mkdir -p docs/app
-          cp -r micropolis/build/* docs/app/
+          cp -r apps/micropolis/build/* docs/app/
 
       - name: Copy Doxygen HTML to Jekyll site (/doc)
         if: ${{ inputs.include_doxygen }}

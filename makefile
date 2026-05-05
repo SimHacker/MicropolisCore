@@ -76,9 +76,9 @@ install: all
 	mkdir -p build
 	cd MicropolisEngine ; make install
 	@if [ -d html ]; then \
-		mkdir -p micropolis/build && cp -r html micropolis/build/doc; \
+		mkdir -p apps/micropolis/build && cp -r html apps/micropolis/build/doc; \
 	else \
-		mkdir -p micropolis/build/doc; \
+		mkdir -p apps/micropolis/build/doc; \
 	fi
 
 clean:
@@ -105,6 +105,6 @@ build_MicropolisEngine:
 
 build_micropolis:
 	echo "Building micropolis SvelteKit front and back end..."
-	cd micropolis ; pnpm install ; pnpm run build
+	cd apps/micropolis ; pnpm install ; pnpm run build
 
 ########################################################################

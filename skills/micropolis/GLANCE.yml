@@ -29,19 +29,19 @@ k_lines:
     - CONSTRUCTIONISM
 
 interfaces:
-  cli: "micropolis/cli/entry.ts"
-  modules: "micropolis/cli"
-  constants: "micropolis/cli/constants/constants.js"
+  cli: "apps/micropolis/cli/entry.ts"
+  modules: "apps/micropolis/cli"
+  constants: "apps/micropolis/cli/constants/constants.js"
   engine: "MicropolisEngine/src"
-  wasm_wrapper: "micropolis/src/lib/MicropolisSimulator.ts"
-  reactive_bridge: "micropolis/src/lib/MicropolisReactive.svelte.ts"
-  wasm_loaders: "micropolis/src/lib/wasm"
-  renderers: "micropolis/src/lib/*TileRenderer.ts"
+  wasm_wrapper: "apps/micropolis/src/lib/MicropolisSimulator.ts"
+  reactive_bridge: "apps/micropolis/src/lib/MicropolisReactive.svelte.ts"
+  wasm_loaders: "apps/micropolis/src/lib/wasm"
+  renderers: "apps/micropolis/src/lib/*TileRenderer.ts"
   renderer_roadmap: "designs/renderer-plugin-roadmap.md"
   moollm_integration: "designs/moollm-micropolis-integration.md"
   sim_ensemble_bridge: "/Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator"
   vitamoo_typescript: "/Users/a2deh/GroundUp/Leela/git/SimObliterator_Suite/vitamoo/docs/OBLITERATOR-TYPESCRIPT.md"
-  command_bus: "micropolis/cli/bus/index.ts"
+  command_bus: "apps/micropolis/cli/bus/index.ts"
 
 delegate_to:
   command_bus: "Live UI, pie menu, chat, LLM proposal, command dispatch"
@@ -67,5 +67,5 @@ see_also:
   - SKILL.md
   - README.md
   - "../micropolis-command-bus"
-  - "../../micropolis/README.md"
+  - "../../apps/micropolis/README.md"
   - "../../README.md"

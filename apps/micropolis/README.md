@@ -10,7 +10,7 @@ From the repository root, first build or refresh the WASM engine:
 # Activate Emscripten first if needed.
 source ~/Developer/emsdk/emsdk_env.sh
 
-cd ../MicropolisEngine
+cd ../../MicropolisEngine
 make clean install
 ```
 
@@ -23,7 +23,7 @@ See the root `README.md` for Emscripten SDK setup.
 Install dependencies and start the app:
 
 ```bash
-cd micropolis
+cd apps/micropolis
 npm install
 npm run dev
 
@@ -50,10 +50,10 @@ One CLI exposes city-file tools, terminal visualizations, the WASM simulator, an
 ```bash
 npm run micropolis -- about --format yaml
 npm run micropolis -- api --format yaml
-npm run micropolis -- city info ../content/micropolis/cities/haight.cty
-npm run micropolis -- city info ../content/micropolis/cities/haight.cty --format yaml
-npm run micropolis -- city export ../content/micropolis/cities/haight.cty --include-map --format csv
-npm run micropolis -- visualize ascii ../content/micropolis/cities/haight.cty
+npm run micropolis -- city info ../../content/micropolis/cities/haight.cty
+npm run micropolis -- city info ../../content/micropolis/cities/haight.cty --format yaml
+npm run micropolis -- city export ../../content/micropolis/cities/haight.cty --include-map --format csv
+npm run micropolis -- visualize ascii ../../content/micropolis/cities/haight.cty
 npm run micropolis -- sim info --format yaml
 npm run micropolis -- sim smoke --ticks 10 --format yaml
 npm run micropolis -- bus list --format yaml
@@ -63,7 +63,7 @@ npm run micropolis -- bus record-dispatch recorder.mark --args '{"message":"hell
 If `sim` cannot load the engine, rebuild after activating Emscripten:
 
 ```bash
-cd ../MicropolisEngine
+cd ../../MicropolisEngine
 make clean install
 ```
 

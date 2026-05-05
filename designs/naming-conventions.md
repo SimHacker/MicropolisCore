@@ -99,7 +99,7 @@ Use dot-separated big-endian ids. Pattern:
 domain.object.action[.qualifier]
 ```
 
-Prefer object/action order over verb-first order so related commands sort together. Registered commands today live in `micropolis/src/lib/micropolisCommands.ts` (for example `sim.toggle-pause`, `sim.set-speed-*`, `city.generate-random`, `view.pan-left`, `tax.increase`, `recorder.mark`).
+Prefer object/action order over verb-first order so related commands sort together. Registered commands today live in `apps/micropolis/src/lib/micropolisCommands.ts` (for example `sim.toggle-pause`, `sim.set-speed-*`, `city.generate-random`, `view.pan-left`, `tax.increase`, `recorder.mark`).
 
 ### Event Types
 
@@ -109,7 +109,7 @@ Low-level engine events describe domain facts. Do not encode UI policy; hosts de
 
 ### Callback Methods
 
-The WASM boundary uses whatever symbols **`Callback` / `JSCallback`** export today (`MicropolisEngine/src/callback.h`, generated `micropolis/src/types/micropolisengine.d.ts`). When you align method names with event strings, use `lowerCamelCase`, **subject-first**, with the **terminal segment last** (`fundsUpdated`, `cityLoaded`, `cityLoadWill`, …) — mirror the dots left to right; do not append `Did` after predicates that already mean completion (`Updated`, `Changed`, …).
+The WASM boundary uses whatever symbols **`Callback` / `JSCallback`** export today (`MicropolisEngine/src/callback.h`, generated `apps/micropolis/src/types/micropolisengine.d.ts`). When you align method names with event strings, use `lowerCamelCase`, **subject-first**, with the **terminal segment last** (`fundsUpdated`, `cityLoaded`, `cityLoadWill`, …) — mirror the dots left to right; do not append `Did` after predicates that already mean completion (`Updated`, `Changed`, …).
 
 ### TypeScript Classes
 
