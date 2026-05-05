@@ -5,34 +5,34 @@
     <!--
 
         This XML file defines all the strings in Micropolis,
-        for specific languages.
+	for specific languages.
 
-        The "strings_en-US.xml" file is considered the master file.
-        It is used as a template for the other languages.
-        In order to add a string, first add it to the "en-US" file,
-        then use the web "/server/getTranslations" web interface to
-        update the other language strings from the "en-US" strings.
-        That will add any new strings in place, and mark them as 
-        needing to be translated, with at-signs like "@nl-NL".
-        Then you can use the web interface to translate the
-        strings into other languages.
+	The "strings_en-US.xml" file is considered the master file.
+	It is used as a template for the other languages.
+	In order to add a string, first add it to the "en-US" file,
+	then use the web "/server/getTranslations" web interface to
+	update the other language strings from the "en-US" strings.
+	That will add any new strings in place, and mark them as 
+	needing to be translated, with at-signs like "@nl-NL".
+	Then you can use the web interface to translate the
+	strings into other languages.
 
-        The top level <strings> element should have a language attribute, 
-        which specifies the language of the translated strings. 
+	The top level <strings> element should have a language attribute, 
+	which specifies the language of the translated strings. 
 
-        Each <string> sub-element has an id attribute, 
-        which is the name by which the string is refered in the code.
-        The ID can be the string itself in English, 
-        possibly abbreviated with a "*" at the end, 
-        or it may be a logical name called out by the code. 
-        Some string elements have an optional comment attribute,
-        which tells the translator how to deal with the string.
-        Each string element contains utf-8 unicode text, 
-        which is the translated string. 
+	Each <string> sub-element has an id attribute, 
+	which is the name by which the string is refered in the code.
+	The ID can be the string itself in English, 
+	possibly abbreviated with a "*" at the end, 
+	or it may be a logical name called out by the code. 
+	Some string elements have an optional comment attribute,
+	which tells the translator how to deal with the string.
+	Each string element contains utf-8 unicode text, 
+	which is the translated string. 
 
-        Strings should not contain any markup as actual tags. Any
-        markup or entities to be displayed as html in the user
-        interface should be escaped.
+	Strings should not contain any markup as actual tags. Any
+	markup or entities to be displayed as html in the user
+	interface should be escaped.
 
     -->
 

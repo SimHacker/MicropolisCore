@@ -7,8 +7,8 @@
         url="notice_10_url"
         description="notice_10_description"
         color="0xff4f4f"
-        picture="icon_pollution_rsrc"
-        showMap="true"
+	picture="icon_pollution_rsrc"
+	showMap="true"
     />
 
     <notice
@@ -17,8 +17,8 @@
         url="notice_11_url"
         description="notice_11_description"
         color="0xff4f4f"
-        picture="icon_crime_rsrc"
-        showMap="true"
+	picture="icon_crime_rsrc"
+	showMap="true"
     />
 
     <notice
@@ -27,8 +27,8 @@
         url="notice_12_url"
         description="notice_12_description"
         color="0xff4f4f"
-        picture="icon_traffic_rsrc"
-        showMap="true"
+	picture="icon_traffic_rsrc"
+	showMap="true"
     />
 
     <notice
@@ -37,7 +37,7 @@
         url="notice_20_url"
         description="notice_20_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -46,8 +46,8 @@
         url="notice_21_url"
         description="notice_21_description"
         color="0xff4f4f"
-        sprite="5"
-        showMap="true"
+	sprite="5"
+	showMap="true"
     />
 
     <notice
@@ -56,8 +56,8 @@
         url="notice_22_url"
         description="notice_22_description"
         color="0xff4f4f"
-        sprite="6"
-        showMap="true"
+	sprite="6"
+	showMap="true"
     />
 
     <notice
@@ -66,7 +66,7 @@
         url="notice_23_url"
         description="notice_23_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -75,7 +75,7 @@
         url="notice_24_url"
         description="notice_24_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -84,7 +84,7 @@
         url="notice_25_url"
         description="notice_25_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -93,7 +93,7 @@
         title="notice_26_title"
         url="notice_26_url"
         description="notice_26_description"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -102,7 +102,7 @@
         url="notice_27_url"
         description="notice_27_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -111,7 +111,7 @@
         url="notice_30_url"
         description="notice_30_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -120,7 +120,7 @@
         url="notice_32_url"
         description="notice_32_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -129,8 +129,8 @@
         url="notice_35_url"
         description="notice_35_description"
         color="0x7fff7f"
-        picture="icon_town_rsrc"
-        showMap="false"
+	picture="icon_town_rsrc"
+	showMap="false"
     />
 
     <notice
@@ -139,8 +139,8 @@
         url="notice_36_url"
         description="notice_36_description"
         color="0x7fff7f"
-        picture="icon_city_rsrc"
-        showMap="false"
+	picture="icon_city_rsrc"
+	showMap="false"
     />
 
     <notice
@@ -149,8 +149,8 @@
         url="notice_37_url"
         description="notice_37_description"
         color="0x7fff7f"
-        picture="icon_capital_rsrc"
-        showMap="false"
+	picture="icon_capital_rsrc"
+	showMap="false"
     />
 
     <notice
@@ -159,7 +159,7 @@
         url="notice_38_url"
         description="notice_38_description"
         color="0x7fff7f"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -168,7 +168,7 @@
         url="notice_39_url"
         description="notice_39_description"
         color="0x7fff7f"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -177,8 +177,8 @@
         url="notice_41_url"
         description="notice_41_description"
         color="0xff4f4f"
-        sprite="2"
-        showMap="true"
+	sprite="2"
+	showMap="true"
     />
 
     <notice
@@ -187,7 +187,7 @@
         url="notice_42_url"
         description="notice_42_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -196,7 +196,7 @@
         url="notice_43_url"
         description="notice_43_description"
         color="0xff4f4f"
-        showMap="true"
+	showMap="true"
     />
 
     <notice
@@ -205,7 +205,7 @@
         url="notice_44_url"
         description="notice_44_description"
         color="0xff4f4f"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -214,7 +214,7 @@
         url="notice_45_url"
         description="notice_45_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -223,7 +223,7 @@
         url="notice_46_url"
         description="notice_46_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -232,8 +232,8 @@
         url="notice_47_url"
         description="notice_47_description"
         color="0x7fff7f"
-        picture="icon_keytothecity_rsrc"
-        showMap="false"
+	picture="icon_keytothecity_rsrc"
+	showMap="false"
     />
 
     <notice
@@ -242,8 +242,8 @@
         url="notice_48_url"
         description="notice_48_description"
         color="0xff4f4f"
-        picture="icon_impeached_rsrc"
-        showMap="false"
+	picture="icon_impeached_rsrc"
+	showMap="false"
     />
 
     <notice
@@ -252,8 +252,8 @@
         url="notice_49_url"
         description="notice_49_description"
         color="0xffd700"
-        picture="icon_about_rsrc"
-        showMap="false"
+	picture="icon_about_rsrc"
+	showMap="false"
     />
 
     <notice
@@ -262,7 +262,7 @@
         url="notice_50_url"
         description="notice_50_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -271,7 +271,7 @@
         url="notice_51_url"
         description="notice_51_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -280,7 +280,7 @@
         url="notice_52_url"
         description="notice_52_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -289,7 +289,7 @@
         url="notice_53_url"
         description="notice_53_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -298,7 +298,7 @@
         url="notice_54_url"
         description="notice_54_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -307,7 +307,7 @@
         url="notice_55_url"
         description="notice_55_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -316,7 +316,7 @@
         url="notice_56_url"
         description="notice_56_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
     <notice
@@ -325,7 +325,7 @@
         url="notice_57_url"
         description="notice_57_description"
         color="0x7f7fff"
-        showMap="false"
+	showMap="false"
     />
 
 </notices>
