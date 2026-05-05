@@ -5,6 +5,7 @@ Material here is **reference and archive**: specs, talks, HTML bundles, and froz
 | Path | Contents |
 |------|----------|
 | **`openlaszlo-micropolis/`** | Historic OpenLaszlo (**`*.lzx`**) client + **`resources/`**, with merged **`README.md`** (essay + **`NOTES.txt`** / **`TODO.txt`** index). |
+| **`historical/`** | Long-form archives (e.g. migrated blog posts): one topic per **`*.md`**, images alongside — see **`historical/README.md`**. |
 | **`micropolis-js-tests.md`** | CLI / Vitest pointers for JS tooling. |
 | **`*.html`**, **`references.txt`**, **`city-save-files.md`**, etc. | Various standalone references. |
 
