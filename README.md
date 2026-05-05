@@ -243,14 +243,17 @@ His key trick: recursive weight-sharing in fractal convolutional blocks, where e
 
 **MicropolisHub** ties this repository to [MOOLLM](https://github.com/SimHacker/moollm) — the microworld skill framework where the **micropolis** skill, AI tutors, and related designs live. To work across engine code, the SvelteKit app, and MOOLLM skills in one flow:
 
-1. **Clone both repositories** (sibling directories work well):
+1. **Check out MOOLLM and MicropolisCore in the same directory** (sibling folders under one parent, e.g. `~/Developer/` or `~/src/`):
 
    ```bash
+   mkdir -p ~/Developer && cd ~/Developer
    git clone https://github.com/SimHacker/MicropolisCore.git
    git clone https://github.com/SimHacker/moollm.git
    ```
 
-2. **Add both folders to the same Cursor workspace** so indexing, rules, and agents can see MicropolisCore and MOOLLM together: use **File → Add Folder to Workspace…** (or your OS equivalent) and include both repo roots, or open a multi-root `.code-workspace` file that lists both paths.
+   Keeping them side-by-side makes paths predictable and matches how multi-root workspaces list folders.
+
+2. **Add both repositories to your Cursor workspace** — and any other related checkouts you use (e.g. SimObliterator Suite for VitaMoo, design-only repos): use **File → Add Folder to Workspace…** (or your OS equivalent) and include each repo root, or open a multi-root `.code-workspace` file that lists those paths. Cursor can index and search across all of them together.
 
 3. **Follow MOOLLM’s setup and install instructions first** (clone is already done if you used step 1):
 
@@ -258,6 +261,8 @@ His key trick: recursive weight-sharing in fractal convolutional blocks, where e
    - [MOOLLM QUICKSTART.md](https://github.com/SimHacker/moollm/blob/main/QUICKSTART.md) — open the repo in Cursor and wait until **Settings → Cursor Settings → Indexing → Codebase Indexing** reaches **100%**, as in MOOLLM’s quickstart.
 
 4. **Then** install and build MicropolisCore using the prerequisites and commands below (Emscripten, `pnpm`, WASM engine, `micropolis` app).
+
+Using the same layout with **other AI coding tools** (for example **Claude Code**) is plausible so both trees stay in context, but that workflow is **not yet tested or documented** here—Cursor + MOOLLM is the supported path today.
 
 MOOLLM does not replace the Node/pnpm toolchain here; it complements this repo for skills, YAML Jazz, and agent orchestration alongside the engine and web app.
 
