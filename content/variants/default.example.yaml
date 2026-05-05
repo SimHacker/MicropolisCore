@@ -1,0 +1,17 @@
+# Example content variant manifest — copy to e.g. default.yaml and adjust paths.
+# Build tooling should load variants/<VITE_CONTENT_VARIANT>.yaml (or agreed env name).
+
+id: default
+label: Default development bundle
+
+micropolis:
+  # Future: paths under content/micropolis/ (scenarios, site copy, themes)
+  include: []
+
+vitamoo:
+  # Future: paths under content/vitamoo/ (exchange snippets, pack metadata)
+  include: []
+
+shared:
+  # Future: paths under content/shared/ (branding, legal, shared i18n)
+  include: []
