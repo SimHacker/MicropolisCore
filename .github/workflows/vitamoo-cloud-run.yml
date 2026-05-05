@@ -1,0 +1,106 @@
+name: Build & Deploy VitaMooSpace to Cloud Run
+
+# Manual trigger only (same behavior as SimObliterator_Suite). Deploy runs only when
+# repository secret CLOUD_RUN_DEPLOY is set and GCP secrets are present.
+
+on:
+  workflow_dispatch:
+    inputs:
+      region:
+        description: 'GCP region (e.g. us-central1)'
+        default: 'us-central1'
+        required: false
+      service:
+        description: 'Cloud Run service name'
+        default: 'vitamoospace'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        run: |
+          set -e
+          ENABLE="${{ secrets.CLOUD_RUN_DEPLOY != '' }}"
+          HAS_GCP="${{ secrets.GCP_SA_KEY != '' && secrets.GCP_PROJECT_ID != '' }}"
+          if [ "$ENABLE" != "true" ]; then
+            echo "::notice::Cloud Run deploy skipped: add repository secret CLOUD_RUN_DEPLOY (any value) to enable deploy on this repo."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$HAS_GCP" != "true" ]; then
+            echo "::error::CLOUD_RUN_DEPLOY is set but GCP_PROJECT_ID or GCP_SA_KEY is missing."
+            exit 1
+          fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+  build-and-deploy:
+    needs: gate
+    if: needs.gate.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ inputs.region || secrets.GCP_REGION || 'us-central1' }}-docker.pkg.dev
+
+      - name: Set image tag
+        id: meta
+        run: |
+          REGION="${{ inputs.region || secrets.GCP_REGION || 'us-central1' }}"
+          PROJECT="${{ secrets.GCP_PROJECT_ID }}"
+          SERVICE="${{ inputs.service || 'vitamoospace' }}"
+          TAG="${REGION}-docker.pkg.dev/${PROJECT}/vitamoospace/${SERVICE}:${GITHUB_SHA::8}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "region=${REGION}" >> "$GITHUB_OUTPUT"
+          echo "service=${SERVICE}" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure Artifact Registry repo exists
+        run: |
+          gcloud artifacts repositories describe vitamoospace \
+            --location=${{ steps.meta.outputs.region }} 2>/dev/null || \
+          gcloud artifacts repositories create vitamoospace \
+            --repository-format=docker \
+            --location=${{ steps.meta.outputs.region }} \
+            --description="VitaMooSpace container images"
+
+      - name: Build and push container
+        run: |
+          docker build \
+            -f vitamoo/vitamoospace/Dockerfile \
+            -t ${{ steps.meta.outputs.tag }} \
+            .
+          docker push ${{ steps.meta.outputs.tag }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ steps.meta.outputs.service }} \
+            --image=${{ steps.meta.outputs.tag }} \
+            --region=${{ steps.meta.outputs.region }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --port=3000 \
+            --memory=256Mi \
+            --min-instances=0 \
+            --max-instances=3 \
+            --set-env-vars="NODE_ENV=production"
+
+      - name: Show service URL
+        run: |
+          gcloud run services describe ${{ steps.meta.outputs.service }} \
+            --region=${{ steps.meta.outputs.region }} \
+            --format='value(status.url)'

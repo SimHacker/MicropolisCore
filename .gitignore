@@ -43,3 +43,14 @@
 \#*
 
 build
+
+# Node / pnpm (Vitamoo workspace at repo root)
+node_modules/
+.pnpm-store/
+pnpm-debug.log*
+
+# VitaMoo build outputs
+vitamoo/dist/
+vitamoo/mooshow/dist/
+vitamoo/vitamoospace/.svelte-kit/
+vitamoo/vitamoospace/build/

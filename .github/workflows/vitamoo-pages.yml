@@ -1,0 +1,93 @@
+# VitaMooSpace static app → GitHub Pages (manual runs only — no push trigger).
+#
+# Configure either:
+#   - Settings → Secrets and variables → Actions → Variables: VITAMOOSPACE_PAGES_URL
+#   - or the same name as a repository secret
+#
+# Enable: Settings → Pages → Build and deployment → Source: GitHub Actions.
+#
+# Run: Actions → Deploy VitaMooSpace to GitHub Pages → Run workflow
+
+name: Deploy VitaMooSpace to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.check.outputs.deploy }}
+    steps:
+      - id: check
+        env:
+          VAR_URL: ${{ vars.VITAMOOSPACE_PAGES_URL }}
+          SECRET_URL: ${{ secrets.VITAMOOSPACE_PAGES_URL }}
+        run: |
+          if [ -n "${VAR_URL}" ] || [ -n "${SECRET_URL}" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-and-deploy:
+    needs: gate
+    if: needs.gate.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Resolve public site URL
+        id: site
+        env:
+          PAGES_SITE_URL: ${{ vars.VITAMOOSPACE_PAGES_URL || secrets.VITAMOOSPACE_PAGES_URL }}
+        run: node vitamoo/scripts/resolve-public-site-url.mjs
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build vitamoo core
+        run: pnpm --filter vitamoo run build
+
+      - name: Build mooshow
+        run: pnpm --filter mooshow run build
+
+      - name: Build vitamoospace
+        env:
+          BASE_PATH: ${{ steps.site.outputs.base_path }}
+        run: pnpm --filter vitamoospace run build
+
+      - name: Write CNAME for custom domain
+        if: steps.site.outputs.cname_host != ''
+        env:
+          CNAME_HOST: ${{ steps.site.outputs.cname_host }}
+        run: printf '%s\n' "$CNAME_HOST" > vitamoo/vitamoospace/build/CNAME
+
+      - uses: actions/configure-pages@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: vitamoo/vitamoospace/build
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

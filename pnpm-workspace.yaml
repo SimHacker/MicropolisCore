@@ -1,0 +1,6 @@
+# VitaMoo workspace (same layout as former SimObliterator_Suite vitamoo tree).
+# Micropolis web app remains under micropolis/ with its own npm workflow until unified.
+packages:
+  - 'vitamoo'
+  - 'vitamoo/mooshow'
+  - 'vitamoo/vitamoospace'

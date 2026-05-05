@@ -1,0 +1,37 @@
+// Character File. Copyright 1997, Maxis Inc.
+version 300
+0
+1
+child-censor
+1
+0
+7
+PELVIS
+xskin-child-censor-PELVIS-PELVISBOX
+1
+0
+SPINE2
+xskin-child-censor-SPINE2-CHESTBOX
+2
+0
+R_HAND
+xskin-child-censor-R_HAND-RIGHTHANDBOX
+16
+0
+L_HAND
+xskin-child-censor-L_HAND-LEFTHANDBOX
+8
+0
+HEAD
+xskin-child-censor-HEAD-HEADBOX
+4
+0
+R_FOOT
+xskin-child-censor-R_FOOT-RIGHTFOOTBOX
+64
+0
+L_FOOT
+xskin-child-censor-L_FOOT-LEFTFOOTBOX
+32
+0
+0

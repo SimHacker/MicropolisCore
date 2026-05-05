@@ -1,12 +1,10 @@
 name: Build Wasm Library with Emscripten
 
+# Manual runs only — avoids automatic GitHub Pages deploy on every push to main.
+# Actions → Build Wasm Library with Emscripten → Run workflow
+
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:

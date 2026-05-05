@@ -1,0 +1,915 @@
+{
+  "schemaVersion": 1,
+  "metadata": {
+    "title": "VitaMoo demo pack",
+    "description": "Playing scenes and character templates; asset lists in content-assets.json."
+  },
+  "assetIndexRef": "content-assets.json",
+  "gltfAttachments": [],
+  "characterTemplates": [
+    {
+      "id": "dad-fit",
+      "name": "Dad (Fit)",
+      "skeleton": "adult",
+      "body": "xskin-b003mafit_01-PELVIS-BODY",
+      "bodyTexture": "B003MAFitdrk_Dad02",
+      "head": "xskin-C003MA_RomanCrew-HEAD-HEAD",
+      "headTexture": "C003MAdrk_RnB01",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-test-animation5",
+      "voice": {
+        "pitch": 55,
+        "range": 22,
+        "formant": 0.82,
+        "breathiness": 0.1
+      }
+    },
+    {
+      "id": "mom-ponytail",
+      "name": "Mom (Ponytail)",
+      "skeleton": "adult",
+      "body": "xskin-b002fafit_01-PELVIS-BODY",
+      "bodyTexture": "B002FAFitdrk_Mom01",
+      "head": "xskin-C002FA_Ponytail-HEAD-HEAD",
+      "headTexture": "C002FAdrk_Ponytail3",
+      "leftHand": "xskin-hflo-L_HAND-HANDFL",
+      "rightHand": "xskin-hfro-R_HAND-HANDFR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-dance-inplace-twistloop",
+      "voice": {
+        "pitch": 190,
+        "range": 55,
+        "formant": 1.17,
+        "breathiness": 0.18
+      }
+    },
+    {
+      "id": "ross-bald",
+      "name": "Ross (Bald)",
+      "skeleton": "adult",
+      "body": "xskin-b001mafit_01-PELVIS-BODY",
+      "bodyTexture": "B001MAFitdrk_relax",
+      "head": "xskin-C001MA_Ross-HEAD-HEADB",
+      "headTexture": "C001MAdrk_Ross",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-test-animation",
+      "voice": {
+        "pitch": 50,
+        "range": 20,
+        "formant": 0.78,
+        "breathiness": 0.08
+      }
+    },
+    {
+      "id": "mercedes",
+      "name": "Mercedes",
+      "skeleton": "adult",
+      "body": "xskin-b001fafit_01-PELVIS-BODY",
+      "bodyTexture": "B001FAFitdrk_Shannon01",
+      "head": "xskin-C001FA_Mercedes-HEAD-HEAD",
+      "headTexture": "C001FAdrk_Sharon",
+      "leftHand": "xskin-hflo-L_HAND-HANDFL",
+      "rightHand": "xskin-hfro-R_HAND-HANDFR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-test-animation2",
+      "voice": {
+        "pitch": 200,
+        "range": 60,
+        "formant": 1.2,
+        "breathiness": 0.2
+      }
+    },
+    {
+      "id": "biker-dude",
+      "name": "Biker Dude",
+      "skeleton": "adult",
+      "body": "xskin-b004maskn_01-PELVIS-BODY",
+      "bodyTexture": "B003MAFitdrk_Dad02",
+      "head": "xskin-C004MA_biker-HEAD-HEAD",
+      "headTexture": "C004MAdrk_biker",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-walking-frantic-loop",
+      "voice": {
+        "pitch": 35,
+        "range": 15,
+        "formant": 0.65,
+        "breathiness": 0.06
+      }
+    },
+    {
+      "id": "hipster",
+      "name": "Hipster",
+      "skeleton": "adult",
+      "body": "xskin-b005mafit_01-PELVIS-BODY",
+      "bodyTexture": "B005MAFitlgt_hippy",
+      "head": "xskin-c005ma_hipster-HEAD-HEAD",
+      "headTexture": "C005MAlgt_Hipster",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOlgt",
+      "animation": "a2o-test-animation3",
+      "voice": {
+        "pitch": 60,
+        "range": 25,
+        "formant": 0.82,
+        "breathiness": 0.18
+      }
+    },
+    {
+      "id": "fat-lady-summer",
+      "name": "Fat Lady Summer",
+      "skeleton": "adult",
+      "body": "xskin-b001fafat_01-PELVIS-BODY",
+      "bodyTexture": "B001FAFatdrk_summer01",
+      "head": "xskin-c003FA_longhair-HEAD-HEAD",
+      "headTexture": "C003FAdrk_fatale",
+      "leftHand": "xskin-hflo-L_HAND-HANDFL",
+      "rightHand": "xskin-hfro-R_HAND-HANDFR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-dance-inplace-twistloop",
+      "voice": {
+        "pitch": 165,
+        "range": 45,
+        "formant": 1.08,
+        "breathiness": 0.15
+      }
+    },
+    {
+      "id": "grandpa",
+      "name": "Grandpa",
+      "skeleton": "adult",
+      "body": "xskin-b013maskn_01-PELVIS-BODY",
+      "bodyTexture": "B013MASkndrk_Gpa",
+      "head": "xskin-c002ma_baldfat-HEAD-HEAD",
+      "headTexture": "C002MAdrk_GPA2",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-energetic1",
+      "voice": {
+        "pitch": 42,
+        "range": 18,
+        "formant": 0.7,
+        "breathiness": 0.28
+      }
+    },
+    {
+      "id": "the-boss",
+      "name": "The Boss",
+      "skeleton": "adult",
+      "body": "xskin-b004mafat_01-PELVIS-BODY",
+      "bodyTexture": "B004MAFatdrk_boss01",
+      "head": "xskin-c010ma_baldbeard-HEAD-HEAD",
+      "headTexture": "C010MAdrk_baldbeard01",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-test-animation4",
+      "voice": {
+        "pitch": 45,
+        "range": 18,
+        "formant": 0.72,
+        "breathiness": 0.08
+      }
+    },
+    {
+      "id": "the-slob",
+      "name": "The Slob",
+      "skeleton": "adult",
+      "body": "xskin-b002mafat_01-PELVIS-BODY",
+      "bodyTexture": "B002MAFatdrk_slob",
+      "head": "xskin-c001ma_ross-HEAD-HEADB",
+      "headTexture": "C001MAdrk_Ross",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-energetic1",
+      "voice": {
+        "pitch": 48,
+        "range": 20,
+        "formant": 0.74,
+        "breathiness": 0.22
+      }
+    },
+    {
+      "id": "deb",
+      "name": "Deb",
+      "skeleton": "adult",
+      "body": "xskin-b008fafit_01-PELVIS-BODY",
+      "bodyTexture": "B008FAFitdrk_TWif",
+      "head": "xskin-c006fa_deb-HEAD-HEAD",
+      "headTexture": "C006FAdrk_deb",
+      "leftHand": "xskin-hflo-L_HAND-HANDFL",
+      "rightHand": "xskin-hfro-R_HAND-HANDFR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-walking-loop",
+      "voice": {
+        "pitch": 185,
+        "range": 50,
+        "formant": 1.15,
+        "breathiness": 0.16
+      }
+    },
+    {
+      "id": "grandma",
+      "name": "Grandma",
+      "skeleton": "adult",
+      "body": "xskin-b002fafat_01-PELVIS-BODY",
+      "bodyTexture": "B002FAFatdrk_gma1",
+      "head": "xskin-c012fa_gma2-HEAD-HEAD",
+      "headTexture": "C012FAdrk_gma2",
+      "leftHand": "xskin-hflo-L_HAND-HANDFL",
+      "rightHand": "xskin-hfro-R_HAND-HANDFR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-test-animation5",
+      "voice": {
+        "pitch": 155,
+        "range": 35,
+        "formant": 1.05,
+        "breathiness": 0.28
+      }
+    },
+    {
+      "id": "peg",
+      "name": "Peg",
+      "skeleton": "adult",
+      "body": "xskin-b009faskn_01-PELVIS-BODY",
+      "bodyTexture": "B009FASkndrk_Libr",
+      "head": "xskin-c008fa_peg-HEAD-HEAD",
+      "headTexture": "C008FAdrk_Peg",
+      "leftHand": "xskin-hflo-L_HAND-HANDFL",
+      "rightHand": "xskin-hfro-R_HAND-HANDFR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-approve",
+      "voice": {
+        "pitch": 175,
+        "range": 45,
+        "formant": 1.12,
+        "breathiness": 0.22
+      }
+    },
+    {
+      "id": "lizard-king",
+      "name": "Lizard King",
+      "skeleton": "adult",
+      "body": "xskin-b004mafat_01-PELVIS-BODY",
+      "bodyTexture": "B004MAFatdrk_Lizrd",
+      "head": "xskin-C004MA_biker-HEAD-HEAD",
+      "headTexture": "C004MAdrk_biker",
+      "leftHand": "xskin-hmlo-L_HAND-HANDML",
+      "rightHand": "xskin-hmro-R_HAND-HANDMR",
+      "handTexture": "HUAOdrk",
+      "animation": "a2o-test-animation6",
+      "voice": {
+        "pitch": 38,
+        "range": 15,
+        "formant": 0.68,
+        "breathiness": 0.06
+      }
+    }
+  ],
+  "playingScenes": [
+    {
+      "id": "solo",
+      "name": "Solo",
+      "cast": [
+        {
+          "id": "person-solo-0",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Brick Mancastle",
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation5"
+        }
+      ]
+    },
+    {
+      "id": "the-couple",
+      "name": "The Couple",
+      "cast": [
+        {
+          "id": "person-the-couple-0",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Brick Mancastle",
+          "position": {
+            "x": -2,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation5"
+        },
+        {
+          "id": "person-the-couple-1",
+          "characterTemplateId": "mom-ponytail",
+          "actorLabel": "Cheryl Swanbeam",
+          "position": {
+            "x": 2,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-dance-inplace-twistloop"
+        }
+      ]
+    },
+    {
+      "id": "three-amigos",
+      "name": "Three Amigos",
+      "cast": [
+        {
+          "id": "person-three-amigos-0",
+          "characterTemplateId": "ross-bald",
+          "actorLabel": "Blaine Cueball",
+          "position": {
+            "x": -3.5,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation"
+        },
+        {
+          "id": "person-three-amigos-1",
+          "characterTemplateId": "mercedes",
+          "actorLabel": "Fawn Luxington",
+          "position": {
+            "x": 0,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation2"
+        },
+        {
+          "id": "person-three-amigos-2",
+          "characterTemplateId": "grandpa",
+          "actorLabel": "Quincy Vape III",
+          "position": {
+            "x": 3.5,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-energetic1"
+        }
+      ]
+    },
+    {
+      "id": "dance-party",
+      "name": "Dance Party",
+      "cast": [
+        {
+          "id": "person-dance-party-0",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Brick Mancastle",
+          "position": {
+            "x": -3,
+            "z": 2
+          },
+          "direction": 135,
+          "skill": "a2o-dance-inplace-twistloop"
+        },
+        {
+          "id": "person-dance-party-1",
+          "characterTemplateId": "mom-ponytail",
+          "actorLabel": "Cheryl Swanbeam",
+          "position": {
+            "x": 3,
+            "z": 2
+          },
+          "direction": 225,
+          "skill": "a2o-dance-inplace-twistloop"
+        },
+        {
+          "id": "person-dance-party-2",
+          "characterTemplateId": "mercedes",
+          "actorLabel": "Fawn Luxington",
+          "position": {
+            "x": -3,
+            "z": -2
+          },
+          "direction": 45,
+          "skill": "a2o-test-animation2"
+        },
+        {
+          "id": "person-dance-party-3",
+          "characterTemplateId": "biker-dude",
+          "actorLabel": "Throttle McBeef",
+          "position": {
+            "x": 3,
+            "z": -2
+          },
+          "direction": 315,
+          "skill": "a2o-walking-frantic-loop"
+        }
+      ]
+    },
+    {
+      "id": "grand-chorus",
+      "name": "Grand Chorus",
+      "cast": [
+        {
+          "id": "person-grand-chorus-0",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Brick Mancastle",
+          "position": {
+            "x": -4.5,
+            "z": 2
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation"
+        },
+        {
+          "id": "person-grand-chorus-1",
+          "characterTemplateId": "mom-ponytail",
+          "actorLabel": "Fawn Luxington",
+          "position": {
+            "x": -1.5,
+            "z": 2
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation2"
+        },
+        {
+          "id": "person-grand-chorus-2",
+          "characterTemplateId": "ross-bald",
+          "actorLabel": "Throttle McBeef",
+          "position": {
+            "x": 1.5,
+            "z": 2
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation3"
+        },
+        {
+          "id": "person-grand-chorus-3",
+          "characterTemplateId": "mercedes",
+          "actorLabel": "Dolly Wonderknit",
+          "position": {
+            "x": 4.5,
+            "z": 2
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation4"
+        },
+        {
+          "id": "person-grand-chorus-4",
+          "characterTemplateId": "biker-dude",
+          "actorLabel": "Quincy Vape III",
+          "position": {
+            "x": -4.5,
+            "z": -2
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation5"
+        },
+        {
+          "id": "person-grand-chorus-5",
+          "characterTemplateId": "hipster",
+          "actorLabel": "Tanya Stridewell",
+          "position": {
+            "x": -1.5,
+            "z": -2
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation6"
+        },
+        {
+          "id": "person-grand-chorus-6",
+          "characterTemplateId": "fat-lady-summer",
+          "actorLabel": "Dirk Powerlunch",
+          "position": {
+            "x": 1.5,
+            "z": -2
+          },
+          "direction": 0,
+          "skill": "a2o-dance-inplace-twistloop"
+        },
+        {
+          "id": "person-grand-chorus-7",
+          "characterTemplateId": "grandpa",
+          "actorLabel": "Cheryl Swanbeam",
+          "position": {
+            "x": 4.5,
+            "z": -2
+          },
+          "direction": 0,
+          "skill": "a2o-walking-frantic-loop"
+        }
+      ]
+    },
+    {
+      "id": "simopolis",
+      "name": "Simopolis",
+      "cast": [
+        {
+          "id": "person-simopolis-0",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Brick Mancastle",
+          "position": {
+            "x": -5.2,
+            "z": 4
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation"
+        },
+        {
+          "id": "person-simopolis-1",
+          "characterTemplateId": "mom-ponytail",
+          "actorLabel": "Fawn Luxington",
+          "position": {
+            "x": -1.8,
+            "z": 4
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation2"
+        },
+        {
+          "id": "person-simopolis-2",
+          "characterTemplateId": "ross-bald",
+          "actorLabel": "Throttle McBeef",
+          "position": {
+            "x": 1.8,
+            "z": 4
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation3"
+        },
+        {
+          "id": "person-simopolis-3",
+          "characterTemplateId": "mercedes",
+          "actorLabel": "Dolly Wonderknit",
+          "position": {
+            "x": 5.2,
+            "z": 4
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation4"
+        },
+        {
+          "id": "person-simopolis-4",
+          "characterTemplateId": "biker-dude",
+          "actorLabel": "Quincy Vape III",
+          "position": {
+            "x": -5.2,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation5"
+        },
+        {
+          "id": "person-simopolis-5",
+          "characterTemplateId": "hipster",
+          "actorLabel": "Tanya Stridewell",
+          "position": {
+            "x": -1.8,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-test-animation6"
+        },
+        {
+          "id": "person-simopolis-6",
+          "characterTemplateId": "fat-lady-summer",
+          "actorLabel": "Dirk Powerlunch",
+          "position": {
+            "x": 1.8,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-dance-inplace-twistloop"
+        },
+        {
+          "id": "person-simopolis-7",
+          "characterTemplateId": "grandpa",
+          "actorLabel": "Cheryl Swanbeam",
+          "position": {
+            "x": 5.2,
+            "z": 0
+          },
+          "direction": 0,
+          "skill": "a2o-walking-frantic-loop"
+        },
+        {
+          "id": "person-simopolis-8",
+          "characterTemplateId": "the-boss",
+          "actorLabel": "Gary Nachofingers",
+          "position": {
+            "x": -5.2,
+            "z": -4
+          },
+          "direction": 0,
+          "skill": "a2o-energetic1"
+        },
+        {
+          "id": "person-simopolis-9",
+          "characterTemplateId": "the-slob",
+          "actorLabel": "Mildred Starchpress",
+          "position": {
+            "x": -1.8,
+            "z": -4
+          },
+          "direction": 0,
+          "skill": "a2o-approve"
+        },
+        {
+          "id": "person-simopolis-10",
+          "characterTemplateId": "deb",
+          "actorLabel": "Vince Rattlesnake",
+          "position": {
+            "x": 1.8,
+            "z": -4
+          },
+          "direction": 0,
+          "skill": "a2o-walking-loop"
+        },
+        {
+          "id": "person-simopolis-11",
+          "characterTemplateId": "grandma",
+          "actorLabel": "Harold Suspenders",
+          "position": {
+            "x": 5.2,
+            "z": -4
+          },
+          "direction": 0,
+          "skill": "a2o-idle1"
+        }
+      ]
+    },
+    {
+      "id": "flash-crowd",
+      "name": "Flash Crowd",
+      "cast": [
+        {
+          "id": "person-flash-crowd-0",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Brick Mancastle",
+          "position": {
+            "x": -5.4,
+            "z": 3.9
+          },
+          "direction": 140,
+          "skill": "a2o-test-animation"
+        },
+        {
+          "id": "person-flash-crowd-1",
+          "characterTemplateId": "mom-ponytail",
+          "actorLabel": "Fawn Luxington",
+          "position": {
+            "x": -3.5,
+            "z": 4
+          },
+          "direction": 52,
+          "skill": "a2o-test-animation2"
+        },
+        {
+          "id": "person-flash-crowd-2",
+          "characterTemplateId": "ross-bald",
+          "actorLabel": "Throttle McBeef",
+          "position": {
+            "x": -1,
+            "z": 4.4
+          },
+          "direction": 44,
+          "skill": "a2o-test-animation3"
+        },
+        {
+          "id": "person-flash-crowd-3",
+          "characterTemplateId": "mercedes",
+          "actorLabel": "Dolly Wonderknit",
+          "position": {
+            "x": 1.2,
+            "z": 3.9
+          },
+          "direction": 47,
+          "skill": "a2o-test-animation4"
+        },
+        {
+          "id": "person-flash-crowd-4",
+          "characterTemplateId": "biker-dude",
+          "actorLabel": "Quincy Vape III",
+          "position": {
+            "x": 3.1,
+            "z": 4.2
+          },
+          "direction": 13,
+          "skill": "a2o-test-animation5"
+        },
+        {
+          "id": "person-flash-crowd-5",
+          "characterTemplateId": "hipster",
+          "actorLabel": "Tanya Stridewell",
+          "position": {
+            "x": 5.5,
+            "z": 4.3
+          },
+          "direction": 359,
+          "skill": "a2o-test-animation6"
+        },
+        {
+          "id": "person-flash-crowd-6",
+          "characterTemplateId": "fat-lady-summer",
+          "actorLabel": "Dirk Powerlunch",
+          "position": {
+            "x": -5.5,
+            "z": 1.2
+          },
+          "direction": 301,
+          "skill": "a2o-dance-inplace-twistloop"
+        },
+        {
+          "id": "person-flash-crowd-7",
+          "characterTemplateId": "grandpa",
+          "actorLabel": "Cheryl Swanbeam",
+          "position": {
+            "x": -3.4,
+            "z": 1.6
+          },
+          "direction": 81,
+          "skill": "a2o-walking-frantic-loop"
+        },
+        {
+          "id": "person-flash-crowd-8",
+          "characterTemplateId": "the-boss",
+          "actorLabel": "Gary Nachofingers",
+          "position": {
+            "x": -1,
+            "z": 1.3
+          },
+          "direction": 79,
+          "skill": "a2o-energetic1"
+        },
+        {
+          "id": "person-flash-crowd-9",
+          "characterTemplateId": "the-slob",
+          "actorLabel": "Mildred Starchpress",
+          "position": {
+            "x": 0.9,
+            "z": 1.6
+          },
+          "direction": 52,
+          "skill": "a2o-approve"
+        },
+        {
+          "id": "person-flash-crowd-10",
+          "characterTemplateId": "deb",
+          "actorLabel": "Vince Rattlesnake",
+          "position": {
+            "x": 3.1,
+            "z": 1.2
+          },
+          "direction": 176,
+          "skill": "a2o-walking-loop"
+        },
+        {
+          "id": "person-flash-crowd-11",
+          "characterTemplateId": "grandma",
+          "actorLabel": "Harold Suspenders",
+          "position": {
+            "x": 5.6,
+            "z": 1.6
+          },
+          "direction": 235,
+          "skill": "a2o-idle1"
+        },
+        {
+          "id": "person-flash-crowd-12",
+          "characterTemplateId": "peg",
+          "actorLabel": "Petunia Flambe",
+          "position": {
+            "x": -5.5,
+            "z": -1.1
+          },
+          "direction": 193,
+          "skill": "a2o-idle2"
+        },
+        {
+          "id": "person-flash-crowd-13",
+          "characterTemplateId": "lizard-king",
+          "actorLabel": "Blaine Cueball",
+          "position": {
+            "x": -3.6,
+            "z": -1.5
+          },
+          "direction": 321,
+          "skill": "a2o-idle3"
+        },
+        {
+          "id": "person-flash-crowd-14",
+          "characterTemplateId": "dad-fit",
+          "actorLabel": "Prudence Ironskirt",
+          "position": {
+            "x": -1,
+            "z": -1.2
+          },
+          "direction": 295,
+          "skill": "a2o-test-animation"
+        },
+        {
+          "id": "person-flash-crowd-15",
+          "characterTemplateId": "mom-ponytail",
+          "actorLabel": "Chad Thunderpants",
+          "position": {
+            "x": 0.9,
+            "z": -1.7
+          },
+          "direction": 338,
+          "skill": "a2o-test-animation2"
+        },
+        {
+          "id": "person-flash-crowd-16",
+          "characterTemplateId": "ross-bald",
+          "actorLabel": "Sable Diamondwrist",
+          "position": {
+            "x": 3.1,
+            "z": -1.5
+          },
+          "direction": 40,
+          "skill": "a2o-test-animation3"
+        },
+        {
+          "id": "person-flash-crowd-17",
+          "characterTemplateId": "mercedes",
+          "actorLabel": "Axle Grindhouse",
+          "position": {
+            "x": 5.7,
+            "z": -1.2
+          },
+          "direction": 194,
+          "skill": "a2o-test-animation4"
+        },
+        {
+          "id": "person-flash-crowd-18",
+          "characterTemplateId": "biker-dude",
+          "actorLabel": "Jasper Coldpress",
+          "position": {
+            "x": -5.6,
+            "z": -4.1
+          },
+          "direction": 186,
+          "skill": "a2o-test-animation5"
+        },
+        {
+          "id": "person-flash-crowd-19",
+          "characterTemplateId": "hipster",
+          "actorLabel": "Nana Crumbsworth",
+          "position": {
+            "x": -3.5,
+            "z": -4.3
+          },
+          "direction": 343,
+          "skill": "a2o-test-animation6"
+        },
+        {
+          "id": "person-flash-crowd-20",
+          "characterTemplateId": "fat-lady-summer",
+          "actorLabel": "Lana Moonbeam",
+          "position": {
+            "x": -1.2,
+            "z": -3.9
+          },
+          "direction": 331,
+          "skill": "a2o-dance-inplace-twistloop"
+        },
+        {
+          "id": "person-flash-crowd-21",
+          "characterTemplateId": "grandpa",
+          "actorLabel": "Slade Fangsworth",
+          "position": {
+            "x": 0.8,
+            "z": -4.1
+          },
+          "direction": 273,
+          "skill": "a2o-walking-frantic-loop"
+        },
+        {
+          "id": "person-flash-crowd-22",
+          "characterTemplateId": "the-boss",
+          "actorLabel": "Dwayne Couchfort",
+          "position": {
+            "x": 3.4,
+            "z": -4.4
+          },
+          "direction": 194,
+          "skill": "a2o-energetic1"
+        },
+        {
+          "id": "person-flash-crowd-23",
+          "characterTemplateId": "the-slob",
+          "actorLabel": "Rex Boardroom",
+          "position": {
+            "x": 5.4,
+            "z": -3.9
+          },
+          "direction": 352,
+          "skill": "a2o-approve"
+        }
+      ]
+    }
+  ]
+}

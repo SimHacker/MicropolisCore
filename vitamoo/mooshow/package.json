@@ -1,0 +1,19 @@
+{
+  "name": "mooshow",
+  "version": "0.1.0",
+  "description": "Graphics/runtime layer for VitaMoo — WebGPU rendering, picking, camera, hooks",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "vitamoo": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.38",
+    "typescript": "^5.7"
+  }
+}
