@@ -6,9 +6,11 @@ Use it for open-licensed scenarios, plug-in manifests, fictionalized replacement
 
 ## Upstream (public)
 
-- **Open source tower project & narrative:** [github.com/SimHacker/YootTower](https://github.com/SimHacker/YootTower)
-- **Wiki:** [github.com/SimHacker/YootTower/wiki](https://github.com/SimHacker/YootTower/wiki)
+Matches **`origin`** on the open tower checkout: `git@github.com:YootTowerManagement/YootTower.git`.
+
+- **Tower repo & narrative:** [github.com/YootTowerManagement/YootTower](https://github.com/YootTowerManagement/YootTower)
+- **Wiki:** [github.com/YootTowerManagement/YootTower/wiki](https://github.com/YootTowerManagement/YootTower/wiki)
 
 ## Workspace mount (optional)
 
-If you use Cursor multi-root or local checkouts, keep the public repo beside MicropolisCore and link or submodule as you prefer. **Yoot Tower Management** is the private archival/licensing workflow repo (invite-only); it points at the same public tree above.
+If you use Cursor multi-root or local checkouts, clone **`YootTowerManagement/YootTower`** beside MicropolisCore and link or submodule as you prefer. **Archival / licensing workflow** lives in the separate org repo [github.com/YootTowerManagement/YootTowerManagement](https://github.com/YootTowerManagement/YootTowerManagement) (`origin` on that checkout); invite-only when kept private.
