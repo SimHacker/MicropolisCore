@@ -1,4 +1,8 @@
-import { defaultMicropolisMapRenderDescription, validateRenderDescription, type RenderDescription } from '$lib/render/description';
+import {
+	defaultMicropolisMapRenderDescription,
+	validateRenderDescription,
+	type RenderDescription
+} from '@micropolis/tile-renderer';
 import type { PageLoad } from './$types';
 
 export const ssr = false;

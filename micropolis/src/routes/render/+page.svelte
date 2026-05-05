@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { renderMicropolisMapSoftware, type TileAtlas } from '$lib/render/software';
-	import type { RenderDescription } from '$lib/render/description';
+	import { renderMicropolisMapSoftware, type TileAtlas } from '@micropolis/tile-renderer';
+	import type { RenderDescription } from '@micropolis/tile-renderer';
 
 	let { data }: { data: { renderDescription: RenderDescription } } = $props();
 	let canvas: HTMLCanvasElement;
@@ -42,7 +42,8 @@
 		}
 
 		const image = renderMicropolisMapSoftware(description, map, checkerAtlas());
-		const imageData = new ImageData(image.data, image.width, image.height);
+		const pixels = new Uint8ClampedArray(image.data);
+		const imageData = new ImageData(pixels, image.width, image.height);
 		canvas.width = image.width;
 		canvas.height = image.height;
 		context.putImageData(imageData, 0, 0);

@@ -2,7 +2,7 @@
 	"name": "micropoliscore",
 	"version": "0.1.0",
 	"private": true,
-	"description": "MicropolisCore monorepo — WASM engine, Micropolis web app, VitaMoo (vitamoo)",
+	"description": "MicropolisCore monorepo — WASM engine, packages/, micropolis web app, vitamoo",
 	"type": "module",
 	"scripts": {
 		"build": "pnpm -r --stream --if-present run build"

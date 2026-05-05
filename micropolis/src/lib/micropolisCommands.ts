@@ -1,6 +1,6 @@
 import { commandBus, type Command, type CommandContext } from './CommandBus';
 import type { MicropolisSimulator } from './MicropolisSimulator';
-import type { TileRenderer } from './WebGLTileRenderer';
+import type { TileRenderer } from '@micropolis/tile-renderer';
 
 export interface MicropolisCommandContext extends CommandContext {
   simulator?: MicropolisSimulator | null;

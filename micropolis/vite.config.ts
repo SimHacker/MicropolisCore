@@ -4,6 +4,12 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
+  ssr: {
+    noExternal: ['@micropolis/tile-renderer']
+  },
+  optimizeDeps: {
+    include: ['@micropolis/tile-renderer']
+  },
   plugins: [
     sveltekit(),
     topLevelAwait(),

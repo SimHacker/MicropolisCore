@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@micropolis/tile-renderer": "workspace:*",
 		"@capacitor/android": "^6.1.0",
 		"@capacitor/cli": "^6.1.0",
 		"@capacitor/core": "^6.1.0",

@@ -1,7 +1,7 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { TileRenderer, WebGLTileRenderer } from '$lib/WebGLTileRenderer';
+  import { TileRenderer, WebGLTileRenderer } from '@micropolis/tile-renderer';
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
   import { commandBus, shortcutFromKeyboardEvent } from '$lib/CommandBus';
   import { commandRecorder } from '$lib/CommandRecorder';

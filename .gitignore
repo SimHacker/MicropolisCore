@@ -54,3 +54,6 @@ vitamoo/dist/
 vitamoo/mooshow/dist/
 vitamoo/vitamoospace/.svelte-kit/
 vitamoo/vitamoospace/build/
+
+# Shared packages (emit optional dist/)
+packages/*/dist/

@@ -68,7 +68,8 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
 
 		this.context.imageSmoothingEnabled = !['pixel', 'nearest'].includes(atlas.sampling ?? 'pixel');
 		const image = renderMicropolisMapSoftware(description, this.mapData, atlas, this.mopData);
-		this.context.putImageData(new ImageData(image.data, image.width, image.height), 0, 0);
+		const pixels = new Uint8ClampedArray(image.data);
+		this.context.putImageData(new ImageData(pixels, image.width, image.height), 0, 0);
 	}
 }
 
