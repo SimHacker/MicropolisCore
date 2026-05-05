@@ -61,14 +61,25 @@
 
 ########################################################################
 
-.PHONY: all doxygen
+# Set SKIP_DOXYGEN=1 to skip C++ API docs (faster builds; use with CI workflow input).
+CORE_TARGETS = build_MicropolisEngine build_micropolis
 
-all: build_MicropolisEngine build_micropolis build_doxygen
+ifeq ($(SKIP_DOXYGEN),1)
+all: $(CORE_TARGETS)
+else
+all: $(CORE_TARGETS) build_doxygen
+endif
+
+.PHONY: all doxygen
 
 install: all
 	mkdir -p build
 	cd MicropolisEngine ; make install
-	cp -r html micropolis/build/doc
+	@if [ -d html ]; then \
+		mkdir -p micropolis/build && cp -r html micropolis/build/doc; \
+	else \
+		mkdir -p micropolis/build/doc; \
+	fi
 
 clean:
 	cd MicropolisEngine ; make clean

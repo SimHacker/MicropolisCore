@@ -1,10 +1,23 @@
-name: Build Wasm Library with Emscripten
-
 # Manual runs only — avoids automatic GitHub Pages deploy on every push to main.
 # Actions → Build Wasm Library with Emscripten → Run workflow
+#
+# Toggle: use workflow_dispatch inputs (below). For boolean flags, the supported
+# place is `on.workflow_dispatch.inputs` — they appear in the "Run workflow"
+# dialog in the Actions tab. Repository/organization Variables are an alternative
+# for values shared across workflows, but per-run UI toggles belong here.
+
+name: Build Wasm Library with Emscripten
 
 on:
   workflow_dispatch:
+    inputs:
+      include_doxygen:
+        description: Generate Doxygen C++ API HTML and publish it at /doc on Pages
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -12,18 +25,19 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Update to v3 for Node.js 20 support
+        uses: actions/checkout@v4
 
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v14
-  
+
       - name: Install Doxygen
-        run: sudo apt-get install -y doxygen
+        if: ${{ inputs.include_doxygen }}
+        run: sudo apt-get update && sudo apt-get install -y doxygen
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3  # Ensure using the latest version
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'  # Specify Node.js 20 for compatibility
+          node-version: '20'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -31,51 +45,56 @@ jobs:
       - name: Install Dependencies with pnpm
         run: |
           cd micropolis
-          pnpm install  # Use pnpm to install dependencies
+          pnpm install
 
-      - name: Build
+      - name: Build (WASM + optional Doxygen)
+        env:
+          SKIP_DOXYGEN: ${{ inputs.include_doxygen && '0' || '1' }}
         run: |
-          echo ".github/workflows/emscripten_build.yaml: Running Build step:"
+          echo ".github/workflows/emscripten_build.yml: Build step"
           emcc --version
           node --version
           make install
-      
-      # Setup and build Jekyll site
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
-      
+
       - name: Install Jekyll and dependencies
         run: |
           gem install jekyll bundler
           cd docs
           bundle init
           bundle add jekyll jekyll-theme-minimal jekyll-relative-links jekyll-optional-front-matter
-      
+
       - name: Copy build artifacts to Jekyll
         run: |
           mkdir -p docs/app
           cp -r micropolis/build/* docs/app/
-          
+
+      - name: Copy Doxygen HTML to Jekyll site (/doc)
+        if: ${{ inputs.include_doxygen }}
+        run: |
+          mkdir -p docs/doc
+          cp -r html/* docs/doc/
+
       - name: Copy diagrams and PDF to Jekyll
         run: |
           mkdir -p docs/assets/images docs/assets/pdf
-          # Copy diagram images
-          cp Cursor/SimCityReverseDiagrams-Page-*.png docs/assets/images/
-          cp Cursor/SimCityReverseDiagrams-Note-*.png docs/assets/images/
-          # Copy PDF
-          cp Cursor/SimCityReverseDiagrams.pdf docs/assets/pdf/
-      
+          cp Cursor/SimCityReverseDiagrams-Page-*.png docs/assets/images/ 2>/dev/null || true
+          cp Cursor/SimCityReverseDiagrams-Note-*.png docs/assets/images/ 2>/dev/null || true
+          cp Cursor/SimCityReverseDiagrams.pdf docs/assets/pdf/ 2>/dev/null || true
+
       - name: Build Jekyll site
         run: |
           cd docs
           bundle exec jekyll build
 
       - name: Deploy to GitHub Pages
-        if: success() && github.ref == 'refs/heads/main' # Only deploy if build was successful and on main branch
+        if: success() && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_site  # Use Jekyll's output directory instead
+          publish_dir: ./docs/_site
