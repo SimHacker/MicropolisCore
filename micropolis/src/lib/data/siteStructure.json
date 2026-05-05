@@ -1,11 +1,27 @@
 [
   {
-    "comment": "Root Page (Dynamically generated index)",
+    "comment": "Home — hub for Micropolis + Sims playing pages",
     "url": "/",
-    "title": "Micropolis Web",
-    "header": "Site Index",
-    "description": "🏛️🌍🪢🗺️ An index of all pages on the Micropolis Web site.",
-    "tooltip": "Go to Micropolis Web Site Index"
+    "title": "Micropolis",
+    "header": "Micropolis",
+    "description": "🏙️🧑‍🤝‍🧑 Combined Micropolis city view and Sims (VitaMoo) animation playground.",
+    "tooltip": "Home — Micropolis & Sims"
+  },
+  {
+    "comment": "Play — Micropolis city tile view",
+    "url": "/play/micropolis",
+    "title": "Micropolis",
+    "header": "Micropolis",
+    "description": "🏙️ Pan and zoom the SimCity tile engine in the browser (WASM + WebGL/WebGPU).",
+    "tooltip": "Play Micropolis city view"
+  },
+  {
+    "comment": "Play — The Sims (VitaMoo)",
+    "url": "/play/sims",
+    "title": "The Sims",
+    "header": "The Sims",
+    "description": "🧑‍🤝‍🧑 Sims 1 character meshes and animation via VitaMoo / mooshow (integration in progress).",
+    "tooltip": "Play The Sims — VitaMoo"
   },
   {
     "comment": "About Page",

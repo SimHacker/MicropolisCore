@@ -1,8 +1,8 @@
-export const prerender = true;
+export const prerender = false;
 
 /** @type {import('./$types').PageLoad} */
 export function load() {
 	return {
-		layoutMode: 'scrollable'
+		layoutMode: 'fill'
 	};
 }

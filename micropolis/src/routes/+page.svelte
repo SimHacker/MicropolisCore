@@ -1,69 +1,15 @@
 <script lang="ts">
-	// src/routes/+page.svelte
-	// Renders the home page with TileView component
-	import TileView from '$lib/TileView.svelte';
-	import MicropolisView from '$lib/MicropolisView.svelte';
-	import { onMount, onDestroy } from 'svelte';
-
 	/**
+	 * Combined Micropolis + Sims hub — links into each playing surface.
 	 * @typedef {import('$lib/navigationTree').siteStructure[0]} NavNode
 	 */
-
 	/** @type {{ node: NavNode, fullPath: Array<NavNode>, siteStructure: Array<NavNode> }} */
 	export let data;
 
-	// Extract title, header, description for the index page itself
 	let pageHeadTitle = '';
-	$: pageHeadTitle = data?.node?.title || 'Micropolis Web'; // Fallback title
-	let pageHeader = '';
-	$: pageHeader = data?.node?.header || pageHeadTitle; // Use header field, fallback to title
+	$: pageHeadTitle = data?.node?.title || 'Micropolis';
 	let pageDescription = '';
 	$: pageDescription = data?.node?.description || '';
-	
-	// Home page container element reference
-	let containerElement: HTMLDivElement;
-	let resizeListener: (() => void) | null = null;
-	
-	// Function to resize the game container to fill space between header and footer
-	function resizeGameContainer() {
-		if (!containerElement) return;
-		
-		// Get header and footer heights
-		const header = document.querySelector('.navigation-area');
-		const footer = document.querySelector('.site-footer');
-		
-		if (!header || !footer) return;
-		
-		const headerHeight = header.getBoundingClientRect().height;
-		const footerHeight = footer.getBoundingClientRect().height;
-		
-		// Calculate available height
-		const availableHeight = window.innerHeight - headerHeight - footerHeight;
-		
-		// Set container height to fill available space
-		containerElement.style.height = `${Math.max(availableHeight, 400)}px`;
-	}
-	
-	onMount(() => {
-		// Set up resize listener
-		if (typeof window !== 'undefined') {
-			resizeListener = () => {
-				requestAnimationFrame(resizeGameContainer);
-			};
-			
-			window.addEventListener('resize', resizeListener);
-			
-			// Initial resize after a short delay to ensure elements are rendered
-			setTimeout(resizeGameContainer, 100);
-		}
-	});
-	
-	onDestroy(() => {
-		// Clean up resize listener
-		if (typeof window !== 'undefined' && resizeListener) {
-			window.removeEventListener('resize', resizeListener);
-		}
-	});
 </script>
 
 <svelte:head>
@@ -73,23 +19,95 @@
 	{/if}
 </svelte:head>
 
-<!-- Render the Micropolis TileView component -->
-<div class="micropolis-container" bind:this={containerElement}>
-	<MicropolisView />
+<div class="hub">
+	<p class="lede">
+		Experimental playground for <strong>Micropolis</strong> (city tiles / WASM) and <strong>The Sims</strong> mesh
+		animation (VitaMoo). Shared chrome, pie menus, and tabbed windows will grow from here.
+	</p>
+
+	<ul class="cards">
+		<li>
+			<a href="/play/micropolis" class="card micropolis">
+				<span class="card-title">Micropolis</span>
+				<span class="card-desc">Pan and zoom the tile engine; WebGL / WebGPU renderers.</span>
+			</a>
+		</li>
+		<li>
+			<a href="/play/sims" class="card sims">
+				<span class="card-title">The Sims</span>
+				<span class="card-desc">VitaMoo character demo — WebGPU, mooshow (embed in progress).</span>
+			</a>
+		</li>
+	</ul>
 </div>
 
 <style>
-	.micropolis-container {
-		width: 100%;
-		height: calc(100vh - 180px); /* Default fallback calculation */
-		min-height: 500px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin: 0;
+	.hub {
+		max-width: 44rem;
+		margin: 0 auto;
+		padding: 1rem 0 2rem;
+	}
+
+	.lede {
+		font-size: 1.05rem;
+		line-height: 1.55;
+		margin: 0 0 1.5rem;
+	}
+
+	.cards {
+		list-style: none;
 		padding: 0;
-		overflow: visible;
-		position: relative;
-		flex-grow: 1; /* Allow container to expand and fill available space */
+		margin: 0;
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: 1fr;
+	}
+
+	@media (min-width: 520px) {
+		.cards {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		padding: 1rem 1.1rem;
+		border-radius: 8px;
+		text-decoration: none;
+		color: inherit;
+		min-height: 6.5rem;
+		border: 2px solid rgba(0, 0, 0, 0.12);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+		transition:
+			transform 0.12s ease,
+			box-shadow 0.12s ease;
+	}
+
+	.card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+	}
+
+	.card.micropolis {
+		border-color: var(--rci-R-green, #00c000);
+		background: linear-gradient(145deg, rgba(0, 192, 0, 0.08), transparent 55%);
+	}
+
+	.card.sims {
+		border-color: var(--rci-C-blue, #0080ff);
+		background: linear-gradient(145deg, rgba(0, 128, 255, 0.08), transparent 55%);
+	}
+
+	.card-title {
+		font-weight: 700;
+		font-size: 1.15rem;
+	}
+
+	.card-desc {
+		font-size: 0.92rem;
+		line-height: 1.45;
+		opacity: 0.92;
 	}
 </style>

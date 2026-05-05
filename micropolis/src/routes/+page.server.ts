@@ -2,8 +2,8 @@ import { error } from '@sveltejs/kit';
 import { findNodeByUrl, siteStructure } from '$lib/navigationTree';
 import type { PageServerLoad } from './$types';
 
-// This page cannot be prerendered as it dynamically generates the index
-export const prerender = false;
+// Static hub: site structure is fixed at build time
+export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
     const requestedUrl = '/'; // Explicitly loading the root page

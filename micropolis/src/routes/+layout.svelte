@@ -73,7 +73,7 @@
 		{/if}
 	</div>
 
-	<main class="content-area" class:no-scroll={$page.url.pathname === '/'}>
+	<main class="content-area" class:no-scroll={$page.url.pathname === '/play/micropolis'}>
 		<slot />
 	</main>
 	
