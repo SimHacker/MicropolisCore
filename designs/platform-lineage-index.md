@@ -16,3 +16,11 @@ Micropolis has shipped through many stacks (workstations, X11, OLPC, Flash, Wasm
 - **`documentation/`** — *artifact*: manuals, talks, HTML exports, **immutable snapshots** (e.g. OpenLaszlo sources).
 
 When an old idea graduates into something we still pursue (city branching, Git worlds, voting across simulations), it typically grows a **`designs/*.md`** note while the archive file stays the historical receipt — see **`TODO.txt`** vs **`github-as-mmorpg-multiverse.md`**.
+
+## Outreach: Electric Carnival and related pages (short context)
+
+**Electric Carnival** (summer 1994, Lollapalooza “Mindfield”, sponsored by Interval Research) was a traveling tent of tech demos—dozens of kiosks, not a game product. One kiosk, **SimCity Without Walls**, put **multiplayer SimCityNet** (Unix/X11 build) in front of concert crowds—typically an **SGI Indigo** and an **NCD X terminal** sharing one city. That matters for **Micropolis / SimCity Unix lineage** only as **public demo and distribution folklore**: it showed cooperative city-building and pie-menu UX off-workstation, alongside unrelated exhibits (e.g. **Bounce** visual MIDI/dataflow in the “Midi Zoo”). It does not change core simulation rules; it is marketing and hacker outreach for the same **multiplayer + UI experiments** documented under **`documentation/historical/`** (SimCity Info index, keynote transcripts, NeWS/HyperLook vs X11 notes).
+
+**HyperLook** (NeWS) and **NeWS** pages in those archives describe the **first Unix UI port path** (PostScript UI, zooming, editable stacks); **X11/Tcl-Tk** is the portable branch that became widely shipped. **`catalog.com/hopkins/simcity/index.html`** on Wayback is an **index of artifacts** (reviews, SimCityNet proposal, FTP)—useful pointers, not separate games.
+
+**The Sims Transmogrifier** home page (Wayback) documents **player-authored objects for The Sims (single-player)**—adjacent to Maxis tooling and SafeTMog debates (`documentation/historical/drupal-blog/`), not to the Micropolis engine itself.
