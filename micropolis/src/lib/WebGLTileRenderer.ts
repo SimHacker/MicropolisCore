@@ -1,7 +1,7 @@
 // WebGLTileRenderer implementation class
 
 
-import { TileRenderer } from './TileRenderer';
+import { TileRenderer, type ResolvedTileLayerSpec, type TileLayerSource } from './TileRenderer';
 
 
 /**
@@ -20,7 +20,10 @@ import { TileRenderer } from './TileRenderer';
  */
 
 interface ShaderUniformLocations {
-    tileSize: WebGLUniformLocation | null;
+    tileSourceStride: WebGLUniformLocation | null;
+    tileSetInfo: WebGLUniformLocation | null;
+    tileAtlasRect: WebGLUniformLocation | null;
+    tilePolicy: WebGLUniformLocation | null;
     tileRotateLayer:  WebGLUniformLocation | null;
     tiles: (WebGLUniformLocation | null)[] | null;
     mapSize: WebGLUniformLocation | null;
@@ -44,6 +47,25 @@ interface BufferInfo {
     position: WebGLBuffer | null;
     screenTile: WebGLBuffer | null;
     indices: WebGLBuffer | null;
+}
+
+function tileSetInfoForLayer(layer: ResolvedTileLayerSpec | undefined, textureWidth: number, textureHeight: number) {
+    const strideX = layer?.strideX ?? layer?.tileWidth ?? 16;
+    const strideY = layer?.strideY ?? layer?.tileHeight ?? 16;
+    const atlasWidth = layer?.atlasWidth ?? textureWidth - (layer?.atlasX ?? 0);
+    const atlasHeight = layer?.atlasHeight ?? textureHeight - (layer?.atlasY ?? 0);
+    const tilesPerRow = Math.max(1, Math.floor(atlasWidth / strideX));
+    const defaultRowsPerSet = Math.max(1, Math.floor(atlasHeight / strideY));
+    const maxTilesInAtlas = tilesPerRow * defaultRowsPerSet;
+    const tileCount = layer?.tileCount ?? maxTilesInAtlas;
+    const tilesPerSet = layer?.tilesPerSet ?? tileCount;
+    const rowsPerSet = Math.max(1, Math.ceil(tilesPerSet / tilesPerRow));
+    const setsPerTexture = Math.max(1, Math.floor(atlasHeight / (rowsPerSet * strideY)));
+    return { tilesPerRow, tilesPerSet, rowsPerSet, setsPerTexture, tileCount };
+}
+
+function samplingMode(layer: ResolvedTileLayerSpec): number {
+    return layer.sampling === 'pixel' || layer.sampling === 'nearest' ? 0 : 1;
 }
 
 
@@ -73,6 +95,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
      * The height of the tiles texture in pixels.
      */
     private tilesHeight: number = 0;
+    private tileSetInfos: Array<{ tilesPerRow: number; tilesPerSet: number; rowsPerSet: number; setsPerTexture: number; tileCount: number }> = [];
 
     /**
      * Stores information about the WebGL program that compiles and links the vertex and
@@ -105,6 +128,23 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         super();
     }
 
+    private textureMagFilter(layer?: ResolvedTileLayerSpec): number {
+        if (!this.context) return 0;
+        return layer?.sampling === 'linear' || layer?.sampling === 'mipmap'
+            ? this.context.LINEAR
+            : this.context.NEAREST;
+    }
+
+    private textureMinFilter(layer?: ResolvedTileLayerSpec): number {
+        if (!this.context) return 0;
+        if (layer?.mipmaps === 'gpu') {
+            return layer.sampling === 'nearest' || layer.sampling === 'pixel'
+                ? this.context.NEAREST_MIPMAP_NEAREST
+                : this.context.LINEAR_MIPMAP_LINEAR;
+        }
+        return this.textureMagFilter(layer);
+    }
+
     /**
      * Initializes the WebGLTileRenderer with the WebGL context and loads the tile texture.
      * @param canvas The canvas.
@@ -127,7 +167,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         mapHeight: number,
         tileWidth: number,
         tileHeight: number,
-        tileTextureURLs: (string | null)[],
+        tileTextureURLs: TileLayerSource[],
     ): Promise<void> {
     
         await super.initialize(canvas, context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
@@ -239,7 +279,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
             mopData);
     }
     
-    public async loadTextures(tileTextureURLs: (string | null)[] | null): Promise<void> {
+    public async loadTextures(tileTextureURLs: TileLayerSource[] | null): Promise<void> {
 
         if (!this.context) {
             throw new Error('GL context or tileTextureURLs are not initialized.');
@@ -254,8 +294,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                 this.context.createTexture();
 
             const url =
-                (tileTextureURLs &&
-                 tileTextureURLs[i]) || null;
+                this.tileLayers[i]?.url || null;
 
             if (url) {
 
@@ -294,6 +333,7 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
                         this.tilesWidth = image.width;
                         this.tilesHeight = image.height;
+                        this.tileSetInfos[i] = tileSetInfoForLayer(this.tileLayers[i], image.width, image.height);
 
                         this.context.bindTexture(
                             this.context.TEXTURE_2D,
@@ -322,12 +362,16 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                         this.context.texParameteri(
                             this.context.TEXTURE_2D, 
                             this.context.TEXTURE_MIN_FILTER, 
-                            this.context.NEAREST);
+                            this.textureMinFilter(this.tileLayers[i]));
 
                         this.context.texParameteri(
                             this.context.TEXTURE_2D, 
                             this.context.TEXTURE_MAG_FILTER, 
-                            this.context.NEAREST);
+                            this.textureMagFilter(this.tileLayers[i]));
+
+                        if (this.tileLayers[i]?.mipmaps === 'gpu') {
+                            this.context.generateMipmap(this.context.TEXTURE_2D);
+                        }
 
                         resolve();
                     };
@@ -374,7 +418,10 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         const fsSource = `#version 300 es
             precision highp float;
             precision highp usampler2D;
-            uniform vec2 u_tileSize;
+            uniform vec4 u_tileSourceStride;
+            uniform vec4 u_tileSetInfo;
+            uniform vec4 u_tileAtlasRect;
+            uniform vec4 u_tilePolicy;
             uniform vec2 u_tileRotateLayer;
             uniform vec2 u_mapSize;
             uniform usampler2D u_map;
@@ -436,16 +483,21 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                     case 7: tilesSize = textureSize(u_tiles[7], 0); break;
                 }
 
-                int tilesPerRow = 
-                    int(tilesSize.x / int(u_tileSize.x));
-                int tilesPerCol = 
-                    tilesPerRow; // Tile sets are square.
+                vec2 tileSourceSize = u_tileSourceStride.xy;
+                vec2 tileStride = u_tileSourceStride.zw;
+                int tilesPerRow = int(u_tileSetInfo.x);
                 int tilesPerSet = 
-                    tilesPerRow * tilesPerCol;
+                    int(u_tileSetInfo.y);
                 int rowsPerSet =
-                    tilesPerSet / tilesPerRow;
+                    int(u_tileSetInfo.z);
                 int setsPerTexture =
-                    tilesSize.y / (tilesPerCol * int(u_tileSize.y));
+                    int(u_tileSetInfo.w);
+                int tileCount =
+                    int(u_tilePolicy.x);
+                bool wrapTiles =
+                    u_tilePolicy.y > 0.5;
+                bool pixelSampling =
+                    u_tilePolicy.z < 0.5;
                 int setRow =
                     (tileSet % setsPerTexture) * rowsPerSet;
 
@@ -455,29 +507,47 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
                         : ((cellValue & 0x03ff) + 
                            tileRotate +
                            (10 * tilesPerSet));
-                int tileValue =
+                int rawTileValue =
                     int(mod(float(cellRotatedValue), float(tilesPerSet)));
+                int tileValue =
+                    wrapTiles
+                        ? int(mod(float(rawTileValue), float(tileCount)))
+                        : clamp(rawTileValue, 0, tileCount - 1);
 
                 // Calculate tile row and column from cell value
                 int tileRow = int(floor(float(tileValue) / float(tilesPerRow))) + setRow;
                 int tileCol = int(mod(float(tileValue), float(tilesPerRow)));
 
                 // Calculate which pixel of the tile to sample
-                vec2 tileCorner = vec2(tileCol, tileRow) * u_tileSize;
-                vec2 tilePixel = tileCorner + (screenTilePosition * u_tileSize);
+                vec2 tileCorner = u_tileAtlasRect.xy + vec2(tileCol, tileRow) * tileStride;
+                vec2 tilePixel = tileCorner + (screenTilePosition * tileSourceSize);
                 vec2 uv = tilePixel / vec2(tilesSize.x, tilesSize.y);
 
                 // Sample the tile
                 vec4 tileColor;
-                switch (tileLayer) {
-                    case 0: tileColor = texture(u_tiles[0], uv); break;
-                    case 1: tileColor = texture(u_tiles[1], uv); break;
-                    case 2: tileColor = texture(u_tiles[2], uv); break;
-                    case 3: tileColor = texture(u_tiles[3], uv); break;
-                    case 4: tileColor = texture(u_tiles[4], uv); break;
-                    case 5: tileColor = texture(u_tiles[5], uv); break;
-                    case 6: tileColor = texture(u_tiles[6], uv); break;
-                    case 7: tileColor = texture(u_tiles[7], uv); break;
+                if (pixelSampling) {
+                    ivec2 texel = ivec2(clamp(floor(tilePixel), vec2(0.0), vec2(tilesSize) - vec2(1.0)));
+                    switch (tileLayer) {
+                        case 0: tileColor = texelFetch(u_tiles[0], texel, 0); break;
+                        case 1: tileColor = texelFetch(u_tiles[1], texel, 0); break;
+                        case 2: tileColor = texelFetch(u_tiles[2], texel, 0); break;
+                        case 3: tileColor = texelFetch(u_tiles[3], texel, 0); break;
+                        case 4: tileColor = texelFetch(u_tiles[4], texel, 0); break;
+                        case 5: tileColor = texelFetch(u_tiles[5], texel, 0); break;
+                        case 6: tileColor = texelFetch(u_tiles[6], texel, 0); break;
+                        case 7: tileColor = texelFetch(u_tiles[7], texel, 0); break;
+                    }
+                } else {
+                    switch (tileLayer) {
+                        case 0: tileColor = texture(u_tiles[0], uv); break;
+                        case 1: tileColor = texture(u_tiles[1], uv); break;
+                        case 2: tileColor = texture(u_tiles[2], uv); break;
+                        case 3: tileColor = texture(u_tiles[3], uv); break;
+                        case 4: tileColor = texture(u_tiles[4], uv); break;
+                        case 5: tileColor = texture(u_tiles[5], uv); break;
+                        case 6: tileColor = texture(u_tiles[6], uv); break;
+                        case 7: tileColor = texture(u_tiles[7], uv); break;
+                    }
                 }
 
                 fragColor = tileColor;
@@ -497,7 +567,10 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
         };
 
         const uniformLocations: ShaderUniformLocations = {
-            tileSize: this.context.getUniformLocation(program, 'u_tileSize'),
+            tileSourceStride: this.context.getUniformLocation(program, 'u_tileSourceStride'),
+            tileSetInfo: this.context.getUniformLocation(program, 'u_tileSetInfo'),
+            tileAtlasRect: this.context.getUniformLocation(program, 'u_tileAtlasRect'),
+            tilePolicy: this.context.getUniformLocation(program, 'u_tilePolicy'),
             tileRotateLayer: this.context.getUniformLocation(program, 'u_tileRotateLayer'),
             tiles: [],
             mapSize: this.context.getUniformLocation(program, 'u_mapSize'),
@@ -728,7 +801,40 @@ class WebGLTileRenderer extends TileRenderer<WebGL2RenderingContext> {
 
         this.context.useProgram(this.tileProgramInfo.program);
 
-        this.context.uniform2f(this.tileProgramInfo.uniformLocations.tileSize, this.tileWidth, this.tileHeight);
+        const layer = this.tileLayers[this.tileLayer] ?? this.tileLayers.find((candidate) => candidate.url);
+        const layerInfo = this.tileSetInfos[this.tileLayer] ?? this.tileSetInfos.find(Boolean);
+        if (!layer || !layerInfo) {
+            throw new Error('The selected tile layer is not loaded.');
+        }
+
+        this.context.uniform4f(
+            this.tileProgramInfo.uniformLocations.tileSourceStride,
+            layer.tileWidth,
+            layer.tileHeight,
+            layer.strideX,
+            layer.strideY
+        );
+        this.context.uniform4f(
+            this.tileProgramInfo.uniformLocations.tileSetInfo,
+            layerInfo.tilesPerRow,
+            layerInfo.tilesPerSet,
+            layerInfo.rowsPerSet,
+            layerInfo.setsPerTexture
+        );
+        this.context.uniform4f(
+            this.tileProgramInfo.uniformLocations.tileAtlasRect,
+            layer.atlasX,
+            layer.atlasY,
+            layer.atlasWidth ?? this.tilesWidth - layer.atlasX,
+            layer.atlasHeight ?? this.tilesHeight - layer.atlasY
+        );
+        this.context.uniform4f(
+            this.tileProgramInfo.uniformLocations.tilePolicy,
+            layerInfo.tileCount,
+            layer.wrap === 'repeat' ? 1 : 0,
+            samplingMode(layer),
+            0
+        );
         this.context.uniform2f(this.tileProgramInfo.uniformLocations.tileRotateLayer, this.tileRotate, this.tileLayer);
 
         this.context.activeTexture(this.context.TEXTURE0);

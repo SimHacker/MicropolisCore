@@ -1,374 +1,285 @@
-// @ts-nocheck
-// WebGPUTileRenderer implementation class
-
-
 /// <reference types="@webgpu/types" />
-import { TileRenderer } from './TileRenderer';
 
+import { TileRenderer, type ResolvedTileLayerSpec, type TileLayerSource } from './TileRenderer';
 
-interface RenderUniforms {
-    tileSize: [number, number];
-    tilesSize: [number, number];
-    mapSize: [number, number];
-    offset: [number, number];
-    zoom: number;
-    padding: number;
+type TileLayerGpu = {
+	layer: ResolvedTileLayerSpec;
+	texture: GPUTexture;
+	view: GPUTextureView;
+	width: number;
+	height: number;
+	info: TileSetInfo;
+};
+
+type TileSetInfo = {
+	tilesPerRow: number;
+	tilesPerSet: number;
+	rowsPerSet: number;
+	setsPerTexture: number;
+	tileCount: number;
+};
+
+function tileSetInfoForLayer(layer: ResolvedTileLayerSpec, textureWidth: number, textureHeight: number): TileSetInfo {
+	const atlasWidth = layer.atlasWidth ?? textureWidth - layer.atlasX;
+	const atlasHeight = layer.atlasHeight ?? textureHeight - layer.atlasY;
+	const tilesPerRow = Math.max(1, Math.floor(atlasWidth / layer.strideX));
+	const defaultRowsPerSet = Math.max(1, Math.floor(atlasHeight / layer.strideY));
+	const maxTilesInAtlas = tilesPerRow * defaultRowsPerSet;
+	const tileCount = layer.tileCount ?? maxTilesInAtlas;
+	const tilesPerSet = layer.tilesPerSet ?? tileCount;
+	const rowsPerSet = Math.max(1, Math.ceil(tilesPerSet / tilesPerRow));
+	const setsPerTexture = Math.max(1, Math.floor(atlasHeight / (rowsPerSet * layer.strideY)));
+	return { tilesPerRow, tilesPerSet, rowsPerSet, setsPerTexture, tileCount };
 }
 
 class WebGPUTileRenderer extends TileRenderer<GPUCanvasContext> {
-    
-    public context: GPUCanvasContext;
-    public device: GPUDevice;
-    public tileTexture: GPUTexture;
-    public tileTextureView: GPUTextureView;
-    public mapTexture: GPUTexture;
-    public mapTextureView: GPUTextureView;
-    public pipeline: GPURenderPipeline;
-    public bindGroup: GPUBindGroup;
-    public sampler: GPUSampler;
-    public uniformBuffer: GPUBuffer;
-    public tileTextures: Map<string, GPUTexture>;
+	private device?: GPUDevice;
+	private pipeline?: GPURenderPipeline;
+	private sampler?: GPUSampler;
+	private uniformBuffer?: GPUBuffer;
+	private mapTexture?: GPUTexture;
+	private mopTexture?: GPUTexture;
+	private tileLayersGpu: Array<TileLayerGpu | null> = [];
+	private presentationFormat: GPUTextureFormat = 'bgra8unorm';
 
-    constructor() {
-        super();
-        this.context = {} as GPUCanvasContext; // Initialize with empty object
-        this.device = {} as GPUDevice;
-        this.tileTexture = {} as GPUTexture;
-        this.tileTextureView = {} as GPUTextureView;
-        this.mapTexture = {} as GPUTexture;
-        this.mapTextureView = {} as GPUTextureView;
-        this.pipeline = {} as GPURenderPipeline;
-        this.bindGroup = {} as GPUBindGroup;
-        this.sampler = {} as GPUSampler;
-        this.uniformBuffer = {} as GPUBuffer;
-        this.tileTextures = new Map();
-    }
+	async initialize(
+		canvas: HTMLCanvasElement,
+		context: GPUCanvasContext,
+		mapData: Uint16Array,
+		mopData: Uint16Array,
+		mapWidth: number,
+		mapHeight: number,
+		tileWidth: number,
+		tileHeight: number,
+		tileTextureURLs: TileLayerSource[]
+	): Promise<void> {
+		await super.initialize(canvas, context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
+		this.zoom = 1;
 
-    async initialize(
-        canvas: HTMLCanvasElement,
-        context: GPUCanvasContext,
-        mapData: Uint16Array,
-        mopData: Uint16Array,
-        mapWidth: number,
-        mapHeight: number,
-        tileWidth: number,
-        tileHeight: number,
-        tileTextureURLs: string[],
-    ): Promise<void> {
+		const gpu = navigator.gpu;
+		if (!gpu) throw new Error('WebGPU is not available in this browser.');
 
-        await super.initialize(canvas, this.context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
+		const adapter = await gpu.requestAdapter();
+		if (!adapter) throw new Error('WebGPU adapter unavailable.');
 
-        this.context = canvas.getContext('webgpu') as GPUCanvasContext;
-        if (!this.context) {
-            throw new Error('WebGPU is not supported.');
-        }
+		this.device = await adapter.requestDevice();
+		this.presentationFormat = gpu.getPreferredCanvasFormat();
+		this.context = context;
+		this.context.configure({
+			device: this.device,
+			format: this.presentationFormat,
+			alphaMode: 'opaque'
+		});
 
-        // Request an adapter and device
-        const adapter = await navigator.gpu.requestAdapter();
-        if (!adapter) {
-            throw new Error('Failed to get GPU adapter.');
-        }
+		this.uniformBuffer = this.device.createBuffer({
+			size: 7 * 16,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
+		this.mapTexture = this.createUint16Texture(this.mapHeight, this.mapWidth);
+		this.mopTexture = this.createUint16Texture(this.mapHeight, this.mapWidth);
+		this.pipeline = this.createPipeline();
+		this.tileLayersGpu = await Promise.all(this.tileLayers.map((layer) => (layer.url ? this.loadTileLayer(layer) : null)));
+	}
 
-        this.device = await adapter.requestDevice();
+	render(): void {
+		if (!this.canvas || !this.context || !this.device || !this.pipeline || !this.uniformBuffer || !this.mapTexture || !this.mopTexture) {
+			throw new Error('WebGPUTileRenderer is not initialized.');
+		}
 
-        this.context.configure({
-            device: this.device,
-            format: 'bgra8unorm',
-        });
+		const tileLayerGpu = this.tileLayersGpu[this.tileLayer] ?? this.tileLayersGpu.find((layer): layer is TileLayerGpu => layer !== null);
+		if (!tileLayerGpu) throw new Error('WebGPUTileRenderer requires at least one tile texture.');
+		const sampler = this.device.createSampler({
+			magFilter: tileLayerGpu.layer.sampling === 'linear' ? 'linear' : 'nearest',
+			minFilter: tileLayerGpu.layer.sampling === 'linear' ? 'linear' : 'nearest'
+		});
 
-        // Load the tile texture
-        const tileImage = await this.loadImage(tileTextureURLs[0]);
-        this.tileTexture = this.device.createTexture({
-            size: [tileImage.width, tileImage.height, 1],
-            format: 'rgba8unorm',
-            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
-        });
-        this.tileTextureView = this.tileTexture.createView();
+		this.setScreenSize(this.canvas.width, this.canvas.height);
+		this.uploadUint16Texture(this.mapTexture, this.mapData, this.mapHeight, this.mapWidth);
+		this.uploadUint16Texture(this.mopTexture, this.mopData, this.mapHeight, this.mapWidth);
+		this.writeUniforms(tileLayerGpu);
 
-        // Copy image data to texture
-        const imageBitmap = await createImageBitmap(tileImage);
-        this.device.queue.copyExternalImageToTexture(
-            { source: imageBitmap },
-            { texture: this.tileTexture },
-            [tileImage.width, tileImage.height, 1]
-        );
+		const bindGroup = this.device.createBindGroup({
+			layout: this.pipeline.getBindGroupLayout(0),
+			entries: [
+				{ binding: 0, resource: this.mapTexture.createView() },
+				{ binding: 1, resource: this.mopTexture.createView() },
+				{ binding: 2, resource: tileLayerGpu.view },
+				{ binding: 3, resource: sampler },
+				{ binding: 4, resource: { buffer: this.uniformBuffer } }
+			]
+		});
 
-        // Create the map texture
-        this.mapTexture = this.device.createTexture({
-            size: [mapHeight, mapWidth, 1], // Map data is column major order, so the width is the second dimension.
-            format: 'r16uint',
-            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
-        });
-        this.mapTextureView = this.mapTexture.createView();
+		const encoder = this.device.createCommandEncoder();
+		const pass = encoder.beginRenderPass({
+			colorAttachments: [
+				{
+					view: this.context.getCurrentTexture().createView(),
+					clearValue: { r: 0, g: 0, b: 0, a: 1 },
+					loadOp: 'clear',
+					storeOp: 'store'
+				}
+			]
+		});
+		pass.setPipeline(this.pipeline);
+		pass.setBindGroup(0, bindGroup);
+		pass.draw(6);
+		pass.end();
+		this.device.queue.submit([encoder.finish()]);
+	}
 
-        // Copy map data to texture
-         // Map data is column major order, so the width is the second dimension.
-        const bytesPerRow = Math.ceil(mapHeight * 2 / 256) * 256;
-        const bufferSize = bytesPerRow * mapWidth;
-        
-        const mapBuffer = this.device.createBuffer({
-            size: bufferSize,
-            usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
-            mappedAtCreation: true,
-        });
-        new Uint16Array(mapBuffer.getMappedRange()).set(mapData);
-        mapBuffer.unmap();
-        
-        const commandEncoder = this.device.createCommandEncoder();
-        commandEncoder.copyBufferToTexture(
-            { buffer: mapBuffer, bytesPerRow: bytesPerRow },
-            { texture: this.mapTexture },
-            [mapHeight, mapWidth, 1] // Map data is column major order, so the width is the second dimension.
-        );
-        this.device.queue.submit([commandEncoder.finish()]);
-        
-        // Create the shader modules
-        const vertexShaderModule = this.device.createShaderModule({
-            code: `@vertex
-            fn main(
-                @builtin(vertex_index) VertexIndex: u32
-            ) -> @builtin(position) vec4<f32> {
-                var positions = array<vec2<f32>, 6>(
-                    vec2<f32>(-1.0,  1.0),
-                    vec2<f32>( 1.0,  1.0),
-                    vec2<f32>(-1.0, -1.0),
-                    vec2<f32>( 1.0,  1.0),
-                    vec2<f32>(-1.0, -1.0),
-                    vec2<f32>( 1.0, -1.0)
-                );
-                let position = positions[VertexIndex];
-                return vec4<f32>(position, 0.0, 1.0);
-            }`,
-        });
+	private createUint16Texture(width: number, height: number): GPUTexture {
+		return this.device!.createTexture({
+			size: [width, height, 1],
+			format: 'r16uint',
+			usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST
+		});
+	}
 
-        const fragmentShaderModule = this.device.createShaderModule({
-            code: `
-                @group(0) @binding(0) var tileTexture: texture_2d<f32>;
-                @group(0) @binding(1) var tileSampler: sampler;
-                @group(0) @binding(2) var mapTexture: texture_2d<u32>;
+	private uploadUint16Texture(texture: GPUTexture, data: Uint16Array, width: number, height: number): void {
+		const bytesPerRow = alignBytes(width * 2, 256);
+		const bytes = new Uint8Array(bytesPerRow * height);
+		const source = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+		for (let row = 0; row < height; row += 1) {
+			bytes.set(source.subarray(row * width * 2, (row + 1) * width * 2), row * bytesPerRow);
+		}
+		this.device!.queue.writeTexture({ texture }, bytes, { bytesPerRow, rowsPerImage: height }, [width, height, 1]);
+	}
 
-                struct VertexOutput {
-                    @builtin(position) position: vec4<f32>,
-                    @location(0) fragCoord: vec2<f32>,
-                };
+	private async loadTileLayer(layer: ResolvedTileLayerSpec): Promise<TileLayerGpu> {
+		const image = await loadImageBitmap(layer.url!);
+		const texture = this.device!.createTexture({
+			size: [image.width, image.height, 1],
+			format: 'rgba8unorm',
+			usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
+		});
+		this.device!.queue.copyExternalImageToTexture({ source: image }, { texture }, [image.width, image.height, 1]);
+		return {
+			layer,
+			texture,
+			view: texture.createView(),
+			width: image.width,
+			height: image.height,
+			info: tileSetInfoForLayer(layer, image.width, image.height)
+		};
+	}
 
-                struct Uniforms {
-                    tileSize: vec2<f32>;
-                    tilesSize: vec2<f32>;
-                    mapSize: vec2<f32>;
-                };
+	private writeUniforms(tileLayer: TileLayerGpu): void {
+		const uniformData = new Float32Array([
+			this.screenWidth, this.screenHeight, this.panX, this.panY,
+			this.mapWidth, this.mapHeight, this.tileWidth, this.tileHeight,
+			tileLayer.layer.tileWidth, tileLayer.layer.tileHeight, tileLayer.layer.strideX, tileLayer.layer.strideY,
+			tileLayer.info.tilesPerRow, tileLayer.info.tilesPerSet, tileLayer.info.rowsPerSet, tileLayer.info.setsPerTexture,
+			tileLayer.layer.atlasX, tileLayer.layer.atlasY, tileLayer.layer.atlasWidth ?? tileLayer.width - tileLayer.layer.atlasX, tileLayer.layer.atlasHeight ?? tileLayer.height - tileLayer.layer.atlasY,
+			tileLayer.info.tileCount, tileLayer.layer.wrap === 'repeat' ? 1 : 0, tileLayer.layer.opacity, 0,
+			4 * this.zoom, this.tileRotate, 0, 0
+		]);
+		this.device!.queue.writeBuffer(this.uniformBuffer!, 0, uniformData);
+	}
 
-                @group(0) @binding(3) var<uniform> uniforms: Uniforms;
+	private createPipeline(): GPURenderPipeline {
+		const shader = this.device!.createShaderModule({
+			code: `
+struct Uniforms {
+	screen: vec4<f32>,
+	map: vec4<f32>,
+	atlas: vec4<f32>,
+	sets: vec4<f32>,
+	atlasRect: vec4<f32>,
+	policy: vec4<f32>,
+	params: vec4<f32>,
+};
 
-                fn getTileUV(tileIndex: u32, tileSize: vec2<f32>, textureSize: vec2<f32>) -> vec2<f32> {
-                    let tilesPerRow = textureSize.x / tileSize.x;
-                    let tileRow = f32(tileIndex) / tilesPerRow;
-                    let tileCol = f32(tileIndex) - tileRow * tilesPerRow;
-                    let uv = vec2<f32>(tileCol * tileSize.x, tileRow * tileSize.y) / textureSize;
-                    return uv;
-                }
+@group(0) @binding(0) var mapTexture: texture_2d<u32>;
+@group(0) @binding(1) var mopTexture: texture_2d<u32>;
+@group(0) @binding(2) var tilesTexture: texture_2d<f32>;
+@group(0) @binding(3) var tilesSampler: sampler;
+@group(0) @binding(4) var<uniform> uniforms: Uniforms;
 
-                @fragment
-                fn main(input: VertexOutput) -> @location(0) vec4<f32> {
-                    // Calculate the tile index from the map texture
-                    let mapCoord = vec2<i32>(input.fragCoord);
-                    let tileIndex = textureLoad(mapTexture, mapCoord, 0).x;
+struct VertexOut {
+	@builtin(position) position: vec4<f32>,
+	@location(0) screenTile: vec2<f32>,
+};
 
-                    // Calculate the UV coordinates for the tile texture
-                    let tileSize = uniforms.tileSize;
-                    let textureSize = uniforms.tilesSize;
-                    let tileUV = getTileUV(tileIndex, tileSize, textureSize);
-
-                    // Sample the color from the tile texture
-                    let color = textureSample(tileTexture, tileSampler, tileUV);
-
-                    return color;
-                }`,
-        });
-
-        const bindGroupLayout = this.device.createBindGroupLayout({
-            entries: [
-                {
-                    binding: 0,
-                    visibility: GPUShaderStage.FRAGMENT,
-                    texture: { sampleType: 'float' },
-                },
-                {
-                    binding: 1,
-                    visibility: GPUShaderStage.FRAGMENT,
-                    sampler: { type: 'filtering' },
-                },
-                {
-                    binding: 2,
-                    visibility: GPUShaderStage.FRAGMENT,
-                    texture: { sampleType: 'uint' },
-                },
-                {
-                    binding: 3,
-                    visibility: GPUShaderStage.FRAGMENT,
-                    buffer: { type: 'uniform' },
-                },
-            ],
-        });
-        
-        // Create the pipeline
-        this.pipeline = this.device.createRenderPipeline({
-            layout: this.device.createPipelineLayout({ bindGroupLayouts: [bindGroupLayout] }),
-            vertex: {
-                module: vertexShaderModule,
-                entryPoint: 'main',
-            },
-            fragment: {
-                module: fragmentShaderModule,
-                entryPoint: 'main',
-                targets: [
-                    {
-                        format: 'bgra8unorm',
-                    },
-                ],
-            },
-            primitive: {
-                topology: 'triangle-list',
-            },
-        });
-
-        // Add a sampler creation
-        this.sampler = this.device.createSampler({
-            magFilter: 'linear',
-            minFilter: 'linear',
-        });
-
-        // Make sure the uniform buffer is created and populated correctly
-        this.uniformBuffer = this.device.createBuffer({
-            size: 6 * 4, // size for three vec2<f32>
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-            mappedAtCreation: true,
-        });
-        // Map data is column major order, so the width is the second dimension.
-        new Float32Array(this.uniformBuffer.getMappedRange()).set([16.0, 16.0, 256.0, 256.0, mapHeight, mapWidth]);
-        this.uniformBuffer.unmap();
-
-        // Correct the bind group entries to ensure all resources are correctly specified
-        this.bindGroup = this.device.createBindGroup({
-            layout: bindGroupLayout,
-            entries: [
-                {
-                    binding: 0,
-                    resource: this.tileTextureView,
-                },
-                {
-                    binding: 1,
-                    resource: this.sampler,
-                },
-                {
-                    binding: 2,
-                    resource: this.mapTextureView,
-                },
-                {
-                    binding: 3,
-                    resource: {
-                        buffer: this.uniformBuffer,
-                        offset: 0,
-                        size: 6 * 4, // vec2<f32> for tileSize, tilesSize, and mapSize
-                    },
-                },
-            ],
-        });
-    }
-
-    private loadImage(url: string): Promise<HTMLImageElement> {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = url;
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-        });
-    }
-
-    render(): void {
-        if (!this.canvas || !this.context || !this.pipeline || !this.bindGroup) {
-            throw new Error('The canvas, WebGPU context, pipeline, or bind group are not properly initialized.');
-        }
-
-        this.setScreenSize(this.canvas.width, this.canvas.height);
-
-        const commandEncoder = this.device.createCommandEncoder();
-        const textureView = this.context.getCurrentTexture().createView();
-
-        const renderPassDescriptor: GPURenderPassDescriptor = {
-            colorAttachments: [
-                {
-                    view: textureView,
-                    loadOp: 'clear',
-                    storeOp: 'store',
-                    clearValue: { r: 0, g: 0, b: 0, a: 1 },
-                },
-            ],
-        };
-
-        const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
-        passEncoder.setPipeline(this.pipeline);
-        passEncoder.setBindGroup(0, this.bindGroup);
-        passEncoder.draw(6, 1, 0, 0);
-        passEncoder.end();
-
-        this.device.queue.submit([commandEncoder.finish()]);
-    }
-
-    private updateUniforms(): void {
-        const uniformData = new Float32Array([
-            this.tileWidth, this.tileHeight,
-            this.tilesWidth, this.tilesHeight,
-            this.mapWidth, this.mapHeight,
-            this.offsetX, this.offsetY,
-            this.zoom, 0.0  // padding for alignment
-        ]);
-        this.device.queue.writeBuffer(this.uniformBuffer, 0, uniformData);
-    }
-
-    private async createResources(): Promise<void> {
-        // Create descriptor sets for different resource types
-        const textureDescriptor: GPUTextureDescriptor = {
-            size: [this.tilesWidth, this.tilesHeight, 1],
-            format: 'rgba8unorm',
-            usage: GPUTextureUsage.TEXTURE_BINDING | 
-                   GPUTextureUsage.COPY_DST | 
-                   GPUTextureUsage.RENDER_ATTACHMENT,
-            mipLevelCount: 4,  // Support mipmaps for better scaling
-        };
-
-        // Support multiple tile sets or overlay textures
-        this.tileTextures = new Map();
-        this.tileTextures.set('main', this.device.createTexture(textureDescriptor));
-    }
-
-    private validateDevice(): void {
-        const requiredFeatures = [
-            'texture-compression-bc',
-            'timestamp-query',
-        ] as GPUFeatureName[];
-
-        for (const feature of requiredFeatures) {
-            if (!this.device.features.has(feature)) {
-                console.warn(`Optional feature ${feature} not available`);
-            }
-        }
-    }
-
-    private createPipeline(): void {
-        const pipelineDescriptor: GPURenderPipelineDescriptor = {
-            // ... other settings ...
-            multisample: {
-                count: 4,  // MSAA support
-            },
-            primitive: {
-                topology: 'triangle-list',
-                cullMode: 'back',    // Better culling
-                frontFace: 'ccw',
-            }
-        };
-    }
+@vertex
+fn vs(@builtin(vertex_index) vertexIndex: u32) -> VertexOut {
+	var positions = array<vec2<f32>, 6>(
+		vec2<f32>(-1.0,  1.0),
+		vec2<f32>( 1.0,  1.0),
+		vec2<f32>(-1.0, -1.0),
+		vec2<f32>( 1.0,  1.0),
+		vec2<f32>(-1.0, -1.0),
+		vec2<f32>( 1.0, -1.0)
+	);
+	let position = positions[vertexIndex];
+	let screen = uniforms.screen;
+	let map = uniforms.map;
+	let params = uniforms.params;
+	let px = screen.z * map.z;
+	let py = screen.w * map.w;
+	let z = params.x;
+	let worldX = (px + (position.x * screen.x / z)) / map.z;
+	let worldY = (py - (position.y * screen.y / z)) / map.w;
+	var out: VertexOut;
+	out.position = vec4<f32>(position, 0.0, 1.0);
+	out.screenTile = vec2<f32>(worldX, worldY);
+	return out;
 }
 
+@fragment
+fn fs(input: VertexOut) -> @location(0) vec4<f32> {
+	let map = uniforms.map;
+	let atlas = uniforms.atlas;
+	let sets = uniforms.sets;
+	let atlasRect = uniforms.atlasRect;
+	let policy = uniforms.policy;
+	let params = uniforms.params;
+	let tileCoord = floor(input.screenTile);
+	if (tileCoord.x < 0.0 || tileCoord.y < 0.0 || tileCoord.x >= map.x || tileCoord.y >= map.y) {
+		return vec4<f32>(0.0, 0.0, 0.0, 1.0);
+	}
+
+	let mapCoord = vec2<i32>(i32(tileCoord.y), i32(tileCoord.x));
+	let cellValue = i32(textureLoad(mapTexture, mapCoord, 0).x);
+	let mopValue = i32(textureLoad(mopTexture, mapCoord, 0).x);
+	let tileSet = mopValue & 0xff;
+	let tilesPerRow = i32(sets.x);
+	let tilesPerSet = i32(sets.y);
+	let rowsPerSet = i32(sets.z);
+	let setsPerTexture = i32(sets.w);
+	let tileCount = i32(policy.x);
+	let wrapTiles = policy.y > 0.5;
+	let rawTileValue = ((cellValue & 0x03ff) + i32(params.y) + (10 * tilesPerSet)) % tilesPerSet;
+	let tileValue = select(clamp(rawTileValue, 0, tileCount - 1), rawTileValue % tileCount, wrapTiles);
+	let tileCol = tileValue % tilesPerRow;
+	let tileRow = (tileValue / tilesPerRow) + ((tileSet % setsPerTexture) * rowsPerSet);
+	let positionInTile = fract(input.screenTile);
+	let tilePixel = atlasRect.xy + vec2<f32>(f32(tileCol), f32(tileRow)) * atlas.zw + positionInTile * atlas.xy;
+	let tileUv = tilePixel / vec2<f32>(textureDimensions(tilesTexture));
+	return textureSample(tilesTexture, tilesSampler, tileUv);
+}`
+		});
+
+		return this.device!.createRenderPipeline({
+			layout: 'auto',
+			vertex: { module: shader, entryPoint: 'vs' },
+			fragment: { module: shader, entryPoint: 'fs', targets: [{ format: this.presentationFormat }] },
+			primitive: { topology: 'triangle-list' }
+		});
+	}
+}
+
+function alignBytes(value: number, alignment: number): number {
+	return Math.ceil(value / alignment) * alignment;
+}
+
+async function loadImageBitmap(url: string): Promise<ImageBitmap> {
+	const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+		const element = new Image();
+		element.onload = () => resolve(element);
+		element.onerror = () => reject(new Error(`Failed to load tile texture: ${url}`));
+		element.src = url;
+	});
+	return createImageBitmap(image);
+}
 
 export { TileRenderer, WebGPUTileRenderer };

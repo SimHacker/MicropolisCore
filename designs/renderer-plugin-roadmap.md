@@ -58,12 +58,12 @@ Content management should work offline-first where practical:
 - Upload source assets and rendered previews only after review.
 - Keep server catalogs derived from approved, versioned client submissions.
 
-Micropolis maps are a good software-renderer target: render destination pixels from a continuous screen-to-world transform, sample the tile map and tileset like a shader, and avoid tile seams at every scale. The same plugin interface should also allow WebGL/WebGPU renderers to consume high-level Sims/Micropolis scene descriptions.
+Micropolis maps are a good software-renderer target: render destination pixels from a continuous screen-to-world transform, sample the tile map and tileset like a shader, and avoid tile seams at every scale. Tile atlases declare source tile width/height independently from stride x/y, optional sub-rects inside larger images, tile counts, wrap/clamp policy, sampling policy, and blend/opacity/tint policy. Padded and low-resolution tile sets can live beside normal tiles; small special-purpose tile sets can wrap over just a few tiles; transparent high-resolution tiles can serve as overlays or UI chrome. MOP values can select alternate per-tile sets, which enables "lowresify" filters for de-emphasized city areas. The same plugin interface should also allow WebGL/WebGPU renderers to consume high-level Sims/Micropolis scene descriptions.
 
 ## TODO
 
-1. Finish Canvas renderer polish: expose it through renderer selection, add visual regression fixtures, and support richer filtering/overlay sidecars.
-2. Bring `WebGPUTileRenderer` up to parity with `WebGLTileRenderer` API and resource lifecycle.
+1. Finish Canvas renderer polish: expose it through renderer selection, add visual regression fixtures, and implement richer blend/overlay sidecars.
+2. Finish `WebGPUTileRenderer` hardening: visual parity fixtures, resource disposal, richer multi-texture cases, and full blend/opacity/tint policy.
 3. Extend the initial Micropolis `RenderDescription` schema to cover Sims characters, Sims objects, and catalog thumbnails.
 4. Factor renderer selection behind a plugin-style interface so the app can select WebGPU, WebGL, or Canvas by capability, platform, and lesson intent.
 5. Expand `/render` from software Micropolis preview into the shared interactive/headless renderer route.

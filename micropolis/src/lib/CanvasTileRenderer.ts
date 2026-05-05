@@ -1,4 +1,4 @@
-import { TileRenderer } from './TileRenderer';
+import { TileRenderer, type ResolvedTileLayerSpec, type TileLayerSource } from './TileRenderer';
 import { defaultMicropolisMapRenderDescription } from './render/description';
 import { renderMicropolisMapSoftware, type TileAtlas } from './render/software';
 
@@ -14,12 +14,18 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
 		mapHeight: number,
 		tileWidth: number,
 		tileHeight: number,
-		tileTextureURLs: (string | null)[]
+		tileTextureURLs: TileLayerSource[]
 	): Promise<void> {
 		await super.initialize(canvas, context, mapData, mopData, mapWidth, mapHeight, tileWidth, tileHeight, tileTextureURLs);
 		this.context = context;
 		this.zoom = 1;
-		this.atlases = await Promise.all(tileTextureURLs.map((url) => (url ? loadTileAtlas(url, tileWidth, tileHeight) : null)));
+		this.atlases = await Promise.all(
+			this.tileLayers.map((layer) =>
+				layer.url
+					? loadTileAtlas(layer)
+					: null
+			)
+		);
 	}
 
 	render(): void {
@@ -60,13 +66,14 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
 			}
 		});
 
-		const image = renderMicropolisMapSoftware(description, this.mapData, atlas);
+		this.context.imageSmoothingEnabled = !['pixel', 'nearest'].includes(atlas.sampling ?? 'pixel');
+		const image = renderMicropolisMapSoftware(description, this.mapData, atlas, this.mopData);
 		this.context.putImageData(new ImageData(image.data, image.width, image.height), 0, 0);
 	}
 }
 
-async function loadTileAtlas(url: string, tileWidth: number, tileHeight: number): Promise<TileAtlas> {
-	const image = await loadImage(url);
+async function loadTileAtlas(layer: ResolvedTileLayerSpec): Promise<TileAtlas> {
+	const image = await loadImage(layer.url!);
 	const canvas = document.createElement('canvas');
 	canvas.width = image.width;
 	canvas.height = image.height;
@@ -79,8 +86,26 @@ async function loadTileAtlas(url: string, tileWidth: number, tileHeight: number)
 	return {
 		width: image.width,
 		height: image.height,
-		tileWidth,
-		tileHeight,
+		atlasX: layer.atlasX,
+		atlasY: layer.atlasY,
+		atlasWidth: layer.atlasWidth,
+		atlasHeight: layer.atlasHeight,
+		tileWidth: layer.tileWidth,
+		tileHeight: layer.tileHeight,
+		strideX: layer.strideX,
+		strideY: layer.strideY,
+		tileCount: layer.tileCount,
+		tilesPerSet: layer.tilesPerSet,
+		pixelAspectX: layer.pixelAspectX,
+		pixelAspectY: layer.pixelAspectY,
+		sampling: layer.sampling,
+		mipmaps: layer.mipmaps,
+		gutterX: layer.gutterX,
+		gutterY: layer.gutterY,
+		wrap: layer.wrap,
+		blend: layer.blend,
+		opacity: layer.opacity,
+		tint: layer.tint,
 		data: imageData.data
 	};
 }

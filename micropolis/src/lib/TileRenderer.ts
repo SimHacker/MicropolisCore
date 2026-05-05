@@ -19,6 +19,124 @@
  */
 
 
+export interface TileLayerSpec {
+    id?: string;
+    url: string | null;
+    atlasX?: number;
+    atlasY?: number;
+    atlasWidth?: number;
+    atlasHeight?: number;
+    tileWidth?: number;
+    tileHeight?: number;
+    strideX?: number;
+    strideY?: number;
+    tileCount?: number;
+    tilesPerSet?: number;
+    pixelAspectX?: number;
+    pixelAspectY?: number;
+    wrap?: 'repeat' | 'clamp';
+    sampling?: 'pixel' | 'nearest' | 'linear' | 'area' | 'mipmap';
+    mipmaps?: false | 'gpu' | 'tile-aware';
+    gutterX?: number;
+    gutterY?: number;
+    pixelArt?: boolean;
+    blend?: 'replace' | 'alpha' | 'multiply' | 'screen' | 'add' | 'tint';
+    opacity?: number;
+    colorSpace?: 'srgb' | 'linear';
+    premultipliedAlpha?: boolean;
+    tint?: [number, number, number, number];
+}
+
+export interface ResolvedTileLayerSpec {
+    id?: string;
+    url: string | null;
+    atlasX: number;
+    atlasY: number;
+    atlasWidth?: number;
+    atlasHeight?: number;
+    tileWidth: number;
+    tileHeight: number;
+    strideX: number;
+    strideY: number;
+    tileCount?: number;
+    tilesPerSet?: number;
+    pixelAspectX: number;
+    pixelAspectY: number;
+    wrap: 'repeat' | 'clamp';
+    sampling: 'pixel' | 'nearest' | 'linear' | 'area' | 'mipmap';
+    mipmaps: false | 'gpu' | 'tile-aware';
+    gutterX: number;
+    gutterY: number;
+    pixelArt: boolean;
+    blend: 'replace' | 'alpha' | 'multiply' | 'screen' | 'add' | 'tint';
+    opacity: number;
+    colorSpace: 'srgb' | 'linear';
+    premultipliedAlpha: boolean;
+    tint?: [number, number, number, number];
+}
+
+export type TileLayerSource = string | null | TileLayerSpec;
+
+export function resolveTileLayerSource(
+    source: TileLayerSource,
+    defaultTileWidth: number,
+    defaultTileHeight: number,
+): ResolvedTileLayerSpec {
+    if (typeof source === 'string' || source === null) {
+        return {
+            url: source,
+            atlasX: 0,
+            atlasY: 0,
+            tileWidth: defaultTileWidth,
+            tileHeight: defaultTileHeight,
+            strideX: defaultTileWidth,
+            strideY: defaultTileHeight,
+            pixelAspectX: 1,
+            pixelAspectY: 1,
+            wrap: 'repeat',
+            sampling: 'pixel',
+            mipmaps: false,
+            gutterX: 0,
+            gutterY: 0,
+            pixelArt: true,
+            blend: 'replace',
+            opacity: 1,
+            colorSpace: 'srgb',
+            premultipliedAlpha: false,
+        };
+    }
+
+    const tileWidth = source.tileWidth ?? defaultTileWidth;
+    const tileHeight = source.tileHeight ?? defaultTileHeight;
+    return {
+        id: source.id,
+        url: source.url,
+        atlasX: source.atlasX ?? 0,
+        atlasY: source.atlasY ?? 0,
+        atlasWidth: source.atlasWidth,
+        atlasHeight: source.atlasHeight,
+        tileWidth,
+        tileHeight,
+        strideX: source.strideX ?? tileWidth,
+        strideY: source.strideY ?? tileHeight,
+        tileCount: source.tileCount,
+        tilesPerSet: source.tilesPerSet,
+        pixelAspectX: source.pixelAspectX ?? 1,
+        pixelAspectY: source.pixelAspectY ?? 1,
+        wrap: source.wrap ?? 'repeat',
+        sampling: source.sampling ?? (source.pixelArt === false ? 'linear' : 'pixel'),
+        mipmaps: source.mipmaps ?? false,
+        gutterX: source.gutterX ?? 0,
+        gutterY: source.gutterY ?? 0,
+        pixelArt: source.pixelArt ?? !['linear', 'mipmap'].includes(String(source.sampling)),
+        blend: source.blend ?? 'replace',
+        opacity: source.opacity ?? 1,
+        colorSpace: source.colorSpace ?? 'srgb',
+        premultipliedAlpha: source.premultipliedAlpha ?? false,
+        tint: source.tint,
+    };
+}
+
 abstract class TileRenderer<TContext> {
 
     /**
@@ -123,6 +241,7 @@ abstract class TileRenderer<TContext> {
     /**
      * The URL of the tile texture.
      */
+    public tileLayers: ResolvedTileLayerSpec[] = [];
     public tileTextureURLs: (string | null)[] | null = null;
  
     constructor() {
@@ -150,7 +269,7 @@ abstract class TileRenderer<TContext> {
         mapHeight: number,
         tileWidth: number,
         tileHeight: number,
-        tileTextureURLs: (string | null)[],
+        tileTextureURLs: TileLayerSource[],
     ): Promise<void> {
 
         this.canvas = canvas;
@@ -161,7 +280,8 @@ abstract class TileRenderer<TContext> {
         this.mapHeight = mapHeight;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
-        this.tileTextureURLs = tileTextureURLs;
+        this.tileLayers = tileTextureURLs.map((source) => resolveTileLayerSource(source, tileWidth, tileHeight));
+        this.tileTextureURLs = this.tileLayers.map((layer) => layer.url);
         this.panXMax = this.mapWidth;
         this.panYMax = this.mapHeight;
     
