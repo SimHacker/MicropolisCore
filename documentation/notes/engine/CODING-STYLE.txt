@@ -45,8 +45,6 @@ C++ coding style:
 - Documentation:
   - Document everything with Doxygen.
 
-
-
 Not decided:
 
 - Comment style.

@@ -376,7 +376,15 @@ These can be added incrementally: enable for one package at a time (e.g. `packag
 
 ### Shared `tsconfig.base.json` — scaffolded 2026-05-06
 
-`tsconfig.base.json` exists at repo root with `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`. Packages adopt it when they have capacity: enabling `noUncheckedIndexedAccess` alone surfaces ~276 latent index-access issues in `packages/vitamoo`. Fix file-by-file and extend once clean. **Start with the smallest package** (`packages/mooshow`) to build the pattern.
+`tsconfig.base.json` exists at repo root with `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`. Packages adopt it when they have capacity.
+
+**Attempt history:** enabling `noUncheckedIndexedAccess` on `packages/vitamoo` alone surfaced **~276 type errors** — mostly array index accesses and optional-field patterns throughout the animation/parser code. It's the right target state but needs a dedicated pass, not a side-effect of other work.
+
+**Recommended adoption order:**
+1. `packages/tile-renderer` — smallest, fewest errors expected
+2. `packages/mooshow` — once mooshow test suite is green with strict (it has tests now)
+3. `packages/vitamoo` — largest payoff, largest effort (~276 errors to fix)
+4. Svelte apps — inherit from generated SvelteKit tsconfig, handle separately
 
 ### Deprecated sub-dependencies — ✅ resolved (2026-05-06)
 
@@ -393,7 +401,7 @@ These live under `documentation/` and are **frozen** — kept for lineage, not t
 | `documentation/notes/legacy/TODO.txt` | OLPC-era TODO list |
 | `documentation/notes/legacy/ROADMAP.txt` | Python/GTK-era roadmap |
 | `documentation/notes/legacy/DevelopmentPlan.md` | TileEngine / CellEngine era plan |
-| `documentation/openlaszlo-micropolis/TODO.txt` | OpenLaszlo / Flash client scratchpad |
+| `documentation/openlaszlo/TODO.txt` | OpenLaszlo / Flash client scratchpad |
 
 See [`documentation/notes/legacy/README.md`](notes/legacy/README.md) for the legacy index.
 

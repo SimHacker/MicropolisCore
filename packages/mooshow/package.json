@@ -14,13 +14,15 @@
   "engines": { "node": ">=20" },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run"
   },
   "dependencies": {
     "vitamoo": "workspace:*"
   },
   "devDependencies": {
     "@webgpu/types": "^0.1.38",
-    "typescript": "^5.7"
+    "typescript": "^5.7",
+    "vitest": "^2.1.9"
   }
 }

@@ -4,7 +4,7 @@ This directory captures design rationale that should outlive chat context.
 
 ## Documentation layout
 
-**`documentation/`** is the umbrella for manuals, talks, HTML bundles, **frozen snapshots** (for example **`documentation/openlaszlo-micropolis/`** with `*.lzx` and scratchpads like **`TODO.txt`**), long-form **historical** archives, and this **`designs/`** subtree for **ongoing** intent: Wasm bridge, command path, multiplayer metaphors. Everything here is documentation; **`designs/`** is simply where we keep specs that track what we intend to build next.
+**`documentation/`** is the umbrella for manuals, talks, HTML bundles, **frozen snapshots** (for example **`documentation/openlaszlo/`** with `*.lzx` and scratchpads like **`TODO.txt`**), long-form **historical** archives, and this **`designs/`** subtree for **ongoing** intent: Wasm bridge, command path, multiplayer metaphors. Everything here is documentation; **`designs/`** is simply where we keep specs that track what we intend to build next.
 
 When an older note foreshadows current work (city branching, social play, Git-as-multiverse), prefer a **link** from the archive into this folder instead of duplicating prose — see **`platform-lineage-index.md`**.
 

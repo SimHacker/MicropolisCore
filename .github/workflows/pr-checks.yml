@@ -56,7 +56,7 @@ jobs:
       - run: pnpm --filter micropolis run check
 
   test:
-    name: Micropolis Vitest (WASM in Node)
+    name: Tests (Micropolis WASM + mooshow integration)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,4 +66,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter vitamoo run build
+      - run: pnpm --filter mooshow run build
+      - run: pnpm --filter mooshow run test
       - run: pnpm --filter micropolis run test

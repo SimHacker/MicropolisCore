@@ -13,7 +13,7 @@ Everything under this directory is **project documentation**: manuals for player
 | **`notes/`** | Developer notes: CLI/save-file references, engine scratch files, legacy OLPC plans, Cursor session exports, prompts. See **`notes/README.md`**. |
 | **`talks/`** | Conference talk artifacts (e.g. HAR 2009). See **`talks/README.md`**. |
 | **`historical/`** | Long-form archives (migrated blog posts, etc.). See **`historical/README.md`**. |
-| **`openlaszlo-micropolis/`** | Frozen **OpenLaszlo** web client (`*.lzx`) plus **`resources/`** and scratchpads. See **`openlaszlo-micropolis/README.md`**. |
+| **`openlaszlo/`** | Frozen **OpenLaszlo** web client (`*.lzx`) plus **`resources/`** and scratchpads — with an essay on OL constraint/prototype architecture and its lineage into Svelte 5. See **`openlaszlo/README.md`**. |
 
 ## Quick links
 

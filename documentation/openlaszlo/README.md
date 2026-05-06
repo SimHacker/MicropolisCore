@@ -4,13 +4,13 @@ This tree holds the **historic OpenLaszlo (`*.lzx`)** Micropolis front-end: **`m
 
 ## Self-contained snapshot
 
-All **`src=` paths are relative** to each compile unit and use **`../resources/...`** — i.e. this directory’s **`resources/`** (`data/`, `images/`, `sounds/`, tiles, SWFs). You can copy **`documentation/openlaszlo-micropolis/`** elsewhere and inspect or compile without referencing repo-root **`content/micropolis/`**.
+All **`src=` paths are relative** to each compile unit and use **`../resources/...`** — i.e. this directory’s **`resources/`** (`data/`, `images/`, `sounds/`, tiles, SWFs). You can copy **`documentation/openlaszlo/`** elsewhere and inspect or compile without referencing repo-root **`content/micropolis/`**.
 
 Optional merge **into** the canonical bundle the Wasm app loads:
 
 ```bash
 # from MicropolisCore repo root
-rsync -av documentation/openlaszlo-micropolis/resources/ content/micropolis/
+rsync -av documentation/openlaszlo/resources/ content/micropolis/
 ```
 
 ## Companion files (scratchpads)

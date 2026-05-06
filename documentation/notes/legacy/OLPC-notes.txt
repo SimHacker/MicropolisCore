@@ -87,8 +87,9 @@ Core Ideas:
         
         Collaboration: Enhance multi player mode to support sharing activities.
           Both publishing your game for others to clone and play themselves (massively single player, like Spore),
-          and letting others join in your game (like the current cooperative multi-player mode)). 
-          Multi player inte
+          and letting others join in your game (like the current cooperative multi-player mode). 
+          Multi player inteaction, voting, chat, white board overlay, invitations, 
+          cursors, presence, etc.
 
         Expression: Enhance chat, journaling, storytelling, and personalization aspects of the game. 
 

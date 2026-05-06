@@ -124,7 +124,7 @@ Do not treat this section as a spec; treat **`city-save-files.md`** as the spec.
 | **Commercial Unix product** | DUX / multi-player **SimCityNet** | Multiplayer, chat/drawing, voting ideas; fast workstations changed pacing vs home computers. |
 | **Maxis** | **The Sims** | Collaboration with **Will Wright**; pie menus fit object-centric “verbs on things” UI. |
 | **OLPC** | Tcl/Tk / X11 activity | **GPLv3** release negotiated with EA; constructionist education framing (Papert, Kay). Multiplayer **disabled** in OLPC build for simplicity. |
-| **Web (historical Micropolis Online)** | C++ core + **Python** + **OpenLaszlo / Flash** client, AMF, etc. | Transcript lists many adjacent technologies (TurboGears, PyGTK era). **Current MicropolisCore** uses **Wasm + Svelte**—treat OpenLaszlo as **archived** under `documentation/openlaszlo-micropolis/`. |
+| **Web (historical Micropolis Online)** | C++ core + **Python** + **OpenLaszlo / Flash** client, AMF, etc. | Transcript lists many adjacent technologies (TurboGears, PyGTK era). **Current MicropolisCore** uses **Wasm + Svelte**—treat OpenLaszlo as **archived** under `documentation/openlaszlo/`. |
 
 **Public demos / articles mentioned:**
 

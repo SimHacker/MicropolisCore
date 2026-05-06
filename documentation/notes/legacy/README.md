@@ -13,5 +13,8 @@ These files captured **shipping plans** and **roadmaps** for Micropolis on **OLP
 | **`DevelopmentPlan.md`** | Don Hopkins’ essay on C++/Python split, tile engine, internationalization — starts with a disclaimer that technology moved on; still useful for **why** the core/UI boundary exists. |
 | **`ROADMAP.txt`** | Old source tree map (“`src/notes`”, resources, Tcl widget notes). |
 | **`DocTCL.txt`** | Tcl/Tk documentation hooks from the Unix UI line. |
+| **`CALLBACKS.txt`** | Simulator → UI callback hooks for the Tcl/Python era (moved from `engine/`). Current Embind/JSCallback design is in **`../../designs/callback-interface-roadmap.md`**. |
+| **`SharedData.txt`** | Shared state between UI and engine in the Tcl/Python stack (moved from `engine/`). |
+| **`outline.txt`** | Early outline / structure notes for engine or docs (moved from `engine/`). |
 
 If an idea here reappears in modern work, link forward to **`../../designs/`** rather than duplicating.
