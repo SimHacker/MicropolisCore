@@ -9,7 +9,7 @@ Loose files that support **development**, **CLI / save-file work**, and **agent 
 | **Root of `notes/`** | Frequently used, still-relevant material: multiplayer research, modern UI plans, CLI test doc, save-file reference, prompt snippets. |
 | **`engine/`** | Low-level engine scratch: callbacks, tile map, simulator hooks, file layout, coding style, asset inventories. |
 | **`legacy/`** | OLPC / Python-GTK-era plans, Tcl notes, old roadmaps and TODOs — **kept for lineage**, often superseded by Wasm + Svelte work. |
-| **`cursor/`** | Curated **`cursor/cursor-context-notes.md`** plus archived **raw** transcript (see **`cursor/README.md`**). |
+| **`cursor/`** | Curated session notes: **`cursor/cursor-context-notes.md`** (see **`cursor/README.md`**). |
 
 ## Index (root files)
 

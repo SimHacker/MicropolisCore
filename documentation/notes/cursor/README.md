@@ -2,7 +2,6 @@
 
 | File | Description |
 |------|-------------|
-| **`cursor-context-notes.md`** | **Curated** notes: SimCity / Micropolis, save files, Gingold reverse diagrams, Librande one-pagers, Bret Victor explorable media, Shneiderman dynamic queries → SimCity filters, OLPC/GPL lineage, HyperLook/NeWS patterns, pie menus. Safe for kids and classrooms; no raw chat chrome. |
-| **`cursor-context-notes-raw-transcript.txt`** | **Unfiltered** export of a long Cursor / ChatGPT working session (includes scraped pages, timestamps, and material intentionally **omitted** from the `.md`). For archaeology only—not vetted. |
+| **`cursor-context-notes.md`** | Curated notes from long Cursor / ChatGPT sessions: SimCity / Micropolis, save files, Gingold reverse diagrams, Librande one-pagers, Bret Victor explorable media, Shneiderman dynamic queries → SimCity filters, OLPC/GPL lineage, HyperLook/NeWS patterns, pie menus. Safe for general audiences; no raw chat dump in-repo. |
 
-Start with the **Markdown** file for LLM context or human reading.
+Only this Markdown file is maintained here; expand it when new sessions surface durable facts, or split detail into **`../`** topical notes and **`../../designs/`**.

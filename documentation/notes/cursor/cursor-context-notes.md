@@ -1,14 +1,12 @@
 # MicropolisCore: curated notes from Cursor / ChatGPT sessions
 
-This document distills a long **Cursor IDE / ChatGPT working transcript** (save-file analysis, UI history, papers, talks, and scraped web pages) into **structured, navigable notes** for humans and LLMs. It **deduplicates** boilerplate, drops site chrome and timestamps, and **removes** content that was off-topic, abrasive, or not suitable to retain (see end section).
+This document distills a long **Cursor IDE / ChatGPT working transcript** (save-file analysis, UI history, papers, talks, and scraped web pages) into **structured, navigable notes** for humans and LLMs. It **deduplicates** boilerplate, drops site chrome and timestamps, and **removes** content that was off-topic, abrasive, or not suitable to retain (see end section). The **verbatim transcript is not kept** in this repository—only this curated summary.
 
 **Canonical technical references in this repo (prefer these over this file):**
 
 - City / `.cty` layout: [`../city-save-files.md`](../city-save-files.md)
 - CLI / Vitest: [`../micropolis-js-tests.md`](../micropolis-js-tests.md)
 - Current architecture: [`../../designs/`](../../designs/)
-
-**Raw transcript (unfiltered):** [`cursor-context-notes-raw-transcript.txt`](cursor-context-notes-raw-transcript.txt)
 
 ---
 
@@ -196,7 +194,7 @@ The transcript contains a long **HyperLook vs HyperCard** narrative. **Technical
 - **Unkind, sensational, political, or NSFW asides** and **slurs** present in informal user prompts or jokes in the long HyperLook section—including a **marked NSFW** disaster screenshot narrative. None of that is reproduced here by design.
 - **Duplicate** lists of the same Worrydream URLs and the same Gingold quotations.
 
-If you need a **verbatim** line for legal or scholarly citation, consult **`cursor-context-notes-raw-transcript.txt`** locally—do not treat the raw file as vetted for classroom distribution.
+For **verbatim** wording from the original chat, check **git history** for commits that still contained the raw export (before it was removed), or re-export from your own Cursor logs.
 
 ---
 
