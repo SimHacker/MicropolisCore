@@ -48,10 +48,26 @@ build
 /html/
 doxygen_warnings
 
-# Node / pnpm (Vitamoo workspace at repo root)
+# Node / pnpm
 node_modules/
 .pnpm-store/
 pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Never commit Ruby bundler vendor or Jekyll output (gitignored per-app too)
+**/website/vendor/
+**/_jekyll_content_build/
+**/.jekyll-cache/
+**/.jekyll-metadata
+
+# Vite timestamp files
+vite.config.*.timestamp-*
+
+# CI/build artifacts at repo root
+_site/
+html/
 
 # VitaMoo build outputs
 packages/vitamoo/dist/

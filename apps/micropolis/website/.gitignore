@@ -1,0 +1,6 @@
+# Ruby bundler — install locally for CI, never commit
+vendor/
+.bundle/
+_site/
+.jekyll-cache/
+.jekyll-metadata
