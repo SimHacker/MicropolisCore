@@ -16,7 +16,7 @@ The base game and expansion packages are treated as immutable references. Confli
 
 ## Current groundwork (implemented)
 
-Core analysis utilities live in `vitamoo/io/guid-collision.ts` and are exported from `vitamoo`:
+Core analysis utilities live in `packages/vitamoo/vitamoo/io/guid-collision.ts` and are exported from `vitamoo`:
 
 - `buildGuidObjectMap()` / `appendGuidObjectMap()` for incremental GUID -> object-list intake.
 - `analyzeGuidBucket()` / `analyzeGuidObjectMap()` for per-GUID classification.

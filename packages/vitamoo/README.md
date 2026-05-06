@@ -2,15 +2,15 @@
 
 **VitaMoo** is a **Sims 1**-style animation and asset stack: parse CMX/SKN/CFP, drive skeletons, deform meshes. The **WebGPU `Renderer`** (WGSL) is a **framework** aimed at rendering **more than characters** over time—other Sims content types, tooling, and **plug-ins** such as custom UI and data visualization—with **skinned character animation** as the **first** integrated slice. No game engine: TypeScript and a small layered stack you can reuse or replace.
 
-## What’s in this directory
+## Monorepo layout
 
-| Layer | Role |
-|-------|------|
-| **vitamoo/** | Core: parsers, skeleton math, mesh deformation, animation ticks, **`io/`** (FAR archives, Maxis IFF v1/v2.x with version detection, FourCC resource type constants, STR#/CTSS/CST string tables, pluggable resource handler registry). No DOM, no canvas. |
-| **mooshow/** | Graphics/runtime: WebGPU stage (`Renderer.create`), camera, object-ID picking, spin input, hooks for UI (selection, plumb bob, keys). Depends on `vitamoo`. |
-| **vitamoospace/** | SvelteKit app: full-page demo, playing-scene / template / skill menus, one `VitaMooSpace` component that uses `vitamoo` + `mooshow`. |
+| Layer | Location | Role |
+|-------|----------|------|
+| **vitamoo** (this package) | **`packages/vitamoo`** | Core: parsers, skeleton math, mesh deformation, animation ticks, **`io/`** (FAR archives, Maxis IFF v1/v2.x with version detection, FourCC resource type constants, STR#/CTSS/CST string tables, pluggable resource handler registry). No DOM, no canvas. |
+| **mooshow** | **`packages/mooshow`** | Graphics/runtime: WebGPU stage (`Renderer.create`), camera, object-ID picking, spin input, hooks for UI (selection, plumb bob, keys). Depends on `vitamoo`. |
+| **vitamoospace** | **`apps/vitamoospace`** | SvelteKit app: full-page demo, playing-scene / template / skill menus, one `VitaMooSpace` component that uses `vitamoo` + `mooshow`. |
 
-Scenes and bodies come from the **playing-scene exchange** (`content-exchange.json` with `schemaVersion`, `characterTemplates`, `playingScenes`, optional `assetIndexRef` to a pure asset list such as `content-assets.json`) plus CMX/SKN/BMP/CFP assets. The loader enforces exchange schema validation and maps templates/placements to the runtime index (`characters`, `scenes`, `cast`) without legacy fallback paths. See `docs/moo-world-model-and-save-alignment.md`. Validate shipped demo files with `npm run verify:exchange`, merge invariants with `npm run verify:exchange:merge`, and GUID-collision groundwork with `npm run verify:guid-collision`.
+Scenes and bodies come from the **playing-scene exchange** (`content-exchange.json` with `schemaVersion`, `characterTemplates`, `playingScenes`, optional `assetIndexRef` to a pure asset list such as `content-assets.json`) plus CMX/SKN/BMP/CFP assets, shipped under **`content/vitamoo/sims-demo/`** (served in dev/build via **`apps/vitamoospace/static/data`** → symlink). The loader enforces exchange schema validation and maps templates/placements to the runtime index (`characters`, `scenes`, `cast`) without legacy fallback paths. See **[`documentation/vitamoo/moo-world-model-and-save-alignment.md`](../../documentation/vitamoo/moo-world-model-and-save-alignment.md)**. From **`packages/vitamoo`**: validate demo files with **`pnpm run verify:exchange`**, merge invariants with **`pnpm run verify:exchange:merge`**, GUID-collision groundwork with **`pnpm run verify:guid-collision`**.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ Shader display modes still use **`?debugSlice=0`** … **`6`** (see Default cont
 - **Browser viewer with your UI:** depend on `mooshow`; create a stage, load a content index, wire hooks to your components.
 - **Full demo:** use or fork `vitamoospace`; swap assets and content index to rebrand.
 
-See **[docs/DOCUMENTATION.md](docs/DOCUMENTATION.md)** for full API and layer boundaries, data formats, and how to extend or build on top. **Layer refactor (phases):** **[docs/REFACTOR-PLAN.md](docs/REFACTOR-PLAN.md)**. **WebGPU renderer index:** **[docs/README.md](docs/README.md)** (spec, status, GPU-deformation checklist).
+See **[`documentation/vitamoo/DOCUMENTATION.md`](../../documentation/vitamoo/DOCUMENTATION.md)** for full API and layer boundaries, data formats, and how to extend or build on top. **Layer refactor (phases):** **[`documentation/vitamoo/REFACTOR-PLAN.md`](../../documentation/vitamoo/REFACTOR-PLAN.md)**. **WebGPU renderer index:** **[`documentation/vitamoo/README.md`](../../documentation/vitamoo/README.md)** (spec, status, GPU-deformation checklist).
 
 ---
 
@@ -108,7 +108,7 @@ Mesh **debug view modes** (UV, normals, solid tests, etc.) are selected with the
 
 ## GitHub Pages (fork)
 
-The workflow **Deploy VitaMooSpace to GitHub Pages** runs on pushes to **`main`** that touch the vitamoo paths (see `.github/workflows/pages.yml`), or manually via **Actions → Run workflow**. It only deploys if **`VITAMOOSPACE_PAGES_URL`** is set (repository variable or secret). Manual CLI:
+The workflow **Deploy VitaMooSpace to GitHub Pages** (see **`.github/workflows/vitamoo-pages.yml`**) is **manual** (**Actions → Run workflow**). It only deploys if **`VITAMOOSPACE_PAGES_URL`** is set (repository variable or secret). Manual CLI:
 
 ```bash
 gh workflow run "Deploy VitaMooSpace to GitHub Pages" --repo OWNER/REPO

@@ -58,14 +58,14 @@ Per frame, mooshow now executes a single batched compute encoder:
 
 | File | Role |
 |------|------|
-| `vitamoo/vitamoo/renderer.ts` | WebGPU renderer and orchestration entry points for animation/deform/world compute, draw, tap-buffer allocation and readback. |
-| `vitamoo/vitamoo/gpu-animator.ts` | Multi-practice animation kernels and dispatch sequencing. |
-| `vitamoo/vitamoo/gpu-skill-cache.ts` | GPU-resident skill keyframes, hierarchy/topology, and per-bone flags. |
-| `vitamoo/vitamoo/gpu-deformer.ts` | Deformation kernels matching VitaBoy phase 0 / phase 1 / blend flow. |
-| `vitamoo/vitamoo/gpu-world-transform.ts` | Post-deformation body/world transform pass. |
-| `vitamoo/mooshow/src/runtime/stage.ts` | Runtime backend selection, per-body orchestration, validation scheduling, draw loop integration. |
-| `vitamoo/mooshow/src/runtime/content-loader.ts` | Character body assembly and practice creation. |
-| `vitamoo/vitamoospace/src/lib/components/DebugPanel.svelte` | Runtime controls and validation diagnostics UI. |
+| `packages/vitamoo/vitamoo/renderer.ts` | WebGPU renderer and orchestration entry points for animation/deform/world compute, draw, tap-buffer allocation and readback. |
+| `packages/vitamoo/vitamoo/gpu-animator.ts` | Multi-practice animation kernels and dispatch sequencing. |
+| `packages/vitamoo/vitamoo/gpu-skill-cache.ts` | GPU-resident skill keyframes, hierarchy/topology, and per-bone flags. |
+| `packages/vitamoo/vitamoo/gpu-deformer.ts` | Deformation kernels matching VitaBoy phase 0 / phase 1 / blend flow. |
+| `packages/vitamoo/vitamoo/gpu-world-transform.ts` | Post-deformation body/world transform pass. |
+| `packages/mooshow/src/runtime/stage.ts` | Runtime backend selection, per-body orchestration, validation scheduling, draw loop integration. |
+| `packages/mooshow/src/runtime/content-loader.ts` | Character body assembly and practice creation. |
+| `apps/vitamoospace/src/lib/components/DebugPanel.svelte` | Runtime controls and validation diagnostics UI. |
 
 ---
 
@@ -158,5 +158,5 @@ Per frame, mooshow now executes a single batched compute encoder:
 
 - [webgpu-renderer-design.md §3.11](./webgpu-renderer-design.md#311-censorship-mesh-bounding-box-pixelization) — bbox pixelization options (post-process, per-mesh, hybrid).
 - [sims-content-pipeline-notes.md](./sims-content-pipeline-notes.md) — suit type and exporter notes.
-- `vitamoo/vitamoo/types.ts` — `SuitData.type` (`0` normal, `1` censor).
+- `packages/vitamoo/vitamoo/types.ts` — `SuitData.type` (`0` normal, `1` censor).
 

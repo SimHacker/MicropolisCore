@@ -364,8 +364,8 @@ Events live on bone nodes, keyed by skill name, matching the original per-bone `
 
 | Area | Location |
 |------|-----------|
-| VitaMoo Props/TimeProps types | `vitamoo/types.ts` |
+| VitaMoo Props/TimeProps types | `packages/vitamoo/vitamoo/types.ts` |
 | Note-track history and original tag vocabulary | [sims-content-pipeline-notes.md](./sims-content-pipeline-notes.md) |
-| glTF loader (static meshes, future skinned) | `vitamoo/loaders/gltf.ts` |
+| glTF loader (static meshes, future skinned) | `packages/vitamoo/vitamoo/loaders/gltf.ts` |
 | glTF import/export phasing (§8 in design) | [webgpu-renderer-design.md §8](./webgpu-renderer-design.md) |
 | GPU readback for authoring tools | [gpu-assets-tooling-roadmap.md](./gpu-assets-tooling-roadmap.md) |

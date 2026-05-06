@@ -54,10 +54,10 @@ node_modules/
 pnpm-debug.log*
 
 # VitaMoo build outputs
-vitamoo/dist/
-vitamoo/mooshow/dist/
-vitamoo/vitamoospace/.svelte-kit/
-vitamoo/vitamoospace/build/
+packages/vitamoo/dist/
+packages/mooshow/dist/
+apps/vitamoospace/.svelte-kit/
+apps/vitamoospace/build/
 
 # Shared packages (emit optional dist/)
 packages/*/dist/

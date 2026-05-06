@@ -1,4 +1,4 @@
-# VitaMoo — `docs/`
+# VitaMoo — `documentation/vitamoo/`
 
 Focused notes for the **WebGPU renderer** and related roadmap. The **full stack protocol** (layers, APIs, content formats) is **[`DOCUMENTATION.md`](./DOCUMENTATION.md)**. **Layer refactor history** is **[`REFACTOR-PLAN.md`](./REFACTOR-PLAN.md)**.
 
@@ -57,8 +57,8 @@ See **[webgpu-renderer-status.md](./webgpu-renderer-status.md)** (gaps, next ste
 |------|------|
 | **Monorepo layers** | **vitamoo** (core: parsers, skeleton, `Renderer`, textures) → **mooshow** (stage, pick, hooks) → **vitamoospace** (SvelteKit app). |
 | **Sibling design repos** | **obliterator-designs** (separate checkout): `designs/04-DISPLAY-LISTS-AND-GPU-RESOURCES.md`, `designs/05-SIMS1-WORLD-RENDER-LAYERS.md` — display lists + pools; Sims draw order. Same references as [webgpu-renderer-status.md § Related design docs](./webgpu-renderer-status.md#related-design-docs). |
-| **Tooling** | **pnpm** workspace in `vitamoo/`; **WebGPU**-capable browser for the demo; **Node** for build/tests. |
-| **Deploy** | GitHub Actions **`.github/workflows/pages.yml`** + repo secret `VITAMOOSPACE_PAGES_URL` for Pages. |
+| **Tooling** | **pnpm** workspace at the **MicropolisCore** repo root (`apps/*`, `packages/*`); **WebGPU**-capable browser for the demo; **Node** for build/tests. |
+| **Deploy** | GitHub Actions **`.github/workflows/vitamoo-pages.yml`** + repo variable/secret **`VITAMOOSPACE_PAGES_URL`** for Pages. |
 
 ---
 

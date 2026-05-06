@@ -4,9 +4,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(__dirname, '..');
-const exchangePath = path.join(root, 'vitamoospace/static/data/content-exchange.json');
-const assetsPath = path.join(root, 'vitamoospace/static/data/content-assets.json');
+const repoRoot = path.resolve(__dirname, '../../..');
+const exchangePath = path.join(repoRoot, 'content/vitamoo/sims-demo/content-exchange.json');
+const assetsPath = path.join(repoRoot, 'content/vitamoo/sims-demo/content-assets.json');
 
 function fail(msg) {
     console.error(msg);

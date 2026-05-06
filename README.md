@@ -384,7 +384,7 @@ source ~/Developer/emsdk/emsdk_env.sh
 cd MicropolisEngine
 make clean install
 
-# 3. Install monorepo dependencies (micropolis app, shared packages, vitamoo workspace).
+# 3. Install monorepo dependencies (Micropolis and VitaMooSpace apps, shared packages, VitaMoo libraries).
 cd ..
 pnpm install
 

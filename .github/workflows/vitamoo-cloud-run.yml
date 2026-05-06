@@ -81,7 +81,7 @@ jobs:
       - name: Build and push container
         run: |
           docker build \
-            -f vitamoo/vitamoospace/Dockerfile \
+            -f apps/vitamoospace/Dockerfile \
             -t ${{ steps.meta.outputs.tag }} \
             .
           docker push ${{ steps.meta.outputs.tag }}

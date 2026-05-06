@@ -1,6 +1,6 @@
 /**
  * Derives SvelteKit paths.base (BASE_PATH) and optional GitHub Pages CNAME host
- * from a public site URL. Used by CI and by vitamoo/scripts/build-vitamoospace-static.mjs.
+ * from a public site URL. Used by CI and by any VitaMooSpace static build helper scripts.
  *
  * Env (when run as main): PAGES_SITE_URL, optional GITHUB_OUTPUT for Actions.
  */

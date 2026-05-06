@@ -1,6 +1,6 @@
 # SimObliterator → TypeScript: save data, content library, and VitaMoo integration
 
-This document surveys the **Python side** of **SimObliterator Suite** (repository root, outside `vitamoo/`), proposes a **portable TypeScript** module family for **reading and eventually writing** Sims 1 save and game data in **browser and Node**, and orders work so the **first win** is: **load every Sim from a neighborhood (all lots / families)** into **VitaMoo** for animation and outfit play.
+This document surveys the **Python side** of **SimObliterator Suite** (a separate repository from MicropolisCore; outside this repo’s **`packages/vitamoo`** tree), proposes a **portable TypeScript** module family for **reading and eventually writing** Sims 1 save and game data in **browser and Node**, and orders work so the **first win** is: **load every Sim from a neighborhood (all lots / families)** into **VitaMoo** for animation and outfit play.
 
 It is **not** a mandate for a line-by-line Python port. TypeScript modules should match **on-disk contracts** and **user-visible capabilities**, **maximize reuse of vitamoo** (parsers, types, naming), and stay **small, testable, and environment-agnostic**.
 
@@ -40,7 +40,7 @@ The save-data TS stack should **not** invent parallel names for those shapes. Th
 
 ### 1.2 Naming and patterns (conventions)
 
-- Prefer **existing vitamoo/mooshow names**: `ContentIndex`, `CharacterDef`, `ContentStore`, `assetsBaseUrl` (when URL-based), `loadIndex` / `loadAllContent` semantics.
+- Prefer **existing `packages/mooshow` names** (and the **`vitamoo`** package): `ContentIndex`, `CharacterDef`, `ContentStore`, `assetsBaseUrl` (when URL-based), `loadIndex` / `loadAllContent` semantics.
 - New types for saves should be **`PascalCase`** interfaces in files colocated with domain (`neighborhood.ts`, `neighbor-record.ts`), mirroring **`Body`**, **`StageConfig`** style in mooshow.
 - **Pure parse functions** return **plain objects** or **readonly** views; avoid hidden globals (same as core vitamoo parsers).
 - **Errors:** throw **`Error`** with stable codes or `cause` where useful, similar to **`content-loader`** JSON / fetch errors.
@@ -69,7 +69,7 @@ The save-data TS stack should **not** invent parallel names for those shapes. Th
 | **DBPF** | Package-style containers where used | `formats/dbpf/dbpf.py` |
 | **Mesh / character assets** | BCF/BMF/CFP, CMX text, SKN, glTF export helpers | `formats/mesh/bcf.py`, `bmf.py`, `cfp.py`, `cmx.py`, `skn.py`, `gltf_export.py` |
 
-**Overlap with vitamoo:** TypeScript already implements **CMX, SKN, CFP, BMP** and animation/render (`vitamoo/vitamoo/`). The new work is **IFF/FAR/save orchestration** and **resolving paths** from STR# / filenames into bytes vitamoo can consume.
+**Overlap with vitamoo:** TypeScript already implements **CMX, SKN, CFP, BMP** and animation/render (`packages/vitamoo/vitamoo/`). The new work is **IFF/FAR/save orchestration** and **resolving paths** from STR# / filenames into bytes vitamoo can consume.
 
 ### 2.2 Application core (`src/Tools/core/`)
 
@@ -244,7 +244,7 @@ This is the concrete start sequence for coding the first `Roots` and `Catalog` t
 Work follows **§6** (layered interchange and fidelity profiles). In short:
 
 1. **OBJD/OBJF/SPR/DGRP** resolution and preview (2D first, 3D holodeck later per vitamoo design docs).
-2. **GUID collision triage before mutation:** ingest GUID -> object lists, exact-match groups, and similarity matrices for one warning per colliding GUID; treat base-game and expansion objects as immutable anchors. Keep scanners analysis-only: emit complete identifiers/context, then let Cursor/MOOLLM choose remediation tools in a separate disposition phase. For higher-level MOOLLM/human-assisted resolution, run a preflight graph pass over all objects: extract GUID references from Simantics/chunk code, annotate container/path provenance (FAR or directory overlap), and use that graph to preserve coherent inter-object intent during re-GUID decisions. Current groundwork: `vitamoo/io/guid-collision.ts`. See [`guid-collision-analysis-plan.md`](./guid-collision-analysis-plan.md).
+2. **GUID collision triage before mutation:** ingest GUID -> object lists, exact-match groups, and similarity matrices for one warning per colliding GUID; treat base-game and expansion objects as immutable anchors. Keep scanners analysis-only: emit complete identifiers/context, then let Cursor/MOOLLM choose remediation tools in a separate disposition phase. For higher-level MOOLLM/human-assisted resolution, run a preflight graph pass over all objects: extract GUID references from Simantics/chunk code, annotate container/path provenance (FAR or directory overlap), and use that graph to preserve coherent inter-object intent during re-GUID decisions. Current groundwork: `packages/vitamoo/vitamoo/io/guid-collision.ts`. See [`guid-collision-analysis-plan.md`](./guid-collision-analysis-plan.md).
 3. **Simantics (BHAV)** and other structured chunks: **YAML** (and **JSON** where automation prefers it) as the edit surface; round-trip **decode → edit → encode** into chunk bytes.
 4. **Transmogrifier-class** flows: partial export, **patch bundles**, and **derived channel regeneration** (RGB / alpha / Z / zoom) per **fidelity profile**; full interchange with [`gltf-extras-metadata.md`](./gltf-extras-metadata.md) and GPU readback ideas in [`gpu-assets-tooling-roadmap.md`](./gpu-assets-tooling-roadmap.md) where relevant.
 5. **Object SQL corpus for higher-level tooling:** scan all objects across selected directories/FARs and export a normalized SQLite database of objects, chunks, GUID references, and provenance so MOOLLM/human-assisted workflows can query intent and relationship graphs directly. Primary target is Node-side batch tooling; optional local browser path can use SQLite WASM (or equivalent) for user-selected saves, with optional read-only publication via Datasette.
@@ -336,7 +336,7 @@ Python’s deep BHAV tooling in **SimObliterator Suite** remains a **reference i
 
 ## 9. Suggested repository placement
 
-Add a **workspace package sibling to mooshow** under **`vitamoo/`** (for example **`vitamoo/sims-io/`**), registered in **`vitamoo/pnpm-workspace.yaml`**. Use **strict TypeScript**, **`*.test.ts`** next to sources, and **`vitamoo`** as a **dependency** from **`sims-io`** for parsers and (optionally) **`mooshow`** as a **devDependency** for type-only imports of **`ContentIndex`** / **`ContentLoader`** in the bridge—**or** duplicate only the **type** definitions in `sims-io` if you must avoid a cycle (prefer importing types from **`mooshow`** exports).
+Add a **workspace package sibling** to **`packages/mooshow`** (for example **`packages/sims-io/`**), registered in the **repo root** **`pnpm-workspace.yaml`**. Use **strict TypeScript**, **`*.test.ts`** next to sources, and **`vitamoo`** as a **dependency** from **`sims-io`** for parsers and (optionally) **`mooshow`** as a **devDependency** for type-only imports of **`ContentIndex`** / **`ContentLoader`** in the bridge—**or** duplicate only the **type** definitions in `sims-io` if you must avoid a cycle (prefer importing types from **`mooshow`** exports).
 
 **vitamoo** remains the **animation, mesh, CFP, render** core; **sims-io** owns **IFF/FAR/save** and **L0** adapters. **No second copy** of CMX/SKN/CFP parsing.
 

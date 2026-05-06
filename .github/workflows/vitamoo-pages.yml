@@ -60,7 +60,7 @@ jobs:
         id: site
         env:
           PAGES_SITE_URL: ${{ vars.VITAMOOSPACE_PAGES_URL || secrets.VITAMOOSPACE_PAGES_URL }}
-        run: node vitamoo/scripts/resolve-public-site-url.mjs
+        run: node packages/vitamoo/scripts/resolve-public-site-url.mjs
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -80,13 +80,13 @@ jobs:
         if: steps.site.outputs.cname_host != ''
         env:
           CNAME_HOST: ${{ steps.site.outputs.cname_host }}
-        run: printf '%s\n' "$CNAME_HOST" > vitamoo/vitamoospace/build/CNAME
+        run: printf '%s\n' "$CNAME_HOST" > apps/vitamoospace/build/CNAME
 
       - uses: actions/configure-pages@v4
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: vitamoo/vitamoospace/build
+          path: apps/vitamoospace/build
 
       - name: Deploy
         id: deployment

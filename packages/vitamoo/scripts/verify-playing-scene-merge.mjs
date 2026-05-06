@@ -5,15 +5,15 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(__dirname, '..');
-const mergeDistPath = path.join(root, 'mooshow/dist/runtime/playing-scene-merge.js');
+const repoRoot = path.resolve(__dirname, '../../..');
+const mergeDistPath = path.join(repoRoot, 'packages/mooshow/dist/runtime/playing-scene-merge.js');
 if (!fs.existsSync(mergeDistPath)) {
     throw new Error(`Build mooshow first: missing ${mergeDistPath}`);
 }
 
 const { parseContentIndexAssetLists, playingSceneExchangeToContentIndex } = await import(pathToFileURL(mergeDistPath).href);
 
-const exchangePath = path.join(root, 'vitamoospace/static/data/content-exchange.json');
+const exchangePath = path.join(repoRoot, 'content/vitamoo/sims-demo/content-exchange.json');
 const exchange = JSON.parse(fs.readFileSync(exchangePath, 'utf8'));
 let merged = exchange;
 if (exchange.assetIndexRef) {

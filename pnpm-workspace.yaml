@@ -1,7 +1,4 @@
 # MicropolisCore monorepo — apps/, shared packages, VitaMoo.
 packages:
-  - 'apps/micropolis'
+  - 'apps/*'
   - 'packages/*'
-  - 'vitamoo'
-  - 'vitamoo/mooshow'
-  - 'vitamoo/vitamoospace'

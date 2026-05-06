@@ -235,7 +235,7 @@ Notes about the Sims character animation pipeline that matter for anyone buildin
 
 3DS Max is **Z-up right-handed**. The Sims game is **Y-up**. The CMX Exporter converts at export time using `decomp_affine` on Max's `Matrix3` transforms. By the time data reaches CMX/SKN/CFP files, it is already in the game's coordinate system. VitaMoo's TypeScript parsers and WGSL shaders work in the game coordinate system directly — no axis swaps needed for Sims 1 content.
 
-**Sims-aligned VitaMoo space** (what deformation and WGSL use after native parsers run) is **right-handed** with **+Y up**. CFP animation on disk is stored in a **DirectX-oriented** encoding relative to that runtime; **`parseCFP`** in `vitamoo/vitamoo/parser.ts` converts it into Sims-aligned VitaMoo space by negating stored **Z** on translation keys and **W** on quaternion keys.
+**Sims-aligned VitaMoo space** (what deformation and WGSL use after native parsers run) is **right-handed** with **+Y up**. CFP animation on disk is stored in a **DirectX-oriented** encoding relative to that runtime; **`parseCFP`** in `packages/vitamoo/vitamoo/parser.ts` converts it into Sims-aligned VitaMoo space by negating stored **Z** on translation keys and **W** on quaternion keys.
 
 **glTF 2.0** is defined by Khronos as **right-handed** with **+Y up** — the **same** handedness and up axis as Sims-aligned VitaMoo. In glTF, a default camera looks down **−Z**, so **+Z** is the world direction **from the origin toward the viewer** in that standard layout (this is the glTF spec’s camera rule, not a separate informal convention).
 

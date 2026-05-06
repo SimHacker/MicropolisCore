@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Generates plumb-bob.gltf: diamond mesh (same as procedural) + optional second mesh.
- * Run from repo root: node vitamoo/scripts/generate-plumb-bob-gltf.js
- * Output: vitamoo/dist/data/plumb-bob.gltf (embedded buffer)
+ * Run from repo root: node packages/vitamoo/scripts/generate-plumb-bob-gltf.js
+ * Output: packages/vitamoo/dist/data/plumb-bob.gltf (embedded buffer)
  */
 
 import fs from 'fs';
@@ -70,7 +70,7 @@ const uvLen = uvBytes.byteLength;
 const indLen = indBytes.byteLength;
 
 const gltf = {
-  asset: { version: '2.0', generator: 'vitamoo/scripts/generate-plumb-bob-gltf.js' },
+  asset: { version: '2.0', generator: 'packages/vitamoo/scripts/generate-plumb-bob-gltf.js' },
   scene: 0,
   scenes: [{ nodes: [0] }],
   nodes: [{ name: 'PlumbBob', mesh: 0 }],

@@ -81,7 +81,7 @@ Use these **document and API** terms. They are **not** renamed copies of legacy 
 
 The **playing scene** is a VitaMooSpace / mooshow construct: **not** a shipped Sims 1 concept. It is the **JSON-shaped document** the **player** loads: **people** (`Person` slices), libraries, environment, optional embedded district/lot slices. You **play** it in the browser; **tool and authoring layers** use the same file for edit/save/round-trip without replacing the player core.
 
-The VitaMooSpace demo ships **`vitamoospace/static/data/content-exchange.json`** plus **`content-assets.json`** (mesh/skeleton lists via `assetIndexRef`). Types and the player converge on `schemaVersion` and the exchange fields below (`assertPlayingSceneExchange` in `vitamoo`).
+The VitaMooSpace demo ships **`content/vitamoo/sims-demo/content-exchange.json`** plus **`content-assets.json`** (mesh/skeleton lists via `assetIndexRef`; served at **`/data/`** in the app). Types and the player converge on `schemaVersion` and the exchange fields below (`assertPlayingSceneExchange` in `vitamoo`).
 
 | Field | Purpose |
 |-------|--------|

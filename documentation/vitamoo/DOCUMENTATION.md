@@ -39,9 +39,9 @@ flowchart TB
 
 ## 2. Layer 1: vitamoo (core)
 
-**Path:** `vitamoo/vitamoo/`  
+**Path:** `packages/vitamoo/vitamoo/`  
 **Package:** `vitamoo`  
-**Entry:** `vitamoo/vitamoo.ts`
+**Entry:** `packages/vitamoo/vitamoo/vitamoo.ts`
 
 ### Responsibilities
 
@@ -77,7 +77,7 @@ flowchart TB
 
 ## 3. Layer 2: mooshow (graphics/runtime)
 
-**Path:** `vitamoo/mooshow/`  
+**Path:** `packages/mooshow/`  
 **Package:** `mooshow`  
 **Entry:** `mooshow/src/index.ts`  
 **Dependency:** `vitamoo` (workspace)
@@ -192,7 +192,7 @@ ContentLoader is used internally by the stage; its types are exported so the app
 
 ## 4. Layer 3: vitamoospace (SvelteKit app)
 
-**Path:** `vitamoo/vitamoospace/`  
+**Path:** `apps/vitamoospace/`  
 **Package:** `vitamoospace` (private)
 
 ### Structure
@@ -206,12 +206,12 @@ ContentLoader is used internally by the stage; its types are exported so the app
 
 ### Data and assets
 
-- Content index and assets are served from `vitamoospace/static/data/` (e.g. `content-exchange.json`, optional `content-assets.json`, CMX, SKN, BMP, CFP). Maintain that directory as your content pack.
+- Content index and assets ship under **`content/vitamoo/sims-demo/`** (e.g. `content-exchange.json`, optional `content-assets.json`, CMX, SKN, BMP, CFP). The VitaMooSpace app exposes them at **`/data/`** via **`apps/vitamoospace/static/data`** → symlink to that tree. Maintain **`content/vitamoo/sims-demo/`** (or adjust the symlink) as your content pack.
 - `assetsBaseUrl` is set so the stage loads from `/data/` (or the same path with a base path if using SvelteKit `paths.base`).
 
 ### Build and deploy
 
-- **Static:** `@sveltejs/adapter-static`; output is in `vitamoospace/build`. Suitable for GitHub Pages or any static host.
+- **Static:** `@sveltejs/adapter-static`; output is in **`apps/vitamoospace/build`**. Suitable for GitHub Pages or any static host.
 - **Node server:** `@sveltejs/adapter-node` available for a future server; health endpoint is non-prerendered when using static.
 
 ---
@@ -292,15 +292,15 @@ pnpm --filter vitamoospace run preview
 
 Order matters: vitamoospace depends on mooshow, mooshow on vitamoo. For development, run `build` for the packages you change, then run or preview the app.
 
-- **vitamoo:** `npm run build` (or `pnpm --filter vitamoo run build`) → `vitamoo/dist/`.
+- **vitamoo:** `npm run build` (or `pnpm --filter vitamoo run build`) → `packages/vitamoo/dist/`.
 - **mooshow:** `pnpm --filter mooshow run build` → `mooshow/dist/`.
-- **vitamoospace:** `pnpm --filter vitamoospace run build` → `vitamoospace/build/` (static) or run `vite dev` for dev server.
+- **vitamoospace:** `pnpm --filter vitamoospace run build` → **`apps/vitamoospace/build/`** (static) or run `vite dev` for dev server.
 
-Demo assets: ensure `vitamoospace/static/data/` contains `content-exchange.json` (and optional `content-assets.json`) plus the CMX/SKN/BMP/CFP files referenced there (maintain your own content pack in that tree).
+Demo assets: ensure **`content/vitamoo/sims-demo/`** contains `content-exchange.json` (and optional `content-assets.json`) plus the CMX/SKN/BMP/CFP files referenced there (the app’s **`static/data`** entry should point at that directory).
 
 ### GitHub Pages (optional)
 
-The workflow `.github/workflows/pages.yml` builds **vitamoo** → **mooshow** → **vitamoospace** and deploys `vitamoospace/build` with `actions/deploy-pages`.
+The workflow **`.github/workflows/vitamoo-pages.yml`** builds **vitamoo** → **mooshow** → **vitamoospace** and deploys **`apps/vitamoospace/build`** with `actions/deploy-pages`.
 
 On the **default upstream repo**, the deploy job does **not** run unless you set a public site URL:
 
@@ -315,8 +315,8 @@ Enable **Settings → Pages → Source: GitHub Actions** on the repo that publis
 
 - **Hoisting:** Some environments or tools fail with pnpm's strict `node_modules` layout. At the **repository root** (same directory as `pnpm-workspace.yaml`), add a `.npmrc` with `public-hoist-pattern[]=*` or `shamefully-hoist=true`, then run `pnpm install` again so dependencies are hoisted and easier to resolve.
 - **Build in dependency order with npm:** Skip pnpm and use npm from each package directory. From the repo root:
-  1. `cd vitamoo && npm install && npm run build`
-  2. `cd mooshow` — mooshow declares `vitamoo` with `workspace:*`. For npm you need a local link: either `npm link ../vitamoo` (after `npm run build` in vitamoo) or temporarily set `"vitamoo": "file:../vitamoo"` in `mooshow/package.json`, then `npm install && npm run build`
-  3. `cd vitamoospace` — same idea: use `npm link ../mooshow` or `"mooshow": "file:../mooshow"`, then `npm install && npm run build && npm run preview`
+  1. `cd packages/vitamoo && npm install && npm run build`
+  2. `cd ../mooshow` — mooshow declares `vitamoo` with `workspace:*`. For npm you need a local link: either `npm link ../vitamoo` (after `npm run build` in vitamoo) or temporarily set `"vitamoo": "file:../vitamoo"` in `mooshow/package.json`, then `npm install && npm run build`
+  3. `cd ../../apps/vitamoospace` — same idea: use `npm link ../../packages/mooshow` or `"mooshow": "file:../../packages/mooshow"`, then `npm install && npm run build && npm run preview`
   That way installs and builds don't rely on pnpm's workspace resolution.
-- **Yarn (if the repo adds workspace support):** If the root gets a `package.json` with `"workspaces": ["vitamoo", "vitamoo/mooshow", "vitamoo/vitamoospace"]`, `yarn` at root can install and link; `yarn workspace vitamoo build`, etc. Right now the repo is pnpm-oriented, so npm-per-package or pnpm with hoisting are the main fallbacks.
+- **Yarn (if the repo adds workspace support):** If the root gets a `package.json` with `"workspaces": ["apps/*", "packages/*"]`, `yarn` at root can install and link; `yarn workspace vitamoo build`, etc. Right now the repo is pnpm-oriented, so npm-per-package or pnpm with hoisting are the main fallbacks.

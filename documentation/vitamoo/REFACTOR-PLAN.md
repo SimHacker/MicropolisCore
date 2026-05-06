@@ -10,8 +10,8 @@
 | **1** Extract runtime state | Done | Stage has bodies, selectedActor, setScene, setCharacterSolo, ContentLoader, animation loop. |
 | **2** Rendering and hooks | Done | Hooks (onPick, onHover, onSelectionChange, onHighlight, onPlumbBobChange, onOrbitViewChange, etc.), picking, SpinController, SoundEngine. |
 | **3** VitaMooSpace.svelte | Done | Single full-page component, scene/actor/character/animation controls, loads `/data/content-exchange.json` (optionally via `assetIndexRef`), api/health placeholder. |
-| **4** GitHub Pages | Done | `.github/workflows/pages.yml` builds vitamoo → mooshow → vitamoospace and deploys `vitamoospace/build`. Deploy runs only when `VITAMOOSPACE_PAGES_URL` is set (variable or secret) on that repository. |
-| **5** Cleanup and parity | Done | Legacy standalone `demo/` removed. Verbose logging gated (`Renderer.create` / `StageConfig.verbose` / `?vitamooVerbose=1`). `vitamoospace/.gitignore` ignores `.svelte-kit` and `node_modules`. Optional: parity write-up and monorepo migration notes for contributors who want them. |
+| **4** GitHub Pages | Done | **`.github/workflows/vitamoo-pages.yml`** builds vitamoo → mooshow → vitamoospace and deploys **`apps/vitamoospace/build`**. Deploy runs only when **`VITAMOOSPACE_PAGES_URL`** is set (variable or secret) on that repository. |
+| **5** Cleanup and parity | Done | Legacy standalone `demo/` removed. Verbose logging gated (`Renderer.create` / `StageConfig.verbose` / `?vitamooVerbose=1`). **`apps/vitamoospace/.gitignore`** ignores `.svelte-kit` and `node_modules`. Monorepo paths: **`packages/vitamoo`**, **`packages/mooshow`**, **`apps/vitamoospace`**, demo content **`content/vitamoo/sims-demo/`**. |
 
 Definition of Done: items 1–5 are met for shipping layers (core, mooshow, vitamoospace, Pages, quiet default console).
 
@@ -39,43 +39,22 @@ See the coding-order details in [`OBLITERATOR-TYPESCRIPT.md`](./OBLITERATOR-TYPE
 
 ## Goal
 
-The former monolithic viewer was split into three clear layers inside `vitamoo/`:
+The former monolithic viewer was split into three clear layers:
 
-1. `vitamoo/vitamoo` - low-level animation/data core (no UI, no scene editor logic)
-2. `vitamoo/mooshow` - graphics/runtime layer (WebGPU renderer via vitamoo `Renderer`, picking via object IDs, hooks, plumb bob, camera, input adapters)
-3. `vitamoo/vitamoospace` - SvelteKit app (single full-page UI, menus/scenes from JSON, mouse interactions, demo orchestration)
+1. **`packages/vitamoo/vitamoo/`** — low-level animation/data core (no UI, no scene editor logic)
+2. **`packages/mooshow/`** — graphics/runtime layer (WebGPU renderer via vitamoo `Renderer`, picking via object IDs, hooks, plumb bob, camera, input adapters)
+3. **`apps/vitamoospace/`** — SvelteKit app (single full-page UI, menus/scenes from JSON, mouse interactions, demo orchestration)
 
-This is monorepo-ready without doing the full monorepo move yet.
+Those layers now live at **MicropolisCore** repo paths above (`pnpm-workspace.yaml`: **`apps/*`**, **`packages/*`**).
 
 ## Current State
 
-- Core library files live in `vitamoo/vitamoo/*.ts`.
-- The browser app is **vitamoospace** (SvelteKit + mooshow + vitamoo `Renderer`). Scene data lives under `vitamoospace/static/data/` (including `content-exchange.json` and optional `content-assets.json`).
+- Core library files live in **`packages/vitamoo/vitamoo/*.ts`** (package **`vitamoo`**).
+- The browser app is **vitamoospace** (SvelteKit + mooshow + vitamoo `Renderer`). Demo scene JSON and assets live under **`content/vitamoo/sims-demo/`**; **`apps/vitamoospace/static/data`** symlinks there so URLs stay under **`/data/`**.
 
-## Target Layout (inside `vitamoo/`)
+## Historical note (pre–monorepo extract)
 
-- **vitamoo/** (workspace root)
-  - `package.json` — workspace package root (existing)
-  - **vitamoo/** — core module (existing)
-    - `vitamoo.ts`, …
-  - **mooshow/** — graphics module
-    - `package.json`, `tsconfig.json`
-    - **src/**
-      - `index.ts`
-      - **runtime/** — `stage.ts` (WebGPU via vitamoo `Renderer.create`, frame loop, bodies), `content-loader.ts`, `types.ts`
-      - **interaction/** — `picking.ts`, `spin-controller.ts`, `top-physics.ts`
-      - **audio/** — `sound-engine.ts`, `voice.ts`
-      - **hooks/** — `types.ts`, `defaults.ts`
-  - **vitamoospace/** — SvelteKit app
-    - `package.json`, `svelte.config.js`, `vite.config.ts`, `tsconfig.json`
-    - **src/**
-      - `app.css`, `app.html`
-      - **routes/** — `+layout.svelte`, `+page.svelte`
-      - **routes/api/health/** — `+server.ts` (placeholder)
-      - **lib/components/** — `VitaMooSpace.svelte`, `SceneMenu.svelte`, `ActorMenu.svelte`
-      - **lib/stores/** — `scene-state.svelte.ts`, `app-state.svelte.ts`
-      - **lib/config/** — `scenes.schema.ts`
-    - **static/data/** — `content-exchange.json`, optional `content-assets.json`, demo assets
+Earlier iterations kept **mooshow** and **vitamoospace** nested under a single **`vitamoo/`** directory. That layout is **retired**; authoritative paths are **`packages/vitamoo`**, **`packages/mooshow`**, and **`apps/vitamoospace`**.
 
 ## Architectural Boundaries
 
@@ -138,11 +117,10 @@ Suggested API shape:
 
 ## Data and Configuration Strategy
 
-- Treat `vitamoospace/static/data/content-exchange.json` as the runtime content index, with optional `assetIndexRef` to `content-assets.json`.
-- Runtime-consumed assets stay under:
-  - `vitamoospace/static/data/`
+- Treat **`content/vitamoo/sims-demo/content-exchange.json`** as the shipped runtime content index, with optional `assetIndexRef` to `content-assets.json`.
+- Runtime-consumed assets stay under **`content/vitamoo/sims-demo/`** (exposed to the app via **`apps/vitamoospace/static/data`**).
 - Add optional app-facing scene config:
-  - `vitamoospace/src/lib/config/scenes.json` (or TS module after schema validation)
+  - `apps/vitamoospace/src/lib/config/scenes.json` (or TS module after schema validation)
 - Rule:
   - graphics/runtime reads normalized data handed by app
   - app owns menu labels, scene presets, and UX defaults
@@ -154,7 +132,7 @@ Suggested API shape:
 1. Create `mooshow` package skeleton with TypeScript build.
 2. Create `vitamoospace` SvelteKit app scaffold.
 3. Legacy `demo/` folder removed from the tree (recoverable from git history).
-4. Add scripts at `vitamoo/` root:
+4. Add scripts at **`packages/vitamoo/`** root:
    - build all local packages/apps
    - run vitamoospace dev server
 
@@ -212,14 +190,14 @@ Acceptance:
 
 ## Phase 4 - GitHub Pages Deployment
 
-Update `.github/workflows/pages.yml` to build and deploy the SvelteKit static site
-instead of the legacy `vitamoo/dist` demo.
+Update **`.github/workflows/vitamoo-pages.yml`** to build and deploy the SvelteKit static site
+instead of any legacy standalone **`packages/vitamoo/dist`** demo.
 
 Historical workflow (pre–vitamoospace):
 
-1. `npm ci` in `vitamoo/`
+1. `npm ci` in **`packages/vitamoo`**
 2. `npm run build` (tsc only today; older commits copied a static demo into `dist/`)
-3. Upload `vitamoo/dist` to Pages
+3. Upload **`packages/vitamoo/dist`** to Pages
 
 New workflow:
 
@@ -227,8 +205,8 @@ New workflow:
 2. Build vitamoo core: `pnpm --filter vitamoo run build`.
 3. Build mooshow: `pnpm --filter mooshow run build`.
 4. Build vitamoospace static: `pnpm --filter vitamoospace run build`.
-   - SvelteKit with `@sveltejs/adapter-static` outputs to `vitamoo/vitamoospace/build/`.
-5. Upload `vitamoo/vitamoospace/build/` to Pages.
+   - SvelteKit with `@sveltejs/adapter-static` outputs to `apps/vitamoospace/build/`.
+5. Upload `apps/vitamoospace/build/` to Pages.
 6. Deploy.
 
 SvelteKit adapter-static config:
@@ -237,22 +215,19 @@ SvelteKit adapter-static config:
 - `prerender: { default: true }` in `svelte.config.js`.
 - Base path: set via `paths.base` if deployed under a subpath (e.g. `/SimObliterator_Suite`).
 
-Trigger: `push` to `main`/`master` (paths under `vitamoo/` and workflow) and `workflow_dispatch`. Deploy job is skipped unless `VITAMOOSPACE_PAGES_URL` is configured on the repo.
+Trigger: **`workflow_dispatch`** (manual). Deploy job is skipped unless **`VITAMOOSPACE_PAGES_URL`** is configured on the repo.
 
 Acceptance:
 
 - Pages site serves the SvelteKit-built app at the same URL as today.
-- Static assets (data files, textures) load correctly from `static/data/`.
+- Static assets (data files, textures) load correctly from **`/data/`** (symlink to **`content/vitamoo/sims-demo/`**).
 - Legacy standalone demo is not deployed.
 
 ## Phase 5 - Cleanup and Parity Review
 
 1. Compare former `demo/` features against vitamoospace and document parity status (optional).
 2. Legacy `demo/` removed from tree; recover from git if required.
-3. Add internal migration notes for future monorepo move:
-   - `vitamoo` -> `packages/vitamoo`
-   - `mooshow` -> `packages/mooshow`
-   - `vitamoospace` -> `apps/vitamoospace`
+3. **Monorepo extract (done):** **`packages/vitamoo`**, **`packages/mooshow`**, **`apps/vitamoospace`**, demo content under **`content/vitamoo/sims-demo/`**.
 
 Acceptance:
 
@@ -262,11 +237,11 @@ Acceptance:
 ## Build and Tooling Notes
 
 - Package manager: pnpm workspace already enabled at repo root.
-- Inside `vitamoo/`, prefer package-level scripts:
-  - `pnpm --filter ./vitamoo build`
-  - `pnpm --filter ./mooshow build`
-  - `pnpm --filter ./vitamoospace dev`
-- Keep browser assets under SvelteKit `static/` for now.
+- From the **repo root**, prefer workspace filters:
+  - `pnpm --filter vitamoo run build`
+  - `pnpm --filter mooshow run build`
+  - `pnpm --filter vitamoospace run dev`
+- Ship large demo packs under **`content/`**; keep **`apps/vitamoospace/static/data`** as a symlink (or equivalent) so **`/data/`** URLs stay stable.
 
 ## Risks and Mitigations
 
@@ -277,7 +252,7 @@ Acceptance:
    - Mitigation: enforce a narrow `mooshow` stage API and hooks contract.
 
 3. Risk: asset path breakage during SvelteKit migration.
-   - Mitigation: keep original filenames and mirror the `content-exchange.json` and `assetIndexRef` references in `static/data`.
+   - Mitigation: keep original filenames and mirror the `content-exchange.json` and `assetIndexRef` references under **`content/vitamoo/sims-demo/`** (served via **`static/data`**).
 
 4. Risk: too much rewrite at once.
    - Mitigation: ship vitamoospace first; remove the old tree only after the new path is stable (done).

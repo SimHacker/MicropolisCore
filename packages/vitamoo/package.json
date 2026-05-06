@@ -11,7 +11,7 @@
     "serve": "npm run build && npx http-server dist -o -c-1",
     "parity:fixtures": "tsc && node scripts/parity-fixture.mjs",
     "verify:exchange": "node scripts/verify-demo-exchange.mjs",
-    "verify:exchange:merge": "npm run build && cd mooshow && npm run build && cd .. && node scripts/verify-playing-scene-merge.mjs",
+    "verify:exchange:merge": "pnpm run build && pnpm --filter mooshow run build && node scripts/verify-playing-scene-merge.mjs",
     "verify:guid-collision": "npm run build && node scripts/verify-guid-collision.mjs"
   },
   "devDependencies": {

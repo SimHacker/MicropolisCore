@@ -8,7 +8,7 @@ This note aligns implementation choices with Sims-era authoring and runtime: **r
 
 **Now:** Upload what each frame or tool pass needs **on first use**, keep it on the GPU for the lifetime of that asset or session (textures from `loadTexture`, future mesh/skeleton/animation buffers). Avoid premature eviction; measure first.
 
-**Instrumentation:** Pass `instrumentation` into `Renderer.create` (see `GpuInstrumentationCallbacks` in `vitamoo/gpu-instrumentation.ts`). Allocations for core viewport targets, init resources, and loaded image textures are reported with `purpose` strings suitable for dashboards or logs.
+**Instrumentation:** Pass `instrumentation` into `Renderer.create` (see `GpuInstrumentationCallbacks` in `packages/vitamoo/vitamoo/gpu-instrumentation.ts`). Allocations for core viewport targets, init resources, and loaded image textures are reported with `purpose` strings suitable for dashboards or logs.
 
 **Later:** A dedicated **GPU resource manager** can add LRU eviction, atlasing, streaming, and explicit `retain`/`release` handles. The instrumentation events are the hook points to validate that manager against real usage before it exists.
 
@@ -61,9 +61,9 @@ This stays compatible with the layered **character pipeline** flags in `characte
 
 | Area | Location |
 |------|-----------|
-| Instrumentation types | `vitamoo/gpu-instrumentation.ts` |
+| Instrumentation types | `packages/vitamoo/vitamoo/gpu-instrumentation.ts` |
 | Renderer options | `RendererCreateOptions.instrumentation` |
-| Pipeline / validation flags | `vitamoo/character-pipeline.ts`, mooshow `StageConfig` |
+| Pipeline / validation flags | `packages/vitamoo/vitamoo/character-pipeline.ts`, mooshow `StageConfig` |
 | Design: holodeck, GPU deform, glTF | [webgpu-renderer-design.md](./webgpu-renderer-design.md) |
 | glTF extras metadata schema | [gltf-extras-metadata.md](./gltf-extras-metadata.md) |
 | Status snapshot | [webgpu-renderer-status.md](./webgpu-renderer-status.md) |

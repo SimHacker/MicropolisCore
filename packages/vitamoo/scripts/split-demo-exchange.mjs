@@ -4,7 +4,7 @@
  *   static/data/content-assets.json  — lists only (jq-friendly)
  *   static/data/content-exchange.json — schemaVersion, templates, playingScenes, refs
  *
- * Run: node vitamoo/scripts/split-demo-exchange.mjs
+ * Run: node packages/vitamoo/scripts/split-demo-exchange.mjs (from repo root)
  * (from SimObliterator_Suite repo root)
  */
 import fs from 'fs';
@@ -12,10 +12,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(__dirname, '..');
-const legacyPath = path.join(root, 'vitamoospace/static/data/content.json');
-const assetsPath = path.join(root, 'vitamoospace/static/data/content-assets.json');
-const exchangePath = path.join(root, 'vitamoospace/static/data/content-exchange.json');
+const repoRoot = path.resolve(__dirname, '../../..');
+const legacyPath = path.join(repoRoot, 'content/vitamoo/sims-demo/content.json');
+const assetsPath = path.join(repoRoot, 'content/vitamoo/sims-demo/content-assets.json');
+const exchangePath = path.join(repoRoot, 'content/vitamoo/sims-demo/content-exchange.json');
 
 const ASSET_KEYS = [
     'skeletons',
