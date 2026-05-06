@@ -30,3 +30,16 @@ export { parseFami, FAMI_HAS_PHONE, FAMI_HAS_BABY, FAMI_NEW_HOUSE, FAMI_IN_HOUSE
 export type { FamiChunk } from './l3/fami.js';
 export { parseNbrs, resolveFamilies } from './l3/nbrs.js';
 export type { NbrsChunk, Neighbour } from './l3/nbrs.js';
+
+// L3 — Neighborhood scanner
+export {
+	readNeighborhoodFile,
+	readNeighborhoodFromTree,
+	scanForNeighborhoods,
+	DEFAULT_NGH_DIRS,
+} from './l3/neighborhood.js';
+export type {
+	NeighborhoodData,
+	FamilySummary,
+	NeighbourSummary,
+} from './l3/neighborhood.js';

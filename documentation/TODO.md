@@ -244,7 +244,20 @@ This is a larger project than initially scoped — the DDD vertex format require
 
 **File:** `packages/vitamoo/vitamoo/parser.ts`, `packages/vitamoo/vitamoo/vitamoo.ts` (export)
 
-### 17b. New `packages/sims-io/` — L0–L4 layered I/O stack
+### 17b. ✅ `packages/sims-io` L0–L3 — scaffold complete (2026-05-06)
+
+Implemented and tested:
+- **L0**: `NodeResourceProvider`, `MemoryResourceProvider` — filesystem + in-memory I/O
+- **L1**: `VirtualTree` — merges loose files + FAR archives into one namespace
+- **L2**: re-exported from vitamoo (`parseFar`, `listIffChunks`, etc.)
+- **L3 parsers**: `parseFami`, `parseNbrs`, `resolveFamilies`, `PersonData` constants (80 base-game fields + reserved 74–79 + EP 80–87)
+- **L3 scanner**: `scanForNeighborhoods`, `readNeighborhoodFile`, `readNeighborhoodFromTree`
+
+48 tests, all passing. Source-verified against Sims 1 C++ source (12/17/99).
+
+**Next:** L4 — emit `ContentIndex` from parsed neighbourhood roster so VitaMooSpace can load real Sims into the character viewer without a Python dependency.
+
+### 17c. New `packages/sims-io/` — L4 VitaMoo bridge
 
 Pure TypeScript IFF/FAR/save-data reader with no server dependency. Enables loading
 Sims 1 neighborhood data (families, lots, objects) directly in the browser or Node.
