@@ -109,7 +109,7 @@ Low-level engine events describe domain facts. Do not encode UI policy; hosts de
 
 ### Callback Methods
 
-The WASM boundary uses whatever symbols **`Callback` / `JSCallback`** export today (`MicropolisEngine/src/callback.h`, generated `apps/micropolis/src/types/micropolisengine.d.ts`). When you align method names with event strings, use `lowerCamelCase`, **subject-first**, with the **terminal segment last** (`fundsUpdated`, `cityLoaded`, `cityLoadWill`, …) — mirror the dots left to right; do not append `Did` after predicates that already mean completion (`Updated`, `Changed`, …).
+The WASM boundary uses whatever symbols **`Callback` / `JSCallback`** export today (`packages/micropolis-engine/src/callback.h`, generated `apps/micropolis/src/types/micropolisengine.d.ts`). When you align method names with event strings, use `lowerCamelCase`, **subject-first**, with the **terminal segment last** (`fundsUpdated`, `cityLoaded`, `cityLoadWill`, …) — mirror the dots left to right; do not append `Did` after predicates that already mean completion (`Updated`, `Changed`, …).
 
 ### TypeScript Classes
 
@@ -155,7 +155,7 @@ The event type is the K-line. The payload carries details.
 
 ## Engine callbacks
 
-Authoritative method names are on **`Callback`** in `MicropolisEngine/src/callback.h` (wired through **`JSCallback`** in `MicropolisEngine/src/js_callback.h` and Embind). When you rename them, update C++, Embind, TypeScript adapters, and any docs **in the same change**; do not maintain a speculative rename table in this file.
+Authoritative method names are on **`Callback`** in `packages/micropolis-engine/src/callback.h` (wired through **`JSCallback`** in `packages/micropolis-engine/src/js_callback.h` and Embind). When you rename them, update C++, Embind, TypeScript adapters, and any docs **in the same change**; do not maintain a speculative rename table in this file.
 
 ## Migration Strategy
 

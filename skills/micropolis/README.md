@@ -16,13 +16,13 @@ It centers the unified `micropolis` CLI and the modules it exposes: save files, 
 From `MicropolisCore/micropolis`:
 
 ```bash
-npm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
-npm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty --format yaml
-npm run micropolis -- city export ../../content/micropolis/cities/radial.cty --format csv --include-map
-npm run micropolis -- visualize ascii ../../content/micropolis/cities/radial.cty
-npm run micropolis -- sim smoke --ticks 10 --format yaml
-npm run micropolis -- bus list --format yaml
-npm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml
+pnpm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty --format yaml
+pnpm run micropolis -- city export ../../content/micropolis/cities/radial.cty --format csv --include-map
+pnpm run micropolis -- visualize ascii ../../content/micropolis/cities/radial.cty
+pnpm run micropolis -- sim smoke --ticks 10 --format yaml
+pnpm run micropolis -- bus list --format yaml
+pnpm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml
 ```
 
 ## Current Modules
@@ -41,7 +41,7 @@ npm run micropolis -- bus propose city.generate-random --actor llm --reason "stu
 
 Implemented:
 
-- Unified `npm run micropolis -- ...` CLI with `about`, `api`, `city`, `visualize`, `sim`, and `bus`.
+- Unified `pnpm run micropolis -- ...` CLI with `about`, `api`, `city`, `visualize`, `sim`, and `bus`.
 - YAML/JSON structured output and CSV tile-grid export.
 - Node and browser WASM loader helpers under `src/lib/wasm/`.
 - Real WASM smoke/integration tests, CLI format tests, and command-bus metadata tests.

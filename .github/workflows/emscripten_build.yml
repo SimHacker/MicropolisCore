@@ -51,7 +51,7 @@ jobs:
         env:
           SKIP_DOXYGEN: ${{ inputs.include_doxygen && '0' || '1' }}
         run: |
-          echo ".github/workflows/emscripten_build.yml: Build step"
+          echo ".github/workflows/emscripten_build.yml: Build step (root makefile → packages/micropolis-engine + apps/micropolis)"
           emcc --version
           node --version
           make install

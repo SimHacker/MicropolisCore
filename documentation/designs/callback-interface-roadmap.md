@@ -18,7 +18,7 @@ Prefer these APIs over importing `Micropolis` or touching heap in UI code; exten
 
 ## Authoritative API (WASM / Embind)
 
-Embind and TypeScript see the methods declared on **`Callback`** in `MicropolisEngine/src/callback.h` (same names on `JSCallback` in `MicropolisEngine/src/js_callback.h` and `apps/micropolis/src/types/micropolisengine.d.ts`). Current symbols:
+Embind and TypeScript see the methods declared on **`Callback`** in `packages/micropolis-engine/src/callback.h` (same names on `JSCallback` in `packages/micropolis-engine/src/js_callback.h` and `apps/micropolis/src/types/micropolisengine.d.ts`). Current symbols:
 
 ```text
 autoGoto

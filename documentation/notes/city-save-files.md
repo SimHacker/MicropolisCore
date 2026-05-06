@@ -167,7 +167,7 @@ The Micropolis project now includes a comprehensive JavaScript toolkit for worki
 The JavaScript-based `micropolis` command line tool is integrated into the SvelteKit application and can be invoked via npm:
 
 ```
-npm run micropolis -- <command> [options] <file>
+pnpm run micropolis -- <command> [options] <file>
 ```
 
 Key commands include:

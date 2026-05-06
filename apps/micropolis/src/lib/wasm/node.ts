@@ -15,7 +15,11 @@ export function assertWasmArtifactsPresent(): void {
 	);
 	if (missing.length > 0) {
 		throw new Error(
-			['Missing Micropolis WASM artifacts:', ...missing.map((f) => `  ${f}`), 'Build: cd ../MicropolisEngine && make install'].join('\n')
+			[
+				'Missing Micropolis WASM artifacts:',
+				...missing.map((f) => `  ${f}`),
+				'Build: pnpm --filter @micropolis/engine-wasm run build   (or: cd packages/micropolis-engine && make install)'
+			].join('\n')
 		);
 	}
 }

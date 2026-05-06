@@ -19,7 +19,7 @@ evidence:
   cli_entry: "../../apps/micropolis/cli/entry.ts"
   cli_modules: "../../apps/micropolis/cli"
   constants_source: "../../apps/micropolis/cli/constants/constants.js"
-  wasm_bindings: "../../MicropolisEngine/src/emscripten.cpp"
+  wasm_bindings: "../../packages/micropolis-engine/src/emscripten.cpp"
   typescript_bindings: "../../apps/micropolis/src/types/micropolisengine.d.ts"
   save_file_reference: "../../documentation/notes/city-save-files.md"
   checked_facts:
@@ -71,11 +71,11 @@ files:
     - ../../apps/micropolis/src/lib/micropolisCommands.ts
     - ../../apps/micropolis/src/lib/CommandMcpService.ts
   engine:
-    - ../../MicropolisEngine/src/micropolis.h
-    - ../../MicropolisEngine/src/micropolis.cpp
-    - ../../MicropolisEngine/src/emscripten.cpp
-    - ../../MicropolisEngine/src/fileio.cpp
-    - ../../MicropolisEngine/src/simulate.cpp
+    - ../../packages/micropolis-engine/src/micropolis.h
+    - ../../packages/micropolis-engine/src/micropolis.cpp
+    - ../../packages/micropolis-engine/src/emscripten.cpp
+    - ../../packages/micropolis-engine/src/fileio.cpp
+    - ../../packages/micropolis-engine/src/simulate.cpp
   frontend_bridge:
     - ../../apps/micropolis/src/lib/MicropolisSimulator.ts
     - ../../apps/micropolis/src/lib/MicropolisReactive.svelte.ts
@@ -120,39 +120,39 @@ k_lines:
 
 commands:
   introspection:
-    - "npm run micropolis -- about --format yaml"
-    - "npm run micropolis -- api --format yaml"
+    - "pnpm run micropolis -- about --format yaml"
+    - "pnpm run micropolis -- api --format yaml"
   city:
-    - "npm run micropolis -- city dump <file.cty>"
-    - "npm run micropolis -- city info <file.cty> --format yaml"
-    - "npm run micropolis -- city analyze <file.cty> --format yaml"
-    - "npm run micropolis -- city export <file.cty> --include-map --format yaml"
-    - "npm run micropolis -- city export <file.cty> --include-map --format csv"
-    - "npm run micropolis -- city edit <file.cty> --funds 50000 --tax 9"
-    - "npm run micropolis -- city patch-scenario <file.cty> --dry-run"
+    - "pnpm run micropolis -- city dump <file.cty>"
+    - "pnpm run micropolis -- city info <file.cty> --format yaml"
+    - "pnpm run micropolis -- city analyze <file.cty> --format yaml"
+    - "pnpm run micropolis -- city export <file.cty> --include-map --format yaml"
+    - "pnpm run micropolis -- city export <file.cty> --include-map --format csv"
+    - "pnpm run micropolis -- city edit <file.cty> --funds 50000 --tax 9"
+    - "pnpm run micropolis -- city patch-scenario <file.cty> --dry-run"
   visualize:
-    - "npm run micropolis -- visualize ascii <file.cty>"
-    - "npm run micropolis -- visualize emoji <file.cty>"
-    - "npm run micropolis -- visualize mono <file.cty>"
-    - "npm run micropolis -- visualize map <file.cty> --style ascii"
+    - "pnpm run micropolis -- visualize ascii <file.cty>"
+    - "pnpm run micropolis -- visualize emoji <file.cty>"
+    - "pnpm run micropolis -- visualize mono <file.cty>"
+    - "pnpm run micropolis -- visualize map <file.cty> --style ascii"
   sim:
-    - "npm run micropolis -- sim info --format yaml"
-    - "npm run micropolis -- sim smoke --ticks 10 --format yaml"
+    - "pnpm run micropolis -- sim info --format yaml"
+    - "pnpm run micropolis -- sim smoke --ticks 10 --format yaml"
   bus:
-    - "npm run micropolis -- bus tools --format yaml"
-    - "npm run micropolis -- bus list --format yaml"
-    - "npm run micropolis -- bus preview <command-id> --actor llm --reason WHY --format yaml"
-    - "npm run micropolis -- bus propose <command-id> --actor llm --reason WHY --format yaml"
-    - "npm run micropolis -- bus dispatch <command-id> --source script --format yaml"
-    - "npm run micropolis -- bus record-dispatch <command-id> --source script --format yaml"
-    - "npm run micropolis -- bus proposals --status pending --format yaml"
-    - "npm run micropolis -- bus approve <proposal-id> --actor user --format yaml"
-    - "npm run micropolis -- bus reject <proposal-id> --reason WHY --format yaml"
-    - "npm run micropolis -- bus recordings --format yaml"
-    - "npm run micropolis -- bus recordings-jsonl"
-    - "npm run micropolis -- bus recordings-clear --format yaml"
+    - "pnpm run micropolis -- bus tools --format yaml"
+    - "pnpm run micropolis -- bus list --format yaml"
+    - "pnpm run micropolis -- bus preview <command-id> --actor llm --reason WHY --format yaml"
+    - "pnpm run micropolis -- bus propose <command-id> --actor llm --reason WHY --format yaml"
+    - "pnpm run micropolis -- bus dispatch <command-id> --source script --format yaml"
+    - "pnpm run micropolis -- bus record-dispatch <command-id> --source script --format yaml"
+    - "pnpm run micropolis -- bus proposals --status pending --format yaml"
+    - "pnpm run micropolis -- bus approve <proposal-id> --actor user --format yaml"
+    - "pnpm run micropolis -- bus reject <proposal-id> --reason WHY --format yaml"
+    - "pnpm run micropolis -- bus recordings --format yaml"
+    - "pnpm run micropolis -- bus recordings-jsonl"
+    - "pnpm run micropolis -- bus recordings-clear --format yaml"
   content:
-    - "npm run micropolis -- api --format yaml"
+    - "pnpm run micropolis -- api --format yaml"
     - "browser render route consumes future render-job YAML"
     - "headless browser worker consumes same render-job YAML"
 
@@ -179,17 +179,17 @@ rules:
 workflows:
   cli_introspection:
     steps:
-      - "Run `npm run micropolis -- about --format yaml` for purpose, modules, formats, and examples."
-      - "Run `npm run micropolis -- api --format yaml` for paths and shared module map."
+      - "Run `pnpm run micropolis -- about --format yaml` for purpose, modules, formats, and examples."
+      - "Run `pnpm run micropolis -- api --format yaml` for paths and shared module map."
   llm_static_city_analysis:
     steps:
-      - "Run `npm run micropolis -- city info FILE --format yaml` for metadata."
-      - "Run `npm run micropolis -- city analyze FILE --format yaml` for RCI/power/service summary."
+      - "Run `pnpm run micropolis -- city info FILE --format yaml` for metadata."
+      - "Run `pnpm run micropolis -- city analyze FILE --format yaml` for RCI/power/service summary."
       - "Use region bounds before exporting maps."
       - "Use CSV only for tabular/tile-grid exports."
   live_mutation:
     steps:
-      - "List commands through `npm run micropolis -- bus list --format yaml`."
+      - "List commands through `pnpm run micropolis -- bus list --format yaml`."
       - "Preview before proposal."
       - "Propose risky or LLM-originated actions."
       - "Approval executes through the command bus."

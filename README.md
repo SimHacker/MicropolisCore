@@ -25,7 +25,7 @@ This repo, MicropolisCore, is the C++ simulation engine extracted from the full 
 ## Architecture
 
 ```
-MicropolisEngine/          C++ simulation core
+packages/micropolis-engine/   C++ simulation core (makefile + Emscripten → WASM)
   src/
     micropolis.h           Main engine header
     micropolis.cpp         Core simulation
@@ -318,9 +318,19 @@ emcc --version
 
 ### WASM Engine
 
+The engine is a **pnpm workspace package** (`@micropolis/engine-wasm` in `packages/micropolis-engine/`). It is still built with **GNU make** and **Emscripten** (no CMake). A normal **`pnpm --filter micropolis run build`** runs **`prebuild`**, which invokes **`pnpm --filter @micropolis/engine-wasm run build`** → **`make install`** in that directory.
+
+To rebuild the engine only:
+
 ```bash
-cd MicropolisEngine
+cd packages/micropolis-engine
 make clean install
+```
+
+Or from the repo root:
+
+```bash
+pnpm --filter @micropolis/engine-wasm run build
 ```
 
 `make install` builds the C++ engine and copies these generated artifacts into `apps/micropolis/src/lib/`:
@@ -380,15 +390,13 @@ From a fresh clone:
 # 1. Activate Emscripten.
 source ~/Developer/emsdk/emsdk_env.sh
 
-# 2. Build the C++/WASM engine.
-cd MicropolisEngine
-make clean install
-
-# 3. Install monorepo dependencies (Micropolis and VitaMooSpace apps, shared packages, VitaMoo libraries).
-cd ..
+# 2. Install monorepo dependencies (Micropolis and VitaMooSpace apps, shared packages, VitaMoo libraries, engine workspace stub).
 pnpm install
 
-# 4. Verify CLI, WASM simulator, and web app.
+# 3. Build the C++/WASM engine (requires Emscripten on PATH).
+pnpm --filter @micropolis/engine-wasm run build
+
+# 4. Verify CLI, WASM simulator, and web app (skip step 3 if artifacts are already in apps/micropolis/src/lib/).
 pnpm --filter micropolis run micropolis -- city info ../../content/micropolis/cities/haight.cty
 pnpm --filter micropolis run micropolis -- sim smoke --ticks 1
 pnpm --filter micropolis dev

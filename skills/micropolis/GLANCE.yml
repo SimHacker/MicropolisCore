@@ -32,7 +32,7 @@ interfaces:
   cli: "apps/micropolis/cli/entry.ts"
   modules: "apps/micropolis/cli"
   constants: "apps/micropolis/cli/constants/constants.js"
-  engine: "MicropolisEngine/src"
+  engine: "packages/micropolis-engine/src"
   wasm_wrapper: "apps/micropolis/src/lib/MicropolisSimulator.ts"
   reactive_bridge: "apps/micropolis/src/lib/MicropolisReactive.svelte.ts"
   wasm_loaders: "apps/micropolis/src/lib/wasm"

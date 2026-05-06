@@ -3,9 +3,10 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
+		"prebuild": "pnpm --filter @micropolis/engine-wasm run build",
 		"build:jekyll": "cd website && bundle exec jekyll build --config _config.yml,_config_headless.yml --destination ../_jekyll_content_build",
 		"build:svelte": "mkdir -p build ; vite build",
-		"build": "npm run build:jekyll && npm run build:svelte",
+		"build": "pnpm run build:jekyll && pnpm run build:svelte",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -14,6 +15,7 @@
 		"test:watch": "vitest"
 	},
 	"devDependencies": {
+		"@micropolis/engine-wasm": "workspace:*",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^3.0.0",

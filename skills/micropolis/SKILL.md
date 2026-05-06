@@ -47,7 +47,7 @@ Read in this order:
 |------------|----------|
 | Live simulator/UI mutation | `micropolis-command-bus` |
 | Pie menus/keyboard/chat/LLM action dispatch | `micropolis-command-bus` |
-| CLI structure and doc-first automation | `npm run micropolis -- api --format yaml` |
+| CLI structure and doc-first automation | `pnpm run micropolis -- api --format yaml` |
 | Batch simulation and evaluation loops | `experiment` + `simulation` |
 | Git branches, issues, PRs, commits | `github` |
 | Educational framing | `constructionism` |
@@ -61,32 +61,32 @@ Read in this order:
 
 ## Primary CLI
 
-Run from `MicropolisCore/micropolis`:
+Run from `MicropolisCore/apps/micropolis` (or use `pnpm --filter micropolis run micropolis -- …` from the repo root):
 
 ```bash
-npm run micropolis -- <command> <subcommand> [options]
+pnpm run micropolis -- <command> <subcommand> [options]
 ```
 
 Important commands:
 
 ```bash
-npm run micropolis -- about --format yaml
-npm run micropolis -- api --format yaml
-npm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
-npm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty
-npm run micropolis -- city export --format yaml --include-map ../../content/micropolis/cities/radial.cty
-npm run micropolis -- city export --format csv --include-map ../../content/micropolis/cities/radial.cty
-npm run micropolis -- visualize ascii ../../content/micropolis/cities/radial.cty
-npm run micropolis -- visualize emoji ../../content/micropolis/cities/scenario_tokyo.cty
-npm run micropolis -- sim smoke --ticks 10 --format yaml
-npm run micropolis -- bus list --format yaml
+pnpm run micropolis -- about --format yaml
+pnpm run micropolis -- api --format yaml
+pnpm run micropolis -- city info ../../content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- city analyze ../../content/micropolis/cities/scenario_boston.cty
+pnpm run micropolis -- city export --format yaml --include-map ../../content/micropolis/cities/radial.cty
+pnpm run micropolis -- city export --format csv --include-map ../../content/micropolis/cities/radial.cty
+pnpm run micropolis -- visualize ascii ../../content/micropolis/cities/radial.cty
+pnpm run micropolis -- visualize emoji ../../content/micropolis/cities/scenario_tokyo.cty
+pnpm run micropolis -- sim smoke --ticks 10 --format yaml
+pnpm run micropolis -- bus list --format yaml
 ```
 
 For command dispatch:
 
 ```bash
-npm run micropolis -- bus preview <command-id> --actor llm --reason "why" --format yaml
-npm run micropolis -- bus propose <command-id> --actor llm --reason "why" --format yaml
+pnpm run micropolis -- bus preview <command-id> --actor llm --reason "why" --format yaml
+pnpm run micropolis -- bus propose <command-id> --actor llm --reason "why" --format yaml
 ```
 
 ## Status Boundary
@@ -135,8 +135,8 @@ Formats:
 When an LLM needs Micropolis capabilities:
 
 1. Identify whether the task is file/static or live/mutating.
-2. Use `npm run micropolis -- about --format yaml` or `api --format yaml` when you need the command/module map.
-3. Use `npm run micropolis -- city|visualize|sim|bus ...` for terminal work.
+2. Use `pnpm run micropolis -- about --format yaml` or `api --format yaml` when you need the command/module map.
+3. Use `pnpm run micropolis -- city|visualize|sim|bus ...` for terminal work.
 4. If multi-step simulation or comparison, delegate to `experiment`.
 5. If GitHub-as-MMORPG, delegate Git operations to `github`.
 6. Always explain why a tool call is being made.
@@ -169,7 +169,7 @@ No ghost actions: world-changing work should create an inspectable command propo
 
 ### Static/File-Oriented
 
-Use `npm run micropolis -- city ...` or `visualize ...` when working with:
+Use `pnpm run micropolis -- city ...` or `visualize ...` when working with:
 
 - `.cty` and `.mop` files
 - Binary dumps
@@ -180,7 +180,7 @@ Use `npm run micropolis -- city ...` or `visualize ...` when working with:
 
 ### Live/Running-Simulation
 
-Use `npm run micropolis -- sim ...` or `bus ...` when working with:
+Use `pnpm run micropolis -- sim ...` or `bus ...` when working with:
 
 - Running WASM simulator actions
 - UI view commands
@@ -241,10 +241,10 @@ Candidate sub-skills:
 
 | Area | Files |
 |------|-------|
-| C++ core | `MicropolisEngine/src/` |
-| Embind/WASM | `MicropolisEngine/src/emscripten.cpp` |
-| Save/load | `MicropolisEngine/src/fileio.cpp` |
-| Tools | `MicropolisEngine/src/tool.cpp` |
+| C++ core | `packages/micropolis-engine/src/` |
+| Embind/WASM | `packages/micropolis-engine/src/emscripten.cpp` |
+| Save/load | `packages/micropolis-engine/src/fileio.cpp` |
+| Tools | `packages/micropolis-engine/src/tool.cpp` |
 | CLI entry | `apps/micropolis/cli/entry.ts` |
 | CLI modules | `apps/micropolis/cli/` |
 | Constants | `apps/micropolis/cli/constants/constants.js` |
@@ -337,10 +337,10 @@ The future interface should let humans and LLMs ask for a layer by name without 
 Planned shape:
 
 ```bash
-npm run micropolis -- layer list ../../content/micropolis/cities/haight.cty
-npm run micropolis -- layer dump ../../content/micropolis/cities/haight.cty --layer traffic --compute
-npm run micropolis -- layer export ../../content/micropolis/cities/haight.cty --layer pollution --format json --compute
-npm run micropolis -- layer visualize ../../content/micropolis/cities/haight.cty --layer landvalue --style ascii --compute
+pnpm run micropolis -- layer list ../../content/micropolis/cities/haight.cty
+pnpm run micropolis -- layer dump ../../content/micropolis/cities/haight.cty --layer traffic --compute
+pnpm run micropolis -- layer export ../../content/micropolis/cities/haight.cty --layer pollution --format json --compute
+pnpm run micropolis -- layer visualize ../../content/micropolis/cities/haight.cty --layer landvalue --style ascii --compute
 ```
 
 The CLI should infer the minimum required simulator scans from the requested layer. For exact reconstruction of history-integrated layers, it may need time-travel replay.

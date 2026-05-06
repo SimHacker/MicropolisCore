@@ -51,11 +51,11 @@ const aboutPayload = {
 		}
 	],
 	examples: [
-		'npm run micropolis -- about --format yaml',
-		'npm run micropolis -- city info ../../../content/micropolis/cities/haight.cty --format yaml',
-		'npm run micropolis -- city export ../../../content/micropolis/cities/haight.cty --include-map --format csv',
-		'npm run micropolis -- sim smoke --ticks 10 --format yaml',
-		'npm run micropolis -- bus list --format yaml'
+		'pnpm run micropolis -- about --format yaml',
+		'pnpm run micropolis -- city info ../../../content/micropolis/cities/haight.cty --format yaml',
+		'pnpm run micropolis -- city export ../../../content/micropolis/cities/haight.cty --include-map --format csv',
+		'pnpm run micropolis -- sim smoke --ticks 10 --format yaml',
+		'pnpm run micropolis -- bus list --format yaml'
 	]
 };
 

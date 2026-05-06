@@ -59,6 +59,9 @@ importers:
       '@fontsource/fira-mono':
         specifier: ^4.5.10
         version: 4.5.10
+      '@micropolis/engine-wasm':
+        specifier: workspace:*
+        version: link:../../packages/micropolis-engine
       '@neoconfetti/svelte':
         specifier: ^1.0.0
         version: 1.0.0
@@ -144,6 +147,8 @@ importers:
       vite:
         specifier: ^6.0.0
         version: 6.4.1(@types/node@25.6.0)(tsx@4.21.0)(yaml@2.8.4)
+
+  packages/micropolis-engine: {}
 
   packages/mooshow:
     dependencies:

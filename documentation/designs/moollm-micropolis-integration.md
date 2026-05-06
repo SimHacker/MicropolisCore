@@ -9,7 +9,7 @@ The goal is not "AI plays SimCity for you." The goal is a constructionist enviro
 ## Layer Model
 
 ```text
-MicropolisEngine (C++/WASM)
+`packages/micropolis-engine` (C++/WASM, workspace **`@micropolis/engine-wasm`**)
   simulation, maps, tools, scenarios
 
 SvelteKit/MOOCO

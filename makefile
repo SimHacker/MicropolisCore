@@ -74,7 +74,7 @@ endif
 
 install: all
 	mkdir -p build
-	cd MicropolisEngine ; make install
+	cd packages/micropolis-engine ; make install
 	@if [ -d html ]; then \
 		mkdir -p apps/micropolis/build && cp -r html apps/micropolis/build/doc; \
 	else \
@@ -82,7 +82,7 @@ install: all
 	fi
 
 clean:
-	cd MicropolisEngine ; make clean
+	cd packages/micropolis-engine ; make clean
 	rm -rf build html doxygen_warnings
 
 ########################################################################
@@ -98,7 +98,7 @@ build_doxygen:
 
 build_MicropolisEngine:
 	echo "Building MicropolisEngine with Emscripten..."
-	cd MicropolisEngine ; make all
+	cd packages/micropolis-engine ; make all
 
 ########################################################################
 # build micropolis

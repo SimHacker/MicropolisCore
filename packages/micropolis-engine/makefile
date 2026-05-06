@@ -82,7 +82,7 @@ EMLDFLAGS = \
 	--emit-tsd=micropolisengine.d.ts \
 	--shell-file src/micropolisengine_template.html \
 	--js-library src/micropolisengine_lib.js \
-	--preload-file ../content/micropolis/cities@cities/
+	--preload-file ../../content/micropolis/cities@cities/
 
 
 ########################################################################
@@ -165,10 +165,10 @@ install: all
 	pwd
 	ls -la .
 	ls -la build
-	cp build/micropolisengine.wasm ../apps/micropolis/src/lib
-	cp build/micropolisengine.data ../apps/micropolis/src/lib
-	cp build/micropolisengine.js ../apps/micropolis/src/lib
-	if [ -f build/micropolisengine.d.ts ]; then cp build/micropolisengine.d.ts ../apps/micropolis/src/types; else echo "micropolisengine.d.ts was not generated; keeping existing TypeScript bindings"; fi
+	cp build/micropolisengine.wasm ../../apps/micropolis/src/lib
+	cp build/micropolisengine.data ../../apps/micropolis/src/lib
+	cp build/micropolisengine.js ../../apps/micropolis/src/lib
+	if [ -f build/micropolisengine.d.ts ]; then cp build/micropolisengine.d.ts ../../apps/micropolis/src/types; else echo "micropolisengine.d.ts was not generated; keeping existing TypeScript bindings"; fi
 
 clean:
 	rm -rf \

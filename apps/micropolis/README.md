@@ -4,76 +4,84 @@ This is the SvelteKit frontend for MicropolisCore. It loads the C++ Micropolis e
 
 ## Prerequisites
 
-From the repository root, first build or refresh the WASM engine:
+Use **pnpm** (see the repo root `package.json` **`packageManager`** field). From the repository root:
 
 ```bash
-# Activate Emscripten first if needed.
-source ~/Developer/emsdk/emsdk_env.sh
+pnpm install
+```
 
-cd ../../MicropolisEngine
+The WASM engine lives in **`packages/micropolis-engine/`** (workspace package **`@micropolis/engine-wasm`**). **`pnpm --filter micropolis run build`** runs **`prebuild`**, which builds that package (**`make install`**) so **`micropolisengine.{js,wasm,data}`** are copied into **`src/lib/`** before Vite runs.
+
+To rebuild the engine only (activate Emscripten first if needed):
+
+```bash
+pnpm --filter @micropolis/engine-wasm run build
+```
+
+Or:
+
+```bash
+cd packages/micropolis-engine
 make clean install
 ```
 
-That copies `micropolisengine.js`, `micropolisengine.wasm`, and `micropolisengine.data` into `src/lib/`.
-
-See the root `README.md` for Emscripten SDK setup.
+See the root **`README.md`** for Emscripten SDK setup.
 
 ## Developing
 
-Install dependencies and start the app:
+Install dependencies from the repo root (or **`cd apps/micropolis`** if you already ran **`pnpm install`** at root):
 
 ```bash
 cd apps/micropolis
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 
 # or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm run dev -- --open
 ```
 
 The Vite config copies the generated `.wasm` and `.data` files into the served/build output so the browser can load them.
 
 ## Building
 
-To create a production version of your app:
+Production build (Jekyll content + SvelteKit; **`prebuild`** refreshes WASM):
 
 ```bash
-npm run build
+pnpm run build
 ```
 
-You can preview the production build with `npm run preview`.
+Preview the production build with **`pnpm run preview`**.
 
 ## CLI
 
 One CLI exposes city-file tools, terminal visualizations, the WASM simulator, and the command bus:
 
 ```bash
-npm run micropolis -- about --format yaml
-npm run micropolis -- api --format yaml
-npm run micropolis -- city info ../../content/micropolis/cities/haight.cty
-npm run micropolis -- city info ../../content/micropolis/cities/haight.cty --format yaml
-npm run micropolis -- city export ../../content/micropolis/cities/haight.cty --include-map --format csv
-npm run micropolis -- visualize ascii ../../content/micropolis/cities/haight.cty
-npm run micropolis -- sim info --format yaml
-npm run micropolis -- sim smoke --ticks 10 --format yaml
-npm run micropolis -- bus list --format yaml
-npm run micropolis -- bus record-dispatch recorder.mark --args '{"message":"hello"}' --source script --format yaml
+pnpm run micropolis -- about --format yaml
+pnpm run micropolis -- api --format yaml
+pnpm run micropolis -- city info ../../content/micropolis/cities/haight.cty
+pnpm run micropolis -- city info ../../content/micropolis/cities/haight.cty --format yaml
+pnpm run micropolis -- city export ../../content/micropolis/cities/haight.cty --include-map --format csv
+pnpm run micropolis -- visualize ascii ../../content/micropolis/cities/haight.cty
+pnpm run micropolis -- sim info --format yaml
+pnpm run micropolis -- sim smoke --ticks 10 --format yaml
+pnpm run micropolis -- bus list --format yaml
+pnpm run micropolis -- bus record-dispatch recorder.mark --args '{"message":"hello"}' --source script --format yaml
 ```
 
-If `sim` cannot load the engine, rebuild after activating Emscripten:
+If **`sim`** cannot load the engine, rebuild after activating Emscripten:
 
 ```bash
-cd ../../MicropolisEngine
-make clean install
+pnpm --filter @micropolis/engine-wasm run build
 ```
 
 ## Tests
 
-Vitest loads the real WASM in Node (same artifacts used by `micropolis sim`) and exercises `micropolisReactive`, the heap helper, and basic engine APIs:
+Vitest loads the real WASM in Node (same artifacts used by **`micropolis sim`**) and exercises **`micropolisReactive`**, the heap helper, and basic engine APIs:
 
 ```bash
-npm run test
-npm run test:watch
+pnpm run test
+pnpm run test:watch
 ```
 
 ## Content Management and Navigation

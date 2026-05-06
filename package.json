@@ -5,7 +5,8 @@
 	"description": "MicropolisCore monorepo — WASM engine, packages/, apps (Micropolis, VitaMooSpace), VitaMoo libraries",
 	"type": "module",
 	"scripts": {
-		"build": "pnpm -r --stream --if-present run build"
+		"build": "pnpm -r --stream --if-present run build",
+		"build:engine": "pnpm --filter @micropolis/engine-wasm run build"
 	},
 	"engines": {
 		"node": ">=20"
