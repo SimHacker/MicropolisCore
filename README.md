@@ -52,8 +52,7 @@ packages/tile-renderer/    Shared tile renderers (Canvas 2D, WebGL2, WebGPU, sof
 
 content/micropolis/        Sim bundled assets (`cities/`, `data/`, `images/`, `sounds/`, `tilesets/`)
   cities/                  Save files (.cty) including all 8 scenarios
-Cursor/                    Development docs and references
-notes/                     Design notes and plans
+documentation/             Manuals, talks, notes, designs, historical archives (see documentation/README.md)
 ```
 
 ### Reactive Bridge
@@ -105,7 +104,7 @@ pnpm run micropolis -- city export --format json --include-map city.cty
 cat city.cty | pnpm run micropolis -- city info -
 ```
 
-Full test suite and command reference: [Cursor/micropolis-js-tests.md](Cursor/micropolis-js-tests.md)
+Full test suite and command reference: [documentation/notes/micropolis-js-tests.md](documentation/notes/micropolis-js-tests.md)
 
 ## MicropolisHub: The Vision
 

@@ -179,9 +179,9 @@ The tabbed window/spatial workspace should expose:
 
 ## References
 
-- `notes/MultiPlayerIdeas.txt`
-- `notes/UserInterfacePlan.txt`
-- `notes/PIE-TAB-WINDOWS.md`
+- `documentation/notes/MultiPlayerIdeas.txt`
+- `documentation/notes/legacy/UserInterfacePlan.txt`
+- `documentation/notes/PIE-TAB-WINDOWS.md`
 - `skills/micropolis/`
 - `skills/micropolis-command-bus/`
 - Don Hopkins, SimCityNet X11/TCL/Tk multiplayer demo, InterCHI '93.

@@ -25,4 +25,4 @@ See also:
 
 - `documentation/designs/collaborative-microworld-lineage.md`
 - `documentation/designs/multiplayer-browser-lessons.md`
-- `notes/MultiPlayerIdeas.txt`
+- `documentation/notes/MultiPlayerIdeas.txt`

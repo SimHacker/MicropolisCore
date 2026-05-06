@@ -9,7 +9,7 @@ Long-form writing that predates or sits beside the current MicropolisCore tree: 
 | **`drupal-blog/`** | Posts migrated from the old Drupal site — one topic per **`*.md`** file; see **`drupal-blog/README.md`** for an indexed list. |
 | **`drupal-blog/images/`** | Figures referenced from those posts (prefer descriptive names: `olpc-pie-menu-discussion.png`). |
 
-Add other buckets as needed (e.g. **`talks/`**, **`newsletters/`**) using the same rule: **one document per file**, filename = slug (`micropolis-news-client-notes.md`).
+Add other buckets as needed (e.g. **`newsletters/`**) using the same rule: **one document per file**, filename = slug (`micropolis-news-client-notes.md`). **Conference talk bundles** live under **`../talks/`** instead of here.
 
 ## Markdown conventions
 

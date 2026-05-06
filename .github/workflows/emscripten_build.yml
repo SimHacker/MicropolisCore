@@ -83,9 +83,9 @@ jobs:
       - name: Copy diagrams and PDF to Jekyll
         run: |
           mkdir -p docs/assets/images docs/assets/pdf
-          cp Cursor/SimCityReverseDiagrams-Page-*.png docs/assets/images/ 2>/dev/null || true
-          cp Cursor/SimCityReverseDiagrams-Note-*.png docs/assets/images/ 2>/dev/null || true
-          cp Cursor/SimCityReverseDiagrams.pdf docs/assets/pdf/ 2>/dev/null || true
+          cp documentation/notes/SimCityReverseDiagrams-Page-*.png docs/assets/images/ 2>/dev/null || true
+          cp documentation/notes/SimCityReverseDiagrams-Note-*.png docs/assets/images/ 2>/dev/null || true
+          cp documentation/notes/SimCityReverseDiagrams.pdf docs/assets/pdf/ 2>/dev/null || true
 
       - name: Build Jekyll site
         run: |

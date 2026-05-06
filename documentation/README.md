@@ -1,13 +1,20 @@
 # MicropolisCore documentation
 
-Material here is **reference, archive, and forward-looking notes**: specs, talks, HTML bundles, frozen UI snapshots, and **living architecture rationale** under **`designs/`** (see **`designs/README.md`** — “Documentation layout”).
+Everything under this directory is **project documentation**: manuals for players, engineering notes, conference materials, frozen UI snapshots, migrated historical writing, and forward-looking **design** specs.
 
-| Path | Contents |
-|------|----------|
-| **`designs/`** | Ongoing engineering intent: Wasm bridge, command path, multiplayer metaphors — see **`designs/README.md`**. |
-| **`openlaszlo-micropolis/`** | Historic OpenLaszlo (**`*.lzx`**) client + **`resources/`**, with merged **`README.md`** (essay + **`NOTES.txt`** / **`TODO.txt`** index). |
-| **`historical/`** | Long-form archives (e.g. migrated blog posts): one topic per **`*.md`**, images alongside — see **`historical/README.md`**. |
-| **`micropolis-js-tests.md`** | CLI / Vitest pointers for JS tooling. |
-| **`*.html`**, **`references.txt`**, **`city-save-files.md`**, etc. | Various standalone references. |
+## Top-level map
 
-Cross-links: **`designs/platform-lineage-index.md`**, **`designs/github-as-mmorpg-multiverse.md`**.
+| Path | What it is |
+|------|-------------|
+| **`manual/`** | HTML **Micropolis / SimCity Classic** player manual (introduction, tutorial, user reference, simulator internals, city-planning essay, bibliography, credits). Start at **`manual/index.html`**. |
+| **`designs/`** | Living engineering intent (Wasm bridge, command path, multiplayer, MOOLLM integration). See **`designs/README.md`**. |
+| **`notes/`** | Developer notes: CLI/save-file references, engine scratch files, legacy OLPC plans, Cursor session exports, prompts. See **`notes/README.md`**. |
+| **`talks/`** | Conference talk artifacts (e.g. HAR 2009). See **`talks/README.md`**. |
+| **`historical/`** | Long-form archives (migrated blog posts, etc.). See **`historical/README.md`**. |
+| **`openlaszlo-micropolis/`** | Frozen **OpenLaszlo** web client (`*.lzx`) plus **`resources/`** and scratchpads. See **`openlaszlo-micropolis/README.md`**. |
+
+## Quick links
+
+- **Play the game / use the CLI:** root **`README.md`**, **`notes/micropolis-js-tests.md`**, **`notes/city-save-files.md`**
+- **Platform eras (NeWS → Wasm):** **`designs/platform-lineage-index.md`**
+- **MicropolisHub / Git-as-world:** **`designs/github-as-mmorpg-multiverse.md`**

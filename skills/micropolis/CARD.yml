@@ -21,7 +21,7 @@ evidence:
   constants_source: "../../apps/micropolis/cli/constants/constants.js"
   wasm_bindings: "../../MicropolisEngine/src/emscripten.cpp"
   typescript_bindings: "../../apps/micropolis/src/types/micropolisengine.d.ts"
-  save_file_reference: "../../Cursor/city-save-files.md"
+  save_file_reference: "../../documentation/notes/city-save-files.md"
   checked_facts:
     - "CLI top-level commands: about, api, city, visualize, sim, bus"
     - "city subcommands: dump, export, info, analyze, edit, patch-scenario"

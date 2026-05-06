@@ -286,7 +286,7 @@ Future CLI should support:
 - Pausing at edit points and forking alternate histories.
 - Regenerating runtime maps by replaying enough simulator phases.
 
-This is the "TiVo for Micropolis" model described in `notes/MultiPlayerIdeas.txt`.
+This is the "TiVo for Micropolis" model described in `documentation/notes/MultiPlayerIdeas.txt`.
 See `documentation/designs/command-timeline-git-branches.md` for the command leaf and commit policy.
 
 ## Sidecar Data Protocol

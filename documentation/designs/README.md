@@ -10,8 +10,8 @@ When an older note foreshadows current work (city branching, social play, Git-as
 
 Read these alongside:
 
-- `notes/PIE-TAB-WINDOWS.md`
-- `notes/MultiPlayerIdeas.txt`
+- `documentation/notes/PIE-TAB-WINDOWS.md`
+- `documentation/notes/MultiPlayerIdeas.txt`
 - `skills/micropolis/`
 - `skills/micropolis-command-bus/`
 
