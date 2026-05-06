@@ -26,7 +26,7 @@ export type { VirtualEntry } from './l1/virtual-tree.js';
 
 // L3 — Save / content domain
 export { PersonData, VISIBLE_SKILLS, ALL_SKILLS, PERSONALITY_TRAITS, ZODIAC_NAMES, scalePersonData } from './l3/person-data.js';
-export { parseFami, FAMI_IN_HOUSE, FAMI_USER_CREATED, FAMI_IN_CAS } from './l3/fami.js';
+export { parseFami, FAMI_HAS_PHONE, FAMI_HAS_BABY, FAMI_NEW_HOUSE, FAMI_IN_HOUSE, FAMI_USER_CREATED } from './l3/fami.js';
 export type { FamiChunk } from './l3/fami.js';
 export { parseNbrs, resolveFamilies } from './l3/nbrs.js';
 export type { NbrsChunk, Neighbour } from './l3/nbrs.js';
