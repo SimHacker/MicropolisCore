@@ -374,14 +374,13 @@ None of the `tsconfig.json` files enable:
 
 These can be added incrementally: enable for one package at a time (e.g. `packages/vitamoo` first), fix resulting errors, then propagate.
 
-### Shared `tsconfig.base.json` (nice to have)
+### Shared `tsconfig.base.json` — scaffolded 2026-05-06
 
-Each package maintains its own `tsconfig.json` independently. A root `tsconfig.base.json` with the shared strictness profile (already `strict: true`, `moduleResolution: bundler`, `target: ES2020`) would prevent drift.
+`tsconfig.base.json` exists at repo root with `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`. Packages adopt it when they have capacity: enabling `noUncheckedIndexedAccess` alone surfaces ~276 latent index-access issues in `packages/vitamoo`. Fix file-by-file and extend once clean. **Start with the smallest package** (`packages/mooshow`) to build the pattern.
 
-### Deprecated sub-dependencies (informational)
+### Deprecated sub-dependencies — ✅ resolved (2026-05-06)
 
-`pnpm install` warns about 8 deprecated transitive deps from older Rollup/Capacitor-era packages:
-`abstract-leveldown`, `deferred-leveldown`, `level-js`, `levelup`, `object-keys`, `rollup-plugin-inject`, `sourcemap-codec`, `whatwg-encoding`. These come from `rollup-plugin-node-builtins` / `rollup-plugin-node-globals` still in `apps/micropolis/package.json`. Consider replacing with `vite-plugin-node-polyfills` (already present) and removing those two rollup plugins.
+Removed `rollup-plugin-node-builtins`, `rollup-plugin-node-globals`, `@esbuild-plugins/node-globals-polyfill`, `@esbuild-plugins/node-modules-polyfill`, `svelte-gestures`, `vite-plugin-node-polyfills`, `vite-plugin-wasm` — all were in `package.json` but **not imported anywhere** (−170 packages). The remaining deprecated transitive warnings (`abstract-leveldown`, `level-js`, `levelup`, `object-keys`, `rollup-plugin-inject`, `sourcemap-codec`, `whatwg-encoding`) come from `vite-plugin-top-level-await` (still used in `vite.config.ts` for WASM top-level-await). Once `vite-plugin-top-level-await` updates its internals those will resolve on their own.
 
 ---
 

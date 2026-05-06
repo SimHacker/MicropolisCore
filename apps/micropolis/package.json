@@ -17,17 +17,14 @@
 	"devDependencies": {
 		"@micropolis/engine-wasm": "workspace:*",
 		"@fontsource/fira-mono": "^4.5.10",
-		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.0",
 		"@sveltejs/kit": "^2.59.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
 		"@types/webgl2": "^0.0.11",
 		"@webgpu/types": "^0.1.42",
-		"chalk": "^4.1.2",
 		"svelte": "^5.55.5",
 		"svelte-check": "^4.4.7",
-		"tslib": "^2.4.1",
 		"tsx": "^4.21.0",
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3",
@@ -37,15 +34,8 @@
 	"type": "module",
 	"dependencies": {
 		"@micropolis/tile-renderer": "workspace:*",
-		"@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-		"@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-		"rollup-plugin-node-builtins": "^2.1.2",
-		"rollup-plugin-node-globals": "^1.4.0",
-		"svelte-gestures": "^5.0.1",
-		"vite-plugin-node-polyfills": "^0.22.0",
 		"vite-plugin-static-copy": "^1.0.5",
 		"vite-plugin-top-level-await": "^1.4.1",
-		"vite-plugin-wasm": "^3.3.0",
 		"yaml": "^2.8.4"
 	}
 }
