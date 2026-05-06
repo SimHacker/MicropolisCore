@@ -16,7 +16,7 @@ Focused notes for the **WebGPU renderer** and related roadmap. The **full stack 
 | **[OBLITERATOR-TYPESCRIPT.md](./OBLITERATOR-TYPESCRIPT.md)** | **Sims 1 save / game data in TypeScript:** Python survey; **L0–L4** I/O + **§6** layered **YAML/JSON** interchange (exploded/decoded/semantic), **manifest + fidelity profiles** (Transmogrifier-style partial export, derived α/Z/zoom), **BHAV → YAML** round-trip; MOOLLM **[sim-obliterator](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator)**; pure TS read path; roster → VitaMoo first. |
 | **[moo-world-model-and-save-alignment.md](./moo-world-model-and-save-alignment.md)** | **Moo vocabulary vs Sims persistence:** district, resident record, household, lot archive, **Person**, **Appearance**; **playing scene**; **§5** scene container — top-level arrays, **`id`** refs, YAML option, per-type **`id→row` caches**, jq-friendly interchange; tool layers; glTF + sidecar. |
 
-**Reading order:** [`webgpu-renderer-status.md`](./webgpu-renderer-status.md) for orientation, then [`webgpu-renderer-design.md`](./webgpu-renderer-design.md) for depth. GPU deform/animation **contract and checklist** live in **design §5.0** when changing that path.
+**Reading order:** [`webgpu-renderer-status.md`](./webgpu-renderer-status.md) for orientation, then [`webgpu-renderer-design.md`](./webgpu-renderer-design.md) for depth. GPU deform/animation **contract and checklist** live in **design §5.0** when changing that path. Open work across all VitaMoo areas is in **[`documentation/TODO.md`](../TODO.md)**.
 
 ---
 

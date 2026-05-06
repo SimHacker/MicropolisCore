@@ -8,6 +8,8 @@ This directory captures design rationale that should outlive chat context.
 
 When an older note foreshadows current work (city branching, social play, Git-as-multiverse), prefer a **link** from the archive into this folder instead of duplicating prose — see **`platform-lineage-index.md`**.
 
+Open work for all of these areas is consolidated at **[`documentation/TODO.md`](../TODO.md)**.
+
 Read these alongside:
 
 - `documentation/notes/PIE-TAB-WINDOWS.md`
