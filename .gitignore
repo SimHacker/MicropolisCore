@@ -38,6 +38,9 @@
 # Mac
 .DS_Store
 
+# Scratch / staging areas (never commit unreviewed external content here)
+temp/
+
 # Emacs
 *~
 \#*
@@ -77,3 +80,6 @@ apps/vitamoospace/build/
 
 # Shared packages (emit optional dist/)
 packages/*/dist/
+
+# Temp directory
+temp/
