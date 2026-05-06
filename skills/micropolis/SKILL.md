@@ -192,7 +192,7 @@ Use `npm run micropolis -- sim ...` or `bus ...` when working with:
 
 ### Render/Content-Oriented
 
-Use this skill and `designs/renderer-plugin-roadmap.md` when working with:
+Use this skill and `documentation/designs/renderer-plugin-roadmap.md` when working with:
 
 - Renderer plugin contracts.
 - Micropolis map previews.
@@ -256,16 +256,16 @@ Candidate sub-skills:
 | Canvas renderer | `apps/micropolis/src/lib/CanvasTileRenderer.ts` |
 | WebGPU renderer | `apps/micropolis/src/lib/WebGPUTileRenderer.ts` |
 | Pie menus | `apps/micropolis/src/lib/PieMenu.svelte` |
-| Renderer roadmap | `designs/renderer-plugin-roadmap.md` |
-| Collaboration lineage | `designs/collaborative-microworld-lineage.md` |
-| Multiplayer browser lessons | `designs/multiplayer-browser-lessons.md` |
-| Command path and collaboration modes | `designs/command-path-collaboration-modes.md` |
-| Naming conventions | `designs/naming-conventions.md` |
-| Callback interface roadmap | `designs/callback-interface-roadmap.md` |
-| Command timeline | `designs/command-timeline-git-branches.md` |
-| GitHub multiverse | `designs/github-as-mmorpg-multiverse.md` |
-| Filesystem object model | `designs/filesystem-object-model.md` |
-| MOOLLM integration | `designs/moollm-micropolis-integration.md` |
+| Renderer roadmap | `documentation/designs/renderer-plugin-roadmap.md` |
+| Collaboration lineage | `documentation/designs/collaborative-microworld-lineage.md` |
+| Multiplayer browser lessons | `documentation/designs/multiplayer-browser-lessons.md` |
+| Command path and collaboration modes | `documentation/designs/command-path-collaboration-modes.md` |
+| Naming conventions | `documentation/designs/naming-conventions.md` |
+| Callback interface roadmap | `documentation/designs/callback-interface-roadmap.md` |
+| Command timeline | `documentation/designs/command-timeline-git-branches.md` |
+| GitHub multiverse | `documentation/designs/github-as-mmorpg-multiverse.md` |
+| Filesystem object model | `documentation/designs/filesystem-object-model.md` |
+| MOOLLM integration | `documentation/designs/moollm-micropolis-integration.md` |
 
 ## Time Travel Roadmap
 
@@ -287,7 +287,7 @@ Future CLI should support:
 - Regenerating runtime maps by replaying enough simulator phases.
 
 This is the "TiVo for Micropolis" model described in `notes/MultiPlayerIdeas.txt`.
-See `designs/command-timeline-git-branches.md` for the command leaf and commit policy.
+See `documentation/designs/command-timeline-git-branches.md` for the command leaf and commit policy.
 
 ## Sidecar Data Protocol
 

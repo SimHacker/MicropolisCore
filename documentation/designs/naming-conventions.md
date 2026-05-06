@@ -85,11 +85,11 @@ Micropolis adopts those rules, with syntax adapted per surface.
 
 ### Directories and Files
 
-Use lowercase kebab-case. Layout follows the object-store and branch conventions in the other design docs under `designs/`; keep filenames aligned with whatever YAML or command-record schemas you actually commit.
+Use lowercase kebab-case. Layout follows the object-store and branch conventions in the other design docs in **`documentation/designs/`**; keep filenames aligned with whatever YAML or command-record schemas you actually commit.
 
 ### Branches
 
-Use `type_id`: underscore between object type and id; hyphens inside the id when needed. Detailed shapes live in `designs/filesystem-object-model.md` and related docs once branches exist in your repo.
+Use `type_id`: underscore between object type and id; hyphens inside the id when needed. Detailed shapes live in [`filesystem-object-model.md`](filesystem-object-model.md) and related docs once branches exist in your repo.
 
 ### Command Ids
 

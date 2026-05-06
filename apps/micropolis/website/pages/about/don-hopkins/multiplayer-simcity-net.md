@@ -23,6 +23,6 @@ Modern Micropolis should build on this by combining cooperative decision-making 
 
 See also:
 
-- `designs/collaborative-microworld-lineage.md`
-- `designs/multiplayer-browser-lessons.md`
+- `documentation/designs/collaborative-microworld-lineage.md`
+- `documentation/designs/multiplayer-browser-lessons.md`
 - `notes/MultiPlayerIdeas.txt`

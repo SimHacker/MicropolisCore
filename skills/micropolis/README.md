@@ -35,7 +35,7 @@ npm run micropolis -- bus propose city.generate-random --actor llm --reason "stu
 - `apps/micropolis/src/lib/wasm/`: browser/node WASM loaders and shared heap/callback helpers.
 - `apps/micropolis/src/lib/MicropolisReactive.svelte.ts`: current reactive bridge.
 - `apps/micropolis/src/lib/*TileRenderer.ts`: WebGL current renderer, Canvas/WebGPU retained work-in-progress renderers.
-- `designs/renderer-plugin-roadmap.md`: renderer plugin, client-rendered previews, and headless-browser batch rendering direction.
+- `documentation/designs/renderer-plugin-roadmap.md`: renderer plugin, client-rendered previews, and headless-browser batch rendering direction.
 
 ## Status
 
@@ -132,4 +132,4 @@ Sidecars can store runtime/computed layers that do not belong in classic `.cty` 
 
 The CLI should eventually make computed layers feel like saved layers: ask for `traffic`, `pollution`, `crime`, `landvalue`, `police`, `fire`, etc., and the tool decides whether to read saved bytes, derive from tiles, run simulator analysis scans, or replay history.
 
-Command history should live in the save-file directory in a GitHub branch named like `<type>_<id>` (for example `micropolis_971987439573945`). Cheap edits can be coalesced into leaves and commits for efficiency, but leaves must preserve individual command boundaries so users can later split reality at any command inside a coalesced commit. See `designs/command-timeline-git-branches.md`.
+Command history should live in the save-file directory in a GitHub branch named like `<type>_<id>` (for example `micropolis_971987439573945`). Cheap edits can be coalesced into leaves and commits for efficiency, but leaves must preserve individual command boundaries so users can later split reality at any command inside a coalesced commit. See `documentation/designs/command-timeline-git-branches.md`.

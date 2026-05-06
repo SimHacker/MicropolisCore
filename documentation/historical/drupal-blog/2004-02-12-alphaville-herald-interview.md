@@ -18,7 +18,7 @@ In this interview, Don Hopkins describes his early days on the Sims development 
 
 You can read the entire interview at the [Alphaville Herald](https://web.archive.org/web/20040317155006/http://www.alphavilleherald.com/).
 
-*(In-repo note: see also [`2004-02-05-safetmog-plan.md`](2004-02-05-safetmog-plan.md) and MicropolisCore [`designs/github-as-mmorpg-multiverse.md`](../../../designs/github-as-mmorpg-multiverse.md) for later threads on collaborative worlds.)*
+*(In-repo note: see also [`2004-02-05-safetmog-plan.md`](2004-02-05-safetmog-plan.md) and MicropolisCore [`documentation/designs/github-as-mmorpg-multiverse.md`](../../designs/github-as-mmorpg-multiverse.md) for later threads on collaborative worlds.)*
 
 ---
 

@@ -90,12 +90,12 @@ files:
     - ../../apps/micropolis/src/lib/CanvasTileRenderer.ts
     - ../../apps/micropolis/src/lib/WebGPUTileRenderer.ts
     - ../../apps/micropolis/src/lib/PieMenu.svelte
-    - ../../designs/renderer-plugin-roadmap.md
+    - ../../documentation/designs/renderer-plugin-roadmap.md
   content_management:
-    - ../../designs/filesystem-object-model.md
-    - ../../designs/github-as-mmorpg-multiverse.md
-    - ../../designs/moollm-micropolis-integration.md
-    - ../../designs/renderer-plugin-roadmap.md
+    - ../../documentation/designs/filesystem-object-model.md
+    - ../../documentation/designs/github-as-mmorpg-multiverse.md
+    - ../../documentation/designs/moollm-micropolis-integration.md
+    - ../../documentation/designs/renderer-plugin-roadmap.md
     - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/README.md
     - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/IFF-LAYERS.md
     - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/BRIDGE.md

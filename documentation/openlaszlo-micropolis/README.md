@@ -21,14 +21,14 @@ Plain-text artifacts from the TurboGears / Flash / Facebook era — kept as-is; 
 |------|------------|
 | **`NOTES.txt`** | Client/server tile engine: view bounding boxes per client, lazy tile buffers, animation groups mapped to base tiles to save bandwidth. |
 | **`ASSETS.txt`** | UI inventory (choose-city dialog, tools, notices, overlays, etc.). |
-| **`TODO.txt`** | Roadmap notes: Facebook/social integration, UI shells, config-over-the-wire, **city save trees** (mutable leaf vs immutable branches), multiplayer chat/channels/voting, bots — ideas that **foreshadow** collaborative/world mechanics explored later in **`designs/github-as-mmorpg-multiverse.md`** (Git-as-multiverse, branches as worlds). |
+| **`TODO.txt`** | Roadmap notes: Facebook/social integration, UI shells, config-over-the-wire, **city save trees** (mutable leaf vs immutable branches), multiplayer chat/channels/voting, bots — ideas that **foreshadow** collaborative/world mechanics explored later in **[`../designs/github-as-mmorpg-multiverse.md`](../designs/github-as-mmorpg-multiverse.md)** (Git-as-multiverse, branches as worlds). |
 
-OLPC-specific and other platform docs are indexed from **`designs/platform-lineage-index.md`** so historical write-ups stay linked without duplicating them here.
+OLPC-specific and other platform docs are indexed from **[`../designs/platform-lineage-index.md`](../designs/platform-lineage-index.md)** so historical write-ups stay linked without duplicating them here.
 
-## Documentation vs `designs/`
+## Design notes under `documentation/designs/`
 
-- **`designs/`** — durable rationale for **current** MicropolisCore directions (Wasm bridge, command path, multiplayer metaphors).
-- **`documentation/`** — manuals, talks, **frozen snapshots** (like this tree). Designs are a *kind* of documentation; we separate them so “what we are building” stays easy to grep without wading through archives. See **`designs/README.md`** (“Documentation vs designs”).
+- **`documentation/designs/`** — durable rationale for **current** MicropolisCore directions (Wasm bridge, command path, multiplayer metaphors).
+- **`documentation/`** (including this OpenLaszlo snapshot) — manuals, talks, **frozen snapshots**, and historical archives. See **[`../designs/README.md`](../designs/README.md)** (“Documentation layout”).
 
 ---
 ## Micropolis in OpenLaszlo: Hacking RIAs with Constraints & Prototypes Before It Was Cool

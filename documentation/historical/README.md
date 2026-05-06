@@ -1,6 +1,6 @@
 # Historical documents
 
-Long-form writing that predates or sits beside the current MicropolisCore tree: blog posts, migration-era exports, talks, and snapshots that are worth keeping but are **not** active engineering specs (those stay under **`designs/`**).
+Long-form writing that predates or sits beside the current MicropolisCore tree: blog posts, migration-era exports, talks, and snapshots that are worth keeping but are **not** active engineering specs (those stay under **`../designs/`**).
 
 ## Layout
 
