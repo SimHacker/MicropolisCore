@@ -7,7 +7,6 @@ export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
     const requestedUrl = '/'; // Explicitly loading the root page
-    console.log(`[load /] Loading dynamic site index: ${requestedUrl}`);
 
     // Find the node and path for the root URL in our site structure
     const foundData = findNodeByUrl(requestedUrl);
@@ -20,7 +19,6 @@ export const load: PageServerLoad = async ({ params }) => {
     // Destructure the result
     const { node, fullPath } = foundData;
 
-    console.log(`[load /] Found root node: ${JSON.stringify({ url: node.url, title: node.title })}`);
 
     return {
         node,       // Pass the specific node data for the root page itself

@@ -92,6 +92,7 @@ function assertJsonResponse(contentType: string, responseBodyForHint: string | n
 }
 
 export class ContentLoader {
+    readonly verbose: boolean;
     store: ContentStore;
     readonly baseUrl: string;
     private _index: ContentIndex | null = null;
@@ -101,7 +102,8 @@ export class ContentLoader {
     private _textureCache = new Map<string, TextureHandle>();
     private _textureFactory: TextureFactory | null = null;
 
-    constructor(baseUrl: string) {
+    constructor(baseUrl: string, verbose = false) {
+        this.verbose = verbose;
         this.store = createContentStore();
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
     }
@@ -112,7 +114,7 @@ export class ContentLoader {
 
     setTextureFactory(factory: TextureFactory): void {
         this._textureFactory = factory;
-        console.log('[content-loader] setTextureFactory', factory ? 'ok' : 'null');
+        if (this.verbose) console.log('[content-loader] setTextureFactory', factory ? 'ok' : 'null');
     }
 
     /** Clears parsed asset caches so a new index (e.g. another demo pack) does not reuse stale entries. */

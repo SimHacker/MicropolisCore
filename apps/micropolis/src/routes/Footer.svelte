@@ -1,7 +1,4 @@
-<script>
-  import { page } from '$app/stores';
-
-  // Determine current year for copyright
+<script lang="ts">
   const currentYear = new Date().getFullYear();
 </script>
 

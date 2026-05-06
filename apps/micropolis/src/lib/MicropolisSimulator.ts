@@ -22,9 +22,6 @@ function getGlobalStore(): GlobalStore {
 	return g[GLOBAL_KEY] as GlobalStore;
 }
 
-const capacitorApp: boolean =
-	typeof window !== 'undefined' &&
-	window.location.href === 'capacitor://localhost';
 
 export async function loadMicropolisEngine(): Promise<MainModule> {
 	const store = getGlobalStore();

@@ -1,21 +1,13 @@
 <script lang="ts">
-	// Full-screen Micropolis tile / WASM view (moved from former site home).
+	// Full-screen Micropolis tile / WASM view.
 	import MicropolisView from '$lib/MicropolisView.svelte';
 	import { onMount, onDestroy } from 'svelte';
+	import type { PageServerData } from './$types';
 
-	/**
-	 * @typedef {import('$lib/navigationTree').siteStructure[0]} NavNode
-	 */
-
-	/** @type {{ node: NavNode, fullPath: Array<NavNode>, siteStructure: Array<NavNode> }} */
-	export let data;
-
-	let pageHeadTitle = '';
-	$: pageHeadTitle = data?.node?.title || 'Micropolis';
-	let pageHeader = '';
-	$: pageHeader = data?.node?.header || pageHeadTitle;
-	let pageDescription = '';
-	$: pageDescription = data?.node?.description || '';
+	let { data }: { data: PageServerData } = $props();
+	const pageHeadTitle = $derived(data?.node?.title ?? 'Micropolis');
+	const pageHeader = $derived(data?.node?.header ?? pageHeadTitle);
+	const pageDescription = $derived(data?.node?.description ?? '');
 
 	let containerElement: HTMLDivElement;
 	let resizeListener: (() => void) | null = null;

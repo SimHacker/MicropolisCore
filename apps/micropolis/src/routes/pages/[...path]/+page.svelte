@@ -1,17 +1,9 @@
-<script>
-    import { page } from '$app/stores';
-
-    // Data loaded by +page.server.js: { title, header?, description?, children?, fullPath, pageContent }
-    export let data;
-
-    // Use direct properties from data
-    let pageHeadTitle = '';
-    $: pageHeadTitle = data?.title || 'Page'; // Use title from data
-    let pageHeader = '';
-    $: pageHeader = data?.header || pageHeadTitle; // Use header from data, fallback to title
-    let pageDescription = '';
-    $: pageDescription = data?.description || ''; // Use description from data
-
+<script lang="ts">
+    import type { PageServerData } from './$types';
+    let { data }: { data: PageServerData } = $props();
+    const pageHeadTitle = $derived(data?.title ?? 'Page');
+    const pageHeader = $derived(data?.header ?? pageHeadTitle);
+    const pageDescription = $derived(data?.description ?? '');
 </script>
 
 <svelte:head>

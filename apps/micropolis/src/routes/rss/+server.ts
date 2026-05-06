@@ -93,7 +93,6 @@ async function buildRssFeed(origin: string): Promise<string> {
 // GET handler
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
-    console.log('[GET /rss] Generating RSS feed...');
     try {
         const rssXml = await buildRssFeed(url.origin);
         return new Response(rssXml, {

@@ -12,11 +12,14 @@ the linked documents.
 
 | Area | Next concrete action | Priority |
 |------|----------------------|----------|
-| [CI / build integrity](#ci--build-integrity) | ~~Fix `emscripten_build.yml` Jekyll step~~ ✅ done | ~~High~~ |
-| [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ done | ~~High~~ |
-| [CI / build integrity](#ci--build-integrity) | Add lightweight PR workflow (tests without Emscripten) | **High** |
+| [CI / build integrity](#ci--build-integrity) | ~~Fix `emscripten_build.yml` Jekyll step~~ ✅ | ~~High~~ |
+| [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ | ~~High~~ |
+| [CI / build integrity](#ci--build-integrity) | ~~Add PR workflow (structure + build-ts + svelte-check + Vitest)~~ ✅ | ~~High~~ |
+| [Code quality](#code-quality) | `noUncheckedIndexedAccess` in tsconfig files | Low |
+| [Code quality](#code-quality) | `exactOptionalPropertyTypes` in tsconfig files | Low |
+| [Code quality](#code-quality) | Shared root `tsconfig.base.json` for consistent strictness | Low |
 | [Micropolis WASM testing](#micropolis-wasm-testing) | Expand bridge test coverage | Medium |
-| [Micropolis WASM testing](#micropolis-wasm-testing) | ~~Add CI for `pnpm --filter micropolis run test`~~ ✅ done | ~~High~~ |
+| [Micropolis WASM testing](#micropolis-wasm-testing) | ~~Add CI for Vitest~~ ✅ | ~~High~~ |
 | [Micropolis callbacks](#micropolis-callbacks--events) | Normalized event envelopes | Medium |
 | [Micropolis renderer](#micropolis-renderer) | Renderer plugin selection (Canvas/WebGL/WebGPU) in app | Medium |
 | [VitaMoo — Holodeck](#vitamoo--holodeck) | Terrain/floor/wall/roof pipeline | Medium |
@@ -354,6 +357,31 @@ branch commits for history and sharing.
 
 Multiple users operating in the same simulated city. Depends on command bus persistence
 and CRDT or turn-based arbitration. Long-horizon.
+
+---
+
+---
+
+## Code quality
+
+**Recent audit findings — not yet addressed:**
+
+### TypeScript strictness flags (nice to have)
+
+None of the `tsconfig.json` files enable:
+- **`noUncheckedIndexedAccess`** — catches `arr[i]` returning `T | undefined`
+- **`exactOptionalPropertyTypes`** — distinguishes `{ x?: string }` from `{ x: string | undefined }`
+
+These can be added incrementally: enable for one package at a time (e.g. `packages/vitamoo` first), fix resulting errors, then propagate.
+
+### Shared `tsconfig.base.json` (nice to have)
+
+Each package maintains its own `tsconfig.json` independently. A root `tsconfig.base.json` with the shared strictness profile (already `strict: true`, `moduleResolution: bundler`, `target: ES2020`) would prevent drift.
+
+### Deprecated sub-dependencies (informational)
+
+`pnpm install` warns about 8 deprecated transitive deps from older Rollup/Capacitor-era packages:
+`abstract-leveldown`, `deferred-leveldown`, `level-js`, `levelup`, `object-keys`, `rollup-plugin-inject`, `sourcemap-codec`, `whatwg-encoding`. These come from `rollup-plugin-node-builtins` / `rollup-plugin-node-globals` still in `apps/micropolis/package.json`. Consider replacing with `vite-plugin-node-polyfills` (already present) and removing those two rollup plugins.
 
 ---
 

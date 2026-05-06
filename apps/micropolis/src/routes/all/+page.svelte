@@ -1,9 +1,6 @@
 <script lang="ts">
-    export let data: {
-        tree: Array<any>;
-        contentMap: Record<string, string>;
-        anchors: Record<string, {title: string, url: string}>;
-    };
+    import type { PageServerData } from './$types';
+    let { data }: { data: PageServerData } = $props();
 
     // Convert a URL path to an anchor ID - must match server-side function
     function urlToAnchorId(url: string): string {
@@ -87,9 +84,9 @@
                         <p class="description">{node.description}</p>
                     {/if}
                     
-                    {#if data.contentMap[node.contentSlug]}
+                    {#if data.contentMap[node.contentSlug!]}
                         <div class="markdown-content">
-                            {@html data.contentMap[node.contentSlug]}
+                            {@html data.contentMap[node.contentSlug!]}
                         </div>
                     {/if}
                     
@@ -102,9 +99,9 @@
                                         <p class="description">{childNode.description}</p>
                                     {/if}
                                     
-                                    {#if data.contentMap[childNode.contentSlug]}
+                                    {#if data.contentMap[childNode.contentSlug!]}
                                         <div class="markdown-content">
-                                            {@html data.contentMap[childNode.contentSlug]}
+                                            {@html data.contentMap[childNode.contentSlug!]}
                                         </div>
                                     {/if}
 
@@ -117,9 +114,9 @@
                                                         <p class="description">{grandchildNode.description}</p>
                                                     {/if}
                                                     
-                                                    {#if data.contentMap[grandchildNode.contentSlug]}
+                                                    {#if data.contentMap[grandchildNode.contentSlug!]}
                                                         <div class="markdown-content">
-                                                            {@html data.contentMap[grandchildNode.contentSlug]}
+                                                            {@html data.contentMap[grandchildNode.contentSlug!]}
                                                         </div>
                                                     {/if}
                                                 </section>

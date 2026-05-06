@@ -266,7 +266,7 @@ export class MooShowStage {
                     const m = parseInt(ds, 10);
                     if (m >= 0 && m <= MESH_FRAGMENT_DEBUG_MODE_MAX) {
                         (r as RendererWithDebug).setDebugSlice(m);
-                        console.log('[stage] debugSlice from URL', m);
+                        if (this._verbose) console.log('[stage] debugSlice from URL', m);
                     }
                 }
             }

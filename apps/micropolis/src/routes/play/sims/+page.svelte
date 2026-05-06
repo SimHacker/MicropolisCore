@@ -1,15 +1,9 @@
 <script lang="ts">
-	/**
-	 * Sims / VitaMoo playing surface — placeholder until mooshow + vitamoo are wired from the monorepo.
-	 * @typedef {import('$lib/navigationTree').siteStructure[0]} NavNode
-	 */
-	/** @type {{ node: NavNode, fullPath: Array<NavNode> }} */
-	export let data;
-
-	let pageHeadTitle = '';
-	$: pageHeadTitle = data?.node?.title || 'The Sims';
-	let pageDescription = '';
-	$: pageDescription = data?.node?.description || '';
+	// VitaMoo playing surface — placeholder until mooshow is wired here from the monorepo.
+	import type { PageServerData } from './$types';
+	let { data }: { data: PageServerData } = $props();
+	const pageHeadTitle = $derived(data?.node?.title ?? 'The Sims');
+	const pageDescription = $derived(data?.node?.description ?? '');
 </script>
 
 <svelte:head>

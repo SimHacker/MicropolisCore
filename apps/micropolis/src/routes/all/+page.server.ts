@@ -64,7 +64,6 @@ const internalLinkRegex = /href=["']\/([a-zA-Z0-9\-\/_]+)["']/g;
 
 // Helper function to rewrite internal links to anchors
 function rewriteLinks(htmlContent: string, urlMap: Map<string, string>): string {
-    console.log("[rewriteLinks] Processing HTML content for link rewrites");
     
     return htmlContent.replace(internalLinkRegex, (match, path) => {
         const fullUrl = '/' + path;
@@ -72,12 +71,10 @@ function rewriteLinks(htmlContent: string, urlMap: Map<string, string>): string 
         // Check if we have this URL in our site structure
         if (urlMap.has(fullUrl)) {
             const anchorId = urlMap.get(fullUrl);
-            console.log(`[rewriteLinks] Rewriting ${fullUrl} to #${anchorId}`);
             return `href="#${anchorId}"`;
         }
         
         // If URL is not in our site structure, leave it as is
-        console.log(`[rewriteLinks] URL ${fullUrl} not found in site structure, leaving as is`);
         return match;
     });
 }
@@ -89,7 +86,6 @@ async function fetchAllContentAndRewriteLinks(
     urlMap: Map<string, string>
 ): Promise<void> {
     if (node.excludeFromAll) {
-        console.log(`[fetchAllContent /all] Skipping node (and descendants): ${node.url || 'root'}`);
         return;
     }
 
@@ -97,7 +93,6 @@ async function fetchAllContentAndRewriteLinks(
         try {
             const filePath = getContentFilePath(node.contentSlug);
             if (!contentMap.has(node.contentSlug)) {
-                 console.log(`[fetchAllContent /all] Reading: ${node.contentSlug}`);
                 let html = await readContentFile(filePath, node.contentSlug);
                 // Rewrite links within this node's content
                 html = rewriteLinks(html, urlMap);
@@ -143,24 +138,20 @@ function generateAnchorsForEachPage(
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-    console.log('[load /all] Starting to fetch and process all content...');
     const contentMap = new Map<string, string>();
     
     try {
         // Build map of all valid site URLs to their anchor IDs
         const urlMap = buildSiteUrlMap();
-        console.log(`[load /all] Generated URL map with ${urlMap.size} entries`);
         
         // Generate anchors for each page
         const anchors = generateAnchorsForEachPage(siteStructure);
-        console.log(`[load /all] Generated ${Object.keys(anchors).length} anchors for pages`);
         
         // Process each top-level node separately
         for (const node of siteStructure) {
             await fetchAllContentAndRewriteLinks(node, contentMap, urlMap);
         }
         
-        console.log(`[load /all] Finished fetching/processing content. Map size: ${contentMap.size}`);
         const contentMapObject = Object.fromEntries(contentMap);
 
         return {
