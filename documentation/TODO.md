@@ -25,8 +25,9 @@ the linked documents.
 | [VitaMoo — Holodeck](#vitamoo--holodeck) | Terrain/floor/wall/roof pipeline | Medium |
 | [VitaMoo — renderer polish](#vitamoo--webgpu-renderer-polish) | GPU pass timing, richer validation UX | Medium |
 | [VitaMoo — UI overlays](#vitamoo--ui-overlays) | Pie-menu head, speech bubbles, censorship pass | Low–Medium |
-| [VitaMooSpace — Roots & Catalog tabs](#vitamoospace--roots--catalog-tabs) | Roots + Catalog tab scaffold | High |
-| [Sims I/O in TypeScript](#sims-io-typescript-package) | New `packages/sims-io/` L0–L4 stack | Medium |
+| [VitaMooSpace — Roots & Catalog tabs](#vitamoospace--roots--catalog-tabs) | ~~Roots + Catalog~~ ✅ built — smoke test, then SQLite persistence | Medium |
+| [Sims I/O in TypeScript](#sims-io-typescript-package) | Scaffold `packages/sims-io/` L0 + L2 (FAR/IFF readers) | **High** |
+| [Sims I/O in TypeScript](#sims-io-typescript-package) | Add `parseMSH` to vitamoo (prototype-1998 binary mesh) | Medium |
 | [GUID collision tooling](#sims-guid-collision-tooling) | Wire collision scanner into VitaMooSpace UI | Medium |
 | [GPU asset tooling](#vitamoo--gpu-assets--interchange) | Readback → BMP/IFF export; glTF import/export | Medium |
 | [Package scoping](#package-naming--scoping) | Scope vitamoo/mooshow names (`@vitamoo/…`) | Low |
@@ -206,18 +207,17 @@ content. No GPU implementation yet.
 **Details:** [`documentation/vitamoo/REFACTOR-PLAN.md`](vitamoo/REFACTOR-PLAN.md) § Next app milestone,
 [`documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md`](vitamoo/OBLITERATOR-TYPESCRIPT.md) Phase A1
 
-The next concrete app milestone. The VitaMooSpace app already has server-side file scanning
-infrastructure (`apps/vitamoospace/src/lib/server/files-inventory.ts`).
+**Status:** The Roots and Catalog tabs are **already fully built** in `apps/vitamoospace/src/lib/components/VitaMooSpace.svelte` — add/edit/remove roots, scan triggers, catalog query with kind/rootId/text filters and pagination. Server API routes exist at `api/files/{roots,scan,catalog}`.
 
-### 15. Roots tab
+What remains:
 
-Root management UI: add/remove/enable/disable scan roots (local Sims install paths,
-saves, object folders), trigger scans, view run summaries.
+### 15. Smoke test Roots + Catalog against a real Sims install
 
-### 16. Catalog tab
+Run `pnpm --filter vitamoospace dev`, point a root at a local Sims 1 install or the prototype-1998 archive (`content/vitamoo/sims-prototype-1998/`), trigger a scan, and verify the catalog populates without crashes. File issues for anything broken.
 
-Query discovered files/objects/chunks from a normalized inventory. Backed by Node-side
-scan APIs and SQLite.
+### 16. SQLite persistence for the catalog
+
+Currently `files-inventory.ts` holds state **in-process memory** — a server restart wipes scans. Wire a SQLite backend so scan results survive restarts. Node's `better-sqlite3` or `@sqlite.org/sqlite-wasm` are the natural choices.
 
 **Near-term details (from REFACTOR-PLAN § Next app milestone):**
 - Explicit `rootType` + free-form `rootMetadata` on each root
@@ -236,7 +236,15 @@ scan APIs and SQLite.
 
 **Details:** [`documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md`](vitamoo/OBLITERATOR-TYPESCRIPT.md)
 
-### 17. New `packages/sims-io/` — L0–L4 layered I/O stack
+### 17a. `parseMSH` in vitamoo
+
+**Context:** 323 binary `.msh` files exist in `content/vitamoo/sims-prototype-1998/`. Magic `0xb0b0b0b2`. Format reverse-engineered (see README.md in that directory): uses a **DDD (Direct3D Drawing Device) chunked vertex stream layout** (`[count][stride][data]` headers), NOT the simple CTGFile sequential layout used by `parseBMF`. Positions, normals, UVs, faces, and bone bindings are separate streams. CTGLib length-prefixed strings appear at the end for names.
+
+This is a larger project than initially scoped — the DDD vertex format requires additional work beyond mirroring `parseBMF`. Medium priority, good project for understanding the prototype pipeline.
+
+**File:** `packages/vitamoo/vitamoo/parser.ts`, `packages/vitamoo/vitamoo/vitamoo.ts` (export)
+
+### 17b. New `packages/sims-io/` — L0–L4 layered I/O stack
 
 Pure TypeScript IFF/FAR/save-data reader with no server dependency. Enables loading
 Sims 1 neighborhood data (families, lots, objects) directly in the browser or Node.

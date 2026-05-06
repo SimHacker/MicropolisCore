@@ -56,7 +56,7 @@ jobs:
       - run: pnpm --filter micropolis run check
 
   test:
-    name: Tests (Micropolis WASM + mooshow integration)
+    name: Tests (sims-io, mooshow, Micropolis WASM)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -69,4 +69,6 @@ jobs:
       - run: pnpm --filter vitamoo run build
       - run: pnpm --filter mooshow run build
       - run: pnpm --filter mooshow run test
+      - run: pnpm --filter @micropolis/sims-io run build
+      - run: pnpm --filter @micropolis/sims-io run test
       - run: pnpm --filter micropolis run test

@@ -8,7 +8,7 @@
 		"build": "pnpm -r --stream --if-present run build",
 		"build:engine": "pnpm --filter @micropolis/engine-wasm run build",
 		"check": "pnpm --filter micropolis run check",
-		"test": "pnpm --filter vitamoo run build && pnpm --filter mooshow run build && pnpm --filter mooshow run test && pnpm --filter micropolis run test",
+		"test": "pnpm --filter vitamoo run build && pnpm --filter mooshow run build && pnpm --filter mooshow run test && pnpm --filter @micropolis/sims-io run build && pnpm --filter @micropolis/sims-io run test && pnpm --filter micropolis run test",
 		"verify:structure": "node scripts/verify-monorepo-structure.mjs"
 	},
 	"engines": {

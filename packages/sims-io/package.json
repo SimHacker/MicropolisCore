@@ -1,0 +1,27 @@
+{
+  "name": "@micropolis/sims-io",
+  "version": "0.1.0",
+  "description": "Pure-TypeScript Sims 1 I/O stack: FAR archives, IFF containers, save-data domain (FAMI/NBRS), VitaMoo bridge. No Python, no server.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "vitamoo": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7",
+    "vitest": "^2.1.9"
+  }
+}

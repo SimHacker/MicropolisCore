@@ -44,25 +44,41 @@ The `.msh` files are **compiled binary vertex buffers** produced by the Maxis 3D
 (`CMXExporter.cpp` in the original `vitaboy` codebase). They are the **pre-retail predecessor of
 the `.skn` text format** that vitamoo currently reads.
 
-Binary layout (confirmed by reading `skeleton.cpp` `DeformableMesh::WriteToFile`):
+Binary layout (reverse-engineered from hex analysis, NOT a simple CTGFile stream):
 
 ```
-[magic: 0xb0b0b0b2, 4 bytes]   — Maxis proprietary marker
-[filename string]              — CTGFile length-prefixed: 1-byte len, then chars
-[texture string]               — same
-[bone count: int32]
-[bone names: N strings]
-[face count: int32]            — DeformableFace entries (3 vertex indices + UV indices)
-[bone binding count: int32]    — BoneBinding entries (firstVert, vertCount, firstBlend, blendCount)
-[texture vertex count: int32]  — UV coordinates (float32 pairs)
-[blend data count: int32]      — blended vertex weights
-[vertex count: int32]          — Vec3 positions + normals (float32 × 6 per vertex)
+[magic: 0xb0b0b0b2, 4 bytes]         — Maxis DDD-layer marker
+[vert_count: int32]
+[pos_stride: int32 = 12]             — 12 bytes = 3 × float32 (Vec3 position)
+[positions: vert_count × Vec3]
+
+[norm_count: int32]                  — equal to vert_count
+[norm_stride: int32 = 8]             — 8 bytes = 2 × float32 (encoded normal, not Vec3!)
+[normals: norm_count × 8 bytes]
+
+[face_count: int32]
+[face_stride: int32 = 16]            — 16 bytes per face (vertex index + UV refs)
+[faces: face_count × 16 bytes]
+
+[binding_count: int32]
+[binding_stride: int32 = 24]         — bone binding entries
+[bindings: binding_count × 24 bytes]
+
+...additional DDD vertex stream chunks (UV, blend weights)...
+
+[string_count: int32]
+[string_length: int32]
+[bone/texture names: CTGFile length-prefixed strings]
 ```
 
-This is **structurally identical to the SKN text format** — same data, different encoding. A
-`parseMSH(buffer: ArrayBuffer)` function in vitamoo would mirror `parseBMF` (the retail binary
-mesh format) but with a different magic and field layout. See `documentation/TODO.md` (Sims I/O
-TypeScript package section) for the roadmap.
+The geometry section uses a **DDD (Direct3D Drawing Device) chunked vertex buffer format** — each
+stream has `[count][stride][data]` headers, consistent with DirectX 6/7 era FVF (Flexible Vertex
+Format) mesh storage. This is different from the `DeformableMesh::WriteToFile` CTGFile path in
+`skeleton.cpp` (which writes simple sequential CTGFile integers and strings). The `.msh` files
+are likely produced by a **DDD mesh compiler** step separate from the VitaBoy C++ code.
+
+The full format spec requires additional reverse engineering. A `parseMSH` in vitamoo is a
+separate project from `parseBMF`. See `documentation/TODO.md` for the roadmap item.
 
 **Naming convention:** `xskin-<character>-<bone>-<mesh>.msh` e.g.
 `xskin-biped-ed-HEAD-HEAD.msh`. The `biped-ed` prefix is the prototype character rig name, which
@@ -99,7 +115,7 @@ Standard PNG loader applies; vitamoo's `loadTexture` handles both PNG and BMP vi
 | Prototype (1998) | Retail (2000) | vitamoo support |
 |-----------------|---------------|-----------------|
 | `.cmx` text animation | `.cmx` text animation | ✅ `parseCMX` |
-| `.msh` binary compiled mesh | `.skn` text mesh + `.bmf` binary mesh | ❌ `.msh` not yet; ✅ `.skn` / `.bmf` |
+| `.msh` DDD-format binary mesh | `.skn` text mesh + `.bmf` binary mesh | ❌ `.msh` format differs from `.bmf` (DDD vertex streams vs CTGFile); needs dedicated `parseMSH`; ✅ `.skn` / `.bmf` |
 | `.bin` binary skill | `.cfp` binary animation curves | ❌ `.bin` not yet; ✅ `.cfp` |
 | `.png` textures | `.bmp` textures | ✅ `loadTexture` handles both |
 | `biped-ed` rig name | `b001ma` / `c001ma` naming | — |
