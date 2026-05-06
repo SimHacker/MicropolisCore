@@ -80,7 +80,7 @@ function syncFromEngine(): void {
 	cityMonth = m.cityMonth;
 	cityName = m.cityName;
 	cityFileName = m.cityFileName;
-	gameLevel = Number(m.gameLevel as unknown);
+	gameLevel = (m.gameLevel as unknown as { value: number })?.value ?? Number(m.gameLevel as unknown);
 	simSpeed = m.simSpeed;
 	simPasses = m.simPasses;
 	simPaused = m.simPaused;
@@ -362,8 +362,8 @@ function peekEngineScalars(): MicropolisEnginePeekScalars | null {
 		cityPop: m.cityPop,
 		cityScore: m.cityScore,
 		cityYes: m.cityYes,
-		cityClass: Number(m.cityClass as unknown),
-		gameLevel: Number(m.gameLevel as unknown),
+		cityClass: (m.cityClass as unknown as { value: number })?.value ?? Number(m.cityClass as unknown),
+		gameLevel: (m.gameLevel as unknown as { value: number })?.value ?? Number(m.gameLevel as unknown),
 		simSpeed: m.simSpeed,
 		simPasses: m.simPasses,
 		simPaused: m.simPaused,
