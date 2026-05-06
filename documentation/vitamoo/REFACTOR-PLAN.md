@@ -213,7 +213,7 @@ SvelteKit adapter-static config:
 
 - `fallback: undefined` (no SPA fallback; fully prerendered).
 - `prerender: { default: true }` in `svelte.config.js`.
-- Base path: set via `paths.base` if deployed under a subpath (e.g. `/SimObliterator_Suite`).
+- Base path: set via `paths.base` if deployed under a subpath (e.g. `/MicropolisCore`).
 
 Trigger: **`workflow_dispatch`** (manual). Deploy job is skipped unless **`VITAMOOSPACE_PAGES_URL`** is configured on the repo.
 

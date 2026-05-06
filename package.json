@@ -6,7 +6,8 @@
 	"type": "module",
 	"scripts": {
 		"build": "pnpm -r --stream --if-present run build",
-		"build:engine": "pnpm --filter @micropolis/engine-wasm run build"
+		"build:engine": "pnpm --filter @micropolis/engine-wasm run build",
+		"verify:structure": "node scripts/verify-monorepo-structure.mjs"
 	},
 	"engines": {
 		"node": ">=20"

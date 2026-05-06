@@ -4,8 +4,7 @@
  *   static/data/content-assets.json  — lists only (jq-friendly)
  *   static/data/content-exchange.json — schemaVersion, templates, playingScenes, refs
  *
- * Run: node packages/vitamoo/scripts/split-demo-exchange.mjs (from repo root)
- * (from SimObliterator_Suite repo root)
+ * Run: node packages/vitamoo/scripts/split-demo-exchange.mjs (from MicropolisCore repo root)
  */
 import fs from 'fs';
 import path from 'path';

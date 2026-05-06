@@ -53,9 +53,9 @@ CLI:
 
 ```bash
 cd apps/micropolis
-npm run micropolis -- bus list --format yaml
-npm run micropolis -- bus preview city.generate-random --actor llm --reason "show a new terrain option" --format yaml
-npm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml
+pnpm run micropolis -- bus list --format yaml
+pnpm run micropolis -- bus preview city.generate-random --actor llm --reason "show a new terrain option" --format yaml
+pnpm run micropolis -- bus propose city.generate-random --actor llm --reason "student asked for a fresh city" --format yaml
 ```
 
 ## Next

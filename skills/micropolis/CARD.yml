@@ -99,8 +99,8 @@ files:
     - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/README.md
     - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/IFF-LAYERS.md
     - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/BRIDGE.md
-    - /Users/a2deh/GroundUp/Leela/git/SimObliterator_Suite/vitamoo/docs/OBLITERATOR-TYPESCRIPT.md
-    - /Users/a2deh/GroundUp/Leela/git/SimObliterator_Suite/vitamoo/docs/DOCUMENTATION.md
+    - ../../documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md
+    - ../../documentation/vitamoo/DOCUMENTATION.md
 
 k_lines:
   activates:

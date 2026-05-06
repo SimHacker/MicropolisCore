@@ -280,7 +280,7 @@ So the **`Renderer`** is shared infrastructure for the character viewer **and** 
 
 ## 7. Build and run
 
-From the **repository root** (where `pnpm-workspace.yaml` is, i.e. the SimObliterator_Suite root):
+From the **repository root** (where `pnpm-workspace.yaml` is, i.e. the **MicropolisCore** root):
 
 ```bash
 pnpm install
@@ -292,8 +292,8 @@ pnpm --filter vitamoospace run preview
 
 Order matters: vitamoospace depends on mooshow, mooshow on vitamoo. For development, run `build` for the packages you change, then run or preview the app.
 
-- **vitamoo:** `npm run build` (or `pnpm --filter vitamoo run build`) → `packages/vitamoo/dist/`.
-- **mooshow:** `pnpm --filter mooshow run build` → `mooshow/dist/`.
+- **vitamoo:** `pnpm --filter vitamoo run build` → `packages/vitamoo/dist/`.
+- **mooshow:** `pnpm --filter mooshow run build` → `packages/mooshow/dist/`.
 - **vitamoospace:** `pnpm --filter vitamoospace run build` → **`apps/vitamoospace/build/`** (static) or run `vite dev` for dev server.
 
 Demo assets: ensure **`content/vitamoo/sims-demo/`** contains `content-exchange.json` (and optional `content-assets.json`) plus the CMX/SKN/BMP/CFP files referenced there (the app’s **`static/data`** entry should point at that directory).
@@ -304,7 +304,7 @@ The workflow **`.github/workflows/vitamoo-pages.yml`** builds **vitamoo** → **
 
 On the **default upstream repo**, the deploy job does **not** run unless you set a public site URL:
 
-- **Repository variable** (recommended): `VITAMOOSPACE_PAGES_URL` — e.g. `https://youruser.github.io/SimObliterator_Suite/` for project Pages, or `https://youruser.github.io/` if the app is served from the site root, or `https://example.com/` for a custom domain.
+- **Repository variable** (recommended): `VITAMOOSPACE_PAGES_URL` — e.g. `https://youruser.github.io/MicropolisCore/` for project Pages, or `https://youruser.github.io/` if the app is served from the site root, or `https://example.com/` for a custom domain.
 - **Repository secret** (optional): same name `VITAMOOSPACE_PAGES_URL` if you prefer not to expose the value (unusual for a public URL). If both are set, the variable is used when non-empty.
 
 The workflow parses that URL to set SvelteKit `paths.base` (`BASE_PATH` during build). Hostnames that are not `*.github.io` produce a **`CNAME`** file in the published site (hostname only) for GitHub’s custom-domain flow.

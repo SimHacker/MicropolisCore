@@ -1,7 +1,7 @@
 name: Build & Deploy VitaMooSpace to Cloud Run
 
-# Manual trigger only (same behavior as SimObliterator_Suite). Deploy runs only when
-# repository secret CLOUD_RUN_DEPLOY is set and GCP secrets are present.
+# Manual trigger only. Deploy runs only when repository secret CLOUD_RUN_DEPLOY is
+# set and GCP secrets are present.
 
 on:
   workflow_dispatch:

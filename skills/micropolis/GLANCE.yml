@@ -40,7 +40,7 @@ interfaces:
   renderer_roadmap: "documentation/designs/renderer-plugin-roadmap.md"
   moollm_integration: "documentation/designs/moollm-micropolis-integration.md"
   sim_ensemble_bridge: "/Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator"
-  vitamoo_typescript: "/Users/a2deh/GroundUp/Leela/git/SimObliterator_Suite/vitamoo/docs/OBLITERATOR-TYPESCRIPT.md"
+  vitamoo_typescript: "../../documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md"
   command_bus: "apps/micropolis/cli/bus/index.ts"
 
 delegate_to:

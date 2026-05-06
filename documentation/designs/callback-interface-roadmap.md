@@ -58,7 +58,7 @@ updateSpeed
 updateTaxRate
 ```
 
-Implementations today include **`micropolisReactive.engineCallback`** (`MicropolisReactive.svelte.ts`) and the shared headless no-op callback in `apps/micropolis/src/lib/wasm/callbacks.ts` used by `micropolis sim`. Vitest integration tests live beside the bridge (`npm run test` in `apps/micropolis/`).
+Implementations today include **`micropolisReactive.engineCallback`** (`MicropolisReactive.svelte.ts`) and the shared headless no-op callback in `apps/micropolis/src/lib/wasm/callbacks.ts` used by `micropolis sim`. Vitest integration tests live beside the bridge (`pnpm run test` in `apps/micropolis/`).
 
 ## Naming and events
 
