@@ -12,10 +12,11 @@ the linked documents.
 
 | Area | Next concrete action | Priority |
 |------|----------------------|----------|
-| [CI / build integrity](#ci--build-integrity) | Fix `emscripten_build.yml` Jekyll step | **High** |
-| [CI / build integrity](#ci--build-integrity) | Wire `verify:structure` into CI | High |
+| [CI / build integrity](#ci--build-integrity) | ~~Fix `emscripten_build.yml` Jekyll step~~ ✅ done | ~~High~~ |
+| [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ done | ~~High~~ |
+| [CI / build integrity](#ci--build-integrity) | Add lightweight PR workflow (tests without Emscripten) | **High** |
 | [Micropolis WASM testing](#micropolis-wasm-testing) | Expand bridge test coverage | Medium |
-| [Micropolis WASM testing](#micropolis-wasm-testing) | Add CI for `pnpm --filter micropolis run test` | High |
+| [Micropolis WASM testing](#micropolis-wasm-testing) | ~~Add CI for `pnpm --filter micropolis run test`~~ ✅ done | ~~High~~ |
 | [Micropolis callbacks](#micropolis-callbacks--events) | Normalized event envelopes | Medium |
 | [Micropolis renderer](#micropolis-renderer) | Renderer plugin selection (Canvas/WebGL/WebGPU) in app | Medium |
 | [VitaMoo — Holodeck](#vitamoo--holodeck) | Terrain/floor/wall/roof pipeline | Medium |
@@ -56,23 +57,28 @@ The workflow is manual-only so it has not broken automation, but it would fail i
 
 ---
 
-### 2. Wire `pnpm run verify:structure` into CI
+### 2. ✅ Wire `verify:structure` into CI — done
 
-The structural verification script (`scripts/verify-monorepo-structure.mjs`, 20 assertions,
-added 2026-05-06) is not yet called from any CI workflow. Adding it catches future layout
-regressions (e.g. someone committing into the deleted `MicropolisEngine/` or `vitamoo/` roots,
-or breaking the `static/data` symlink).
+`pnpm run verify:structure` (20 assertions) now runs in both `emscripten_build.yml`
+(after WASM build) and `vitamoo-pages.yml` (after `pnpm install`).
 
-**Add one step to each relevant workflow:**
+### 3. Add a lightweight PR workflow (no Emscripten needed)
+
+The Vitest tests and `verify:structure` both work against the **committed WASM artifacts**
+in `apps/micropolis/src/lib/` — Emscripten is not required to run them. Add a workflow
+triggered on push/PR that runs just:
 
 ```yaml
-- name: Verify monorepo structure
-  run: pnpm run verify:structure
+pnpm install --frozen-lockfile
+pnpm run verify:structure
+pnpm --filter vitamoo run build
+pnpm --filter mooshow run build
+pnpm --filter micropolis run test
 ```
 
-Good candidates: `emscripten_build.yml`, `vitamoo-pages.yml`.
+This keeps CI fast on every PR without a full 15-minute Emscripten compile.
 
-**File:** `.github/workflows/`
+**File:** `.github/workflows/pr-checks.yml` (new)
 
 ---
 
@@ -80,19 +86,12 @@ Good candidates: `emscripten_build.yml`, `vitamoo-pages.yml`.
 
 **Details:** [`documentation/designs/wasm-bridge-and-testing-trajectory.md`](designs/wasm-bridge-and-testing-trajectory.md)
 
-### 3. Add CI for `pnpm --filter micropolis run test`
+### 4. ✅ CI for `pnpm --filter micropolis run test` — done
 
-18 Vitest tests pass locally (loads real WASM in Node). Not yet run in CI on PRs.
+Now runs in `emscripten_build.yml` after the WASM build step. See item 3 above for
+adding it to a lightweight PR workflow that doesn't need Emscripten.
 
-**File:** `.github/workflows/emscripten_build.yml` — add after the WASM build step:
-```yaml
-- name: Run Micropolis Vitest suite
-  run: pnpm --filter micropolis run test
-```
-
----
-
-### 4. Expand bridge test coverage
+### 5. Expand bridge test coverage
 
 Currently: loader, heap, and `MicropolisReactive` integration (attach, peek, poke, snapshot).
 Missing:

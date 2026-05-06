@@ -1,0 +1,56 @@
+# Lightweight checks that run on every push and PR — no Emscripten required.
+# Tests use the committed WASM artifacts in apps/micropolis/src/lib/.
+#
+# Jobs:
+#   structure  — verify monorepo layout invariants (20 assertions)
+#   build-ts   — TypeScript compile for vitamoo + mooshow + vitamoospace
+#   test       — Micropolis Vitest suite (real WASM in Node, 18 tests)
+
+name: PR Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  structure:
+    name: Monorepo structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run verify:structure
+
+  build-ts:
+    name: TypeScript builds (vitamoo / mooshow / vitamoospace)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter vitamoo run build
+      - run: pnpm --filter mooshow run build
+      - run: pnpm --filter vitamoospace run build
+
+  test:
+    name: Micropolis Vitest (WASM in Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter micropolis run test

@@ -1,10 +1,13 @@
-# Manual runs only — avoids automatic GitHub Pages deploy on every push to main.
+# Manual runs only — avoids automatic deploy on every push to main.
 # Actions → Build Wasm Library with Emscripten → Run workflow
 #
-# Toggle: use workflow_dispatch inputs (below). For boolean flags, the supported
-# place is `on.workflow_dispatch.inputs` — they appear in the "Run workflow"
-# dialog in the Actions tab. Repository/organization Variables are an alternative
-# for values shared across workflows, but per-run UI toggles belong here.
+# What this does:
+#   1. Build C++/WASM engine (packages/micropolis-engine → make install)
+#   2. Run Vitest suite against real WASM (pnpm --filter micropolis run test)
+#   3. Verify monorepo structure invariants (pnpm run verify:structure)
+#   4. Optionally generate Doxygen C++ API docs
+#   5. Build SvelteKit app (pnpm --filter micropolis run build) — includes Jekyll
+#   6. Deploy static site + optional Doxygen to GitHub Pages
 
 name: Build Wasm Library with Emscripten
 
@@ -37,64 +40,57 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - uses: pnpm/action-setup@v4
 
-      - name: Install Dependencies with pnpm
+      - name: Install monorepo dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build C++/WASM engine (packages/micropolis-engine → make install)
         run: |
-          cd apps/micropolis
-          pnpm install
-
-      - name: Build (WASM + optional Doxygen)
-        env:
-          SKIP_DOXYGEN: ${{ inputs.include_doxygen && '0' || '1' }}
-        run: |
-          echo ".github/workflows/emscripten_build.yml: Build step (root makefile → packages/micropolis-engine + apps/micropolis)"
           emcc --version
-          node --version
-          make install
+          pnpm --filter @micropolis/engine-wasm run build
 
-      - name: Setup Ruby
+      - name: Verify monorepo structure
+        run: pnpm run verify:structure
+
+      - name: Run Micropolis Vitest suite
+        run: pnpm --filter micropolis run test
+
+      - name: Build optional Doxygen C++ API docs
+        if: ${{ inputs.include_doxygen }}
+        run: |
+          doxygen Doxyfile 2>doxygen_warnings >/dev/null
+          echo "Doxygen warnings:"
+          cat doxygen_warnings || true
+
+      - name: Setup Ruby (for Jekyll)
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
+          working-directory: apps/micropolis/website
           bundler-cache: true
 
-      - name: Install Jekyll and dependencies
+      - name: Build SvelteKit app (Jekyll → _jekyll_content_build, Vite → build/)
+        # Calls build:jekyll then build:svelte directly — avoids triggering the
+        # prebuild hook (which would re-run make install) while keeping builds ordered.
         run: |
-          gem install jekyll bundler
-          cd docs
-          bundle init
-          bundle add jekyll jekyll-theme-minimal jekyll-relative-links jekyll-optional-front-matter
+          cd apps/micropolis
+          pnpm run build:jekyll
+          pnpm run build:svelte
 
-      - name: Copy build artifacts to Jekyll
+      - name: Assemble Pages output
         run: |
-          mkdir -p docs/app
-          cp -r apps/micropolis/build/* docs/app/
-
-      - name: Copy Doxygen HTML to Jekyll site (/doc)
-        if: ${{ inputs.include_doxygen }}
-        run: |
-          mkdir -p docs/doc
-          cp -r html/* docs/doc/
-
-      - name: Copy diagrams and PDF to Jekyll
-        run: |
-          mkdir -p docs/assets/images docs/assets/pdf
-          cp documentation/notes/SimCityReverseDiagrams-Page-*.png docs/assets/images/ 2>/dev/null || true
-          cp documentation/notes/SimCityReverseDiagrams-Note-*.png docs/assets/images/ 2>/dev/null || true
-          cp documentation/notes/SimCityReverseDiagrams.pdf docs/assets/pdf/ 2>/dev/null || true
-
-      - name: Build Jekyll site
-        run: |
-          cd docs
-          bundle exec jekyll build
+          mkdir -p _site/doc
+          cp -r apps/micropolis/build/. _site/
+          if [ "${{ inputs.include_doxygen }}" = "true" ] && [ -d html ]; then
+            cp -r html/. _site/doc/
+          fi
 
       - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_site
+          publish_dir: ./_site

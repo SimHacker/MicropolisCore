@@ -65,6 +65,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify monorepo structure
+        run: pnpm run verify:structure
+
       - name: Build vitamoo core
         run: pnpm --filter vitamoo run build
 

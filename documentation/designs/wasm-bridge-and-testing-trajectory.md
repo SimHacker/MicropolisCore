@@ -16,7 +16,7 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 
 | Area | Detail |
 |------|--------|
-| **Vitest** | **`npm run test`** / **`npm run test:watch`** in **`apps/micropolis/`**; **`vitest.config.ts`** — Node env, **`pool: 'forks'`**, **`fileParallelism: false`**, long timeouts for WASM load/init. |
+| **Vitest** | **`pnpm run test`** / **`pnpm run test:watch`** in **`apps/micropolis/`**; **`vitest.config.ts`** — Node env, **`pool: 'forks'`**, **`fileParallelism: false`**, long timeouts for WASM load/init. |
 | **Bridge filename** | **`MicropolisReactive.svelte.ts`** so runes are valid under the test runner; **`MicropolisView.svelte`** imports **`$lib/MicropolisReactive.svelte`**. |
 | **Heap helper** | **`src/lib/wasm/heap.ts`** — **`heapU16FromEmscriptenModule(module)`** with **try/catch** around **`wasmMemory.buffer`** / **`HEAPU16`**. |
 | **Simulator** | **`MicropolisSimulator`** uses the helper for map/mop views; if no view, warns and leaves **`mapData`/`mopData`** null (graceful degradation). |
@@ -26,7 +26,7 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 
 ## Goals this unlocks
 
-- **Regression safety** for the bridge and WASM load path on every **`npm run test`**.
+- **Regression safety** for the bridge and WASM load path on every **`pnpm run test`**.
 - **Clear extension point** — new **`poke`** / **`peek`** surfaces should get integration coverage before UI reliance.
 - **Alignment with MCP / automation** — **`getSnapshot()`** and stable **`memory`** indexing are easier to trust when exercised under automation.
 
@@ -34,7 +34,7 @@ This note records **what we built**, **why**, **what remains**, and how it fits 
 
 - **Broader bridge coverage** — e.g. **`poke.doTool`**, scenario loads, pause/speed paths, and any new **`JSCallback`** methods as they land.
 - **Callback capture** — add a recorder-oriented callback implementation when replay/debugging needs persisted event streams.
-- **CI** — run **`micropolis`** **`npm run test`** (and **`check`**) on PRs once CI exists or is extended for this package.
+- **CI** — **done** (in `emscripten_build.yml`): `pnpm --filter micropolis run test` and `pnpm run verify:structure` now run after every WASM build. Next: add a lightweight PR workflow that runs tests **without** needing Emscripten (tests use the committed WASM artifacts in `src/lib/`).
 - **CLI coverage** — keep **`micropolis sim`** smoke checks aligned with **`src/lib/wasm/node.ts`** so terminal and test paths exercise the same loader.
 - **Root README** — optional cross-link from repo **`README.md`** to **`micropolis`** testing if contributors land here first.
 
