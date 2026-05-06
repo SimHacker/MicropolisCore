@@ -1,34 +1,17 @@
-<script>
-	import { page } from '$app/stores';
-	// Revert to using $lib alias
+<script lang="ts">
+	import { page } from '$app/state';
 	import { siteStructure, findNodeByUrl } from '$lib/navigationTree';
-	// Placeholder for logo - replace path when available
-	// import logo from '$lib/images/micropolis-logo.svg';
+	import type { SiteNode } from '$lib/navigationTree';
 
-    // Filter the site structure to get only top-level items for the main header
-    // Exclude items explicitly marked as hidden from navigation
-    const headerNavItems = siteStructure.filter(
-        /** @param {any} node */
-        node => !node.hideFromNav
-    );
+	const headerNavItems = siteStructure.filter((node) => !node.hideFromNav);
+	const currentNodeData = $derived(findNodeByUrl(page.url.pathname));
+	const currentPath = $derived(currentNodeData?.fullPath ?? []);
 
-    // Determine the current path and active sections
-    $: currentNodeData = findNodeByUrl($page.url.pathname);
-    $: currentPath = currentNodeData?.fullPath || [];
-    
-    // Function to check if an item is active or has an active child
-    /**
-     * @param {any} item - Navigation item to check
-     * @returns {boolean} Whether the item is active or has an active child
-     */
-    function isActiveOrHasActiveChild(item) {
-        // Direct match
-        if ($page.url.pathname === item.url) return true;
-        // Prefix match for section
-        if (item.url !== '/' && $page.url.pathname.startsWith(item.url)) return true;
-        // Check if this item is in the current path
-        return currentPath.some(node => node.url === item.url);
-    }
+	function isActiveOrHasActiveChild(item: SiteNode): boolean {
+		if (page.url.pathname === item.url) return true;
+		if (item.url !== '/' && page.url.pathname.startsWith(item.url)) return true;
+		return currentPath.some((node) => node.url === item.url);
+	}
 </script>
 
 <header>

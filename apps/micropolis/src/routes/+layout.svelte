@@ -2,32 +2,22 @@
 	import Header from './Header.svelte';
 	import Footer from './Footer.svelte';
 	import './styles.css';
-	import { page } from '$app/stores';
-	import { findNodeByUrl, siteStructure } from '$lib/navigationTree';
-	
-	// Get the current node and full path
-	$: currentNodeData = findNodeByUrl($page.url.pathname);
-	$: currentPath = currentNodeData?.fullPath || [];
-	
-	// Get active node at each level (if any)
-	$: activeFirstLevel = currentPath[0] || null;  // Top level
-	$: activeSecondLevel = currentPath[1] || null; // Second level
-	
-	// Function to check if we should show children for a node
+	import { page } from '$app/state';
+	let { children } = $props();
+	import { findNodeByUrl } from '$lib/navigationTree';
 	import type { SiteNode } from '$lib/navigationTree';
-	function shouldShowChildren(node: SiteNode) {
-		// Only show children if:
-		// 1. Node is active in the current path, OR
-		// 2. Node is explicitly marked to show subtabs
-		return (
-			currentPath.includes(node) || 
-			node.showSubTabs === true
-		);
+
+	const currentNodeData = $derived(findNodeByUrl(page.url.pathname));
+	const currentPath = $derived(currentNodeData?.fullPath ?? []);
+	const activeFirstLevel = $derived(currentPath[0] ?? null);
+	const activeSecondLevel = $derived(currentPath[1] ?? null);
+
+	function shouldShowChildren(node: SiteNode): boolean {
+		return currentPath.includes(node) || node.showSubTabs === true;
 	}
-	
-	// Check which nodes should show their children
-	$: showSecondLevel = !!(activeFirstLevel && shouldShowChildren(activeFirstLevel));
-	$: showThirdLevel = !!(activeSecondLevel && shouldShowChildren(activeSecondLevel));
+
+	const showSecondLevel = $derived(!!(activeFirstLevel && shouldShowChildren(activeFirstLevel)));
+	const showThirdLevel = $derived(!!(activeSecondLevel && shouldShowChildren(activeSecondLevel)));
 </script>
 
 <svelte:head>
@@ -73,8 +63,8 @@
 		{/if}
 	</div>
 
-	<main class="content-area" class:no-scroll={$page.url.pathname === '/play/micropolis'}>
-		<slot />
+	<main class="content-area" class:no-scroll={page.url.pathname === '/play/micropolis'}>
+		{@render children()}
 	</main>
 	
 	<Footer />

@@ -1,47 +1,51 @@
 /// <reference path="../types/micropolisengine.d.ts" />
 
+import type { MainModule } from '../types/micropolisengine.d.js';
 import type { Micropolis, Callback, JSCallback } from '../types/micropolisengine.d.js';
 import { loadMicropolisBrowserModule } from '$lib/wasm/browser';
 import { createMapMopViews } from '$lib/wasm/views';
 
-export let micropolisengine: any;
+export let micropolisengine: MainModule | null = null;
 let sharedSimulator: MicropolisSimulator | null = null;
 let viewCount = 0;
 const GLOBAL_KEY = '__MICROPOLIS_SINGLETON__';
 
-function getGlobalStore(): { simulator?: MicropolisSimulator | null; engine?: any; viewCount?: number } {
-  const g = (globalThis as any);
-  if (!g[GLOBAL_KEY]) g[GLOBAL_KEY] = { simulator: null, engine: null, viewCount: 0 };
-  return g[GLOBAL_KEY];
+interface GlobalStore {
+	simulator?: MicropolisSimulator | null;
+	engine?: MainModule | null;
+	viewCount?: number;
 }
 
-let capacitorApp: boolean = 
-    (typeof window != 'undefined') &&
-    (window.location.href == 'capacitor://localhost');
-console.log(`MicropolisSimulator.ts: capacitorApp: ${capacitorApp}`);
+function getGlobalStore(): GlobalStore {
+	const g = globalThis as Record<string, unknown>;
+	if (!g[GLOBAL_KEY]) g[GLOBAL_KEY] = { simulator: null, engine: null, viewCount: 0 };
+	return g[GLOBAL_KEY] as GlobalStore;
+}
 
-export async function loadMicropolisEngine(): Promise<any> {
+const capacitorApp: boolean =
+	typeof window !== 'undefined' &&
+	window.location.href === 'capacitor://localhost';
 
-    const store = getGlobalStore();
-    if (store.engine) {
-        micropolisengine = store.engine;
-        return micropolisengine;
-    }
+export async function loadMicropolisEngine(): Promise<MainModule> {
+	const store = getGlobalStore();
+	if (store.engine) {
+		micropolisengine = store.engine;
+		return micropolisengine;
+	}
 
-    if (micropolisengine) {
-        store.engine = micropolisengine;
-        return micropolisengine;
-    }
+	if (micropolisengine) {
+		store.engine = micropolisengine;
+		return micropolisengine;
+	}
 
-      micropolisengine = await loadMicropolisBrowserModule();
-      store.engine = micropolisengine;
-
-      return micropolisengine;
-};
+	micropolisengine = await loadMicropolisBrowserModule();
+	store.engine = micropolisengine;
+	return micropolisengine;
+}
 
 export class MicropolisSimulator {
 
-    micropolisengine: any;
+	micropolisengine: MainModule | null = null;
     micropolis: Micropolis | null = null;
     callback: JSCallback | null = null;
     mapData: Uint16Array | null = null;
@@ -98,26 +102,23 @@ export class MicropolisSimulator {
     }
 
     async initialize(callback: Callback | null = null, render: (() => void) | null) {
-        console.log("MicropolisSimulator: initialize");
-        // If this instance was previously used, clean it up defensively
-        if (this.micropolis || this.callback || this.tickIntervalId) {
-            try { this.dispose(); } catch {}
-        }
-        this.disposed = false;
+		// If this instance was previously used, clean it up defensively
+		if (this.micropolis || this.callback || this.tickIntervalId) {
+			try { this.dispose(); } catch { /* ignore */ }
+		}
+		this.disposed = false;
 
-        this.micropolisengine = await loadMicropolisEngine();
-        console.log("MicropolisSimulator: initialize: micropolisengine:", this.micropolisengine);
-        if (this.micropolisengine === null) {
-            console.log("MicropolisSimulator: initialize: error loading micropolisengine.");
-            return;
-        }
-    
-        this.micropolis = new micropolisengine.Micropolis();
-        console.log("MicropolisSimulator: initialize: micropolis:", this.micropolis);
-        if (this.micropolis === null) {
-            console.log("MicropolisSimulator: initialize: error creating micropolis.");
-            return;
-        }
+		this.micropolisengine = await loadMicropolisEngine();
+		if (this.micropolisengine === null) {
+			console.warn('MicropolisSimulator: error loading engine module.');
+			return;
+		}
+
+		this.micropolis = new micropolisengine!.Micropolis();
+		if (this.micropolis === null) {
+			console.warn('MicropolisSimulator: error creating Micropolis instance.');
+			return;
+		}
 
         if (!callback) {
             this.callback = null;
@@ -140,25 +141,19 @@ export class MicropolisSimulator {
         this.isInitialized = true;
     }
 
-    fillMopTiles(value: number) {
-        if (!this.mopData) {
-            console.log("MicropolisSimulator: fillMopTiles: no mopData");
-            return;
-        }
+	fillMopTiles(value: number) {
+		if (!this.mopData) return;
 
         for (let i = 0; i < this.mopData.length; i++) {
             this.mopData[i] = value;
         }
     }
 
-    rotateMapTiles(rotation: number) {
-        if (!this.mapData) {
-            console.log("MicropolisSimulator: rotateMapTiles: no mapData");
-            return;
-        }
+	rotateMapTiles(rotation: number) {
+		if (!this.mapData || !this.micropolisengine) return;
 
-        const lomask = 0x3ff;
-        const tileCount = this.micropolisengine.WORLD_W * this.micropolisengine.WORLD_H;
+		const lomask = 0x3ff;
+		const tileCount = this.micropolisengine.WORLD_W * this.micropolisengine.WORLD_H;
 
         for (let i = 0; i < this.mapData.length; i++) {
             let cell = this.mapData[i];
@@ -200,8 +195,7 @@ export class MicropolisSimulator {
         this.setFramesPerSecond(lastFramesPerSecond);
       }
     
-      setFramesPerSecond(fps: number): void {
-        console.log('setFramesPerSecond: fps:', fps);
+	setFramesPerSecond(fps: number): void {
         if (this.disposed) return;
         this.framesPerSecond = fps;
     
@@ -265,13 +259,12 @@ export class MicropolisSimulator {
       unregisterRenderCallback(fn: () => void) {
         if (fn) this.renderCallbacks.delete(fn);
       }
-      loadDefaultCityOnce() {
-        if (this.micropolis && !this.hasLoadedCity) {
-          console.log('MicropolisSimulator: loadDefaultCityOnce:', this.cityFileName);
-          this.micropolis.loadCity(this.cityFileName);
-          this.hasLoadedCity = true;
-        }
-      }
+	loadDefaultCityOnce() {
+		if (this.micropolis && !this.hasLoadedCity) {
+			this.micropolis.loadCity(this.cityFileName);
+			this.hasLoadedCity = true;
+		}
+	}
 }
 
 export async function getSharedSimulator(callback: Callback | null, render: (() => void) | null): Promise<MicropolisSimulator> {

@@ -100,22 +100,21 @@
       return;
     }
 
+    const eng = micropolisSimulator.micropolisengine;
+    if (!eng) return;
+
     await tileRenderer.initialize(
       canvasGL, 
       ctxGL, 
       micropolisSimulator.mapData!,
       micropolisSimulator.mopData!,
-      micropolisSimulator.micropolisengine.WORLD_W,
-      micropolisSimulator.micropolisengine.WORLD_H, 
+      eng.WORLD_W,
+      eng.WORLD_H, 
       tileWidth, 
       tileHeight, 
       tileLayers);
 
-    //console.log('TileView.svelte: initialize: initialized tile renderer.');
-
-    tileRenderer.panTo(
-      micropolisSimulator.micropolisengine.WORLD_W * 0.5, 
-      micropolisSimulator.micropolisengine.WORLD_H * 0.5);
+    tileRenderer.panTo(eng.WORLD_W * 0.5, eng.WORLD_H * 0.5);
     tileRenderer.zoomTo(1.0);
     tileRenderer.tileLayer = 0;
 

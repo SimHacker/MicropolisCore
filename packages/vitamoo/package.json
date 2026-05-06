@@ -4,11 +4,19 @@
   "description": "Character animation renderer for Sims 1 meshes/skeletons/skins — TypeScript + WebGPU",
   "type": "module",
   "main": "dist/vitamoo.js",
+  "types": "dist/vitamoo.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/vitamoo.d.ts",
+      "import": "./dist/vitamoo.js"
+    }
+  },
+  "engines": { "node": ">=20" },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "pnpm run clean && tsc",
     "dev": "pnpm run build",
-    "serve": "pnpm run build && npx http-server dist -o -c-1",
+    "serve": "pnpm run build && pnpm exec http-server dist -o -c-1",
     "parity:fixtures": "tsc && node scripts/parity-fixture.mjs",
     "verify:exchange": "node scripts/verify-demo-exchange.mjs",
     "verify:exchange:merge": "pnpm run build && pnpm --filter mooshow run build && node scripts/verify-playing-scene-merge.mjs",
@@ -16,6 +24,7 @@
   },
   "devDependencies": {
     "@webgpu/types": "^0.1.38",
+    "http-server": "^14.1.1",
     "typescript": "^5.4"
   }
 }

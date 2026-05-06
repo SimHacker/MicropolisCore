@@ -42,6 +42,19 @@ jobs:
       - run: pnpm --filter mooshow run build
       - run: pnpm --filter vitamoospace run build
 
+  check-micropolis:
+    name: Micropolis svelte-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter micropolis run check
+
   test:
     name: Micropolis Vitest (WASM in Node)
     runs-on: ubuntu-latest

@@ -1,15 +1,8 @@
 <script lang="ts">
-	/**
-	 * Combined Micropolis + Sims hub — links into each playing surface.
-	 * @typedef {import('$lib/navigationTree').siteStructure[0]} NavNode
-	 */
-	/** @type {{ node: NavNode, fullPath: Array<NavNode>, siteStructure: Array<NavNode> }} */
-	export let data;
-
-	let pageHeadTitle = '';
-	$: pageHeadTitle = data?.node?.title || 'Micropolis';
-	let pageDescription = '';
-	$: pageDescription = data?.node?.description || '';
+	import type { PageServerData } from './$types';
+	let { data }: { data: PageServerData } = $props();
+	const pageHeadTitle = $derived(data?.node?.title ?? 'Micropolis');
+	const pageDescription = $derived(data?.node?.description ?? '');
 </script>
 
 <svelte:head>
