@@ -32,3 +32,4 @@ Read these alongside:
 - `moollm-micropolis-integration.md` — How MOOLLM skills, characters, MCP, command bus, and GitHub compose around MicropolisCore.
 - `renderer-plugin-roadmap.md` — Canvas/WebGL/WebGPU renderer plugin direction, pie menus, pedagogy, and future The Sims integration.
 - `vitamoo-monorepo-refactor-plan.md` — VitaMoo monorepo layout and refactor direction.
+- `simopolis.md` — **SimCity + The Sims under one umbrella.** The unified Simopolis vision: two-resolution world, The Uplift character bridge, TypeScript-first IFF pipeline, ecosystem design philosophy. The primary strategic document for the Sims integration work in MicropolisCore.

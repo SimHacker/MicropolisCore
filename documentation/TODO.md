@@ -26,8 +26,11 @@ the linked documents.
 | [VitaMoo — renderer polish](#vitamoo--webgpu-renderer-polish) | GPU pass timing, richer validation UX | Medium |
 | [VitaMoo — UI overlays](#vitamoo--ui-overlays) | Pie-menu head, speech bubbles, censorship pass | Low–Medium |
 | [VitaMooSpace — Roots & Catalog tabs](#vitamoospace--roots--catalog-tabs) | ~~Roots + Catalog~~ ✅ built — smoke test, then SQLite persistence | Medium |
-| [Sims I/O in TypeScript](#sims-io-typescript-package) | Scaffold `packages/sims-io/` L0 + L2 (FAR/IFF readers) | **High** |
-| [Sims I/O in TypeScript](#sims-io-typescript-package) | Add `parseMSH` to vitamoo (prototype-1998 binary mesh) | Medium |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | sims-io L4: ContentIndex bridge → VitaMoo character viewer | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Skin/sprite export: SPR2 → PNG (TypeScript) | High |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | SimCity zone ↔ Sims neighborhood data contract | Medium |
+| [Sims I/O in TypeScript](#sims-io-typescript-package) | ~~Scaffold `packages/sims-io/` L0–L3~~ ✅ done (48 tests) | ~~High~~ |
+| [Sims I/O in TypeScript](#sims-io-typescript-package) | Add `parseMSH` to vitamoo (prototype-1998 binary mesh, DDD format) | Medium |
 | [GUID collision tooling](#sims-guid-collision-tooling) | Wire collision scanner into VitaMooSpace UI | Medium |
 | [GPU asset tooling](#vitamoo--gpu-assets--interchange) | Readback → BMP/IFF export; glTF import/export | Medium |
 | [Package scoping](#package-naming--scoping) | Scope vitamoo/mooshow names (`@vitamoo/…`) | Low |
@@ -229,6 +232,31 @@ Currently `files-inventory.ts` holds state **in-process memory** — a server re
 - Per-root filters before catalog merge
 - Pluggable root drivers (query/search/filter, incremental fetch, upload/publish)
 - Install-set and save virtualization tooling
+
+---
+
+## Simopolis — The Uplift
+
+**Design:** [`documentation/designs/simopolis.md`](designs/simopolis.md)  
+**Vision/story:** [MOOLLM: designs/sim-obliterator/THE-UPLIFT.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/THE-UPLIFT.md)  
+**Field mappings:** [MOOLLM: designs/sim-obliterator/BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md)  
+**IFF layer stack:** [MOOLLM: designs/sim-obliterator/IFF-LAYERS.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/IFF-LAYERS.md)
+
+Bringing SimCity and The Sims under one umbrella in MicropolisCore. Python parsing is replaced by TypeScript in `packages/sims-io`. The Python codebase (SimObliterator Suite) remains a reference implementation and source of truth; this monorepo is the browser-native rewrite.
+
+### A. sims-io L4 — ContentIndex bridge to VitaMoo
+
+`packages/sims-io/src/l4/`: take a `NeighborhoodData` from the L3 scanner and emit a `ContentIndex` that `createMooShowStage` can load. Map each Sim's character filename (`C001FA_Mercedes`, `C001MA_Ross`, etc.) to the asset base URL path. This is the **first end-to-end path**: real Sims save → browser character viewer.
+
+The character filenames come from `Neighbour.originalFileName` (parsed from NBRS). The asset files (CMX, SKN, BMP, CFP) need to be resolvable — either from a local install path (via `NodeResourceProvider`) or from `content/vitamoo/sims-demo/` for the demo pack.
+
+### B. Skin/sprite export: SPR2 → PNG (TypeScript)
+
+SPR2 chunks in Sims IFF files store character skin textures as 8-bit paletted bitmaps. Export to PNG so skins can be displayed, edited, and fed to image generation APIs for regenesis. The Python version exists in SimObliterator (`sprite_export.py`); port to TypeScript in `packages/sims-io`.
+
+### C. SimCity zone ↔ Sims neighborhood data contract
+
+Define the JSON interface: a SimCity lot position maps to `content/micropolis/neighborhoods/<zone>/Neighborhood.iff`. The `sims-io` scanner reads it and returns `NeighborhoodData`. The Micropolis engine reads aggregate stats (budget, population, crime proxy) from parsed family data and folds them into tile simulation. Small, clean interface; big payoff.
 
 ---
 

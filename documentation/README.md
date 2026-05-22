@@ -18,6 +18,7 @@ Everything under this directory is **project documentation**: manuals for player
 ## Quick links
 
 - **What to build next:** **`TODO.md`** ← start here
+- **The unified SimCity + Sims vision:** **`designs/simopolis.md`**
 - **Play the game / use the CLI:** root **`README.md`**, **`notes/micropolis-js-tests.md`**, **`notes/city-save-files.md`**
 - **Platform eras (NeWS → Wasm):** **`designs/platform-lineage-index.md`**
 - **MicropolisHub / Git-as-world:** **`designs/github-as-mmorpg-multiverse.md`**
