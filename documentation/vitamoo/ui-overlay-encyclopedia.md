@@ -4,7 +4,7 @@ Reference behavior for **selection marker** (diamond / arrow above the active ch
 
 **Scope:** numbers, transform order, lighting, timing, and verification targets. **Not** a commitment that VitaMoo already implements all of this.
 
-**Related:** [webgpu-renderer-design.md §3.9](./webgpu-renderer-design.md#39-pie-menu) (compositing plan), [webgpu-renderer-design.md §3.11](./webgpu-renderer-design.md#311-censorship-mesh-bounding-box-pixelization) (censor rects / mosaic pass), [webgpu-renderer-design.md §6](./webgpu-renderer-design.md#6-static-mesh-interchange-gltf-and-plug-in-plumb-bobs) (glTF static meshes), [gltf-extras-metadata.md](./gltf-extras-metadata.md) (optional `extras`).
+**Related:** [webgpu-renderer-design.md §3.9](./webgpu-renderer-design.md#39-pie-menu) (compositing plan), [webgpu-renderer-design.md §3.11](./webgpu-renderer-design.md#311-censorship-mesh-bounding-box-pixelization) (censor rects / mosaic pass), [webgpu-renderer-design.md §6](./webgpu-renderer-design.md#6-static-mesh-interchange-gltf-and-plug-in-plumb-bobs) (glTF static meshes), [gltf-extras-metadata.md](./gltf-extras-metadata.md) (optional `extras`), [../designs/virtual-pointer-and-pie-cursors.md](../designs/virtual-pointer-and-pie-cursors.md) (virtual mouse, label-to-pointer, pointer layer), [../designs/ui-frame-nine-slice.md](../designs/ui-frame-nine-slice.md) (nine-slice frames).
 
 ---
 

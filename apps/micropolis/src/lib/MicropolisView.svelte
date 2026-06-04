@@ -4,39 +4,32 @@
   import { getSharedSimulator, releaseSharedSimulator, MicropolisSimulator } from '$lib/MicropolisSimulator';
   import { micropolisReactive } from '$lib/MicropolisReactive.svelte';
   import TileView from '$lib/TileView.svelte';
-  import About from '$lib/About.svelte'
+  import About from '$lib/About.svelte';
+  import GameHud from '$lib/GameHud.svelte';
+  import Toolbar from '$lib/Toolbar.svelte';
+  import MessageOverlay from '$lib/MessageOverlay.svelte';
+  import ZoneStatusPanel from '$lib/ZoneStatusPanel.svelte';
 
   let micropolisSimulator: MicropolisSimulator | null = null;
   let tileView: TileView | null = null;
-  let initialTouchX = 0;
-  let initialTouchY = 0;
   let viewRenderRef: (() => void) | null = null;
 
   onMount(async () => {
 
     console.log("MicropolisView: onMount: initializing micropolisengine...");
 
-    // Use shared singleton to avoid resetting wasm callback
     viewRenderRef = () => { tileView?.render?.(); };
     micropolisSimulator = await getSharedSimulator(micropolisReactive.engineCallback, viewRenderRef);
     micropolisReactive.attach(micropolisSimulator);
 
-      console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
+    console.log("MicropolisView: onMount:", "micropolisSimulator:", micropolisSimulator);
 
     await tileView!.initialize(micropolisSimulator);
-
-    if (typeof window != 'undefined') {
-      //window.micropolisSimulator = micropolisSimulator;
-      //window.micropolis = micropolisSimulator.micropolis;
-      //window.micropolisengine = micropolisSimulator.micropolisengine;
-
-      // We no longer disable global scrolling
-      // Instead, we only handle events within our container
-    }
   });
 
   onDestroy(() => {
     console.log('MicropolisView: onDestroy');
+    micropolisReactive.registerMapPan(null);
     micropolisReactive.detach();
     releaseSharedSimulator(viewRenderRef || undefined);
   });
@@ -44,11 +37,14 @@
 </script>
 
 <div class="view-container">
-  <TileView
-    bind:this={tileView}
-  />
+  <TileView bind:this={tileView} />
 
-  <About showAbout={true}/>
+  <GameHud />
+  <Toolbar />
+  <MessageOverlay />
+  <ZoneStatusPanel />
+
+  <About showAbout={false}/>
 </div>
 
 <style>
@@ -59,25 +55,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
-
-/* Remove these styles */
-/*
-.fullscreen {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.tileview {
-  display: block;
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-*/
 
 </style>

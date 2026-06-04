@@ -26,9 +26,17 @@ the linked documents.
 | [VitaMoo — renderer polish](#vitamoo--webgpu-renderer-polish) | GPU pass timing, richer validation UX | Medium |
 | [VitaMoo — UI overlays](#vitamoo--ui-overlays) | Pie-menu head, speech bubbles, censorship pass | Low–Medium |
 | [VitaMooSpace — Roots & Catalog tabs](#vitamoospace--roots--catalog-tabs) | ~~Roots + Catalog~~ ✅ built — smoke test, then SQLite persistence | Medium |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | sims-io L4: ContentIndex bridge → VitaMoo character viewer | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Skin/sprite export: SPR2 → PNG (TypeScript) | High |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | SimCity zone ↔ Sims neighborhood data contract | Medium |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 0: sims-io L4 ContentIndex bridge + MOOLLM `CHARACTER.yml` emit | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 0: SPR2 → PNG export + `.iff` save-file download | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 0: minimal `apps/simopolis/` SvelteKit shell | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 1: MOOLLM enrichment via MCP + Family Album server | High |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1C: Uplifted Computer + custom IFF content (the headline demo)** | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1D: Imagine Loop — Examine → Imagine → Edit → Inject (the LLM-as-narrator alternative to reimplementing the Sims engine)** | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1E: Family Album as StoryMaker — branching/merging graph of scenes; "snippets of DNA"; 35-year SimCity → Bar Karma → MicropolisCore lineage** | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1F: Twitch-friendly streaming features — chat-as-writers'-room, OBS overlays, Twitch Extension, save-file giveaway with provenance** | **High** |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 2: Micropolis residential zone ↔ Sims neighborhood data contract | Medium |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 3: Archive tornado — first source (Sims Exchange via archive.org) | Medium |
+| [Simopolis — The Uplift](#simopolis--the-uplift) | Federation peer-game bridges (post-Phase-2): CK3, RimWorld, Stardew Valley, Dwarf Fortress, VTTs (see [federation-peer-games.md](designs/federation-peer-games.md)) | Medium |
 | [Sims I/O in TypeScript](#sims-io-typescript-package) | ~~Scaffold `packages/sims-io/` L0–L3~~ ✅ done (48 tests) | ~~High~~ |
 | [Sims I/O in TypeScript](#sims-io-typescript-package) | Add `parseMSH` to vitamoo (prototype-1998 binary mesh, DDD format) | Medium |
 | [GUID collision tooling](#sims-guid-collision-tooling) | Wire collision scanner into VitaMooSpace UI | Medium |
@@ -91,7 +99,7 @@ This keeps CI fast on every PR without a full 15-minute Emscripten compile.
 
 ## Micropolis WASM testing
 
-**Details:** [`documentation/designs/wasm-bridge-and-testing-trajectory.md`](designs/wasm-bridge-and-testing-trajectory.md)
+**Details:** [documentation/designs/wasm-bridge-and-testing-trajectory.md](designs/wasm-bridge-and-testing-trajectory.md)
 
 ### 4. ✅ CI for `pnpm --filter micropolis run test` — done
 
@@ -114,7 +122,7 @@ Missing:
 
 ## Micropolis callbacks / events
 
-**Details:** [`documentation/designs/callback-interface-roadmap.md`](designs/callback-interface-roadmap.md)
+**Details:** [documentation/designs/callback-interface-roadmap.md](designs/callback-interface-roadmap.md)
 
 ### 5. Normalized event envelopes (`MicropolisEvent`)
 
@@ -122,19 +130,19 @@ Move toward a shared `MicropolisEvent` envelope so `micropolisReactive`, command
 MCP tools, and LLM observers share one vocabulary. Currently the bridge uses the Embind
 callback method names directly.
 
-See naming conventions: [`documentation/designs/naming-conventions.md`](designs/naming-conventions.md)
+See naming conventions: [documentation/designs/naming-conventions.md](designs/naming-conventions.md)
 
 ---
 
 ## Micropolis renderer
 
-**Details:** [`documentation/designs/renderer-plugin-roadmap.md`](designs/renderer-plugin-roadmap.md)
+**Details:** [documentation/designs/renderer-plugin-roadmap.md](designs/renderer-plugin-roadmap.md)
 
 ### 6. Renderer plugin selection in app UI
 
-`CanvasTileRenderer`, `WebGLTileRenderer`, and `WebGPUTileRenderer` exist in
-`packages/tile-renderer/`. The app-level selection polish (runtime switching, fallback
-path) is incomplete.
+`@micropolis/render-core` (viewport, holodeck, `HolodeckStage`, schemas) ships in
+`packages/render-core/`. `CanvasTileRenderer`, `WebGLTileRenderer`, and `WebGPUTileRenderer` remain in
+`packages/tile-renderer/` as scaffolds. Wire `HolodeckStage` + map plugin in `TileView` (phase 5).
 
 - `CanvasTileRenderer` still delegates to software renderer and needs broader app wiring.
 - `WebGPUTileRenderer` is the target high-performance path; needs integration alongside
@@ -144,13 +152,22 @@ path) is incomplete.
 
 ## VitaMoo — Holodeck
 
-**Details:** [`documentation/vitamoo/webgpu-renderer-design.md`](vitamoo/webgpu-renderer-design.md) §4,
-[`documentation/vitamoo/webgpu-renderer-status.md`](vitamoo/webgpu-renderer-status.md)
+**Details:** [documentation/designs/unified-webgpu-renderer.md](designs/unified-webgpu-renderer.md),
+[documentation/vitamoo/webgpu-renderer-design.md](vitamoo/webgpu-renderer-design.md) §4,
+[documentation/vitamoo/webgpu-renderer-status.md](vitamoo/webgpu-renderer-status.md)
 
-### 7. Terrain / floor / wall / roof pipeline (not started)
+### 7. Holodeck plugins + unified compositor (not started)
 
-The character WebGPU path is complete. The Holodeck (§4 in the renderer design) — environment
-geometry: backgrounds, wall planes, roof geometry, floor tiles — is **not started**.
+The character WebGPU path is complete. **HolodeckStage** (display-list executor), environment
+(terrain, floor, walls, roofs), Micropolis map layer, sprites, pie menu (feathered desaturated
+shadow + center head), and floor-grid feedback are specified in the unified WebGPU doc — **not started**.
+
+### 7b. Globe city navigation (ambitious — not started)
+
+**Details:** [documentation/designs/globe-city-navigation.md](designs/globe-city-navigation.md)
+
+Icosphere display of the tile map: **rotate** POI to face camera (no scroll), **fish-eye magnify**
+around screen center, compress toward antipode; slerp animation; inverse pick for tools. Phases G0–G5.
 
 This is the main greenfield work for the VitaMoo renderer.
 
@@ -158,7 +175,7 @@ This is the main greenfield work for the VitaMoo renderer.
 
 ## VitaMoo — WebGPU renderer polish
 
-**Details:** [`documentation/vitamoo/webgpu-renderer-status.md`](vitamoo/webgpu-renderer-status.md)
+**Details:** [documentation/vitamoo/webgpu-renderer-status.md](vitamoo/webgpu-renderer-status.md)
 
 ### 8. GPU pass timing / observability
 
@@ -185,8 +202,8 @@ would enable finer selection.
 
 ## VitaMoo — UI overlays
 
-**Details:** [`documentation/vitamoo/ui-overlay-encyclopedia.md`](vitamoo/ui-overlay-encyclopedia.md),
-[`documentation/vitamoo/webgpu-renderer-status.md`](vitamoo/webgpu-renderer-status.md) § Out of scope
+**Details:** [documentation/vitamoo/ui-overlay-encyclopedia.md](vitamoo/ui-overlay-encyclopedia.md),
+[documentation/vitamoo/webgpu-renderer-status.md](vitamoo/webgpu-renderer-status.md) § Out of scope
 
 ### 12. Pie-menu head rendering
 
@@ -207,8 +224,8 @@ content. No GPU implementation yet.
 
 ## VitaMooSpace — Roots & Catalog tabs
 
-**Details:** [`documentation/vitamoo/REFACTOR-PLAN.md`](vitamoo/REFACTOR-PLAN.md) § Next app milestone,
-[`documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md`](vitamoo/OBLITERATOR-TYPESCRIPT.md) Phase A1
+**Details:** [documentation/vitamoo/REFACTOR-PLAN.md](vitamoo/REFACTOR-PLAN.md) § Next app milestone,
+[documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md](vitamoo/OBLITERATOR-TYPESCRIPT.md) Phase A1
 
 **Status:** The Roots and Catalog tabs are **already fully built** in `apps/vitamoospace/src/lib/components/VitaMooSpace.svelte` — add/edit/remove roots, scan triggers, catalog query with kind/rootId/text filters and pagination. Server API routes exist at `api/files/{roots,scan,catalog}`.
 
@@ -237,32 +254,121 @@ Currently `files-inventory.ts` holds state **in-process memory** — a server re
 
 ## Simopolis — The Uplift
 
-**Design:** [`documentation/designs/simopolis.md`](designs/simopolis.md)  
-**Vision/story:** [MOOLLM: designs/sim-obliterator/THE-UPLIFT.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/THE-UPLIFT.md)  
-**Field mappings:** [MOOLLM: designs/sim-obliterator/BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md)  
-**IFF layer stack:** [MOOLLM: designs/sim-obliterator/IFF-LAYERS.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/IFF-LAYERS.md)
+**Top-level framing:** [documentation/designs/characters-as-hydrogen.md](designs/characters-as-hydrogen.md) — characters as the *hydrogen* (most-abundant, highest-valence content-atom) of the **Micropolis Federation**, with other atom types (lots, objects, behaviors, appearances, memories, stories, sounds) combining into molecules. *Federation* deliberately (Star Trek vibe), not *franchise* — cooperative association of sovereign open-source projects.
+**Strategy:** [documentation/designs/simopolis.md](designs/simopolis.md) — unified Micropolis + Sims vision (introduces the two-product naming: **Micropolis City** + **Micropolis Home**)
+**Substrate:** [documentation/designs/moollm-microworld-os.md](designs/moollm-microworld-os.md) — MOOLLM as the agent layer
+**Recovery pipeline:** [documentation/designs/the-tornado-and-the-archives.md](designs/the-tornado-and-the-archives.md) — sweep the Internet Archive into residential zones
+**Computer-as-portal:** [documentation/designs/the-computer-as-portal.md](designs/the-computer-as-portal.md) — Uplifted Computer + custom IFF content for the EA game
+**Imagine Loop:** [documentation/designs/the-imagine-loop.md](designs/the-imagine-loop.md) — LLM-as-narrator alternative to reimplementing the Sims engine
+**Family Album as StoryMaker:** [documentation/designs/family-album-as-storymaker.md](designs/family-album-as-storymaker.md) — branching / merging community graph of scenes; the 35-year SimCity → DreamScape → Bar Karma → MicropolisCore lineage
+**Federation peer-game bridges:** [documentation/designs/federation-peer-games.md](designs/federation-peer-games.md) — catalogue of "in the spirit of Simopolis" + "wildly popular and great technical fit" bridge candidates (CK3, RimWorld, Stardew, Dwarf Fortress, VTTs, plus the anti-target list)
+**Design discipline (incl. Twitch-friendly):** [documentation/designs/designing-inward-miyamoto-principles.md](designs/designing-inward-miyamoto-principles.md) — Miyamoto principles + Twitch-friendly streaming features + Wright-vs-EA designer-vs-platform separation
+**Build plan:** [documentation/designs/simopolis-uplift-roadmap.md](designs/simopolis-uplift-roadmap.md) — phases 0–5 (incl. 1C / 1D / 1E / 1F), definitions of done, risk register
+**Vision/story (external):** [MOOLLM: THE-UPLIFT.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/THE-UPLIFT.md)  
+**Field mappings (external):** [MOOLLM: BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md)  
+**IFF layer stack (external):** [MOOLLM: IFF-LAYERS.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/IFF-LAYERS.md)
 
-Bringing SimCity and The Sims under one umbrella in MicropolisCore. Python parsing is replaced by TypeScript in `packages/sims-io`. The Python codebase (SimObliterator Suite) remains a reference implementation and source of truth; this monorepo is the browser-native rewrite.
+Bringing Micropolis (the GPL city simulator descended from SimCity) and The Sims under one umbrella in MicropolisCore. Python parsing is replaced by TypeScript in `packages/sims-io`. The Python codebase (SimObliterator Suite) remains a reference implementation; this monorepo is the browser-native rewrite. The full phased plan lives in [simopolis-uplift-roadmap.md](designs/simopolis-uplift-roadmap.md); the headlines below are the immediately-actionable items.
 
-### A. sims-io L4 — ContentIndex bridge to VitaMoo
+### A. sims-io L4 — ContentIndex bridge to VitaMoo (Phase 0)
 
 `packages/sims-io/src/l4/`: take a `NeighborhoodData` from the L3 scanner and emit a `ContentIndex` that `createMooShowStage` can load. Map each Sim's character filename (`C001FA_Mercedes`, `C001MA_Ross`, etc.) to the asset base URL path. This is the **first end-to-end path**: real Sims save → browser character viewer.
 
 The character filenames come from `Neighbour.originalFileName` (parsed from NBRS). The asset files (CMX, SKN, BMP, CFP) need to be resolvable — either from a local install path (via `NodeResourceProvider`) or from `content/vitamoo/sims-demo/` for the demo pack.
 
-### B. Skin/sprite export: SPR2 → PNG (TypeScript)
+### B. sims-io L4 — MOOLLM CHARACTER.yml emit (Phase 0)
+
+`packages/sims-io/src/l4/moollm-character.ts`: per Sim, write a MOOLLM-shaped `CHARACTER.yml` with `sims_traits`, `relationships`, `gold`, `job`, and an *empty* `mind_mirror` placeholder. LLM enrichment of the placeholder is Phase 1. Field mapping is fully specified in the external [BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md).
+
+### C. Skin/sprite export: SPR2 → PNG in TypeScript (Phase 0)
 
 SPR2 chunks in Sims IFF files store character skin textures as 8-bit paletted bitmaps. Export to PNG so skins can be displayed, edited, and fed to image generation APIs for regenesis. The Python version exists in SimObliterator (`sprite_export.py`); port to TypeScript in `packages/sims-io`.
 
-### C. SimCity zone ↔ Sims neighborhood data contract
+### D. Save-file download path (Phase 0)
 
-Define the JSON interface: a SimCity lot position maps to `content/micropolis/neighborhoods/<zone>/Neighborhood.iff`. The `sims-io` scanner reads it and returns `NeighborhoodData`. The Micropolis engine reads aggregate stats (budget, population, crime proxy) from parsed family data and folds them into tile simulation. Small, clean interface; big payoff.
+Round-trip back: take a (possibly edited) `CHARACTER.yml`, write modified `sims_traits`, `gold`, and skill values into the original `Neighborhood.iff`, save as a new file the user can download. Extends the L3 setters.
+
+### E. Minimal `apps/simopolis/` SvelteKit shell (Phase 0)
+
+Drag-drop a `.iff`, see characters, edit fields, write a new `.iff`. The first thing a player can actually *use*.
+
+### F. Micropolis residential zone ↔ Sims neighborhood data contract (Phase 2)
+
+Define the JSON interface: a residential zone position maps to `content/micropolis/cities/<city>/neighborhoods/zone-<row>-<col>.yml` pointing at a parsed `Neighborhood.iff`. The Micropolis engine reads aggregate metrics (budget, population, education, satisfaction) and folds them into tile simulation. Bound neighborhoods read city signals (unemployment, pollution, disasters) back. Small interface, two-way coupling. See [roadmap Phase 2](designs/simopolis-uplift-roadmap.md#phase-2--two-resolution-coupling-micropolis-zone--sims-neighborhood-4-6-weeks).
+
+### G. Family Album server (Phase 1)
+
+Compatible endpoint for the Steam Sims re-release's upload feature. Receives albums, stores under `content/simopolis/albums/incoming/` with provenance, parses, makes them browsable, makes their characters uplift-able. See [roadmap Phase 1 Track B](designs/simopolis-uplift-roadmap.md#phase-1--moollm-enrichment--family-album-server-3-4-weeks).
+
+### G2. Uplifted Computer + custom IFF content (Phase 1C — **the headline demo**)
+
+The first player-visible content artifact: a custom IFF Computer object that "runs" Micropolis (via screen-snapshot SPR2 sprites), plus CD-ROM / Save-Game Disk / Foreign Photo Album / Screen-Snapshot Camera custom objects. Adventure Compiler authors all five from YAML. Player drops them into their `~/Documents/EA Games/The Sims/Downloads/` directory; they appear in the EA-published Sims 1 as ordinary custom content.
+
+**Headline 2-week demo:** Sim plays Micropolis on a custom PC inside the player's EA-published Sims 1. Finishes Will Wright's 1996 Stanford demo.
+
+Full design: [the-computer-as-portal.md](designs/the-computer-as-portal.md). Concrete tasks: [roadmap Phase 1C](designs/simopolis-uplift-roadmap.md#phase-1c--uplifted-computer--custom-iff-content-3-4-weeks-parallelizable-with-2).
+
+Key sub-items:
+- **`moollm://` URL scheme** in `packages/sims-io/src/l4/moollm-url.ts` + resolver
+- **SPR2 *writer*** in `packages/sims-io/src/spr2/writer.ts` (complements Phase 0 reader)
+- **Screen-snapshot renderer**: `tile-renderer` (Micropolis) and `mooshow` (Sims/lots) emit fixed-dimension PNGs that palette-quantize to SPR2
+- **`tools/adventure-compiler/`** core + per-object targets (computer, cd, savegame-disk, album, camera)
+- **`apps/micropolis-home/`** (a.k.a. `apps/simopolis/` during transition) authoring + preview UI for the five object types
+
+### G3. The Imagine Loop (Phase 1D — **the second headline demo**)
+
+The architectural alternative to reimplementing the Sims runtime. Examine a parsed save → Imagine outcomes via LLM (time skips, what-ifs, retroactive backstory, dreams, cheats with narrative) → Edit the high-level YAML representation → Inject a valid `.iff` save file the EA-published Sims 1 plays normally. The LLM is the narrator the Sims never had, **not** a re-simulator of the runtime.
+
+**Headline 1–2-week demo:** Five years pass for the Goth household, in one LLM call, ending in a valid `.iff` the player loads into their EA Sims 1 and a pageable album book on the shelf summarizing the five years in 20 languages.
+
+Full design: [the-imagine-loop.md](designs/the-imagine-loop.md). Concrete tasks: [roadmap Phase 1D](designs/simopolis-uplift-roadmap.md#phase-1d--the-imagine-loop-4-6-weeks-parallelizable-with-1b--1c--2).
+
+Key sub-items:
+- `packages/sims-io/src/l5/` — `examine.ts`, `intent.ts`, `imagine-apply.ts`, `validate.ts`, `compile.ts`, `loop.ts` (valid-or-revise)
+- MOOLLM `skills/imagine-loop/` — prompt structure, Speed-of-Light layout, output JSON schema
+- Family Album page renderer in `packages/mooshow/src/album-render.ts` — WebGPU + image-gen paths, both palette-quantize to SPR2
+- `apps/micropolis-home/src/routes/imagine/` — intent input UI, diff preview, INJECT confirm
+- Intent presets: time-skip, what-if branch, retroactive backstory, dream sequence, cheat-with-narrative
+
+### G4. Family Album as StoryMaker (Phase 1E)
+
+Sims Family Albums become a **branching, merging, geo-tagged graph of scenes** — "snippets of DNA" weavable between authors' stories — in the 35-year SimCity → DreamScape → The Sims → Bar Karma / StoryMaker / Urban Safari lineage finally reaching its natural shape. Five navigation views (Map / Road / Pie-menu / Album / Branching-Story). Federated by git; round-trips to documented Sims 1 album book IFFs.
+
+**Headline 1–2-week demo:** One user with a small album graph, shares one storyline with one friend via a git remote, both compile to a pageable album book IFF and load it into their EA Sims 1. The smallest visible demo of the StoryMaker reborn.
+
+Full design: [family-album-as-storymaker.md](designs/family-album-as-storymaker.md). Concrete tasks: [roadmap Phase 1E](designs/simopolis-uplift-roadmap.md#phase-1e--family-album-as-storymaker-4-6-weeks-parallelizable-with-1b--1c--1d).
+
+Key sub-items:
+- `packages/family-album/` — schemas, graph builder, local-FS + git-remote federation, CA biome layer
+- `apps/micropolis-home/src/routes/album/` — five-view UI (Map / Road / Pie-menu / Album / Branching-Story)
+- `packages/sims-io/src/l4/album-book-compile.ts` — storyline → pageable album-book IFF
+- `packages/sims-io/src/l4/bifrost-merge.ts` — character-snippet DNA operations
+- Imagine-Loop integration: imagine call emits a multi-scene storyline; existing storyline can be passed as context
+
+### G5. Twitch-friendly streaming features (Phase 1F)
+
+"Watching the player IS the game" at Twitch scale. Thirteen concrete streaming-integration features (chat-as-writers'-room, OBS overlay browser sources, bit-cheers as in-narrative events, channel-points redemptions, sub-named Sims, VOD chapter markers, save-file giveaway with provenance, streamer trust controls, multi-streamer crossover, official Twitch Extension, "Twitch Plays Micropolis Home" mode, plus a vision-LLM **Simplifier** screen-scraping agent that reads catalog item descriptions aloud and cross-references online Sims content libraries — useful for streamers narrating builds and for accessibility users). The strategic argument: Sims content streaming is one of the largest non-shooter categories on Twitch; this is the highest-leverage popularity move available to the project.
+
+**Headline 1-week demo:** A Sims streamer drops Micropolis Home overlay URLs into OBS, streams with VOD chapter markers, gives viewers the save file at stream end with full stream-derived provenance trail.
+
+Full design: [designing-inward-miyamoto-principles.md → §8a The Twitch corollary](designs/designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful). Concrete tasks: [roadmap Phase 1F](designs/simopolis-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e).
+
+Key sub-items:
+- `packages/twitch-bridge/` — IRC integration, EventSub wiring, VOD chapter emission
+- `apps/micropolis-home/src/routes/overlays/` — drop-in OBS browser sources
+- `apps/micropolis-home/src/routes/twitch/writers-room/` — chat-as-writers'-room voting + Imagine Loop wiring
+- `apps/twitch-extension/` — official Twitch Extension Studio submission
+- Streamer trust controls, multi-streamer crossover, save-file giveaway with provenance
+
+### H. Archive tornado: first source (Phase 3)
+
+`tools/tornado/`: pull from the Wayback CDX API against archived Sims Exchange snapshots, parse, curate, bind to lots. Provenance is mandatory. Takedown tooling required. See [the-tornado-and-the-archives.md](designs/the-tornado-and-the-archives.md).
 
 ---
 
 ## Sims I/O TypeScript package
 
-**Details:** [`documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md`](vitamoo/OBLITERATOR-TYPESCRIPT.md)
+**Details:** [documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md](vitamoo/OBLITERATOR-TYPESCRIPT.md)
 
 ### 17a. `parseMSH` in vitamoo
 
@@ -305,7 +411,7 @@ Register as workspace package in `pnpm-workspace.yaml` (already `packages/*`).
 
 ## Sims GUID collision tooling
 
-**Details:** [`documentation/vitamoo/guid-collision-analysis-plan.md`](vitamoo/guid-collision-analysis-plan.md)
+**Details:** [documentation/vitamoo/guid-collision-analysis-plan.md](vitamoo/guid-collision-analysis-plan.md)
 
 ### 18. Wire collision scanner into VitaMooSpace UI
 
@@ -321,8 +427,8 @@ re-GUID, merge, disable-package, or defer-and-inspect.
 
 ## VitaMoo — GPU assets & interchange
 
-**Details:** [`documentation/vitamoo/gpu-assets-tooling-roadmap.md`](vitamoo/gpu-assets-tooling-roadmap.md),
-[`documentation/vitamoo/gltf-extras-metadata.md`](vitamoo/gltf-extras-metadata.md)
+**Details:** [documentation/vitamoo/gpu-assets-tooling-roadmap.md](vitamoo/gpu-assets-tooling-roadmap.md),
+[documentation/vitamoo/gltf-extras-metadata.md](vitamoo/gltf-extras-metadata.md)
 
 ### 19. Buffer readback → BMP / IFF sprite export
 
@@ -347,7 +453,7 @@ at boundaries; optionally record the composed timeline.
 
 ## Package naming / scoping
 
-**Details:** [`documentation/designs/vitamoo-monorepo-refactor-plan.md`](designs/vitamoo-monorepo-refactor-plan.md) § Follow-ups
+**Details:** [documentation/designs/vitamoo-monorepo-refactor-plan.md](designs/vitamoo-monorepo-refactor-plan.md) § Follow-ups
 
 ### 22. Scope vitamoo and mooshow package names (deferred)
 
@@ -360,9 +466,9 @@ imports. Do in one coordinated PR.
 
 ## MicropolisHub / MOOLLM integration
 
-**Details:** [`documentation/designs/moollm-micropolis-integration.md`](designs/moollm-micropolis-integration.md),
-[`documentation/designs/command-path-collaboration-modes.md`](designs/command-path-collaboration-modes.md),
-[`documentation/designs/filesystem-object-model.md`](designs/filesystem-object-model.md)
+**Details:** [documentation/designs/moollm-micropolis-integration.md](designs/moollm-micropolis-integration.md),
+[documentation/designs/command-path-collaboration-modes.md](designs/command-path-collaboration-modes.md),
+[documentation/designs/filesystem-object-model.md](designs/filesystem-object-model.md)
 
 ### 23. MCP service layer
 
@@ -387,9 +493,9 @@ recording infrastructure exists.
 
 ## Multiplayer / Git-as-multiverse
 
-**Details:** [`documentation/designs/command-timeline-git-branches.md`](designs/command-timeline-git-branches.md),
-[`documentation/designs/github-as-mmorpg-multiverse.md`](designs/github-as-mmorpg-multiverse.md),
-[`documentation/designs/multiplayer-browser-lessons.md`](designs/multiplayer-browser-lessons.md)
+**Details:** [documentation/designs/command-timeline-git-branches.md](designs/command-timeline-git-branches.md),
+[documentation/designs/github-as-mmorpg-multiverse.md](designs/github-as-mmorpg-multiverse.md),
+[documentation/designs/multiplayer-browser-lessons.md](designs/multiplayer-browser-lessons.md)
 
 ### 26. Branch-as-object-store convention
 
@@ -452,7 +558,7 @@ These live under `documentation/` and are **frozen** — kept for lineage, not t
 | `documentation/notes/legacy/DevelopmentPlan.md` | TileEngine / CellEngine era plan |
 | `documentation/openlaszlo/TODO.txt` | OpenLaszlo / Flash client scratchpad |
 
-See [`documentation/notes/legacy/README.md`](notes/legacy/README.md) for the legacy index.
+See [documentation/notes/legacy/README.md](notes/legacy/README.md) for the legacy index.
 
 ---
 

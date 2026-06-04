@@ -1,11 +1,18 @@
 <script lang="ts">
 
   import { onMount, onDestroy } from 'svelte';
-  import { TileRenderer, WebGLTileRenderer } from '@micropolis/tile-renderer';
+  import {
+    createMapTileRenderer,
+    type MapTileRendererBackend,
+    type TileRenderer,
+  } from '@micropolis/tile-renderer';
   import { MicropolisSimulator } from '$lib/MicropolisSimulator';
   import { commandBus, shortcutFromKeyboardEvent } from '$lib/CommandBus';
   import { commandRecorder } from '$lib/CommandRecorder';
   import { registerMicropolisCommands, type MicropolisCommandContext } from '$lib/micropolisCommands';
+  import { micropolisReactive } from '$lib/MicropolisReactive.svelte';
+  import { toolState } from '$lib/ToolState.svelte';
+  import { resolveEditingTool, toolCursor } from '$lib/gameTools';
 
   // Tile Sets
   import tileLayer_all10 from '$lib/images/tilesets/all.png';
@@ -22,14 +29,18 @@
 
   let canvasGL: HTMLCanvasElement | null = null;
   let ctxGL: WebGL2RenderingContext | null = null;
-  let tileRenderer: TileRenderer<any> | null = null;
+  let rendererBackend: MapTileRendererBackend | null = null;
+  let tileRenderer: TileRenderer<unknown> | null = null;
   let initialized = false;
 
   let autoRepeatIntervalId: any | null = null;
   let autoRepeatDelay = 1000 / 60; // 60 repeats per second
   let autoRepeatKeys: string[] = [];
 
-  let panning: boolean = false;
+  let panning = $state(false);
+  let panButton = $state<number | null>(null);
+  let toolDragging = false;
+  let spacePanHeld = false;
   let screenPos: [number, number] = [0, 0];
   let tilePos: [number, number] = [0, 0];
   let screenPosLast: [number, number] = [0, 0];
@@ -60,6 +71,13 @@
   registerMicropolisCommands();
   commandRecorder.attach(commandBus);
 
+  $effect(() => {
+    micropolisReactive.mapRevision;
+    if (initialized && tileRenderer) {
+      render();
+    }
+  });
+
   export async function initialize(micropolisSimulator_: MicropolisSimulator): Promise<void> {
     console.log("TileView.svelte: initialize:", "micropolisSimulator:", micropolisSimulator_);
   
@@ -68,55 +86,50 @@
     if (!micropolisSimulator || !canvasGL) return;
 
     // Prevent double-initialization when remounting/showing tab again
-    if (initialized && tileRenderer && ctxGL) {
+    if (initialized && tileRenderer) {
       console.log('TileView.svelte: initialize skipped (already initialized)');
       resizeCanvas();
       return;
     }
 
-    // Create 3d canvas drawing context and tileRenderer.
-    //console.log('TileView.svelte: onMount', 'canvasGL:', canvasGL);
     if (canvasGL == null) {
       console.log('TileView.svelte: initialize: canvasGL is null!');
       return;
     }
 
-    ctxGL = canvasGL.getContext('webgl2');
-    //console.log('TileView.svelte: initialize:', 'ctxGL:', ctxGL);
-    if (ctxGL == null) {
-      console.log('TileView.svelte: initialize: no ctxGL!');
+    const created = createMapTileRenderer(canvasGL);
+    if (created == null) {
+      console.log('TileView.svelte: initialize: no supported renderer backend!');
       return;
     }
 
-    tileRenderer = new WebGLTileRenderer();
-
-    if (typeof window != "undefined") {
-      //window.tileRenderer = tileRenderer;
-    }
-
-    //console.log('TileView.svelte: initialize: tileRenderer:', tileRenderer);
-    if (tileRenderer == null) {
-      console.log('TileView.svelte: initialize: no tileRenderer!');
-      return;
-    }
+    tileRenderer = created.renderer;
+    rendererBackend = created.backend;
+    ctxGL = created.webglContext;
+    console.log(`TileView.svelte: using ${rendererBackend} tile renderer`);
 
     const eng = micropolisSimulator.micropolisengine;
     if (!eng) return;
 
     await tileRenderer.initialize(
-      canvasGL, 
-      ctxGL, 
+      canvasGL,
+      created.context,
       micropolisSimulator.mapData!,
       micropolisSimulator.mopData!,
       eng.WORLD_W,
-      eng.WORLD_H, 
-      tileWidth, 
-      tileHeight, 
+      eng.WORLD_H,
+      tileWidth,
+      tileHeight,
       tileLayers);
 
     tileRenderer.panTo(eng.WORLD_W * 0.5, eng.WORLD_H * 0.5);
     tileRenderer.zoomTo(1.0);
     tileRenderer.tileLayer = 0;
+
+    micropolisReactive.registerMapPan((x, y) => {
+      tileRenderer?.panTo(x, y);
+      render();
+    });
 
     if (typeof window != "undefined") {
       canvasGL.addEventListener('wheel', onwheel, {passive: false});
@@ -174,7 +187,7 @@
 
   // Function to resize the canvas to match the screen size.
   function resizeCanvas() {
-    if (!isMounted || !canvasGL || !ctxGL || !tileRenderer) {
+    if (!isMounted || !canvasGL || !tileRenderer) {
         // console.log("TileView.svelte: resizeCanvas skipped (not ready)");
       return;
     }
@@ -205,8 +218,9 @@
 
       console.log(`TileView.svelte: Resized canvas drawing buffer to ${canvasGL.width}x${canvasGL.height}`);
 
-      // Update the WebGL viewport to match the new drawing buffer size
-      ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
+      if (ctxGL) {
+        ctxGL.viewport(0, 0, canvasGL.width, canvasGL.height);
+      }
 
       // Tell the TileRenderer the new CSS display size
       tileRenderer.setScreenSize(displayWidth, displayHeight);
@@ -230,9 +244,39 @@
     ];
 
     if (tileRenderer != null) {
-      tilePos = tileRenderer.screenToTile(screenPos);
-      //console.log('trackMouse: event:', event, 'screenPos:', screenPos, 'tilePos:', tilePos);
+      tilePos = tileRenderer.viewport.screenToWorldTile(screenPos);
+      toolState.setHoverTile(tilePos);
     }
+  }
+
+  function toolResultMessage(result: { value: number } | number): string | null {
+    const eng = micropolisSimulator?.micropolisengine;
+    if (!eng) return null;
+    const v = typeof result === 'number' ? result : result.value;
+    const tr = eng.ToolResult;
+    if (v === tr.TOOLRESULT_NO_MONEY.value) return 'Insufficient funds';
+    if (v === tr.TOOLRESULT_NEED_BULLDOZE.value) return 'Bulldoze first';
+    if (v === tr.TOOLRESULT_FAILED.value) return 'Cannot build here';
+    return null;
+  }
+
+  function applyToolAt(tx: number, ty: number): void {
+    const eng = micropolisSimulator?.micropolisengine;
+    if (!eng || !micropolisSimulator) return;
+
+    const tool = resolveEditingTool(eng, toolState.activeToolId);
+    const result = micropolisReactive.poke.doTool(tool, tx, ty);
+    const feedback = toolResultMessage(result as { value: number });
+    toolState.setLastToolFeedback(feedback);
+    micropolisSimulator.render();
+  }
+
+  function isPanMouseButton(button: number): boolean {
+    return button === 1 || button === 2;
+  }
+
+  function shouldPan(event: MouseEvent): boolean {
+    return spacePanHeld || isPanMouseButton(event.button) || (event.button === 0 && event.shiftKey);
   }
 
   export function onmousedown(event: MouseEvent): void {
@@ -241,11 +285,18 @@
 
     trackMouse(event);
 
-    panning = true;
-    screenPosDown = screenPos;
-    panDown = [tileRenderer.panX, tileRenderer.panY];
+    if (shouldPan(event)) {
+      panning = true;
+      panButton = event.button;
+      screenPosDown = screenPos;
+      panDown = [tileRenderer.panX, tileRenderer.panY];
+      return;
+    }
 
-    //console.log('TileView.svelte: onmousedown: event:', event, 'target:', event.target, 'screenPos:', screenPos, 'panDown:', panDown);
+    if (event.button === 0) {
+      toolDragging = true;
+      applyToolAt(tilePos[0], tilePos[1]);
+    }
   }
 
   export function onmousemove(event: MouseEvent): void {
@@ -254,29 +305,31 @@
 
     trackMouse(event);
 
-    if (!panning) return;
+    if (panning) {
+      const screenDelta: [number, number] = [
+        screenPosLast[0] - screenPos[0],
+        screenPosLast[1] - screenPos[1],
+      ];
+      let tileDelta = tileRenderer.viewport.screenToWorldTileDelta(screenDelta);
+      tileRenderer.panBy(tileDelta[0], tileDelta[1]);
+      render();
+      return;
+    }
 
-    const screenDelta: [number, number] = [
-      screenPosLast[0] - screenPos[0],
-      screenPosLast[1] - screenPos[1],
-    ];
-    let tileDelta = tileRenderer.screenToTileDelta(screenDelta);
-
-    //console.log('TileView.svelte: onmousemove: event:', event, 'target:', event.target, 'screenDelta:', screenDelta, 'tileDelta:', tileDelta, 'tilePos:', tilePos, 'tilePosDown:', tilePosDown, 'screenPos:', screenPos, 'screenPosLast:', screenPosDown);
-
-    tileRenderer.panBy(tileDelta[0], tileDelta[1]);
-
-    render();
+    if (toolDragging && event.buttons & 1) {
+      applyToolAt(tilePos[0], tilePos[1]);
+    }
   }
 
   export function onmouseup(event: MouseEvent): void {
-    if (!panning) return;
-
-    //console.log('TileView.svelte: onmouseup: event:', event, 'target:', event.target);
-
-    panning = false;
-
-    render();
+    if (panning && (panButton === null || event.button === panButton)) {
+      panning = false;
+      panButton = null;
+      render();
+    }
+    if (event.button === 0) {
+      toolDragging = false;
+    }
   }
 
   export function onkeydown(event: KeyboardEvent): void {
@@ -286,7 +339,11 @@
 
     const key = event.key;
 
-    if ((key >= "a") && (key <= "z")) { // letters
+    if (key === 'Shift') {
+      spacePanHeld = true;
+    }
+
+    if ((key >= "a") && (key <= "z")) { // letters — load city by first letter
       event.preventDefault();
       const letter = key.charCodeAt(0) - "a".charCodeAt(0);
       void commandBus.dispatch('city.load-by-letter', commandContext(event, { letter }));
@@ -393,6 +450,10 @@
   export function onkeyup(event: KeyboardEvent): void {
   //console.log('TileView.svelte: onkeyup: event:', event, 'target:', event.target, 'keyCode:', event.keyCode);
     const key = event.key;
+
+    if (key === 'Shift') {
+      spacePanHeld = false;
+    }
 
     switch (key) {
 
@@ -629,12 +690,14 @@
   class="tileview-canvas"
   bind:this={canvasGL}
   tabindex="0"
-  on:mousedown={onmousedown}
-  on:mousemove={onmousemove}
-  on:mouseup={onmouseup}
-  on:keydown={onkeydown}
-  on:keyup={onkeyup}
-  on:mouseleave={onmouseup}
+  style:cursor={toolCursor(toolState.activeToolId, panning)}
+  onmousedown={onmousedown}
+  onmousemove={onmousemove}
+  onmouseup={onmouseup}
+  onkeydown={onkeydown}
+  onkeyup={onkeyup}
+  onmouseleave={onmouseup}
+  oncontextmenu={(e) => e.preventDefault()}
 ></canvas>
 <!--
   use:pan={{ onPan: (any: any) => handlePan(any) }}
@@ -649,16 +712,10 @@
     height: 100%;
     background: none;
     image-rendering: pixelated;
-    cursor: grab;
-    touch-action: none; /* This prevents touch events from scrolling the page */
+    touch-action: none;
     position: relative;
     z-index: 1;
-    /* Contain pointer events to this element */
     pointer-events: auto;
-  }
-
-  .tileview-canvas:active {
-      cursor: grabbing;
   }
 
 </style>

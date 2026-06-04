@@ -10,6 +10,9 @@ importers:
 
   apps/micropolis:
     dependencies:
+      '@micropolis/render-core':
+        specifier: workspace:*
+        version: link:../../packages/render-core
       '@micropolis/tile-renderer':
         specifier: workspace:*
         version: link:../../packages/tile-renderer
@@ -124,6 +127,18 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@25.6.0)
 
+  packages/render-core:
+    devDependencies:
+      '@webgpu/types':
+        specifier: ^0.1.42
+        version: 0.1.69
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@25.6.0)
+
   packages/sims-io:
     dependencies:
       vitamoo:
@@ -138,6 +153,10 @@ importers:
         version: 2.1.9(@types/node@25.6.0)
 
   packages/tile-renderer:
+    dependencies:
+      '@micropolis/render-core':
+        specifier: workspace:*
+        version: link:../render-core
     devDependencies:
       '@types/webgl2':
         specifier: ^0.0.11
@@ -153,6 +172,10 @@ importers:
         version: 2.1.9(@types/node@25.6.0)
 
   packages/vitamoo:
+    dependencies:
+      '@micropolis/render-core':
+        specifier: workspace:*
+        version: link:../render-core
     devDependencies:
       '@webgpu/types':
         specifier: ^0.1.38

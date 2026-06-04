@@ -7,7 +7,7 @@ The **El Sim** parody site ran a fake “furniture of the month” piece celebra
 **Original parody page (Wayback-dependent):**  
 http://sympatheticreactions.hypermart.net/elsim.htm  
 
-The blog post suggested the author could use **RugOMatic** instead — cross-link: [`2004-01-21-rugomatic-tutorial.md`](2004-01-21-rugomatic-tutorial.md).
+The blog post suggested the author could use **RugOMatic** instead — cross-link: [2004-01-21-rugomatic-tutorial.md](2004-01-21-rugomatic-tutorial.md).
 
 ---
 

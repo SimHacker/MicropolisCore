@@ -5,10 +5,10 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
   ssr: {
-    noExternal: ['@micropolis/tile-renderer']
+    noExternal: ['@micropolis/render-core', '@micropolis/tile-renderer']
   },
   optimizeDeps: {
-    include: ['@micropolis/tile-renderer']
+    include: ['@micropolis/render-core', '@micropolis/tile-renderer']
   },
   plugins: [
     sveltekit(),

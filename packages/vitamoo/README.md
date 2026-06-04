@@ -10,7 +10,7 @@
 | **mooshow** | **`packages/mooshow`** | Graphics/runtime: WebGPU stage (`Renderer.create`), camera, object-ID picking, spin input, hooks for UI (selection, plumb bob, keys). Depends on `vitamoo`. |
 | **vitamoospace** | **`apps/vitamoospace`** | SvelteKit app: full-page demo, playing-scene / template / skill menus, one `VitaMooSpace` component that uses `vitamoo` + `mooshow`. |
 
-Scenes and bodies come from the **playing-scene exchange** (`content-exchange.json` with `schemaVersion`, `characterTemplates`, `playingScenes`, optional `assetIndexRef` to a pure asset list such as `content-assets.json`) plus CMX/SKN/BMP/CFP assets, shipped under **`content/vitamoo/sims-demo/`** (served in dev/build via **`apps/vitamoospace/static/data`** → symlink). The loader enforces exchange schema validation and maps templates/placements to the runtime index (`characters`, `scenes`, `cast`) without legacy fallback paths. See **[`documentation/vitamoo/moo-world-model-and-save-alignment.md`](../../documentation/vitamoo/moo-world-model-and-save-alignment.md)**. From **`packages/vitamoo`**: validate demo files with **`pnpm run verify:exchange`**, merge invariants with **`pnpm run verify:exchange:merge`**, GUID-collision groundwork with **`pnpm run verify:guid-collision`**.
+Scenes and bodies come from the **playing-scene exchange** (`content-exchange.json` with `schemaVersion`, `characterTemplates`, `playingScenes`, optional `assetIndexRef` to a pure asset list such as `content-assets.json`) plus CMX/SKN/BMP/CFP assets, shipped under **`content/vitamoo/sims-demo/`** (served in dev/build via **`apps/vitamoospace/static/data`** → symlink). The loader enforces exchange schema validation and maps templates/placements to the runtime index (`characters`, `scenes`, `cast`) without legacy fallback paths. See **[documentation/vitamoo/moo-world-model-and-save-alignment.md](../../documentation/vitamoo/moo-world-model-and-save-alignment.md)**. From **`packages/vitamoo`**: validate demo files with **`pnpm run verify:exchange`**, merge invariants with **`pnpm run verify:exchange:merge`**, GUID-collision groundwork with **`pnpm run verify:guid-collision`**.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ Shader display modes still use **`?debugSlice=0`** … **`6`** (see Default cont
 - **Browser viewer with your UI:** depend on `mooshow`; create a stage, load a content index, wire hooks to your components.
 - **Full demo:** use or fork `vitamoospace`; swap assets and content index to rebrand.
 
-See **[`documentation/vitamoo/DOCUMENTATION.md`](../../documentation/vitamoo/DOCUMENTATION.md)** for full API and layer boundaries, data formats, and how to extend or build on top. **Layer refactor (phases):** **[`documentation/vitamoo/REFACTOR-PLAN.md`](../../documentation/vitamoo/REFACTOR-PLAN.md)**. **WebGPU renderer index:** **[`documentation/vitamoo/README.md`](../../documentation/vitamoo/README.md)** (spec, status, GPU-deformation checklist).
+See **[documentation/vitamoo/DOCUMENTATION.md](../../documentation/vitamoo/DOCUMENTATION.md)** for full API and layer boundaries, data formats, and how to extend or build on top. **Layer refactor (phases):** **[documentation/vitamoo/REFACTOR-PLAN.md](../../documentation/vitamoo/REFACTOR-PLAN.md)**. **WebGPU renderer index:** **[documentation/vitamoo/README.md](../../documentation/vitamoo/README.md)** (spec, status, GPU-deformation checklist).
 
 ---
 

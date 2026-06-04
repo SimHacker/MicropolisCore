@@ -4,9 +4,9 @@ This document distills a long **Cursor IDE / ChatGPT working transcript** (save-
 
 **Canonical technical references in this repo (prefer these over this file):**
 
-- City / `.cty` layout: [`../city-save-files.md`](../city-save-files.md)
-- CLI / Vitest: [`../micropolis-js-tests.md`](../micropolis-js-tests.md)
-- Current architecture: [`../../designs/`](../../designs/)
+- City / `.cty` layout: [../city-save-files.md](../city-save-files.md)
+- CLI / Vitest: [../micropolis-js-tests.md](../micropolis-js-tests.md)
+- Current architecture: [../../designs/](../../designs/)
 
 ---
 
@@ -29,7 +29,7 @@ This document distills a long **Cursor IDE / ChatGPT working transcript** (save-
 **Ideas from the session (already expanded in-repo elsewhere):**
 
 - Cities are **tile grids**; many structures are **multi-tile** (often 3×3, always square in the discussion).
-- Each multi-tile building has a **distinguished center / “hot” tile** the simulator uses for per-building logic (scanning neighbors, repair, power, roads/rails, etc.). In code this relates to **zone bits** / zone-center conventions—see the engine headers and [`../city-save-files.md`](../city-save-files.md) for authoritative detail.
+- Each multi-tile building has a **distinguished center / “hot” tile** the simulator uses for per-building logic (scanning neighbors, repair, power, roads/rails, etc.). In code this relates to **zone bits** / zone-center conventions—see the engine headers and [../city-save-files.md](../city-save-files.md) for authoritative detail.
 - **Tools** paint patterns; the **simulator** maintains invariants around multi-tile objects.
 
 Do not treat this section as a spec; treat **`city-save-files.md`** as the spec.

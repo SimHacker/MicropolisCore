@@ -8,9 +8,9 @@ A batch of “Martian rugs” was posted: preview images from NASA’s web site,
 
 This was framed as an early test of making creation and publishing of *Sims* objects very lightweight.
 
-**Related:** [`2004-01-21-rugomatic-tutorial.md`](2004-01-21-rugomatic-tutorial.md), [`2004-01-08-rss20-sims-module-mysims-radio-userland.md`](2004-01-08-rss20-sims-module-mysims-radio-userland.md).
+**Related:** [2004-01-21-rugomatic-tutorial.md](2004-01-21-rugomatic-tutorial.md), [2004-01-08-rss20-sims-module-mysims-radio-userland.md](2004-01-08-rss20-sims-module-mysims-radio-userland.md).
 
-Several **Jan 23, 2004** picture-rugs from the same blog stream were also captured on the Wayback Machine; copies live under **`sims-objects/`** (Burtynsky pair, Captain Kangaroo obit rug, Mars Express “martianh2o” rugs). See [`sims-objects/`](sims-objects/) for filenames.
+Several **Jan 23, 2004** picture-rugs from the same blog stream were also captured on the Wayback Machine; copies live under **`sims-objects/`** (Burtynsky pair, Captain Kangaroo obit rug, Mars Express “martianh2o” rugs). See [sims-objects/](sims-objects/) for filenames.
 
 ---
 

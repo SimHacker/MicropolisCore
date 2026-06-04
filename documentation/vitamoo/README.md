@@ -1,12 +1,13 @@
 # VitaMoo — `documentation/vitamoo/`
 
-Focused notes for the **WebGPU renderer** and related roadmap. The **full stack protocol** (layers, APIs, content formats) is **[`DOCUMENTATION.md`](./DOCUMENTATION.md)**. **Layer refactor history** is **[`REFACTOR-PLAN.md`](./REFACTOR-PLAN.md)**.
+Focused notes for the **WebGPU renderer** and related roadmap. The **full stack protocol** (layers, APIs, content formats) is **[DOCUMENTATION.md](./DOCUMENTATION.md)**. **Layer refactor history** is **[REFACTOR-PLAN.md](./REFACTOR-PLAN.md)**.
 
 | File | Contents |
 |------|----------|
 | **[DOCUMENTATION.md](./DOCUMENTATION.md)** | **Full stack:** layers, APIs, content formats, hooks, build/deploy, reuse paths. |
 | **[REFACTOR-PLAN.md](./REFACTOR-PLAN.md)** | **Layer split** (phases 0–5): status, boundaries, migration narrative. |
 | **[webgpu-renderer-design.md](./webgpu-renderer-design.md)** | **Specification:** current pipeline, object-ID layout, holodeck roadmap (§4), GPU deformation (§5), WGSL overview, display-list shapes. Update this when behavior or formats change. |
+| **[../designs/unified-webgpu-renderer.md](../designs/unified-webgpu-renderer.md)** | **Integration:** one WebGPU stack for vitamoo + Micropolis map + overlays + pie menu; holodeck plugins and phases. |
 | **[webgpu-renderer-status.md](./webgpu-renderer-status.md)** | **Living status:** what is implemented vs planned, GitHub Pages deployment, file-level map, recommended next steps, out-of-scope list, links to sibling repos. |
 | **[gpu-assets-tooling-roadmap.md](./gpu-assets-tooling-roadmap.md)** | Resident GPU data, readback for browser object export (sprites / BMP / IFF), glTF interchange, streamed animation from clips. |
 | **[sims-content-pipeline-notes.md](./sims-content-pipeline-notes.md)** | Historical notes on 3DS Max note tracks, the CMX Exporter, Transmogrifier/RugOMatic/ShowNTell, community content sites, and how they inform VitaMoo's browser-based tool and interchange design. |
@@ -16,17 +17,17 @@ Focused notes for the **WebGPU renderer** and related roadmap. The **full stack 
 | **[OBLITERATOR-TYPESCRIPT.md](./OBLITERATOR-TYPESCRIPT.md)** | **Sims 1 save / game data in TypeScript:** Python survey; **L0–L4** I/O + **§6** layered **YAML/JSON** interchange (exploded/decoded/semantic), **manifest + fidelity profiles** (Transmogrifier-style partial export, derived α/Z/zoom), **BHAV → YAML** round-trip; MOOLLM **[sim-obliterator](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator)**; pure TS read path; roster → VitaMoo first. |
 | **[moo-world-model-and-save-alignment.md](./moo-world-model-and-save-alignment.md)** | **Moo vocabulary vs Sims persistence:** district, resident record, household, lot archive, **Person**, **Appearance**; **playing scene**; **§5** scene container — top-level arrays, **`id`** refs, YAML option, per-type **`id→row` caches**, jq-friendly interchange; tool layers; glTF + sidecar. |
 
-**Reading order:** [`webgpu-renderer-status.md`](./webgpu-renderer-status.md) for orientation, then [`webgpu-renderer-design.md`](./webgpu-renderer-design.md) for depth. GPU deform/animation **contract and checklist** live in **design §5.0** when changing that path. Open work across all VitaMoo areas is in **[`documentation/TODO.md`](../TODO.md)**.
+**Reading order:** [webgpu-renderer-status.md](./webgpu-renderer-status.md) for orientation, then [webgpu-renderer-design.md](./webgpu-renderer-design.md) for depth. GPU deform/animation **contract and checklist** live in **design §5.0** when changing that path. Open work across all VitaMoo areas is in **[documentation/TODO.md](../TODO.md)**.
 
 ---
 
 ## Accomplishments (shipped)
 
 - **WebGPU character path:** WGSL mesh draw, depth, screen fade, plumb-bob meshes, BMP textures via `loadTexture`, object-ID pick buffer and `readObjectIdAt` (mooshow picking).
-- **GPU pipeline (default path when supported):** batched compute for animation (`GpuAnimator`), deformation (`GpuDeformer`), world transform (`GpuWorldTransform`), resident skill/mesh caches; draw from GPU-deformed buffers with **CPU fallback** (`deformMesh` + `drawMesh`) when needed. See [`webgpu-renderer-status.md`](./webgpu-renderer-status.md) for the authoritative table.
+- **GPU pipeline (default path when supported):** batched compute for animation (`GpuAnimator`), deformation (`GpuDeformer`), world transform (`GpuWorldTransform`), resident skill/mesh caches; draw from GPU-deformed buffers with **CPU fallback** (`deformMesh` + `drawMesh`) when needed. See [webgpu-renderer-status.md](./webgpu-renderer-status.md) for the authoritative table.
 - **CPU reference path:** `Practice.tick` → `updateTransforms` → `deformMesh` remains for gameplay state, validation taps, and fallback drawing.
 - **Logging:** Renderer / texture / deform / pick noise gated behind `Renderer.create(..., { verbose: true })`, `StageConfig.verbose`, or `?vitamooVerbose=1` (default quiet).
-- **Documentation split:** One canonical **design** spec ([`webgpu-renderer-design.md`](./webgpu-renderer-design.md), including **§5.0** CPU/GPU contract for deformation), one **status/roadmap** doc ([`webgpu-renderer-status.md`](./webgpu-renderer-status.md)). Implemented WGSL passes are summarized in **design §1.2** (not duplicated in status).
+- **Documentation split:** One canonical **design** spec ([webgpu-renderer-design.md](./webgpu-renderer-design.md), including **§5.0** CPU/GPU contract for deformation), one **status/roadmap** doc ([webgpu-renderer-status.md](./webgpu-renderer-status.md)). Implemented WGSL passes are summarized in **design §1.2** (not duplicated in status).
 
 ---
 
@@ -36,7 +37,7 @@ Focused notes for the **WebGPU renderer** and related roadmap. The **full stack 
 |-------|--------|
 | **WebGPU + characters (vitamoo + mooshow)** | **In use:** GPU animation + deform + world compute (batched), draw from GPU buffers, textures, picking; CPU deform/draw **fallback** retained. |
 | **Holodeck (design §4)** | **Not started** (terrain/floor/wall/roof pipeline). |
-| **Design §5 (GPU skeletal + animation)** | **Core path shipped**; open work is timing/observability, validation UX, automated browser GPU parity—see [`webgpu-renderer-status.md`](./webgpu-renderer-status.md). |
+| **Design §5 (GPU skeletal + animation)** | **Core path shipped**; open work is timing/observability, validation UX, automated browser GPU parity—see [webgpu-renderer-status.md](./webgpu-renderer-status.md). |
 | **vitamoospace (app)** | Demo host; orbit/canvas sync via `onOrbitViewChange`; ships to GitHub Pages when `VITAMOOSPACE_PAGES_URL` is configured. |
 
 ---
@@ -47,7 +48,7 @@ See **[webgpu-renderer-status.md](./webgpu-renderer-status.md)** (gaps, next ste
 
 - **Holodeck §4:** background, walls/roofs, environment draw order—still the main greenfield vertical.
 - **§5 polish:** GPU pass timing in the debug UI, richer validation summaries, automated end-to-end GPU parity tests; bone-level object IDs for sub-mesh picking (design §2.3).
-- **Object GUID collisions:** run GUID -> object grouping and similarity matrix analysis before any re-GUID/disable action (see [`guid-collision-analysis-plan.md`](./guid-collision-analysis-plan.md)).
+- **Object GUID collisions:** run GUID -> object grouping and similarity matrix analysis before any re-GUID/disable action (see [guid-collision-analysis-plan.md](./guid-collision-analysis-plan.md)).
 
 ---
 

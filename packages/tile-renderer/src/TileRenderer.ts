@@ -1,5 +1,6 @@
 // ITileRenderer interface
 
+import { MapViewport } from '@micropolis/render-core';
 
 /**
  * An abstract class that defines the structure and common functionality for a tile rendering system.
@@ -173,67 +174,10 @@ abstract class TileRenderer<TContext> {
     public mapHeight: number = 100;
 
     /**
-     * The x dimension of an individual tile measured in pixels. This dimension is used to
-     * scale the tile textures to the correct width when rendering.
+     * Shared camera for screen ↔ world-tile ↔ world-pixel transforms.
+     * Overlay plugins should use this instance (or the same reference via {@link MapScene}).
      */
-    public tileWidth: number = 1;
-
-    /**
-     * The y dimension of an individual tile measured in pixels. This dimensions is used to
-     * scale the tile textures to the correct height when rendering.
-     */
-    public tileHeight: number = 1;
-
-    /**
-     * The current horizontal pan position in tile pixels. This value offsets the map rendering
-     * along the X-axis, allowing the user to pan left and right across the map.
-     */
-    public panX: number = 0;
-    public panXMin: number = 0.0;
-    public panXMax: number = 120.0;
-
-    /**
-     * The current vertical pan position in tile pixels. This value offsets the map rendering
-     * along the Y-axis, allowing the user to pan up and down across the map.
-     */
-    public panY: number = 0;
-    public panYMin: number = 0.0;
-    public panYMax: number = 120.0;
-
-    /**
-     * The width of the viewable area on the screen. This is typically set to the width of the
-     * canvas element in pixels and determines the horizontal extent of the visible map area.
-     */
-    public screenWidth: number = 0;
-
-    /**
-     * The height of the viewable area on the screen. This is typically set to the height of the
-     * canvas element in pixels and determines the vertical extent of the visible map area.
-     */
-    public screenHeight: number = 0;
-
-    /**
-     * The screen x anchor, from 0 (left) through 0.5 (center) to 1 (right).
-     * The tile at panX will be pinned to screenAnchorX times the screen width. 
-     */
-
-    public screenAnchorX: number = 0.5;
-
-    /**
-     * The screen y anchor, from 0 (top) through 0.5 (middle) to 1 (bottom).
-     * The tile at panY will be pinned to screenAnchorY times the screen height. 
-     */
-
-    public screenAnchorY: number = 0.5;
-
-    /**
-     * The current zoom level. A value of 1 indicates a default zoom level where the map is rendered
-     * at actual size. Values greater than 1 zoom in, making the tiles appear larger, while values
-     * less than 1 zoom out, making the tiles appear smaller.
-     */
-    public zoom: number = 1;
-    public zoomMin: number = 1.0 / 32.0;
-    public zoomMax: number = 256.0;
+    public readonly viewport: MapViewport = new MapViewport();
 
     public tileRotate: number = 0;
     public tileLayer: number = 0;
@@ -244,7 +188,62 @@ abstract class TileRenderer<TContext> {
     public tileLayers: ResolvedTileLayerSpec[] = [];
     public tileTextureURLs: (string | null)[] | null = null;
  
+    get tileWidth(): number { return this.viewport.tileWidth; }
+    set tileWidth(value: number) { this.viewport.tileWidth = value; }
+
+    get tileHeight(): number { return this.viewport.tileHeight; }
+    set tileHeight(value: number) { this.viewport.tileHeight = value; }
+
+    get panX(): number { return this.viewport.panX; }
+    set panX(value: number) { this.viewport.panX = value; }
+
+    get panXMin(): number { return this.viewport.panXMin; }
+    set panXMin(value: number) { this.viewport.panXMin = value; }
+
+    get panXMax(): number { return this.viewport.panXMax; }
+    set panXMax(value: number) { this.viewport.panXMax = value; }
+
+    get panY(): number { return this.viewport.panY; }
+    set panY(value: number) { this.viewport.panY = value; }
+
+    get panYMin(): number { return this.viewport.panYMin; }
+    set panYMin(value: number) { this.viewport.panYMin = value; }
+
+    get panYMax(): number { return this.viewport.panYMax; }
+    set panYMax(value: number) { this.viewport.panYMax = value; }
+
+    get screenWidth(): number { return this.viewport.screenWidth; }
+    set screenWidth(value: number) { this.viewport.screenWidth = value; }
+
+    get screenHeight(): number { return this.viewport.screenHeight; }
+    set screenHeight(value: number) { this.viewport.screenHeight = value; }
+
+    get screenAnchorX(): number { return this.viewport.screenAnchorX; }
+    set screenAnchorX(value: number) { this.viewport.screenAnchorX = value; }
+
+    get screenAnchorY(): number { return this.viewport.screenAnchorY; }
+    set screenAnchorY(value: number) { this.viewport.screenAnchorY = value; }
+
+    get zoom(): number { return this.viewport.zoom; }
+    set zoom(value: number) { this.viewport.zoom = value; }
+
+    get zoomMin(): number { return this.viewport.zoomMin; }
+    set zoomMin(value: number) { this.viewport.zoomMin = value; }
+
+    get zoomMax(): number { return this.viewport.zoomMax; }
+    set zoomMax(value: number) { this.viewport.zoomMax = value; }
+
     constructor() {
+    }
+
+    /** Keep viewport map dimensions aligned with renderer fields. */
+    protected syncViewportMapSize(): void {
+        this.viewport.configure({
+            mapWidth: this.mapWidth,
+            mapHeight: this.mapHeight,
+            tileWidth: this.tileWidth,
+            tileHeight: this.tileHeight,
+        });
     }
 
     /**
@@ -284,7 +283,8 @@ abstract class TileRenderer<TContext> {
         this.tileTextureURLs = this.tileLayers.map((layer) => layer.url);
         this.panXMax = this.mapWidth;
         this.panYMax = this.mapHeight;
-    
+        this.syncViewportMapSize();
+
         // Perform any other common setup here.
     }
 
@@ -294,122 +294,24 @@ abstract class TileRenderer<TContext> {
      */
     abstract render(): void;
 
-    /**
-     * Convert screen coordinates to tile coordinates.
-     */
-    screenToTile(screenPos: [number, number]): [number, number] {
-        const [screenX, screenY] = screenPos;
-    
-        // First, translate the screen coordinates so that the origin is at the anchor of the screen.
-        const anchoredScreenX = screenX - (this.screenWidth * this.screenAnchorX);
-        const anchoredScreenY = screenY - (this.screenHeight * this.screenAnchorY);
-    
-        // Next, apply the inverse of the zoom to scale the anchored screen coordinates down to tile space
-        const scaledX = anchoredScreenX / this.zoom;
-        const scaledY = anchoredScreenY / this.zoom;
-    
-        // Then, convert the scaled screen coordinates into tile coordinates by dividing by the tile size
-        const tileXBeforePan = scaledX / this.tileWidth;
-        const tileYBeforePan = scaledY / this.tileHeight;
-    
-        // Finally, apply the pan offsets to get the final tile coordinates
-        const tileX = tileXBeforePan + this.panX;
-        const tileY = tileYBeforePan + this.panY;
-    
-        return [tileX, tileY];
-    }
-    
-    /**
-     * Converts change in screen coordinates to change in tile coordinates.
-     **/
-    screenToTileDelta(screenDelta: [number, number]): [number, number] {
-        const [screenDX, screenDY] = screenDelta;
-
-        const tileDX = screenDX / this.zoom / this.tileWidth;
-        const tileDY = screenDY / this.zoom / this.tileHeight;
-
-        return [tileDX, tileDY];
-    }
-
-    /**
-     * Converts tile coordinates to screen coordinates.
-     **/
-    tileToScreen(tilePos: [number, number]): [number, number] {
-        const [tileX, tileY] = tilePos;
-
-        // First, undo the panning by subtracting the pan offsets
-        const unpannedTileX = tileX - this.panX;
-        const unpannedTileY = tileY - this.panY;
-        
-        // Next, apply the zoom to scale the tile coordinates up to screen space
-        const zoomedX = unpannedTileX * this.zoom;
-        const zoomedY = unpannedTileY * this.zoom;
-
-        // Finally, translate the origin back to the screen anchor.
-        const screenX = (zoomedX * this.tileWidth ) + (this.screenWidth  * this.screenAnchorX);
-        const screenY = (zoomedY * this.tileHeight) + (this.screenHeight * this.screenAnchorY);
-
-        return [screenX, screenY];
-    }
-
-    /**
-     * Converts change in tile coordinates to change in screen coordinates.
-     **/
-    tileToScreenDelta(tileDelta: [number, number]): [number, number] {
-        const [tileDX, tileDY] = tileDelta;
-
-        const screenDX = tileDX * this.zoom * this.tileWidth;
-        const screenDY = tileDY * this.zoom * this.tileHeight;
-
-        return [screenDX, screenDY];
-    }
-
-    /**
-     * Updates the size of the rendering canvas.
-     * @param width - The new width of the rendering canvas in pixels.
-     * @param height - The new height of the rendering canvas in pixels.
-     */
     setScreenSize(width: number, height: number): void {
-        this.screenWidth = width;
-        this.screenHeight = height;
+        this.viewport.setScreenSize(width, height);
     }
 
-    /**
-     * Set the pan.
-     * @param panX - The pan X tile coordinate.
-     * @param panY - The pan Y tile coordinate.
-     */
     panTo(panX: number, panY: number): void {
-        this.panX = Math.max(this.panXMin, Math.min(this.panXMax, panX));
-        this.panY = Math.max(this.panYMin, Math.min(this.panYMax, panY));
-        //console.log("panX:", this.panX, "panY:", this.panY);
+        this.viewport.panTo(panX, panY);
     }
 
-    /**
-     * Change the pan.
-     * @param dx - The change in the pan X tile coordinate.
-     * @param dy - The change in the pan Y tile coordinate.
-     */
     panBy(dx: number, dy: number): void {
-        this.panTo(this.panX + dx, this.panY + dy);
+        this.viewport.panBy(dx, dy);
     }
 
-    /**
-     * Set the zoom.
-     * @param zoom - The zoom.
-     */
     zoomTo(zoom: number): void {
-        this.zoom = Math.max(this.zoomMin, Math.min(this.zoomMax, zoom));
-        //console.log("zoom:", this.zoom);
+        this.viewport.zoomTo(zoom);
     }
 
-
-    /**
-     * Change the zoom.
-     * @param zoomFactor - The factor by which to zoom in or out.
-     */
     zoomBy(zoomFactor: number): void {
-        this.zoomTo(this.zoom * zoomFactor);
+        this.viewport.zoomBy(zoomFactor);
     }
 
 }

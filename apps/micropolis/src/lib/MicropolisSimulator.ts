@@ -275,6 +275,9 @@ export async function getSharedSimulator(callback: Callback | null, render: (() 
         await sharedSimulator.initialize(callback, render);
         sharedSimulator.registerRenderCallback(render || (() => {}));
         sharedSimulator.loadDefaultCityOnce();
+        sharedSimulator.micropolis!.enableDisasters = true;
+        sharedSimulator.setGameSpeed(sharedSimulator.gameSpeed);
+        sharedSimulator.setPaused(false);
         store.simulator = sharedSimulator;
     } else {
         // Keep existing wasm/callbacks; just attach this view's render

@@ -6,7 +6,7 @@ An **RSS 2.0 module** design for describing *The Sims* objects in feeds — aime
 
 The companion **MySims** tool for **Radio UserLand** let authors drop a Sims object into a folder to publish it on a blog: generate a preview and description, upload the asset, and post the entry.
 
-The plan was to integrate this pipeline with **ShowNTell** (live web previews) and **RugOMatic** (drag-and-drop object creation). See also [`2004-01-08-showntell-activex-sims-object-preview.md`](2004-01-08-showntell-activex-sims-object-preview.md) and [`2004-01-21-rugomatic-tutorial.md`](2004-01-21-rugomatic-tutorial.md).
+The plan was to integrate this pipeline with **ShowNTell** (live web previews) and **RugOMatic** (drag-and-drop object creation). See also [2004-01-08-showntell-activex-sims-object-preview.md](2004-01-08-showntell-activex-sims-object-preview.md) and [2004-01-21-rugomatic-tutorial.md](2004-01-21-rugomatic-tutorial.md).
 
 ---
 

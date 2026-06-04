@@ -15,7 +15,7 @@
 
 Definition of Done: items 1–5 are met for shipping layers (core, mooshow, vitamoospace, Pages, quiet default console).
 
-**Beyond Phase 5 (not refactor backlog):** **Holodeck** (design §4 in [`webgpu-renderer-design.md`](./webgpu-renderer-design.md))—terrain/floor/wall/roof pipeline—is still **not started**. **Design §5** (GPU animation, deformation, world transform, batched compute, validation taps) is **largely implemented** in code; remaining gaps are observability, UX, and automated GPU end-to-end parity—see [`webgpu-renderer-status.md`](./webgpu-renderer-status.md). **Design §5.0** remains the contract reference for CPU/GPU deformation regressions. Further-out: RGB+alpha+z layered sprites for object tooling, save viewing/editing.
+**Beyond Phase 5 (not refactor backlog):** **Holodeck** (design §4 in [webgpu-renderer-design.md](./webgpu-renderer-design.md))—terrain/floor/wall/roof pipeline—is still **not started**. **Design §5** (GPU animation, deformation, world transform, batched compute, validation taps) is **largely implemented** in code; remaining gaps are observability, UX, and automated GPU end-to-end parity—see [webgpu-renderer-status.md](./webgpu-renderer-status.md). **Design §5.0** remains the contract reference for CPU/GPU deformation regressions. Further-out: RGB+alpha+z layered sprites for object tooling, save viewing/editing.
 
 ### Next app milestone: `Roots` + `Catalog` tabs
 
@@ -33,7 +33,7 @@ The next vitamoospace milestone is a filesystem/object inventory workflow:
 10. Future pass: treat roots as inputs and outputs with explicit privacy/write controls (private backup vs shared collections, remote publish, local export/write).
 11. Future pass: add install-set and save virtualization tooling to switch object sets safely (inactive staging, stop/switch/start orchestration) and manage virtualized save sets.
 
-See the coding-order details in [`OBLITERATOR-TYPESCRIPT.md`](./OBLITERATOR-TYPESCRIPT.md) Phase A1.
+See the coding-order details in [OBLITERATOR-TYPESCRIPT.md](./OBLITERATOR-TYPESCRIPT.md) Phase A1.
 
 ---
 

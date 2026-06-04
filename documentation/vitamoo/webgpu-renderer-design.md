@@ -2,6 +2,8 @@
 
 The vitamoo **WebGPU `Renderer`** is a **rendering framework**, not a single-purpose character toy. It is meant to grow into the common GPU layer for **the rest of Sims-era and adjacent content** (lots, objects, architecture, UI chrome, tooling views) and for **plug-ins** such as custom user interface, data visualization, editors, and holodeck-style composition. **Skinned character animation** (CMX/SKN/CFP, `deformMesh`, `drawMesh`) is the **first shipped slice**; the same pipeline (depth, object IDs, display-list shapes, WGSL passes) extends to terrain, sprites, overlays, and third-party draws.
 
+**Cross-package integration:** [../designs/unified-webgpu-renderer.md](../designs/unified-webgpu-renderer.md) — how Micropolis `MapViewport`, tile map, sprites, and pie menus join this renderer in one WebGPU stack (holodeck layers, `HolodeckPlugin`, pick idTypes). **Cursors / virtual pointer / nine-slice frames:** [../designs/virtual-pointer-and-pie-cursors.md](../designs/virtual-pointer-and-pie-cursors.md), [../designs/ui-frame-nine-slice.md](../designs/ui-frame-nine-slice.md).
+
 This document covers the **current** WebGPU surface and the **roadmap** for Sims-style holodeck rendering: z-buffered sprites, procedural terrain and architecture, and UI feedback (highlighting, selection, pie menu).
 
 ---

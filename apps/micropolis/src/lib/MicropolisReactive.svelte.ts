@@ -95,9 +95,11 @@ function syncFromEngine(): void {
  * Singleton so the simulator always feeds the same reactive store.
  * (Embind adds ClassHandle methods on the wrapped object; plain TS class matches call surface.)
  */
+let mapPanHandler = $state<((x: number, y: number) => void) | null>(null);
+
 class MicropolisReactiveCallback {
-	autoGoto(_micropolis: Micropolis | null, _callbackVal: unknown, _x: number, _y: number, _message: string): void {
-		/* Host may pan map; optional hook — no default state */
+	autoGoto(_micropolis: Micropolis | null, _callbackVal: unknown, x: number, y: number, _message: string): void {
+		mapPanHandler?.(x, y);
 	}
 
 	didGenerateMap(_micropolis: Micropolis | null, _callbackVal: unknown, _seed: number): void {
@@ -542,6 +544,10 @@ export const micropolisReactive = {
 		bumpMap(): void {
 			mapRevision++;
 		}
+	},
+
+	registerMapPan(handler: ((x: number, y: number) => void) | null): void {
+		mapPanHandler = handler;
 	},
 
 	clearBudgetModalRequest(): void {

@@ -160,6 +160,18 @@ export type {
     GuidCollisionWarning,
     GuidCollisionOptions,
 } from './io/index.js';
+export {
+    HolodeckIdType,
+    HolodeckLayer,
+    type HolodeckIdTypeId,
+    type HolodeckLayerId,
+    type HolodeckPlugin,
+    type HolodeckPluginContext,
+    type HolodeckFrameState,
+    type PickResult,
+    type PickingOptions as HolodeckPickingOptions,
+} from '@micropolis/render-core';
+
 export type {
     DisplayListEntry,
     DisplayListEntryStatic,

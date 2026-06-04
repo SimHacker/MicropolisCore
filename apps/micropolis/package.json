@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@micropolis/render-core": "workspace:*",
 		"@micropolis/tile-renderer": "workspace:*",
 		"vite-plugin-static-copy": "^1.0.5",
 		"vite-plugin-top-level-await": "^1.4.1",

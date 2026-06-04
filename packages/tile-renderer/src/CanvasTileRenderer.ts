@@ -1,6 +1,9 @@
 import { TileRenderer, type ResolvedTileLayerSpec, type TileLayerSource } from './TileRenderer';
-import { defaultMicropolisMapRenderDescription } from './render/description';
-import { renderMicropolisMapSoftware, type TileAtlas } from './render/software';
+import {
+	defaultMicropolisMapRenderDescription,
+	renderMicropolisMapSoftware,
+	type TileAtlas,
+} from '@micropolis/render-core';
 
 class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
 	private atlases: Array<TileAtlas | null> = [];

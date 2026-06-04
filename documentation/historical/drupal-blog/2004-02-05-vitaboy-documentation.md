@@ -31,9 +31,9 @@ That full text is preserved on the Internet Archive capture of the daily page (s
 
 For related extracts already split out in this folder, see:
 
-- [`2004-02-05-sims-animation-file-format-cmx.md`](2004-02-05-sims-animation-file-format-cmx.md) — layout sketch  
-- [`2004-02-19-maxscript-sims-animation-pipeline.md`](2004-02-19-maxscript-sims-animation-pipeline.md) — pipeline narrative (reply to John Wainwright)  
-- [`2004-02-05-skn-format-email-bil-simser.md`](2004-02-05-skn-format-email-bil-simser.md) — SKN blending explanation  
+- [2004-02-05-sims-animation-file-format-cmx.md](2004-02-05-sims-animation-file-format-cmx.md) — layout sketch  
+- [2004-02-19-maxscript-sims-animation-pipeline.md](2004-02-19-maxscript-sims-animation-pipeline.md) — pipeline narrative (reply to John Wainwright)  
+- [2004-02-05-skn-format-email-bil-simser.md](2004-02-05-skn-format-email-bil-simser.md) — SKN blending explanation  
 
 ---
 

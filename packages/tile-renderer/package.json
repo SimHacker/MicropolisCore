@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"type": "module",
-	"description": "Shared Micropolis tile map renderers (Canvas 2D, WebGL2, WebGPU) and software preview",
+	"description": "Micropolis tile map GPU scaffolds (WebGL/WebGPU/Canvas) and software export — compositor lives in @micropolis/render-core",
 	"main": "./src/index.ts",
 	"types": "./src/index.ts",
 	"exports": {
@@ -15,6 +15,9 @@
 	"scripts": {
 		"build": "tsc",
 		"test": "vitest run"
+	},
+	"dependencies": {
+		"@micropolis/render-core": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/webgl2": "^0.0.11",

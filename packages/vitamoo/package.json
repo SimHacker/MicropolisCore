@@ -22,6 +22,9 @@
     "verify:exchange:merge": "pnpm run build && pnpm --filter mooshow run build && node scripts/verify-playing-scene-merge.mjs",
     "verify:guid-collision": "pnpm run build && node scripts/verify-guid-collision.mjs"
   },
+  "dependencies": {
+    "@micropolis/render-core": "workspace:*"
+  },
   "devDependencies": {
     "@webgpu/types": "^0.1.38",
     "http-server": "^14.1.1",
