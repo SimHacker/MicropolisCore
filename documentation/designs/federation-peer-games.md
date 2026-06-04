@@ -28,9 +28,21 @@ Below: graded by spiritual fit, technical fit, and combined priority. Nothing co
 
 ---
 
+## Grading
+
+| Symbol | Meaning |
+|---|---|
+| 🟢🟢🟢 | Top priority — high spiritual fit, mature community tooling, large player base, the game *wants* this bridge to exist |
+| 🟢🟢 | Strong fit — would be excellent additions but require more engineering or have one significant caveat |
+| 🟢 | Real fit — niche or with a meaningful caveat, but worth proposing once Phase 1 ships |
+| 🟡 | Interesting but complicated — culturally great, technically harder |
+| 🔴 | Anti-target — looks like a fit but is not; documented to save us from doing the wrong thing |
+
+---
+
 ## Featured peer — Sunny Street (in development) {#sunny-street}
 
-**Sunny Street** is an open-world town for kids roughly 9–11, in active design by **Sungman Cho**. It is listed here *first* — not because the bridge ships tomorrow, but because it is the clearest **2026 counterexample** to opaque “AI town” demos: readable simulation, direct manipulation, narrow AI for memory and recognition (not a second physics engine), and an explicit design argument about what the town should **show** versus what it should leave to the kid’s imagination. That is the same problem [Simopolis](simopolis.md), [MOOLLM](moollm-microworld-os.md), and the [Imagine Loop](the-imagine-loop.md) attack from the Micropolis side. See the public outreach letter: [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md).
+**Sunny Street** is an open-world town for kids roughly 9–11, in active design by **Sungman Cho**. It is highlighted here as a **featured peer** — not because the bridge ships tomorrow, but because it is the clearest **2026 counterexample** to opaque “AI town” demos: readable simulation, direct manipulation, narrow AI for memory and recognition (not a second physics engine), and an explicit design argument about what the town should **show** versus what it should leave to the kid’s imagination. That is the same problem [Simopolis](simopolis.md), [MOOLLM](moollm-microworld-os.md), and the [Imagine Loop](the-imagine-loop.md) attack from the Micropolis side. See the public outreach letter: [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md).
 
 | Aspect | Notes |
 |---|---|
@@ -71,18 +83,6 @@ If Sunny Street later exposes a **region or map** boundary compatible with neigh
 We are not asking Sunny Street to become a Micropolis mod. We are offering an **open Bifrost target**: document the save shape, we ship a companion adapter in `packages/bifrost/adapters/`, the player owns both saves, both studios stay sovereign. If Sungman Cho prefers YAML-or-git-native townsfolk from day one, MOOLLM’s microworld layout is already isomorphic — the adapter becomes trivial.
 
 **Trademark:** *Sunny Street* is used nominatively to describe interoperability with a named in-development project; no affiliation or endorsement is implied.
-
----
-
-## Grading
-
-| Symbol | Meaning |
-|---|---|
-| 🟢🟢🟢 | Top priority — high spiritual fit, mature community tooling, large player base, the game *wants* this bridge to exist |
-| 🟢🟢 | Strong fit — would be excellent additions but require more engineering or have one significant caveat |
-| 🟢 | Real fit — niche or with a meaningful caveat, but worth proposing once Phase 1 ships |
-| 🟡 | Interesting but complicated — culturally great, technically harder |
-| 🔴 | Anti-target — looks like a fit but is not; documented to save us from doing the wrong thing |
 
 ---
 
