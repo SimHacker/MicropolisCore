@@ -89,7 +89,7 @@ Use lowercase kebab-case. Layout follows the object-store and branch conventions
 
 ### Branches
 
-Use `type_id`: underscore between object type and id; hyphens inside the id when needed. Detailed shapes live in [`filesystem-object-model.md`](filesystem-object-model.md) and related docs once branches exist in your repo.
+Use `type_id`: underscore between object type and id; hyphens inside the id when needed. Detailed shapes live in [filesystem-object-model.md](filesystem-object-model.md) and related docs once branches exist in your repo.
 
 ### Command Ids
 

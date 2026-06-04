@@ -243,6 +243,7 @@ If we can show that clearly, the product is legible.
 - Over-polishing chrome before proving the workflow.
 - Making architectural distinctions users cannot feel.
 - Forcing live collaboration when saved branches would do.
+- **Server-mandatory sim** with sharded regions and no offline buffer — see inside account of SimCity 2013 launch in [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) (Andrew Willmott ↔ Don Hopkins, 2013).
 
 ## Micropolis Advantage
 

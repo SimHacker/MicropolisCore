@@ -1,73 +1,81 @@
-# Renderer Plugin Roadmap
+# Renderer plugin roadmap
 
-Micropolis should keep multiple renderer backends because they serve different platforms and teaching goals:
+**Unified target:** [unified-webgpu-renderer.md](unified-webgpu-renderer.md) — one holodeck, WebGPU-native compositor, plugins for terrain/floors/walls/roofs, Micropolis map, sprites, pie menu (feathered desaturated shadow + center head), floor-grid feedback.
 
-- `WebGLTileRenderer` is the current browser renderer.
-- `CanvasTileRenderer` is the simple, inspectable pedagogy renderer path; it now delegates pixel sampling to the shared software renderer and still needs broader app-level selection polish.
-- `WebGPUTileRenderer` should become the high-performance / shader-oriented renderer and eventually share ideas with the general WebGPU renderer work for The Sims content.
-- `PieMenu.svelte` remains a work-in-progress interaction layer for command discovery and direct manipulation.
+**Shared package plan:** [render-core-package.md](render-core-package.md) — `@micropolis/render-core` for viewport, schemas, `HolodeckStage`; vitamoo + micropolis depend on it; WebGL/Canvas stay scaffold-only (no GL-shaped wrapper API).
 
-## Client-Side Catalog Rendering
+**Vitamoo spec:** [webgpu-renderer-design.md](../vitamoo/webgpu-renderer-design.md) · **Status:** [webgpu-renderer-status.md](../vitamoo/webgpu-renderer-status.md) · **UI math:** [ui-overlay-encyclopedia.md](../vitamoo/ui-overlay-encyclopedia.md) · **Cursors / pies:** [virtual-pointer-and-pie-cursors.md](virtual-pointer-and-pie-cursors.md) · **Frames:** [ui-frame-nine-slice.md](ui-frame-nine-slice.md) · **PieCraft / model:** [piecraft/README.md](piecraft/README.md)
 
-Prefer using client hardware for expensive preview rendering. The server should describe what needs rendering; the browser should render it locally, show the user the result, and upload only approved images or assets.
+---
 
-Flow:
+## What ships
+
+| Piece | Package | State |
+|-------|---------|--------|
+| WebGPU `Renderer` (mesh, depth, pick MRT, GPU deform/animate) | `vitamoo` | Done for characters |
+| Display-list types (`static` / `skinned` / `ui`) | `vitamoo` | Types + manual draw paths; **executor + plugins not started** |
+| Holodeck environment (terrain, walls, roofs, floor grid) | `vitamoo` | **Not started** (design §4 steps 4–5) |
+| Pie menu GPU compositing | `vitamoo` | Specified §3.9; **not started** |
+| `MapViewport`, `HolodeckPlugin` / `HolodeckLayer` / `HolodeckIdType` | `tile-renderer` | Viewport done; holodeck types exported for shared contract |
+| `WebGPUTileRenderer`, `createMapTileRenderer()` | `tile-renderer` | Done; **absorb into holodeck `MicropolisMap` plugin** (unified doc phase E) |
+| `MapScene` + `OverlayPlugin` | `tile-renderer` | Staging API until holodeck executor exists |
+| Software raster (no canvas) | `tile-renderer` | Done (`render/software`) |
+
+---
+
+## Fallback backends (parallel, not the compositor model)
+
+| Backend | When |
+|---------|------|
+| **WebGPU** | Default interactive client; Sims + Micropolis + holodeck |
+| **WebGL** | GPU fallback (`WebGLTileRenderer`) |
+| **Canvas** | Pedagogy |
+| **Software / raw RGBA** | Node, catalog batch, no Cairo |
+
+`createMapTileRenderer()` prefers WebGPU → WebGL → Canvas. `TileView.svelte` uses it today.
+
+---
+
+## Client GPU first (browser composes)
+
+**Principle:** all 3D rendering and compositing happens in the **browser** on the **client’s GPU** where WebGPU is supported — no paid server GPU for previews. See [render-core-package.md §0](render-core-package.md#0-client-gpu-first-browser-composes-server-describes).
+
+| Where | What runs |
+|-------|-----------|
+| User’s tab | `HolodeckStage` + plugins every frame (map, Sims, pie menu, terrain) |
+| Headless worker (optional) | **Same** holodeck route inside Chromium — batch catalog/SSR, not a separate server renderer |
+| Server | `RenderDescription`, assets, auth, storage — **not** WGSL/compositing |
+
+Uploads happen **after** local render + user approval. Software/WebGL paths are CI/teaching/fallback only ([unified-webgpu-renderer.md §7](unified-webgpu-renderer.md#7-fallback-raster-not-the-product-gpu-path)).
 
 ```text
-server/catalog/content pack
-  -> high-level render description
-  -> browser renderer plugin
-  -> local preview image(s)
-  -> user approval
-  -> intentional upload of rendered previews/assets
-  -> server catalog stores approved derivatives
+server → description + URLs
+browser → HolodeckStage (WebGPU) → preview
+user approves → upload
+server → catalog version
 ```
 
-This keeps GPU costs off the server path while making catalog images and object previews high quality. The server remains responsible for schemas, versioning, permissions, storage, validation, and publishing. The client owns interactive editing, local render iteration, and preview approval.
+---
 
-The same render-description contract should run in two browser modes:
+## TODO (ordered)
 
-- **Interactive browser renderer** — the user's browser edits content, renders previews, and uploads approved results.
-- **Headless browser renderer** — a hosted Chromium/Playwright/Puppeteer worker opens the same renderer route, loads the same render description, renders batches, and returns images for catalog generation or SSR.
+1. **Vitamoo:** `HolodeckStage` — sort `DisplayListEntry[]` by layer, execute static/skinned/ui (unified doc phase C).
+2. **Vitamoo:** Environment plugin — terrain, floor, walls, roofs (design §4 steps 4–5).
+3. **Vitamoo:** Pie menu plugin — desaturate, feather, shadow, head (design §4 step 8; encyclopedia).
+4. **Tile-renderer → vitamoo:** `MicropolisMap` plugin using shared `MapViewport` + pick idType `7` (phase E).
+5. **Micropolis:** Sprites plugin, floor-grid feedback, interaction highlight (phases F–G).
+6. **Apps:** `TileView` / Micropolis Home → single `Renderer.create`, not a second GPU context (phase H–I).
+7. Extend `RenderDescription` for Sims catalog thumbnails and lot scenes.
+8. Headless batch worker reusing holodeck route.
+9. Pie menu → command-bus metadata (i18n keys).
+10. WebGL/Canvas polish for teaching and fallback only.
 
-This means server-side rendering can reuse the browser renderer instead of starting with a separate raw WebGL/WebGPU server implementation. If a hosted worker has GPU acceleration, the same WebGPU/WebGL code path benefits. If it does not, the same route can fall back to WebGL software paths or Canvas.
+**Ambitious (globe):** [globe-city-navigation.md](globe-city-navigation.md) — icosphere, POI-facing rotation, fish-eye magnify, inverse pick (phases G0–G5).
 
-Headless batch flow:
+---
 
-```text
-catalog/render queue
-  -> render job description
-  -> headless browser opens renderer route
-  -> same WebGPU/WebGL/Canvas plugin path as user browser
-  -> image(s) captured
-  -> validation + storage
-  -> catalog updated
-```
+## Related
 
-Renderer preference order:
-
-1. WebGPU for high-quality 3D Sims characters, objects, shader previews, and future unified content rendering.
-2. WebGL for broad browser coverage and current Micropolis map rendering.
-3. Canvas/software rendering for simple Micropolis tiles, pedagogy, fallback previews, SSR-friendly raster jobs, and deterministic tests.
-
-Content management should work offline-first where practical:
-
-- Add/edit objects, metadata, images, tiles, and scene descriptions in the browser.
-- Render previews locally without contacting the server.
-- Store drafts locally until the user explicitly saves or publishes.
-- Upload source assets and rendered previews only after review.
-- Keep server catalogs derived from approved, versioned client submissions.
-
-Micropolis maps are a good software-renderer target: render destination pixels from a continuous screen-to-world transform, sample the tile map and tileset like a shader, and avoid tile seams at every scale. Tile atlases declare source tile width/height independently from stride x/y, optional sub-rects inside larger images, tile counts, wrap/clamp policy, sampling policy, and blend/opacity/tint policy. Padded and low-resolution tile sets can live beside normal tiles; small special-purpose tile sets can wrap over just a few tiles; transparent high-resolution tiles can serve as overlays or UI chrome. MOP values can select alternate per-tile sets, which enables "lowresify" filters for de-emphasized city areas. The same plugin interface should also allow WebGL/WebGPU renderers to consume high-level Sims/Micropolis scene descriptions.
-
-## TODO
-
-1. Finish Canvas renderer polish: expose it through renderer selection, add visual regression fixtures, and implement richer blend/overlay sidecars.
-2. Finish `WebGPUTileRenderer` hardening: visual parity fixtures, resource disposal, richer multi-texture cases, and full blend/opacity/tint policy.
-3. Extend the initial Micropolis `RenderDescription` schema to cover Sims characters, Sims objects, and catalog thumbnails.
-4. Factor renderer selection behind a plugin-style interface so the app can select WebGPU, WebGL, or Canvas by capability, platform, and lesson intent.
-5. Expand `/render` from software Micropolis preview into the shared interactive/headless renderer route.
-6. Add browser-side preview generation and explicit upload/approval workflow for catalog images.
-7. Add a headless browser batch worker path for catalog generation and SSR snapshots.
-8. Connect pie menu actions to command-bus metadata, including command IDs and i18n keys.
-9. Align the WebGPU renderer with the shared renderer direction for The Sims content so Micropolis and The Sims can become one wonderful world.
+- [pie-menus-browser-extensions.md](pie-menus-browser-extensions.md) — in-page pies vs extension sandbox
+- [simopolis.md](simopolis.md) — Micropolis Home + vitamoo/mooshow packages
+- [gesture-space-and-pie-menus.md](gesture-space-and-pie-menus.md)

@@ -8,7 +8,9 @@ Micropolis has shipped through many stacks (workstations, X11, OLPC, Flash, Wasm
 | **X11 / Tcl-Tk** | Micropolis on workstations | Same; **[collaborative-microworld-lineage.md](collaborative-microworld-lineage.md)** (constructionist / multiplayer context) |
 | **OLPC / Sugar**, GPL release | Educational fork, XO laptop | Jekyll pages **`apps/micropolis/website/pages/about/don-hopkins/olpc-simcity.md`**, **`building-simcity.md`**; external MOOLLM doc linked from root **`README.md`** (SimCity multiplayer & Micropolis) |
 | **TurboGears + OpenLaszlo + Flash** | Web client/server (AMF) | **Frozen snapshot:** **`documentation/openlaszlo/`** (`*.lzx`, **`resources/`**, **`TODO.txt`**, **`NOTES.txt`**) |
-| **Wasm + SvelteKit** | Current MicropolisCore app | **`apps/micropolis/`**, **[wasm-bridge-and-testing-trajectory.md](wasm-bridge-and-testing-trajectory.md)** |
+| **Wasm + SvelteKit** | Current MicropolisCore app | **`apps/micropolis/`**, **[wasm-bridge-and-testing-trajectory.md](wasm-bridge-and-testing-trajectory.md)**, **[micropolis-web-hn-2024.md](micropolis-web-hn-2024.md)** ([HN 40693944](https://news.ycombinator.com/item?id=40693944) launch) |
+| **SimCity 2013 (Glassbox)** | EA/Maxis; JS UI, online — adjacent, not shipped from this repo | **[simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md)** (2013) · **[maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md)** (2015) |
+| **Maxis → EA (1997–2015)** | The Sims, Spore, closure news | **[maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md)** — Will, Lucy, Ocean, Origin |
 
 ## Design notes ↔ reference docs
 

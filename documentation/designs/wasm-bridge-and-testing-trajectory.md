@@ -2,6 +2,8 @@
 
 This note records **what we built**, **why**, **what remains**, and how it fits the wider MicropolisCore direction (callbacks, command path, tooling). It complements **`callback-interface-roadmap.md`**, which stays focused on callback naming and the reactive API surface.
 
+**Launch context:** Don’s architecture and Embind strategy for [micropolisweb.com](https://micropolisweb.com) are harvested from [HN 40693944](https://news.ycombinator.com/item?id=40693944) (June 2024) in [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md).
+
 ## Intentions
 
 1. **Treat the reactive bridge as the stable JS façade** — UI and automation should prefer **`micropolisReactive`** (`peek` / `poke` / `memory` / `wasmModule` / `getSnapshot`) over ad hoc heap access or duplicated Embind calls. Tests should exercise that façade against real WASM so regressions show up before shipping.
