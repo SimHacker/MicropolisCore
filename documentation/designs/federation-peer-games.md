@@ -42,27 +42,26 @@ Below: graded by spiritual fit, technical fit, and combined priority. Nothing co
 
 ## Featured peer — Sunny Street (in development) {#sunny-street}
 
-**Sunny Street** is an open-world town for kids roughly 9–11, in active design by **Sungman Cho**. It is highlighted here as a **featured peer** — not because the bridge ships tomorrow, but because it is the clearest **2026 counterexample** to opaque “AI town” demos: readable simulation, direct manipulation, narrow AI for memory and recognition (not a second physics engine), and an explicit design argument about what the town should **show** versus what it should leave to the kid’s imagination. That is the same problem [Simopolis](simopolis.md), [MOOLLM](moollm-microworld-os.md), and the [Imagine Loop](the-imagine-loop.md) attack from the Micropolis side. See the public outreach letter: [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md).
+**Sunny Street** is in active development by **Sungman Cho**. Public description (LinkedIn, May 2026): a **living town** game for kids with **AI characters**, **unexpected problems** (wildfire recovery, crops failing, coordinating villagers), and a goal to build **“thinking muscles”** by learning to **think, create, and solve with AI** — not receive instant answers. First **closed beta** (50 families). We have **not** played the build; this entry is a **conditional** peer slot, not a spec of their product.
+
+Highlighted here because that **pedagogical** framing rhymes with problems [Simopolis](simopolis.md), [MOOLLM](moollm-microworld-os.md), and the [Imagine Loop](the-imagine-loop.md) explore on the open-source side — **if** Sunny Street later wants documented, player-owned character data. Outreach letter (grounded in the public post, not private assumptions): [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md).
 
 | Aspect | Notes |
 |---|---|
-| Grade | 🟢🟢 — **spiritual fit 10/10**; technical fit **pending** until town/save formats are documented and round-trip tested |
-| Spiritual fit | Sims-lineage neighbors and routines at **kid-legible** resolution; procedural rhetoric without black-box “the model decided”; complements [legible social dynamics](https://github.com/SimHacker/moollm/blob/main/designs/legible-social-dynamics.md) and [Alan Kay’s SimCity critique](https://github.com/SimHacker/moollm/blob/main/designs/sims/simcity-multiplayer-micropolis.md#alan-kays-critique-and-vision) (open the hood, don’t air-guitar the simulation) |
+| Grade | 🟢🟢 — **spiritual fit** (pedagogy + town + coordination) looks strong from public materials; **technical fit pending** — no save-format bridge until documented and round-trip tested |
+| Spiritual fit | Anti–instant-answer AI; problem-solving through curiosity, planning, creativity, collaboration; town + AI villagers — *may* align with Sims-lineage social texture and [legible social dynamics](https://github.com/SimHacker/moollm/blob/main/designs/legible-social-dynamics.md) **if** causes are systemic, not only chat |
 | Technical fit | **TBD on save format.** Federation posture: user-side companion tools on **save files the player owns** — same as Sims `.iff`, Stardew XML, CK3 script. When Sunny Street publishes or documents its town/character save shape, we follow the [onboarding playbook](#how-the-bifrost-handles-a-new-peer-game-onboarding-playbook): map → adapter → `extensions.sunny_street:` → round-trip |
 | What the bridge ships | **Bidirectional character interop** through the canonical soul-file (`CHARACTER.yml`), not by embedding either engine inside the other |
 
-### Why Sunny Street ↔ Simopolis is interesting (not just “import a JSON”)
+### Why a bridge *might* matter someday (speculative — not beta scope)
 
-The Federation’s unit of value is **identity**, not a screenshot. One soul-file; many **incarnations** ([characters-as-hydrogen.md](characters-as-hydrogen.md)): a row in `Neighborhood.iff`, a MOOLLM citizen directory, a Micropolis zone aggregate, and — once the adapter exists — a **townsfolk slot in a Sunny Street save**. They are synchronized incarnations, not copies; merge semantics and provenance behave like git over character state.
+**Only if** Sungman Cho wants character portability and publishes a lawful save format. The Federation’s unit of value is **identity**, not a screenshot: one soul-file; many **incarnations** ([characters-as-hydrogen.md](characters-as-hydrogen.md)) — e.g. a Sims `.iff` row, a MOOLLM citizen directory, and hypothetically a Sunny Street townsfolk slot.
 
-**Sims → Sunny Street (export Pleasantview into the kid’s town).**  
-Take a household the player already loves — Cassandra Goth, a Stardew farmer you merged earlier, a Foundry VTT bard — Bifrost **read** from `Neighborhood.iff` (or Dream YAML) → soul-file → Bifrost **write** into Sunny Street’s save. The **game** still runs Sunny Street’s readable rules on screen; the bridge does not replace physics. What travels: name, trait-shaped personality, relationship edges, selected memories the kid (or parent) can open in files. Sunny Street can **reinterpret** adult-scale Sims motives into kid-scale social texture (who is friendly, who shares lunch, who remembers your birthday) without cloning EA assets or pretending to be The Sims.
+**Hypothetical Sims → Sunny Street:** Bifrost read → soul-file → write into a Sunny Street save the player owns; Sunny Street’s engine still runs Sunny Street’s rules — no Sims embed, no EA asset redistribution.
 
-**Sunny Street → Sims / Simopolis (visit the dollhouse).**  
-A townsfolk the child raised in Sunny Street — routines, friendships, the gifts they chose to show on screen — exports to a soul-file and **incarnates** in Pleasantview: valid PersonData in a `.iff` the player loads in Sims 1 Legacy Collection, or a narrative-only Dream citizen for Imagine Loop play. The **shallow** sim stays in whichever runtime is active; the **deep** sim stays in the kid’s head ([Simulator Effect](https://github.com/SimHacker/moollm/blob/main/designs/eval/EVAL-INCARNATE-FRAMEWORK.md#the-simulator-effect)).
+**Hypothetical Sunny Street → Sims / Dream:** a villager a child invested in during play → soul-file → Pleasantview or Dream — **if** structured export exists.
 
-**Sunny Street ↔ every other peer (same hub).**  
-Because all bridges meet at the soul-file, a character is not trapped in a pairwise pipe. Sunny Street ↔ Sims ↔ Stardew ↔ RimWorld ↔ CK3 becomes **Sunny Street ↔ soul-file ↔ X** — the [Family Album](family-album-as-storymaker.md) graph and Bifrost merge apply across hops. Example story: a Sunny Street NPC who “moved away” reappears as a Goth cousin in Pleasantview; a colonist who visited the town on holiday returns to RimWorld with a `memories/sunny-street-visit.yml` chapter.
+**Hypothetical hub:** Sunny Street ↔ soul-file ↔ Stardew / RimWorld / … — same pattern as other peers; [Family Album](family-album-as-storymaker.md) for player-to-player story merges.
 
 **City scale (optional second primitive).**  
 If Sunny Street later exposes a **region or map** boundary compatible with neighboring-town protocols, the same [city-protocol interop](federation-peer-games.md#cities-skylines--cities-skylines-ii-colossal-order--paradox-2015--2023) used for Cities: Skylines can sit a Micropolis city next to a Sunny Street district — commuters and stats across the edge, characters still bound to lots via [zone-binding](simopolis.md#how-sims-save-files-actually-bind-to-micropolis-tiles). Character bridges and city bridges stay separate primitives; both can be true.
@@ -80,7 +79,9 @@ If Sunny Street later exposes a **region or map** boundary compatible with neigh
 
 ### Collaboration posture
 
-We are not asking Sunny Street to become a Micropolis mod. We are offering an **open Bifrost target**: document the save shape, we ship a companion adapter in `packages/bifrost/adapters/`, the player owns both saves, both studios stay sovereign. If Sungman Cho prefers YAML-or-git-native townsfolk from day one, MOOLLM’s microworld layout is already isomorphic — the adapter becomes trivial.
+**Near term:** compare notes on pedagogy and architecture (thinking-with-AI vs answer vending) — see outreach letter. **No ask** for the May 2026 closed beta.
+
+**Long term (optional):** if Sunny Street wants interoperability, we offer an **open Bifrost target**: document the save shape, we ship a companion adapter in `packages/bifrost/adapters/`, the player owns both saves, both projects stay sovereign. Not a Micropolis mod, not a partnership claim.
 
 **Trademark:** *Sunny Street* is used nominatively to describe interoperability with a named in-development project; no affiliation or endorsement is implied.
 
