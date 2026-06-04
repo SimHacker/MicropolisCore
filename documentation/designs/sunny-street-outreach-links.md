@@ -6,6 +6,8 @@
 
 **Repos:** [MicropolisCore](https://github.com/SimHacker/MicropolisCore) · [moollm](https://github.com/SimHacker/moollm)
 
+All links below target `main` on GitHub. To re-verify: `python3 scripts/check-sunny-street-links.py` (from MicropolisCore repo root).
+
 ---
 
 ## What Sunny Street is after — and why it matters beyond one project
@@ -36,7 +38,7 @@ For Sunny Street, two labels from our lineage split the problem cleanly.
 
 - [Procedural rhetoric index](https://github.com/SimHacker/moollm/blob/main/designs/indexes/PROCEDURAL-RHETORIC-INDEX.md) — rules as arguments; many voices, not averaged mush  
 - [Simulator Effect (EVAL framework)](https://github.com/SimHacker/moollm/blob/main/designs/eval/EVAL-INCARNATE-FRAMEWORK.md#the-simulator-effect) — Wright, two computers, implication vs simulation  
-- Skill: [simulator-effect](https://github.com/SimHacker/moollm/tree/main/skills/simulator-effect)  
+- Skill: [simulator-effect](https://github.com/SimHacker/moollm/blob/main/skills/simulator-effect/SKILL.md)  
 - [MOOLLM manifesto](https://github.com/SimHacker/moollm/blob/main/designs/MOOLLM-MANIFESTO.md) — filesystem as world; inspectable state  
 - [MOOLLM microworld OS](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/moollm-microworld-os.md) — character = directory, room = directory  
 - [MOOLLM–Micropolis integration](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/moollm-micropolis-integration.md) — tutors, command bus, shared ground  
@@ -51,7 +53,7 @@ MOOLLM’s **memory palace**, **mind-mirror**, and **character** skills are the 
 
 - [Character simulation index](https://github.com/SimHacker/moollm/blob/main/designs/indexes/CHARACTER-SIMULATION-INDEX.md) — Sims (1997) → Generative Agents → file-based memory  
 - [Imagine Loop](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/the-imagine-loop.md) — LLM-as-narrator, not LLM-as-simulator  
-- Skills: [character](https://github.com/SimHacker/moollm/tree/main/skills/character) · [memory-palace](https://github.com/SimHacker/moollm/tree/main/skills/memory-palace) · [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) · [incarnation](https://github.com/SimHacker/moollm/tree/main/skills/incarnation) · [representation-ethics](https://github.com/SimHacker/moollm/tree/main/skills/representation-ethics)  
+- Skills: [character](https://github.com/SimHacker/moollm/blob/main/skills/character/SKILL.md) · [memory-palace](https://github.com/SimHacker/moollm/blob/main/skills/memory-palace/SKILL.md) · [mind-mirror](https://github.com/SimHacker/moollm/blob/main/skills/mind-mirror/SKILL.md) · [incarnation](https://github.com/SimHacker/moollm/blob/main/skills/incarnation/SKILL.md) · [representation-ethics](https://github.com/SimHacker/moollm/blob/main/skills/representation-ethics/SKILL.md)  
 - [Sims design index](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-design-index.md) · [Find-best-action / autonomy](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-find-best-action.md)  
 
 ### 3. Direct manipulation and what to show on screen
@@ -65,7 +67,7 @@ Readable simulation is also a **UI** problem. Pie menus, SimCity’s tool palett
 - [Sims pie menus (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-pie-menus.md)  
 - [Designing inward (Miyamoto + Simulator Effect)](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/designing-inward-miyamoto-principles.md)  
 - [Simulator Effect (EVAL framework)](https://github.com/SimHacker/moollm/blob/main/designs/eval/EVAL-INCARNATE-FRAMEWORK.md#the-simulator-effect) — same Wright thread, moollm repo  
-- Skill: [advertisement](https://github.com/SimHacker/moollm/tree/main/skills/advertisement) — objects broadcast available actions  
+- Skill: [advertisement](https://github.com/SimHacker/moollm/blob/main/skills/advertisement/SKILL.md) — objects broadcast available actions  
 - [Interaction design articles index](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/interaction-design-articles-index.md) — HCI corpus with primary sources  
 
 ### 4. Town scale, cozy lineage, and building on Sims without cloning
@@ -87,12 +89,12 @@ If Sunny Street ever wants a **city-scale** sibling or classroom mode: Micropoli
 - [MOOLLM–Micropolis integration](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/moollm-micropolis-integration.md)  
 - [Filesystem object model](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/filesystem-object-model.md)  
 - [Collaborative microworld lineage](https://github.com/SimHacker/MicropolisCore/blob/main/documentation/designs/collaborative-microworld-lineage.md)  
-- Skill: [micropolis](https://github.com/SimHacker/moollm/tree/main/skills/micropolis)  
+- Skill: [micropolis](https://github.com/SimHacker/moollm/blob/main/skills/micropolis/SKILL.md)  
 
 ### 6. Proof the microworld pattern is real (not slideware)
 
-- [examples/adventure-4](https://github.com/SimHacker/moollm/tree/main/examples/adventure-4) — 150+ file room-based world, characters, emergent play  
-- Skills: [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) · [room](https://github.com/SimHacker/moollm/tree/main/skills/room) · [simulator-effect](https://github.com/SimHacker/moollm/tree/main/skills/simulator-effect)  
+- [examples/adventure-4](https://github.com/SimHacker/moollm/blob/main/examples/adventure-4/README.md) — 150+ file room-based world, characters, emergent play  
+- Skills: [adventure](https://github.com/SimHacker/moollm/blob/main/skills/adventure/SKILL.md) · [room](https://github.com/SimHacker/moollm/blob/main/skills/room/SKILL.md) · [simulator-effect](https://github.com/SimHacker/moollm/blob/main/skills/simulator-effect/SKILL.md)  
 
 ---
 
