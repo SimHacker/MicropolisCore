@@ -1,5 +1,16 @@
 <script lang="ts">
 
+  // TODO(virtual-cursor): route this map's pan/zoom/rotate through MapGestureController,
+  //   a CONSUMER of the virtual cursor layer.
+  //   DESIGN: documentation/designs/virtual-cursor-layer.md §4,§5,§6,§9
+  //   import { MapGestureController } from '$lib/input/MapGestureController';
+  //   onMount: const map = new MapGestureController();
+  //            const detach = map.attach(canvasGL!);   // pointer/touch/wheel
+  //            map.onChange(cam => { /* drive tileRenderer pan/scale/rotation */ });
+  //   Replaces the ad-hoc `panning` drag below with: reversible edge-autoscroll (§4),
+  //   inertial "throw" + immediate brake-to-catch (§5), and seamless multitouch
+  //   pan/zoom/rotate pivot with finger add/remove handoff (§6).
+
   import { onMount, onDestroy } from 'svelte';
   import {
     createMapTileRenderer,

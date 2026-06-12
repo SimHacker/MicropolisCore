@@ -7,6 +7,15 @@
 	import { findNodeByUrl } from '$lib/navigationTree';
 	import type { SiteNode } from '$lib/navigationTree';
 
+	// TODO(virtual-cursor): mount the cross-cutting cursor layer once here.
+	//   DESIGN: documentation/designs/virtual-cursor-layer.md §2,§7,§10
+	//   import { createPointerStore } from '$lib/input/pointer.svelte';
+	//   import CursorLayer from '$lib/input/CursorLayer.svelte';
+	//   import PointerGrabToggle from '$lib/input/PointerGrabToggle.svelte';
+	//   const pointer = createPointerStore();   // share via context to consumers
+	//   onMount(() => pointer.attach(document.body));
+	//   Place <PointerGrabToggle> in Header and <CursorLayer cursor={pointer.cursor}/> below.
+
 	const currentNodeData = $derived(findNodeByUrl(page.url.pathname));
 	const currentPath = $derived(currentNodeData?.fullPath ?? []);
 	const activeFirstLevel = $derived(currentPath[0] ?? null);
@@ -68,6 +77,9 @@
 	</main>
 	
 	<Footer />
+
+	<!-- TODO(virtual-cursor): render the cursor overlay here so it sits above all content.
+	     <CursorLayer cursor={pointer.cursor} />  — see virtual-cursor-layer.md §7 -->
 </div>
 
 <style>

@@ -1,5 +1,16 @@
 <script>
 
+// TODO(virtual-cursor): make this pie menu a CONSUMER of the virtual cursor layer.
+//   DESIGN: documentation/designs/virtual-cursor-layer.md §2,§9
+//           documentation/designs/virtual-pointer-and-pie-cursors.md (pie consumer)
+//   On open:  const release = pointer.request();   // ref-count → virtual mode (edge-proof)
+//   While open: hit-test wedges against pointer.{x,y} (the unified virtual pointer),
+//               not raw clientX/Y, so the menu works at/over the window edge;
+//               animate label→pointer when the menu is repositioned near an edge.
+//   On close: release();   // drop the request; layer reverts if no other holders.
+//   (Today this component reads OS pointer events directly; leave that path as the
+//    'direct'/'hybrid' fallback when lock is denied.)
+
 /*
 
     // https://imfeld.dev/writing/svelte_domless_components

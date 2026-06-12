@@ -1,0 +1,22 @@
+# CHARACTER.yml — representational-character interface file (optional plugin interface).
+# See documentation/designs/content-plugins-and-autodiscovery.md §1.
+# This declares WHO a page represents and the ethics of that representation. It travels
+# WITH the plugin directory so the declaration is never separated from the content.
+
+name: Don Hopkins
+signifier: "👤"            # 👤 living person · 🕯️ deceased (represent via legacy) · 💬 speaks-as (not used here)
+
+representation:
+  kind: self               # self | representational
+  consent: self-sovereign  # this is Don's own character; he has editorial control
+  speaks_as: false         # the page publishes material ABOUT the subject, not AS them
+  may:
+    - "Publish factual, sourced material about his public work."
+    - "Link to his canonical full-resolution site, donhopkins.com."
+  must_not:
+    - "Invent quotes or put words in his mouth."
+  disclaimer: >
+    Representational page. Factual and friendly, no puffery.
+
+canonical: https://donhopkins.com
+upstream: ../../../../../../DonHopkins/characters/don-hopkins/   # authoring source (private repo)

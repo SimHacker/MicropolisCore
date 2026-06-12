@@ -12,6 +12,10 @@ the linked documents.
 
 | Area | Next concrete action | Priority |
 |------|----------------------|----------|
+| [Playable Micropolis game](#playable-micropolis-game) | Phase A: auto-start sim + HUD bound to `micropolisReactive` | **High** |
+| [Playable Micropolis game](#playable-micropolis-game) | Phase B: `ToolState` + click-to-build + minimal `Toolbar` | **High** |
+| [Playable Micropolis game](#playable-micropolis-game) | Phase C: message/zone/budget overlays + disaster surfacing | High |
+| [Playable Micropolis game](#playable-micropolis-game) | Pie/cursor substrate + memory-palace graph editor (cauldron) | Medium |
 | [CI / build integrity](#ci--build-integrity) | ~~Fix `emscripten_build.yml` Jekyll step~~ ✅ | ~~High~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ | ~~High~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Add PR workflow (structure + build-ts + svelte-check + Vitest)~~ ✅ | ~~High~~ |
@@ -44,6 +48,41 @@ the linked documents.
 | [Package scoping](#package-naming--scoping) | Scope vitamoo/mooshow names (`@vitamoo/…`) | Low |
 | [MicropolisHub / MOOLLM](#micropolishub--moollm-integration) | MCP service, command bus, LLM proposals | Long-horizon |
 | [Multiplayer / Git-as-multiverse](#multiplayer--git-as-multiverse) | Command timeline, branch objects | Long-horizon |
+
+---
+
+## Playable Micropolis game
+
+**Details:** [documentation/designs/micropolis-playable-game-readiness.md](designs/micropolis-playable-game-readiness.md)
+(evidence-based ground truth + Phase A–D plan) and the gathering cauldron
+[documentation/designs/playable-pie-publishing-cauldron/](designs/playable-pie-publishing-cauldron/README.md)
+(the interaction + publishing vision: pie/cursor/graph substrate + federated publishing).
+
+The engine, WASM bridge, WebGL tile viewer, command bus, and Svelte-5 reactive façade all
+work — but there is **no HUD, tool cursor, click-to-build, or message/zone/budget UI**, and
+`PieMenu.svelte` is a stub. The reactive layer feeds tests, not chrome. The fastest path to
+"playable" is UI wiring, not engine work.
+
+### P1. Vertical slice — Phase A (make the sim feel alive) — **High**
+Auto-start sim at speed 3 on attach (`MicropolisSimulator.ts`); new `GameHud.svelte` (funds,
+date, R/C/I demand, pause) bound to `micropolisReactive` via `$derived`; mount in
+`MicropolisView`. See readiness doc §6 Phase A.
+
+### P2. Vertical slice — Phase B (core interaction loop) — **High**
+`ToolState.svelte.ts` (active tool); pan-vs-build in `TileView`; left-click →
+`micropolisReactive.poke.doTool()`; tool cursor + ghost preview; minimal `Toolbar.svelte`
+(Road/Bulldoze/R-C-I/Query — simpler than the pie); `tool.*` command-bus commands. §6 Phase B.
+
+### P3. Vertical slice — Phase C (classic feedback) — High
+`MessageOverlay` (advisory toasts), `ZoneStatusPanel` (query), `BudgetModal`, `autoGoto`
+map-pan, disaster dev commands. §6 Phase C.
+
+### P4. Pie/cursor substrate + memory-palace graph editor — Medium (cauldron)
+Fresh Svelte 5 reimagination of pie menus (not uncommenting the prototype) on
+[piecraft/PIE-MENU-MODEL.md](designs/piecraft/PIE-MENU-MODEL.md) +
+[virtual-cursor-layer.md](designs/virtual-cursor-layer.md), generalizing into a
+bump-to-connect, two-way-linked, pie-navigable graph editor/browser. Gathered + brewed in the
+cauldron above; ladled into playbooks once the monolith stabilizes.
 
 ---
 

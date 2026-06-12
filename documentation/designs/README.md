@@ -19,6 +19,11 @@ Read these alongside:
 
 ## Documents
 
+### 🍲 Active cauldron + playable-game plan (start here for "make it a game")
+
+- **[playable-pie-publishing-cauldron/](playable-pie-publishing-cauldron/README.md)** — **the gathering.** A MOOLLM `cauldron` brew (Phase 1: melting) for the three entangled pillars: **playable game**, the **pie/cursor/graph interaction substrate**, and the **federated publishing system**. The rich-soup monolith seed is [GATHERING.md](playable-pie-publishing-cauldron/GATHERING.md); it gets stirred, then ladled into topical docs + playbooks. *Read this to understand the whole interaction+publishing vision and where everything connects.*
+- **[micropolis-playable-game-readiness.md](micropolis-playable-game-readiness.md)** — **evidence-based ground truth + the minimal playable vertical slice** (Phases A–C: auto-start sim, HUD, `ToolState` + click-to-build, messages/zone/budget). The engine and reactive bridge are *ahead of* the UI; this is the fastest path to "playable." Pre-scoped as the cauldron's first ladle.
+
 ### Interaction design articles (HCI / pie menus / accessibility / agents)
 
 [interaction-design-articles-index.md](interaction-design-articles-index.md)

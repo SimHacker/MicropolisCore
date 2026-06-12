@@ -1,0 +1,27 @@
+# CARD.yml — "trading card" projection interface file (optional plugin interface).
+# See documentation/designs/content-plugins-and-autodiscovery.md §1 (card resolution tier).
+# A future renderer can turn this into a collectible card; for now it is structured
+# metadata that travels with the plugin.
+
+title: Don Hopkins
+subtitle: User-Interface Designer & Simulation Hacker
+signifier: "👤"
+emoji: "🐧💻🖱️🍕"
+
+abilities:
+  - name: Pie Menus
+    text: Directional radial menus — from the CHI'88 HCIL study to NeWS, X11, The Sims, OLPC, the web, and Unity.
+  - name: SimCity Liberator
+    text: Ported SimCity to Unix (NeWS/HyperLook, X11/TCL/Tk) and helped open-source it as Micropolis under the GPL.
+  - name: Sims Toolsmith
+    text: Built the pie-menu UI, architectural editing, and the user-creation tools (SimShow, Transmogrifier, RugOMatic) that launched its modding community.
+
+combos:
+  - with: ben-shneiderman
+    text: Pie menus & direct manipulation (the CHI'88 study).
+  - with: will-wright
+    text: Decades of "cyberiadic sallies" — SimCity on Unix through The Sims at Maxis.
+
+links:
+  canonical: https://donhopkins.com
+  page: /pages/about/don-hopkins

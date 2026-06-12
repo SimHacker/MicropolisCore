@@ -1,8 +1,20 @@
 # Virtual pointer, pie menus, and environment cursors
 
+> **⚠️ Refactor note (2026-06-07):** The **virtual cursor is now specified as its own
+> cross-cutting layer** in **[virtual-cursor-layer.md](virtual-cursor-layer.md)** —
+> usable without pie menus, with pie menus as just one *consumer*. Treat **this**
+> document as the **pie-menu + tile-cursor consumer** of that layer (pie wedge
+> hit-testing, tool/frame cursor, palette↔cursor design, Sims placement, multiplayer).
+> The §4 "Virtual mouse" material here is the seed of the layer; the canonical,
+> decoupled spec (modes, ref-counted activation, inertial throw/brake, multitouch
+> pan/zoom/rotate handoff, MediaGraph gliding) lives in virtual-cursor-layer.md.
+
 **Author lineage:** Don Hopkins — HyperLook/NeWS SimCity, X11/TCL/Tk multiplayer SimCityNet, OpenLaszlo Micropolis Online, Sims placement feedback.
 
-**Purpose:** Specify how **pointer layers**, **tile editing frames**, **pie menus**, and **environment-driven cursor physics** fit the WebGPU holodeck — and how high-level gestural UI (pies, tabs, HyperCard-style windows) rests on that stack.
+**Purpose:** Specify how **pie menus** and **tile editing frames** *consume* the
+[virtual cursor layer](virtual-cursor-layer.md) — pie wedge hit-testing, the
+tile-snapped tool/frame cursor, palette↔cursor unification, Sims placement feedback,
+and multiplayer presence — on the WebGPU holodeck.
 
 **Companion docs:**
 

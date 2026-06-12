@@ -149,7 +149,7 @@ This addendum deepens the intent and explains why the design choices align with 
 
 #### Design Rationale and Lineage
 - Direct Manipulation (Shneiderman): Favor visible objects, physical actions over syntax, rapid incremental reversible operations, and immediate feedback. This improves learnability, reduces errors, and builds mastery.
-- Explorable Explanations (Brett Victor): Show dynamic state continuously so users can think with the medium, not around it. Reveal cause-and-effect with tight visual coupling of action to result.
+- Explorable Explanations (Bret Victor): Show dynamic state continuously so users can think with the medium, not around it. Reveal cause-and-effect with tight visual coupling of action to result.
 - Constructionism (Papert): Support learning-by-making. Expose mechanisms and provide tools for safe experiment, iteration, and reflection.
 - Maxis Tradition (Will Wright): The UI’s true product is the user’s mental model. Keep numbers out of the user’s face; visualize relationships; enable playful exploration and storytelling.
 - Empirical Foundations (HCIL): Pie menus and dynamic queries are validated to be fast, precise, and reliable. Design to leverage spatial memory and shorten visual search.

@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { findNodeByUrl, getPrerenderEntries } from '$lib/navigationTree';
-import { getContentFilePath, readContentFile } from '$lib/server/jekyllContent.js';
+import { getContentFilePath, readContentFile } from '$lib/server/markdownContent.js';
 
 export const prerender = true;
 

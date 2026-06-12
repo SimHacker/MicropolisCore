@@ -48,91 +48,7 @@
         "title": "Don Hopkins",
         "header": "Don Hopkins: Micropolis Developer",
         "contentSlug": "about/don-hopkins",
-        "description": "🐧💻🖱️🍕 Learn about the developer who worked on The Sims, ported SimCity, and developed Micropolis.",
-        "matchUrlPrefix": true,
-        "children": [
-          {
-            "comment": "SimCity NeWS/HyperLook Version Page",
-            "url": "/pages/about/don-hopkins/simcity-news-hyperlook",
-            "title": "SimCity NeWS/HyperLook",
-            "header": "SimCity for NeWS/HyperLook (1991-1992)",
-            "contentSlug": "about/don-hopkins/simcity-news-hyperlook",
-            "description": "📜🖥️🅿️⚙️ Porting SimCity Classic to Sun's PostScript-based NeWS/HyperLook environment.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "SimCity X11/TCL/Tk Version Page",
-            "url": "/pages/about/don-hopkins/simcity-x11-tcltk",
-            "title": "SimCity X11/TCL/Tk",
-            "header": "SimCity for X11/TCL/Tk (1993)",
-            "contentSlug": "about/don-hopkins/simcity-x11-tcltk",
-            "description": "🇽🖥️⌨️🛠️ Developed the Unix version using X11 and TCL/Tk, featuring pie menus.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "SimCityNet Multiplayer Version Page",
-            "url": "/pages/about/don-hopkins/multiplayer-simcity-net",
-            "title": "SimCityNet Multiplayer",
-            "header": "Multiplayer SimCityNet (1993)",
-            "contentSlug": "about/don-hopkins/multiplayer-simcity-net",
-            "description": "🤝👥🌐🔌 Created a networked, cooperative multiplayer version based on the X11/TCL/Tk code.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "The Sims Contributions Page",
-            "url": "/pages/about/don-hopkins/the-sims",
-            "title": "The Sims",
-            "header": "The Sims Contributions (1997-2000)",
-            "contentSlug": "about/don-hopkins/the-sims",
-            "description": "🧑‍🤝‍🧑🏡🛠️👨‍💻 Details on core development, UI, tools, and user empowerment for The Sims 1.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "SimCity OLPC Version Page",
-            "url": "/pages/about/don-hopkins/olpc-simcity",
-            "title": "SimCity OLPC",
-            "header": "SimCity for OLPC (2007-2008)",
-            "contentSlug": "about/don-hopkins/olpc-simcity",
-            "description": "💻🧒🌍📖 Adapting and open-sourcing SimCity as Micropolis for the OLPC project.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "Micropolis C++/Python Integration Page",
-            "url": "/pages/about/don-hopkins/micropolis-cpp-python",
-            "title": "Micropolis C++/Python",
-            "header": "Micropolis C++/Python Integration",
-            "contentSlug": "about/don-hopkins/micropolis-cpp-python",
-            "description": "🐍⚙️🧩🔗 Refactoring the core SimCity engine into cleaner C++ integrated with Python via SWIG.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "Micropolis Linux PyGTK Version Page",
-            "url": "/pages/about/don-hopkins/micropolis-linux-pygtk",
-            "title": "Micropolis Linux PyGTK",
-            "header": "Micropolis Linux PyGTK Version (Deprecated)",
-            "contentSlug": "about/don-hopkins/micropolis-linux-pygtk",
-            "description": "🐧🖼️🖱️💿 A deprecated Linux desktop version using PyGTK, Cairo, and Pango, with pie menus.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "Micropolis Online Web Version Page",
-            "url": "/pages/about/don-hopkins/micropolis-online-turbogears-openlaszlo",
-            "title": "Micropolis Online",
-            "header": "Micropolis Online (TurboGears/OpenLaszlo - Deprecated)",
-            "contentSlug": "about/don-hopkins/micropolis-online-turbogears-openlaszlo",
-            "description": "🕸️🌐⚡💻 A deprecated web client/server version using Python/TurboGears and Flash/OpenLaszlo.",
-            "hideFromNav": true
-          },
-          {
-            "comment": "Micropolis WebAssembly Version Page",
-            "url": "/pages/about/don-hopkins/micropolis-web-wasm-webgl-sveltekit",
-            "title": "Micropolis Web",
-            "header": "Micropolis Web (WASM/WebGL/SvelteKit - Current)",
-            "contentSlug": "about/don-hopkins/micropolis-web-wasm-webgl-sveltekit",
-            "description": "🚀🕸️📊💻 The current WebAssembly port using SvelteKit, WebGL, and interactive diagrams.",
-            "hideFromNav": true
-          }
-        ]
+        "description": "🐧💻🖱️🍕 Learn about the developer who worked on The Sims, ported SimCity, and developed Micropolis."
       },
       {
         "comment": "Chaim Gingold Page",
@@ -143,11 +59,11 @@
         "description": "📖️🏗️📊👨‍🔬 Dive into insights from \"Building SimCity,\" Chaim's book detailing the game's creation."
       },
       {
-        "comment": "Brett Victor Page",
-        "url": "/pages/about/brett-victor",
-        "title": "Brett Victor",
-        "header": "Brett Victor: Dynamic Mediums",
-        "contentSlug": "about/brett-victor",
+        "comment": "Bret Victor Page",
+        "url": "/pages/about/bret-victor",
+        "title": "Bret Victor",
+        "header": "Bret Victor: Dynamic Mediums",
+        "contentSlug": "about/bret-victor",
         "description": "✨💡🖼️💻 Explore the work of an influential designer focused on dynamic mediums for thought."
       },
       {
@@ -167,11 +83,27 @@
         "description": "🖱️👨‍🔬📊💡 Understand the principles championed by the computer scientist who coined \"direct manipulation\"."
       },
       {
+        "comment": "Richard Bartle Page",
+        "url": "/pages/about/richard-bartle",
+        "title": "Richard Bartle",
+        "header": "Richard Bartle: Virtual Worlds & Player Types",
+        "contentSlug": "about/richard-bartle",
+        "description": "🏰♠️♥️♦️♣️ Co-creator of MUD1 (1978) and originator of the Bartle taxonomy of player types; the MUD → MOO → MOOLLM lineage."
+      },
+      {
+        "comment": "Yoot Saito Page",
+        "url": "/pages/about/yoot-saito",
+        "title": "Yoot Saito",
+        "header": "Yoot Saito: The Tower & Seaman",
+        "contentSlug": "about/yoot-saito",
+        "description": "🏢🐟🎙️ Japanese designer behind The Tower / SimTower, Seaman, and Odama — and the 1993 interviewer of Alan Kay."
+      },
+      {
         "comment": "Constructionist Education Page",
         "url": "/pages/about/constructionist-education",
         "title": "Constructionist Education",
         "header": "Constructionist Education",
-        "contentSlug": "constructionist-education",
+        "contentSlug": "about/constructionist-education",
         "description": "🛠️🧱🧑‍🏫🧑‍🎓 An overview of the learning theory where knowledge is built through active creation and sharing.",
         "matchUrlPrefix": true,
         "showSubTabs": true,
@@ -181,7 +113,7 @@
             "url": "/pages/about/constructionist-education/jean-piaget",
             "title": "Jean Piaget",
             "header": "Jean Piaget: Cognitive Development",
-            "contentSlug": "constructionist-education/jean-piaget",
+            "contentSlug": "about/constructionist-education/jean-piaget",
             "description": "👶🤔🧠🇨🇭 Review the foundational theories of the Swiss psychologist on child cognitive development."
           },
           {
@@ -189,7 +121,7 @@
             "url": "/pages/about/constructionist-education/seymour-papert",
             "title": "Seymour Papert",
             "header": "Seymour Papert: Constructionism & Logo",
-            "contentSlug": "constructionist-education/seymour-papert",
+            "contentSlug": "about/constructionist-education/seymour-papert",
             "description": "🐢🧱💻🧑‍🏫 Meet the MIT mathematician who pioneered AI, developed Logo, and founded Constructionism."
           },
           {
@@ -197,7 +129,7 @@
             "url": "/pages/about/constructionist-education/marvin-minsky",
             "title": "Marvin Minsky",
             "header": "Marvin Minsky: AI & Society of Mind",
-            "contentSlug": "constructionist-education/marvin-minsky",
+            "contentSlug": "about/constructionist-education/marvin-minsky",
             "description": "🤖🧠🧩👥 Delve into the thinking of an AI founding father, co-founder of MIT's AI Lab."
           },
           {
@@ -205,7 +137,7 @@
             "url": "/pages/about/constructionist-education/alan-kay",
             "title": "Alan Kay",
             "header": "Alan Kay: Dynabook & OOP",
-            "contentSlug": "constructionist-education/alan-kay",
+            "contentSlug": "about/constructionist-education/alan-kay",
             "description": "💻📖💡👨‍🏫 Learn about the computer scientist, key figure in OOP & GUIs, who envisioned the Dynabook."
           },
           {
@@ -213,7 +145,7 @@
             "url": "/pages/about/constructionist-education/doreen-nelson",
             "title": "Doreen Nelson",
             "header": "Doreen Nelson: Design-Based Learning",
-            "contentSlug": "constructionist-education/doreen-nelson",
+            "contentSlug": "about/constructionist-education/doreen-nelson",
             "description": "🏗️🧱🧑‍🏫🪢 Explore Design-Based Learning (DBL), the hands-on educational methodology."
           }
         ]
