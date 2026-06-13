@@ -1,0 +1,134 @@
+# Tornado source registry — hand-maintained, PR-able.
+# See documentation/designs/the-tornado-and-the-archives.md
+
+sources:
+  - id: sim-archive-project
+    name: Sim Archive Project
+    collection_url: https://archive.org/details/sim-archive-project
+    status: in-scope
+    content_types:
+      - family_album
+      - save_iff
+      - custom_skins
+      - custom_objects
+      - lots
+      - exchange_scrape
+    games:
+      - sims1
+      - sims2
+      - sims3
+    license_assumption: fan content, non-commercial use
+    notes: >
+      Community-led Internet Archive collection. Exchange scrapes at specific
+      points in time (not complete). Packaged ZIP/RAR items alongside individual
+      uploads. Don Hopkins consulted at founding. Prefer over raw Wayback CDX
+      where items are already bundled and downloadable.
+
+  - id: tso-conversions
+    name: The Sims Online Conversions
+    item_url: https://archive.org/details/tsoconversions
+    parent_collection: sim-archive-project
+    status: in-scope
+    content_types:
+      - custom_skins
+      - custom_heads
+      - custom_objects
+    games:
+      - sims1
+    license_assumption: fan content, non-commercial use
+    notes: >
+      Skins, heads, and objects cloned from The Sims Online for The Sims 1.
+      Packaged as TSO_Conversions.zip and TSO Heads Collection (Reorganized).zip.
+      High-value TS1 CC for skin/object recovery; not Family Album content.
+
+  - id: persimmon-grove
+    name: Persimmon Grove
+    item_url: https://archive.org/details/Persimmon
+    live_url: https://persimmon.ephralon.de/
+    parent_collection: sim-archive-project
+    status: in-scope
+    content_types:
+      - custom_objects
+      - house_and_garden
+    games:
+      - sims1
+    author: Koromo
+    license_assumption: fan content, non-commercial use; cloning permitted with acknowledgment
+    notes: >
+      Classic TS1 CC by Koromo — particular styles of house and garden, indoors
+      and outdoors. Base-game compatible (no expansion packs required). RAR
+      bundle (~75 MB) on IA; live site still hosted via Ephralon. High-priority
+      tornado object-recovery source.
+
+  - id: bunny-wuffles-architectural-supplies
+    name: Bunny Wuffles Architectural Supplies
+    item_url: https://archive.org/details/bunnywufflesarchitecturalsupplies
+    live_url: http://sas.woobsha.com/
+    parent_collection: sim-archive-project
+    status: in-scope
+    content_types:
+      - custom_objects
+      - walls_and_floors
+      - houses
+      - tutorials
+    games:
+      - sims1
+    author: Bunny Wuffles
+    license_assumption: fan content, non-commercial use; recolour/retexture/redesign permitted with credit and link
+    notes: >
+      Classic TS1 architectural CC — themed objects, walls, floors, houses, plus
+      object-creation tutorials and housekeeping guides. RAR bundle (~176 MB) on
+      IA; archives at sas.woobsha.com. Includes Cultural Heritage Foundation
+      theme packs. Expansion-pack compatibility varies by object.
+
+  - id: sims1-official-downloads
+    name: The Sims 1 Official Downloads Collection
+    item_url: https://archive.org/details/sims1officialdownloads
+    status: reference
+    content_types:
+      - official_objects
+      - official_skins
+    games:
+      - sims1
+    license_assumption: EA/Maxis official content
+    mirrored_from:
+      - http://www.simechoes.org/simechoes1/maxis/maxisindex.html
+      - http://www.thesimsdepot.com/sims-1/downloads/get-cool-stuff/
+      - https://simarchive.wordpress.com/the-sims-official-downloads/
+    notes: >
+      Comprehensive official Maxis download mirror (~150 MB 7z). Not a tornado
+      lot-binding target — baseline for Content Registry dependency resolution,
+      IFF parse validation, and expansion-conflict detection. Some downloads
+      duplicate expansion content; installing twice breaks the game.
+
+  - id: ts1-branded-objects
+    name: The Sims 1 Branded Objects
+    item_url: https://archive.org/details/TS1BrandedObjects
+    status: reference
+    content_types:
+      - official_objects
+      - branded_advertising
+    games:
+      - sims1
+    license_assumption: EA/Maxis official content
+    notes: >
+      Official Maxis branded/advertising objects: Pepsi machine ($900, base game),
+      McDonald's food kiosk ($4,900), Intel computer ($6,999). Reference for
+      Content Registry and object identification — not a tornado lot-binding target.
+
+  - id: the-sims-jukebox
+    name: The Sims Jukebox
+    item_url: https://archive.org/details/thesimsjukebox
+    status: reference
+    content_types:
+      - desktop_app
+      - music_player
+    games:
+      - sims1
+    license_assumption: EA/Maxis official content
+    publication_date: "2000"
+    notes: >
+      Official Maxis desktop jukebox (Windows executable, ~2000): "Download this
+      cool desktop jukebox and enjoy your favorite tunes Sims-style!" Template
+      and UX reference for a future jukebox creator tool — not a tornado import
+      or lot-binding target.

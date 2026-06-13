@@ -10,6 +10,15 @@ export interface RenderViewport {
 	zoom: number;
 }
 
+export interface SpriteRenderProfile {
+	/** `classic` at map scale; `overview` for small/iconic full-city maps. */
+	mode: 'classic' | 'overview';
+	scale_around_hotspot?: boolean;
+	drop_shadow?: boolean;
+	min_sprite_px?: number;
+	shadow?: { offsetX: number; offsetY: number; blur: number; opacity: number };
+}
+
 export interface MicropolisMapRenderDescription {
 	schema_version: 1;
 	render_type: 'micropolis.map';
@@ -57,7 +66,9 @@ export interface MicropolisMapRenderDescription {
 		premultiplied_alpha?: boolean;
 	}>;
 	viewport: RenderViewport;
-	layers?: Array<'map' | 'mop' | 'overlay'>;
+	layers?: Array<'map' | 'mop' | 'overlay' | 'sprites'>;
+	/** Sprite compositing for print, thumbnails, overview maps — see map-compositing-and-measurement.md §2.4 */
+	sprite_render?: SpriteRenderProfile;
 	filters?: Record<string, unknown>;
 }
 

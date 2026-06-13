@@ -74,9 +74,11 @@ The WebGPU target follows the **X11/Tk** model for editing (tile-snapped **frame
          │ screen↔world-tile            │ (render-core)
 ```
 
-**Design rule:** Input logic owns **virtual pointer state** and **tile anchor**; plugins only **render** what input publishes each frame. Pie menus never require the compositor to “guess” cursor semantics.
+**Design rule:** Input logic owns **virtual pointer state** and **tile anchor**; holodeck
+plugins **render** all cursor pixels (local + remote). Svelte components above the canvas
+manage reactive state, text, dialogs, and windows — positioned via `stage.measure()`.
 
-See [unified-webgpu-renderer.md §2–3](unified-webgpu-renderer.md) and [ui-frame-nine-slice.md](ui-frame-nine-slice.md).
+See [map-compositing-and-measurement.md §3.2](map-compositing-and-measurement.md#32-dom-vs-webgpu-split).
 
 ---
 

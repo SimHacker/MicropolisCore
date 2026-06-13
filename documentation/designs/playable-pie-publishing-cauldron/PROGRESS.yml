@@ -1,0 +1,38 @@
+# Playable vertical slice — execution log
+# Update after each playbook step verifies green. See wisdom/executor-conventions.md.
+
+meta:
+  cauldron: playable-pie-publishing-cauldron
+  batch: playable-slice-1
+  updated: "2026-06-12"
+  batch_1_status: ready_to_execute
+
+playbooks:
+  PB-01-viewport-tile-frame-helper:
+    status: not_started
+    steps: {}
+  PB-02-mount-cursor-layer:
+    status: not_started
+    steps: {}
+  PB-03-budget-modal:
+    status: not_started
+    steps: {}
+  PB-04-tool-commands:
+    status: not_started
+    steps: {}
+  PB-05-vertical-slice-verify:
+    status: not_started
+    steps: {}
+
+# Batch 2 (holodeck cutover) — skeleton; not executable until batch 1 complete
+# and atlas open questions OQ-1..OQ-6 resolved. See HOLODECK-CUTOVER-ATLAS.md.
+holodeck_batch:
+  status: skeleton
+  gated_on: batch_1_complete
+  playbooks:
+    HB-01-micropolis-map-plugin: { status: skeleton }
+    HB-02-tileview-holodeck-toggle: { status: skeleton }
+    HB-03-editing-tool-cursor-plugin: { status: skeleton }
+    HB-04-measure-driven-dom-chrome: { status: skeleton }
+    HB-05-pick-buffer-query-tool: { status: skeleton }
+    HB-06-parity-and-retire-webgl-bridge: { status: skeleton }

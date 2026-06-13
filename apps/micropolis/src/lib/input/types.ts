@@ -31,7 +31,7 @@ export interface UnifiedPointer {
 	source: PointerSource;
 }
 
-/** What the CursorLayer renders. Any size/shape/color/sprite. (design §7) */
+/** Published each frame to WebGPU cursor plugins — not a DOM render model. (design §7) */
 export interface CursorState {
 	x: number;
 	y: number;
@@ -41,6 +41,73 @@ export interface CursorState {
 	shape: string;
 	color: string;
 	sprite?: string;
+}
+
+/** Where a cursor/tool anchors in space — drives plugin + measure refs. */
+export type CursorAnchorSpace = 'screen' | 'world-tile' | 'world-pixel';
+
+/** Which cursor raster backends are active on `CursorLayer.svelte`. */
+export type CursorBackend = 'dom' | 'webgpu' | 'both';
+
+/** Which presentation backends participate for one cursor instance. */
+export type CursorDomSlot = 'label' | 'avatar' | 'tooltip' | 'infovis' | 'autoscroll-hint';
+
+export interface CursorRepresentationSpec {
+	/** Holodeck plugin ids that draw GPU pixels (may be empty → no WebGPU work). */
+	webgpu?: string[];
+	/** DOM slots to mount; omit or `[]` → create no DOM nodes for this cursor. */
+	dom?: CursorDomSlot[];
+}
+
+/**
+ * Per-player cursor bundle — the single logical "cursor" coordinated across layers.
+ * Tile tools (bulldozer, residential) use `world-tile`; chalk/whiteboard glide in
+ * `world-pixel`; local pointer uses `screen`.
+ *
+ * FUTURE (design only): shared tool instances — pall bearers, opposite-corner resize,
+ * tool-as-vehicle (driver + passenger). See map-compositing-and-measurement.md §3.5.
+ * Expect optional `role?`, `toolInstanceId?` when multiplayer collaborative tools land.
+ */
+export interface CursorPresence {
+	playerId: string;
+	local: boolean;
+	toolId: string;
+	anchorSpace: CursorAnchorSpace;
+	visible: boolean;
+	/** FUTURE: e.g. 'driver' | 'passenger' | 'corner-tl' | 'corner-br' | 'pall-bearer'. */
+	role?: string;
+	/** FUTURE: shared vehicle/zone draft id when multiple presences attach to one tool. */
+	toolInstanceId?: string;
+	/** Tile footprint when anchorSpace === 'world-tile'. */
+	tile?: { x: number; y: number; w?: number; h?: number };
+	/** Virtual/world pixel position when anchorSpace === 'world-pixel' (chalk, strokes). */
+	worldPx?: { x: number; y: number };
+	/** Screen hotspot when anchorSpace === 'screen' or pointer overlay. */
+	screen?: { x: number; y: number };
+	/** User icon / avatar — may attach to tool frame or float independently. */
+	avatar?: {
+		spriteId: string;
+		attachTo: 'tool-cursor' | 'pointer' | 'free';
+	};
+	/** Which backends render this presence (remote tile-only often has webgpu, no dom). */
+	representations: CursorRepresentationSpec;
+	styleId?: string;
+	rimPolicy?: 'fat' | 'thin';
+	/** In-progress stroke (chalk, whiteboard) — WebGPU line + optional DOM infovis. */
+	stroke?: {
+		points: Array<{ x: number; y: number }>;
+		color: string;
+		width: number;
+		down: boolean;
+	};
+}
+
+/** Tool catalog entry — maps tool id → anchor space + default representations. */
+export interface ToolCursorProfile {
+	toolId: string;
+	anchorSpace: CursorAnchorSpace;
+	styleId: string;
+	representations: CursorRepresentationSpec;
 }
 
 /** A timestamped pointer sample (velocity estimation for throw). */

@@ -97,7 +97,7 @@ The old design notes describe:
 - Shared chat and messages.
 - Multiple simultaneous views.
 - Voting panels for expensive actions.
-- Bouncing/ghosted proposed buildings before they are committed.
+- Bouncing/ghosted proposed buildings before they are committed — **bounce height ∝ votes still needed**; solo player gets height-1 bounce with no dialog ([map-compositing-and-measurement.md §5](map-compositing-and-measurement.md#5-multiplayer-voting-preview-historical--target)).
 - Unanimous approval for expensive zones.
 - Logs sufficient to replay edits.
 - Branch points at every editing command.
@@ -121,7 +121,7 @@ This gives Micropolis an advantage over generic multiplayer surfaces:
 
 1. Shared state should be visible and consequential.
 2. Major actions should be proposals before they become facts.
-3. Proposals should be local to the map when possible, not hidden in modal dialogs.
+3. Proposals should be local to the map when possible, not hidden in modal dialogs — **and** when a framed dialog is needed (tax-class civic decisions), anchor it to in-world measure points so dialog + bounce stay one object.
 4. Every action should be loggable, replayable, and branchable.
 5. Branches should be explainable alternate histories, not just save files.
 6. Players should be able to bring evidence back from private experiments to shared timelines.

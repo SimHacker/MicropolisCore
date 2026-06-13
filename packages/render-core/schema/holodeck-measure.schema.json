@@ -1,0 +1,206 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://micropolis.dev/schema/holodeck-measure/1",
+	"title": "HolodeckMeasureProtocol",
+	"description": "JSON-friendly sparse read/write/patch protocol for holodeck layout measurement. See documentation/designs/map-compositing-and-measurement.md",
+	"type": "object",
+	"oneOf": [
+		{ "$ref": "#/$defs/MeasureReadRequest" },
+		{ "$ref": "#/$defs/MeasureReadResponse" },
+		{ "$ref": "#/$defs/MeasureWriteRequest" },
+		{ "$ref": "#/$defs/MeasureWriteResponse" },
+		{ "$ref": "#/$defs/MeasurePatch" }
+	],
+	"$defs": {
+		"MeasureRect": {
+			"type": "object",
+			"required": ["x", "y", "w", "h"],
+			"properties": {
+				"x": { "type": "number" },
+				"y": { "type": "number" },
+				"w": { "type": "number" },
+				"h": { "type": "number" }
+			},
+			"additionalProperties": false
+		},
+		"MeasurePoint": {
+			"type": "object",
+			"required": ["x", "y"],
+			"properties": {
+				"x": { "type": "number" },
+				"y": { "type": "number" },
+				"id": { "type": "string" }
+			},
+			"additionalProperties": false
+		},
+		"MeasureValue": {
+			"type": "object",
+			"required": ["ok", "space"],
+			"properties": {
+				"ok": { "type": "boolean" },
+				"space": { "enum": ["screen", "world-tile", "world-pixel"] },
+				"bounds": { "$ref": "#/$defs/MeasureRect" },
+				"points": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/MeasurePoint" }
+				},
+				"_constraints": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/$defs/MeasurePropertyConstraint" }
+				},
+				"_meta": {
+					"type": "object",
+					"properties": {
+						"readonly": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
+					},
+					"additionalProperties": false
+				},
+				"left": { "type": "number", "description": "CSS px; alias for bounds.x" },
+				"top": { "type": "number" },
+				"width": { "type": "number" },
+				"height": { "type": "number" },
+				"opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+				"lineWidth": { "type": "number", "minimum": 0 },
+				"strokeWidth": { "type": "number", "minimum": 0 },
+				"color": { "type": "string" },
+				"marginTop": { "type": "number" },
+				"marginRight": { "type": "number" },
+				"marginBottom": { "type": "number" },
+				"marginLeft": { "type": "number" }
+			},
+			"additionalProperties": true
+		},
+		"MeasurePropertyConstraint": {
+			"type": "object",
+			"properties": {
+				"type": { "enum": ["number", "string", "boolean", "color"] },
+				"min": { "type": "number" },
+				"max": { "type": "number" },
+				"step": { "type": "number" },
+				"enum": { "type": "array" },
+				"default": {},
+				"readonly": { "type": "boolean" },
+				"css": { "type": "string" }
+			},
+			"additionalProperties": false
+		},
+		"MeasureRef": {
+			"type": "string",
+			"description": "layerId[/objectId[/attachmentId[/kind]]]",
+			"examples": [
+				"editing-tool-cursor/local/inner/bounds",
+				"pointer-cursors/local/hotspot/point",
+				"map/tile:12,34,3,3/bounds"
+			]
+		},
+		"MeasureReadRequest": {
+			"type": "object",
+			"required": ["op", "schema_version", "refs"],
+			"properties": {
+				"op": { "const": "read" },
+				"schema_version": { "const": 1 },
+				"refs": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/MeasureRef" },
+					"minItems": 1
+				}
+			},
+			"additionalProperties": false
+		},
+		"MeasureReadResponse": {
+			"type": "object",
+			"required": ["schema_version", "frame", "values"],
+			"properties": {
+				"schema_version": { "const": 1 },
+				"frame": { "type": "integer", "minimum": 0 },
+				"values": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/$defs/MeasureValue" }
+				},
+				"missing": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/MeasureRef" }
+				}
+			},
+			"additionalProperties": false
+		},
+		"MeasureWriteRequest": {
+			"type": "object",
+			"required": ["op", "schema_version", "patches"],
+			"properties": {
+				"op": { "const": "write" },
+				"schema_version": { "const": 1 },
+				"patches": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "object",
+						"additionalProperties": true
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"MeasureWriteResponse": {
+			"type": "object",
+			"required": ["schema_version", "frame", "applied"],
+			"properties": {
+				"schema_version": { "const": 1 },
+				"frame": { "type": "integer", "minimum": 0 },
+				"applied": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/MeasureRef" }
+				},
+				"rejected": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": ["ref", "reason"],
+						"properties": {
+							"ref": { "$ref": "#/$defs/MeasureRef" },
+							"reason": { "type": "string" }
+						},
+						"additionalProperties": false
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"MeasurePatch": {
+			"type": "object",
+			"required": ["op", "schema_version", "baseFrame", "frame"],
+			"properties": {
+				"op": { "const": "patch" },
+				"schema_version": { "const": 1 },
+				"baseFrame": { "type": "integer", "minimum": 0 },
+				"frame": { "type": "integer", "minimum": 0 },
+				"updates": {
+					"type": "object",
+					"additionalProperties": { "$ref": "#/$defs/MeasureValue" }
+				},
+				"propUpdates": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "object",
+						"additionalProperties": true
+					},
+					"description": "Sparse per-property merge: lineWidth, opacity, margins, shader uniforms, …"
+				},
+				"removed": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/MeasureRef" }
+				},
+				"propRemoved": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "array",
+						"items": { "type": "string" }
+					}
+				}
+			},
+			"additionalProperties": false
+		}
+	}
+}

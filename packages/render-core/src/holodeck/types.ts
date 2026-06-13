@@ -1,4 +1,10 @@
 import type { MapViewport } from '../viewport/MapViewport.js';
+import type { MeasureKind, MeasureQuery, MeasureValue } from '../measure/protocol.js';
+
+/** @deprecated Use {@link MeasureValue} from `@micropolis/render-core/measure`. */
+export type MeasureResult = MeasureValue;
+
+export type { MeasureKind, MeasureQuery, MeasureValue };
 
 /** Pick buffer idType values — see documentation/designs/unified-webgpu-renderer.md */
 export const HolodeckIdType = {
@@ -61,6 +67,16 @@ export interface HolodeckPlugin {
 	render(ctx: HolodeckPluginContext): void;
 	/** Future: display-list entries for vitamoo executor. */
 	collect?(viewport: MapViewport, frame: HolodeckFrameState): readonly unknown[];
+	/**
+	 * Expose screen-space geometry for DOM overlays (tooltips, vote dialogs, labels).
+	 * See documentation/designs/map-compositing-and-measurement.md §3.
+	 */
+	measure?(query: MeasureQuery, ctx: HolodeckPluginContext): MeasureValue | null;
+	/**
+	 * Sparse write: accept JSON patches keyed by measure ref (input → plugin state).
+	 * See documentation/designs/map-compositing-and-measurement.md §3.4.
+	 */
+	applyMeasure?(ref: string, patch: Record<string, unknown>, ctx: HolodeckPluginContext): boolean;
 	dispose?(): void;
 }
 

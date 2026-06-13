@@ -354,13 +354,6 @@
       spacePanHeld = true;
     }
 
-    if ((key >= "a") && (key <= "z")) { // letters — load city by first letter
-      event.preventDefault();
-      const letter = key.charCodeAt(0) - "a".charCodeAt(0);
-      void commandBus.dispatch('city.load-by-letter', commandContext(event, { letter }));
-      return;
-    }
-
     switch (key) {
 
       case " ": // space

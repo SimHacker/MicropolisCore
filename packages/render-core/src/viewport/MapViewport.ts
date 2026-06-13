@@ -192,6 +192,20 @@ export class MapViewport {
 		return o;
 	}
 
+	/** Screen-space axis-aligned rect for a tile block (CSS px, top-left origin). */
+	worldTileToScreenRect(
+		tileX: number,
+		tileY: number,
+		tileW: number,
+		tileH: number,
+	): { x: number; y: number; w: number; h: number } {
+		const [x0, y0] = this.worldTileToScreen([tileX, tileY]);
+		const [x1, y1] = this.worldTileToScreen([tileX + tileW, tileY + tileH]);
+		const x = Math.min(x0, x1);
+		const y = Math.min(y0, y1);
+		return { x, y, w: Math.abs(x1 - x0), h: Math.abs(y1 - y0) };
+	}
+
 	containsWorldTile(tile: Vec2): boolean {
 		const [x, y] = tile;
 		return x >= 0 && x < this.mapWidth && y >= 0 && y < this.mapHeight;

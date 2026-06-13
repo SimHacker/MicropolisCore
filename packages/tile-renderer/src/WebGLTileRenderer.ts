@@ -1,5 +1,7 @@
-// WebGLTileRenderer implementation class
-
+// WebGLTileRenderer — LEGACY / FROZEN. Not in createMapTileRenderer default chain.
+// Do not extend for overlays, sprites, measure API, or holodeck features.
+// Greenfield: software + WebGPU holodeck. Optional clean-slate WebGL rewrite later.
+// @see documentation/designs/map-compositing-and-measurement.md §1.1
 
 import { TileRenderer, type ResolvedTileLayerSpec, type TileLayerSource } from './TileRenderer';
 

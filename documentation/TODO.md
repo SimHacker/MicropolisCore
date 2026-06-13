@@ -14,9 +14,10 @@ the linked documents.
 |------|----------------------|----------|
 | [Playable Micropolis game](#playable-micropolis-game) | Phase A: auto-start sim + HUD bound to `micropolisReactive` | **High** |
 | [Playable Micropolis game](#playable-micropolis-game) | Phase B: `ToolState` + click-to-build + minimal `Toolbar` | **High** |
+| [Playable Micropolis game](#playable-micropolis-game) | Phase B: `CursorLayer` DOM/SVG tool cursor (same clip math as future WebGPU) | **High** |
 | [Playable Micropolis game](#playable-micropolis-game) | Phase C: message/zone/budget overlays + disaster surfacing | High |
 | [Playable Micropolis game](#playable-micropolis-game) | Pie/cursor substrate + memory-palace graph editor (cauldron) | Medium |
-| [CI / build integrity](#ci--build-integrity) | ~~Fix `emscripten_build.yml` Jekyll step~~ ✅ | ~~High~~ |
+| [Micropolis renderer](#micropolis-renderer) | Holodeck map migration — **after playable A–C** | Medium (gated) |
 | [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ | ~~High~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Add PR workflow (structure + build-ts + svelte-check + Vitest)~~ ✅ | ~~High~~ |
 | [Code quality](#code-quality) | `noUncheckedIndexedAccess` in tsconfig files | Low |
@@ -25,7 +26,7 @@ the linked documents.
 | [Micropolis WASM testing](#micropolis-wasm-testing) | Expand bridge test coverage | Medium |
 | [Micropolis WASM testing](#micropolis-wasm-testing) | ~~Add CI for Vitest~~ ✅ | ~~High~~ |
 | [Micropolis callbacks](#micropolis-callbacks--events) | Normalized event envelopes | Medium |
-| [Micropolis renderer](#micropolis-renderer) | Renderer plugin selection (Canvas/WebGL/WebGPU) in app | Medium |
+| [Micropolis renderer](#micropolis-renderer) | Holodeck map migration — **after playable A–C** | Medium (gated) |
 | [VitaMoo — Holodeck](#vitamoo--holodeck) | Terrain/floor/wall/roof pipeline | Medium |
 | [VitaMoo — renderer polish](#vitamoo--webgpu-renderer-polish) | GPU pass timing, richer validation UX | Medium |
 | [VitaMoo — UI overlays](#vitamoo--ui-overlays) | Pie-menu head, speech bubbles, censorship pass | Low–Medium |
@@ -60,8 +61,13 @@ the linked documents.
 
 The engine, WASM bridge, WebGL tile viewer, command bus, and Svelte-5 reactive façade all
 work — but there is **no HUD, tool cursor, click-to-build, or message/zone/budget UI**, and
-`PieMenu.svelte` is a stub. The reactive layer feeds tests, not chrome. The fastest path to
-"playable" is UI wiring, not engine work.
+`PieMenu.svelte` is a stub. The reactive layer feeds tests, not chrome.
+
+**Policy:** **Playable first** (Phases A–C on the existing WebGL map). Do **not** block
+playable on holodeck migration or WebGPU cursor plugins. Cursors ship via
+`CursorLayer.svelte` with **DOM/SVG** first (tile footprint + ghost preview); **WebGPU cursor
+rendering** is added later as a parallel, configurable backend on the same component — no
+disruption, incremental growth. See [map-compositing-and-measurement.md §4](designs/map-compositing-and-measurement.md#4-implementation-order-updated).
 
 ### P1. Vertical slice — Phase A (make the sim feel alive) — **High**
 Auto-start sim at speed 3 on attach (`MicropolisSimulator.ts`); new `GameHud.svelte` (funds,
@@ -70,8 +76,18 @@ date, R/C/I demand, pause) bound to `micropolisReactive` via `$derived`; mount i
 
 ### P2. Vertical slice — Phase B (core interaction loop) — **High**
 `ToolState.svelte.ts` (active tool); pan-vs-build in `TileView`; left-click →
-`micropolisReactive.poke.doTool()`; tool cursor + ghost preview; minimal `Toolbar.svelte`
-(Road/Bulldoze/R-C-I/Query — simpler than the pie); `tool.*` command-bus commands. §6 Phase B.
+`micropolisReactive.poke.doTool()`; minimal `Toolbar.svelte` (Road/Bulldoze/R-C-I/Query);
+`tool.*` command-bus commands. §6 Phase B.
+
+### P2b. Tool cursor via `CursorLayer` (DOM/SVG, same phase as B) — **High**
+Mount `CursorLayer.svelte` above the map canvas. **Phase 1 backend:** DOM/SVG tile frame +
+ghost preview at `hoverTile` — use `MapViewport` / tile-renderer screen↔tile math so
+**clipping and footprint match** what the future WebGPU layer will use. **Phase 2 backend
+(later):** enable `representations.webgpu` + holodeck plugins when map migrates to
+`HolodeckStage`; DOM labels/chrome remain on the same component. Config:
+`CursorBackend = 'dom' | 'webgpu' | 'both'`. Measure protocol wires in when holodeck lands;
+until then, cursor geometry comes from shared viewport helpers. See
+[input/README.md](../apps/micropolis/src/lib/input/README.md).
 
 ### P3. Vertical slice — Phase C (classic feedback) — High
 `MessageOverlay` (advisory toasts), `ZoneStatusPanel` (query), `BudgetModal`, `autoGoto`
@@ -88,24 +104,24 @@ cauldron above; ladled into playbooks once the monolith stabilizes.
 
 ## CI / build integrity
 
-**Details:** `documentation/designs/` → see audit report from 2026-05-06; pre-existing CI bug.
+**Publishing policy (micropolisweb.com):** Pushes to `main` run **PR Checks** only (structure,
+TypeScript, tests) — they do **not** deploy. The live demo at
+[micropolisweb.com](https://micropolisweb.com/) updates **only** when you manually run
+**Actions → Build Wasm Library with Emscripten** and check **Deploy to GitHub Pages**.
+Default for that checkbox is **off** so you can verify a full build before publishing.
 
-### 1. Fix `emscripten_build.yml` Jekyll step ⚠️
+| Workflow | Trigger | Deploys Pages? |
+|----------|---------|----------------|
+| `pr-checks.yml` | every push / PR | No |
+| `emscripten_build.yml` | manual only | Only if `deploy_to_pages` ✓ |
+| `vitamoo-pages.yml` | manual only | VitaMooSpace (separate site) |
 
-The `.github/workflows/emscripten_build.yml` workflow (manual-only, `workflow_dispatch`)
-references a `docs/` directory and `documentation/notes/SimCityReverseDiagrams-*.png/pdf`
-that do not exist at the repo root:
+**Local dev:** `pnpm --filter micropolis dev` — test playable work before any publish.
 
-- The Jekyll site lives at **`apps/micropolis/website/`** (built via `apps/micropolis/package.json`
-  **`build:jekyll`**), not a top-level `docs/`.
-- The PNG/PDF assets were never committed (or have moved).
+### 1. Emscripten + Pages workflow
 
-The workflow is manual-only so it has not broken automation, but it would fail if run.
-
-**Fix needed:**
-- Point the Jekyll step at `apps/micropolis/website/` (or remove it if the Pages deploy
-  is already handled by GitHub's standard Pages flow from the SvelteKit output).
-- Either commit the diagram assets, remove those `cp` lines, or adjust paths.
+`.github/workflows/emscripten_build.yml` — manual-only; Jekyll step uses `apps/micropolis/website/`.
+Use **`deploy_to_pages: false`** (default) while developing; re-run with deploy enabled when ready.
 
 **File:** `.github/workflows/emscripten_build.yml`
 
@@ -116,25 +132,9 @@ The workflow is manual-only so it has not broken automation, but it would fail i
 `pnpm run verify:structure` (20 assertions) now runs in both `emscripten_build.yml`
 (after WASM build) and `vitamoo-pages.yml` (after `pnpm install`).
 
-### 3. Add a lightweight PR workflow (no Emscripten needed)
+### 3. ✅ Lightweight PR workflow — done
 
-The Vitest tests and `verify:structure` both work against the **committed WASM artifacts**
-in `apps/micropolis/src/lib/` — Emscripten is not required to run them. Add a workflow
-triggered on push/PR that runs just:
-
-```yaml
-pnpm install --frozen-lockfile
-pnpm run verify:structure
-pnpm --filter vitamoo run build
-pnpm --filter mooshow run build
-pnpm --filter micropolis run test
-```
-
-This keeps CI fast on every PR without a full 15-minute Emscripten compile.
-
-**File:** `.github/workflows/pr-checks.yml` (new)
-
----
+**File:** `.github/workflows/pr-checks.yml`
 
 ## Micropolis WASM testing
 
@@ -175,17 +175,28 @@ See naming conventions: [documentation/designs/naming-conventions.md](designs/na
 
 ## Micropolis renderer
 
-**Details:** [documentation/designs/renderer-plugin-roadmap.md](designs/renderer-plugin-roadmap.md)
+**Details:** [documentation/designs/renderer-plugin-roadmap.md](designs/renderer-plugin-roadmap.md),
+[documentation/designs/map-compositing-and-measurement.md](designs/map-compositing-and-measurement.md)
 
-### 6. Renderer plugin selection in app UI
+**Gated on playable:** Do not migrate `TileView` to holodeck or build WebGPU cursor plugins
+until [Playable Micropolis game](#playable-micropolis-game) Phases **A–C** ship (HUD, tools,
+click-to-build, classic feedback). Existing **WebGL** map stays the rasterizer for the vertical
+slice. Holodeck work unlocks vitamoo convergence, measure readback from GPU, and MOP overlays —
+but is not on the critical path to “playable.”
 
-`@micropolis/render-core` (viewport, holodeck, `HolodeckStage`, schemas) ships in
-`packages/render-core/`. `CanvasTileRenderer`, `WebGLTileRenderer`, and `WebGPUTileRenderer` remain in
-`packages/tile-renderer/` as scaffolds. Wire `HolodeckStage` + map plugin in `TileView` (phase 5).
+### R1. After playable A–C — holodeck map migration
 
-- `CanvasTileRenderer` still delegates to software renderer and needs broader app wiring.
-- `WebGPUTileRenderer` is the target high-performance path; needs integration alongside
-  the Sims VitaMoo WebGPU work.
+- `MicropolisMapPlugin` — absorb `WebGPUTileRenderer`; wire `TileView` → `HolodeckStage`.
+- Keep `renderMicropolisMapSoftware` aligned (server `/render`, CI fixtures).
+- Enable `CursorLayer` **`webgpu`** backend + `EditingToolCursorPlugin` (parallel to DOM; user/config toggles `dom` | `webgpu` | `both`).
+- Generalized MOP overlay schema + software pass + WebGPU tint pass.
+- **Software sprite compositor (required)** — print/export/overview modes; WebGPU plugin parity.
+- Legacy WebGL **off default chain** (frozen); whiteboard / vote preview / §3.5 on software + WebGPU only.
+
+### R2. Design north star (not yet)
+
+Multi-player collaborative tools + tool-as-vehicle + Factorio-like parameterized templates
+via measure protocol — [map-compositing-and-measurement.md §3.5](designs/map-compositing-and-measurement.md#35-future-goals-design-for-do-not-implement-yet).
 
 ---
 
@@ -401,7 +412,7 @@ Key sub-items:
 
 ### H. Archive tornado: first source (Phase 3)
 
-`tools/tornado/`: pull from the Wayback CDX API against archived Sims Exchange snapshots, parse, curate, bind to lots. Provenance is mandatory. Takedown tooling required. See [the-tornado-and-the-archives.md](designs/the-tornado-and-the-archives.md).
+`tools/tornado/`: pull from the Wayback CDX API against archived Sims Exchange snapshots and the [Sim Archive Project](https://archive.org/details/sim-archive-project) IA collection (`content/simopolis/archives/SOURCES.yml`), parse, curate, bind to lots. Provenance is mandatory. Takedown tooling required. See [the-tornado-and-the-archives.md](designs/the-tornado-and-the-archives.md).
 
 ---
 

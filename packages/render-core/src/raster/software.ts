@@ -1,5 +1,12 @@
 import type { MicropolisMapRenderDescription } from '../schema/description.js';
 
+/**
+ * CPU raster for Micropolis map export (Node, `/render`, print-this-city).
+ * Sprites compositor pass is **required** for full exports — see
+ * documentation/designs/map-compositing-and-measurement.md §2.4
+ * (not yet implemented; tiles + MOP only today).
+ */
+
 export interface RgbaImage {
 	width: number;
 	height: number;

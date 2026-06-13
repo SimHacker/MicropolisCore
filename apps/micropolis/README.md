@@ -52,6 +52,18 @@ pnpm run build
 
 Preview the production build with **`pnpm run preview`**.
 
+## Publishing (micropolisweb.com)
+
+The public demo at [micropolisweb.com](https://micropolisweb.com/) is **not** updated by pushes to `main`.
+
+| Action | Updates live site? |
+|--------|------------------|
+| `git push origin main` | No — runs PR Checks only |
+| `pnpm run dev` / `pnpm run preview` locally | No |
+| **Actions → Build Wasm Library with Emscripten** | Only if you check **Deploy to GitHub Pages** |
+
+Deploy defaults to **off**. Run the workflow without deploy to verify a production build; run again with deploy enabled when ready to publish.
+
 ## CLI
 
 One CLI exposes city-file tools, terminal visualizations, the WASM simulator, and the command bus:

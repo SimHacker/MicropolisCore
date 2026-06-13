@@ -115,14 +115,14 @@ TS bindings: `build/micropolisengine.d.ts` (copied to `apps/micropolis/src/types
 | Class | Status |
 |-------|--------|
 | `TileRenderer` (base) | pan/zoom, screen↔tile coords, layer specs |
-| `WebGLTileRenderer` | **used in production UI** |
+| `WebGLTileRenderer` | **frozen legacy bridge** — `TileView` only; no new features |
 | `WebGPUTileRenderer` | implemented (~286 lines), **not wired into app** |
-| `CanvasTileRenderer` | software path; used only on `/render` |
+| `CanvasTileRenderer` | software path; default fallback in `createMapTileRenderer()`; `/render` |
 
-App integration point: `TileView.svelte` hardcodes `new WebGLTileRenderer()`. See
-[renderer-plugin-roadmap.md](renderer-plugin-roadmap.md) and
-[unified-webgpu-renderer.md](unified-webgpu-renderer.md) for the capability-based selection
-plan and the shared WebGPU compositor (holodeck) the Sims (VitaMoo) track also needs.
+App integration point: `TileView.svelte` hardcodes `new WebGLTileRenderer()` as a **temporary playable bridge**.
+It is **not** on the greenfield path — new overlays, sprites, and measure APIs target software + WebGPU holodeck only
+([map-compositing-and-measurement.md §1.1](map-compositing-and-measurement.md#11-webgl--frozen-legacy-not-a-constraint-clean-slate-later-optional)).
+Default `createMapTileRenderer()` chain is **`webgpu` → `canvas`** (WebGL opt-in only).
 
 ## 6. Prioritized plan — minimal playable vertical slice
 
@@ -139,7 +139,7 @@ plan and the shared WebGPU compositor (holodeck) the Sims (VitaMoo) track also n
 - **B1** `ToolState.svelte.ts` (new): `$state` active tool, `autoBulldoze` flag.
 - **B2** Distinguish pan vs. build in `TileView` (e.g. middle-click / Space+drag pans; left-click applies tool).
 - **B3** On click → `micropolisReactive.poke.doTool(activeTool, tileX, tileY)`.
-- **B4** Tool cursor CSS + ghost preview at `hoverTile`.
+- **B4** **`CursorLayer.svelte`** mounted in `MicropolisView` — **DOM/SVG** tile tool frame + ghost preview at `hoverTile`. Use the same screen↔tile clipping math as the future WebGPU cursor layer (`MapViewport` / tile-renderer helpers) so switching backends is config-only later (`CursorBackend: 'dom' | 'webgpu' | 'both'`).
 - **B5** Minimal `Toolbar.svelte` (Road, Bulldoze, R/C/I, Query) — **simpler than full PieMenu** to get playable fast.
 - **B6** Command-bus commands `tool.select-*`, `tool.apply-at-cursor` in `micropolisCommands.ts`.
 
@@ -150,24 +150,24 @@ plan and the shared WebGPU compositor (holodeck) the Sims (VitaMoo) track also n
 - **C4** Wire `autoGoto` → pan map to message coordinates (`MicropolisReactive` + `TileView`).
 - **C5** Dev menu: wrap `makeEarthquake` etc. as commands / poke extensions.
 
-### Phase D — Polish & renderer (later)
-- **D1** Renderer factory: WebGL default, WebGPU if available, Canvas fallback (`createTileRenderer.ts`).
-- **D2** Sprite overlay layer (`SpriteOverlay.svelte`; read engine sprite list).
-- **D3** Finish **PieMenu** + command-bus metadata → **this is where the
-  [cauldron](playable-pie-publishing-cauldron/README.md) takes over**: the toolbar is the
-  stop-gap; the pie/graph substrate is the real interaction model.
-- **D4** Touch pan/pinch. **D5** Audio via `makeSound`.
+### Phase D — Renderer & polish (**after** playable A–C)
+- **D1** `MicropolisMapPlugin` + `TileView` → `HolodeckStage` (WebGPU map); retire frozen WebGL bridge when cutover complete.
+- **D2** Enable **`CursorLayer` WebGPU backend** — `EditingToolCursorPlugin` in parallel with DOM/SVG (config toggle; no API break).
+- **D3** Sprite overlay layer (engine sprite list).
+- **D4** Finish **PieMenu** + command-bus metadata → [cauldron](playable-pie-publishing-cauldron/README.md).
+- **D5** Touch pan/pinch. **D6** Audio via `makeSound`. **D7** MOP overlays + software/WebGPU parity tests.
 
 ### Suggested file touch order (smallest path to "playable")
 1. `MicropolisSimulator.ts` — default speed
 2. `ToolState.svelte.ts` — create
 3. `GameHud.svelte` — create
 4. `Toolbar.svelte` — create
-5. `TileView.svelte` — click-to-tool, hover tile, cursor
-6. `MicropolisView.svelte` — compose HUD + toolbar
-7. `micropolisCommands.ts` — tool commands
-8. `MessageOverlay.svelte` — create
-9. `MicropolisReactive.svelte.ts` — `autoGoto` pan hook, optional disaster poke wrappers
+5. `TileView.svelte` — click-to-tool, hover tile
+6. `CursorLayer.svelte` — DOM/SVG tool frame + ghost (viewport clip math)
+7. `MicropolisView.svelte` — compose HUD + toolbar + CursorLayer
+8. `micropolisCommands.ts` — tool commands
+9. `MessageOverlay.svelte` — create
+10. `MicropolisReactive.svelte.ts` — `autoGoto` pan hook, optional disaster poke wrappers
 
 ## 7. Definition of done (vertical slice)
 

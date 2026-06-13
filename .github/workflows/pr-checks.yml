@@ -1,10 +1,6 @@
-# Lightweight checks that run on every push and PR — no Emscripten required.
-# Tests use the committed WASM artifacts in apps/micropolis/src/lib/.
-#
-# Jobs:
-#   structure  — verify monorepo layout invariants (20 assertions)
-#   build-ts   — TypeScript compile for vitamoo + mooshow + vitamoospace
-#   test       — Micropolis Vitest suite (real WASM in Node, 18 tests)
+# Lightweight checks on push/PR — no Emscripten, no GitHub Pages deploy.
+# The live demo at https://micropolisweb.com/ is unchanged by pushes to main.
+# Publish only via: Actions → "Build Wasm Library with Emscripten" → deploy_to_pages ✓
 
 name: PR Checks
 

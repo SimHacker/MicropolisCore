@@ -42,9 +42,15 @@ PRs, parallelizable once the shape is known.
 
 | File | Role |
 |------|------|
-| [`GATHERING.md`](GATHERING.md) | **The Phase-1 monolith seed.** The rich soup: requirements, goals, ideas, evidence, and many cross-links. Numbered sections (§1…), Appendix A (design wisdom), Appendix B (open-questions tracker). Grows every STIR turn. |
-| *(later)* `playbooks/` | Ladled-out PRs once the monolith is stable (one file per landable PR). |
-| *(later)* `NN-*.md` | Topical docs split from the monolith at LADLE time. |
+| [`PLAYABLE-SLICE-ATLAS.md`](PLAYABLE-SLICE-ATLAS.md) | **Batch 1 atlas** — playable vertical slice status + topic map |
+| [`playbooks/`](playbooks/) | **Batch 1 runbooks** PB-01..05 (GCS-style; `[AUTO]`/`[HUMAN]` steps) — executable now |
+| [`HOLODECK-CUTOVER-ATLAS.md`](HOLODECK-CUTOVER-ATLAS.md) | **Batch 2 atlas (skeleton)** — WebGL→WebGPU holodeck cutover |
+| [`playbooks-holodeck/`](playbooks-holodeck/) | **Batch 2 runbooks (skeleton)** HB-01..06 — gated on batch 1 ✅ |
+| [`wisdom/`](wisdom/) | [code-anchors](wisdom/code-anchors.md) (verified symbols), [executor-conventions](wisdom/executor-conventions.md), [cursor-without-holodeck](wisdom/cursor-layer-without-holodeck.md) |
+| [`DOING.md`](DOING.md) | Now / next / K-line status |
+| [`PROGRESS.yml`](PROGRESS.yml) | Machine execution log |
+| [`GATHERING.md`](GATHERING.md) | **The Phase-1 monolith seed** (pie + publishing pillars; STIR) |
+| *(later)* `NN-*.md` | Topical docs split from the monolith at LADLE time (pie, publishing) |
 
 ## How to work this cauldron
 

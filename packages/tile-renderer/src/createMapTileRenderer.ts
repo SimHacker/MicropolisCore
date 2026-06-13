@@ -6,7 +6,7 @@ import { WebGPUTileRenderer } from './WebGPUTileRenderer';
 export type MapTileRendererBackend = 'webgpu' | 'webgl' | 'canvas';
 
 export interface CreateMapTileRendererOptions {
-	/** Try backends in order; default prefers WebGPU, then WebGL, then Canvas. */
+	/** Try backends in order; default `['webgpu', 'canvas']`. Legacy WebGL: opt-in only. */
 	prefer?: MapTileRendererBackend[];
 }
 
@@ -17,12 +17,13 @@ export interface CreatedMapTileRenderer {
 	webglContext: WebGL2RenderingContext | null;
 }
 
-const DEFAULT_PREFER: MapTileRendererBackend[] = ['webgpu', 'webgl', 'canvas'];
+const DEFAULT_PREFER: MapTileRendererBackend[] = ['webgpu', 'canvas'];
 
 /**
  * Create a map tile renderer for a canvas, preferring WebGPU when available.
- * The substantial {@link WebGPUTileRenderer} implementation lives in this package;
- * apps should call this rather than hard-picking WebGL.
+ * Default chain: webgpu → canvas (software pixels). WebGL is **not** in the default
+ * chain — frozen legacy; opt in with `prefer: ['webgl', …]` only for the TileView bridge.
+ * @see documentation/designs/map-compositing-and-measurement.md §1.1
  */
 export function createMapTileRenderer(
 	canvas: HTMLCanvasElement,

@@ -321,7 +321,7 @@ The first real tornado. Limit to one source so we learn the legal/ethical/perfor
 
 ### Recommended first target: archived Sims Exchange snapshots
 
-The Sims Exchange is the highest-value, lowest-controversy first target: EA's own former service, well-snapshotted in `archive.org`, with a clear "fan content" understanding.
+The Sims Exchange is the highest-value, lowest-controversy first target: EA's own former service, well-snapshotted in `archive.org`, with a clear "fan content" understanding. Start with the community [Sim Archive Project](https://archive.org/details/sim-archive-project) collection (seeded in [`content/simopolis/archives/SOURCES.yml`](../../content/simopolis/archives/SOURCES.yml)) for packaged Exchange and CC bundles; fall back to Wayback CDX for album HTML not yet in the collection.
 
 ### Tasks
 

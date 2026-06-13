@@ -73,26 +73,9 @@ function createMicropolisCommands(): Command<MicropolisCommandContext>[] {
         simulator.render();
       },
     },
-    {
-      id: 'city.load-by-letter',
-      label: 'Load City by Letter',
-      icon: 'folder-open',
-      context: ['keyboard'],
-      policy: { risk: 'destructive', allowLLM: false, requiresApproval: true },
-      enabled: (context) => hasMicropolis(context) && typeof context.args?.letter === 'number',
-      preview: ({ simulator, args }) => {
-        const letter = Number(args?.letter ?? 0);
-        const city = simulator?.cityFileNames[letter % (simulator.cityFileNames.length || 1)];
-        return { label: city ? `Load ${city}` : 'Load city' };
-      },
-      run: ({ simulator, args }) => {
-        if (!simulator?.micropolis) return;
-        const letter = Number(args?.letter ?? 0);
-        const city = simulator.cityFileNames[letter % (simulator.cityFileNames.length || 1)];
-        simulator.micropolis.loadCity(city);
-        simulator.render();
-      },
-    },
+    // Retired: 'city.load-by-letter' (whimsical a-z city cycler). Removed so plain letter
+    // keys are free for tool selection. A real city browser/previewer is future work.
+    // See documentation/designs/playable-pie-publishing-cauldron/playbooks/PB-04-tool-commands.md
     {
       id: 'tile-set.next',
       label: 'Next Tile Set',

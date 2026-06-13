@@ -1,4 +1,6 @@
-# Manual runs only — avoids automatic deploy on every push to main.
+# Manual runs only — does NOT run on push to main.
+# Protects https://micropolisweb.com/ during development: merge freely; publish only when ready.
+#
 # Actions → Build Wasm Library with Emscripten → Run workflow
 #
 # What this does:
@@ -7,7 +9,7 @@
 #   3. Verify monorepo structure invariants (pnpm run verify:structure)
 #   4. Optionally generate Doxygen C++ API docs
 #   5. Build SvelteKit app (pnpm --filter micropolis run build) — includes Jekyll
-#   6. Deploy static site + optional Doxygen to GitHub Pages
+#   6. Deploy to GitHub Pages ONLY if you check "Deploy to GitHub Pages" (default: off)
 
 name: Build Wasm Library with Emscripten
 
@@ -18,9 +20,19 @@ on:
         description: Generate Doxygen C++ API HTML and publish it at /doc on Pages
         type: boolean
         default: true
+      deploy_to_pages:
+        description: >-
+          Deploy build to GitHub Pages (micropolisweb.com). Leave unchecked while
+          developing — verify the build first, then re-run with this enabled.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
+
+concurrency:
+  group: micropolis-pages-deploy
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -89,7 +101,10 @@ jobs:
           fi
 
       - name: Deploy to GitHub Pages
-        if: success() && github.ref == 'refs/heads/main'
+        if: >-
+          success() &&
+          github.ref == 'refs/heads/main' &&
+          inputs.deploy_to_pages == true
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -27,12 +27,12 @@
 
 | Backend | When |
 |---------|------|
-| **WebGPU** | Default interactive client; Sims + Micropolis + holodeck |
-| **WebGL** | GPU fallback (`WebGLTileRenderer`) |
-| **Canvas** | Pedagogy |
-| **Software / raw RGBA** | Node, catalog batch, no Cairo |
+| **WebGPU** | Default interactive client; holodeck compositor |
+| **Software / Canvas** | Node, `/render`, print, CI; browser fallback when no WebGPU (`webgpu` → `canvas`) |
+| **WebGL (legacy)** | **Frozen.** Opt-in only (`prefer: ['webgl']`); not in default chain. `TileView` bridge until holodeck cutover |
+| **WebGL (future)** | Optional clean-slate rewrite later — spec-aligned, not a port of legacy code |
 
-`createMapTileRenderer()` prefers WebGPU → WebGL → Canvas. `TileView.svelte` uses it today.
+`createMapTileRenderer()` default: **`webgpu` → `canvas`** (software pixels). **Target interactive app:** `HolodeckStage`; `/render` + server → software only.
 
 ---
 
@@ -59,16 +59,19 @@ server → catalog version
 
 ## TODO (ordered)
 
-1. **Vitamoo:** `HolodeckStage` — sort `DisplayListEntry[]` by layer, execute static/skinned/ui (unified doc phase C).
-2. **Vitamoo:** Environment plugin — terrain, floor, walls, roofs (design §4 steps 4–5).
-3. **Vitamoo:** Pie menu plugin — desaturate, feather, shadow, head (design §4 step 8; encyclopedia).
-4. **Tile-renderer → vitamoo:** `MicropolisMap` plugin using shared `MapViewport` + pick idType `7` (phase E).
-5. **Micropolis:** Sprites plugin, floor-grid feedback, interaction highlight (phases F–G).
-6. **Apps:** `TileView` / Micropolis Home → single `Renderer.create`, not a second GPU context (phase H–I).
-7. Extend `RenderDescription` for Sims catalog thumbnails and lot scenes.
-8. Headless batch worker reusing holodeck route.
-9. Pie menu → command-bus metadata (i18n keys).
-10. WebGL/Canvas polish for teaching and fallback only.
+1. **Vitamoo:** `HolodeckStage` display-list **executor** (sort + dispatch static/skinned/ui/frame).
+2. **Micropolis (after playable A–C):** `MicropolisMapPlugin` — absorb `WebGPUTileRenderer`; software raster aligned.
+3. **Micropolis (with holodeck):** `CursorLayer` **`webgpu`** backend + `EditingToolCursorPlugin` (parallel to DOM/SVG).
+4. **Overlays:** Generalized MOP/color overlay layer — software pass + WebGPU plugin, same schema.
+5. **Measure:** holodeck `measure()` on tool-cursor + pointer plugins (DOM path uses viewport helpers until then).
+6. **Micropolis:** **Sprite layer — software compositor (required)** + WebGPU plugin; `SpriteRenderProfile` for print/overview — [§2.4](map-compositing-and-measurement.md#24-sprites--required-on-software-print-iconic-maps-overviews).
+7. **Apps:** `TileView` → `HolodeckStage` when playable ships; `/render` + server → software (map + sprites + overlays).
+8. **Legacy WebGL:** removed from default `createMapTileRenderer` chain; frozen — no greenfield features. Optional clean-slate WebGL rewrite later.
+9. Vitamoo: Environment, pie menu plugins (existing roadmap items).
+10. Extend `RenderDescription` for catalog thumbnails and lot scenes.
+11. Headless batch worker (Chromium WebGPU when available).
+12. Pie menu → command-bus metadata.
+13. **Later:** Whiteboard layer, multiplayer vote preview (“bouncing zone”) — [map-compositing-and-measurement.md §5](map-compositing-and-measurement.md#5-multiplayer-voting-preview-historical--target).
 
 **Ambitious (globe):** [globe-city-navigation.md](globe-city-navigation.md) — icosphere, POI-facing rotation, fish-eye magnify, inverse pick (phases G0–G5).
 

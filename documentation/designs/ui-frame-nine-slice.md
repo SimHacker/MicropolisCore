@@ -79,18 +79,28 @@ Executor applies policy **after** projecting `inner` from tile space to screen, 
 
 ## 4. Uses
 
-### 4.1 Editing-tool cursor
+### 4.1 Editing-tool cursor (tile-snapped)
 
 1. Snap `hoverTile` + `gToolSize[tool]` → **inner** in `world-tile`.
 2. Project inner corners to screen → **inner** in `screen`.
-3. `outer = outerFromInner(inner, rimPx)` — rim grows **outward** only.
+3. `outer = outerFromInner(inner, rimPx)` — rim grows **outward** only (nine-slice path).
 4. `FrameInstance` with `hollow: true`, procedural dual stroke, tool color from palette catalog.
 5. Long tools (road/rail): asymmetric rim or custom atlas with **long** edge aspect (palette legend).
 
+**Center-only variant (no edges):** set slice insets to zero on all sides — the frame is
+**only the center cell**, fixed size at **tile pixel resolution** (e.g. a 48×48 hand-drawn
+bitmap for a 3×3 tool, authored at exact display size). No stretching; 1:1 blit via
+`static` quad or nine-slice degenerate case. Plugs into the same `EditingToolCursorPlugin`
+via style id `cursor.tool.center-only` or `cursor.tool.tiled-atlas`.
+
 ### 4.2 Pointer / multiplayer
 
-- Small **frame** around pointer hotspot (screen space), or atlas arrow in corner cells only.
-- Remote cursors: same component + presence interpolation ([Liveblocks cursors](https://liveblocks.io/blog/how-to-animate-multiplayer-cursors)).
+- **All cursor pixels on WebGPU** — local mouse/virtual pointer + **every remote player's
+  tile tool frame** (not remote mouse sprites).
+- Local tool frame: **fat** rim (`FrameRimPolicy.scale` > 1); remote: **thin** rim, same
+  nine-slice or center-only style, player color from catalog.
+- Presence interpolation for remote tile anchors ([Liveblocks pattern](https://liveblocks.io/blog/how-to-animate-multiplayer-cursors)) applies to **state** fed to the plugin, not DOM divs.
+- Optional small pointer glyph at hotspot for local mouse only (`PointerCursorPlugin`).
 
 ### 4.3 Windows, panels, subpanels
 
@@ -120,9 +130,11 @@ Holodeck executor (phase C):
 
 | Style id | Use |
 |----------|-----|
-| `cursor.tool.default` | Procedural dual stroke |
-| `cursor.tool.road` | Long horizontal rim emphasis |
-| `cursor.tool.zone` | Medium square |
+| `cursor.tool.default` | Procedural dual-stroke nine-slice (hollow) |
+| `cursor.tool.center-only` | Center cell only — fixed tile-px bitmap, zero edge insets |
+| `cursor.tool.tiled-atlas` | Hand-drawn per-tile-size cursor atlas at native resolution |
+| `cursor.tool.road` | Long horizontal rim emphasis (nine-slice) |
+| `cursor.tool.zone` | Medium square (nine-slice) |
 | `chrome.window.motif` | Atlas nine-slice |
 | `chrome.panel.inset` | Hollow + fill |
 

@@ -128,12 +128,76 @@ around the fingers, and lifting/adding fingers never snaps.
 
 ---
 
-## 7. Cursor rendering (its own layer)
+## 7. Cursor rendering — parallel layer coordinator
 
-The controller publishes `CursorState` (position, size, shape, color, sprite); a
-`CursorLayer` renders it — **any size/shape/color**, local + remote. Independent of
-every consumer. On the WebGPU holodeck this is the `POINTER_CURSORS` layer (115); in
-plain DOM it's an absolutely-positioned overlay.
+The controller publishes `CursorState`, `ToolCursorState`, and per-player
+`CursorPresence` bundles. **`CursorLayer.svelte`** is the high-level handle on
+everything a cursor *is*: it coordinates representations across backends without
+duplicating layout math.
+
+```text
+VirtualPointerController / multiplayer presence / tool selection
+                    │
+                    ▼
+            CursorLayer.svelte  (parallel coordinator)
+                    │
+     ┌──────────────┼──────────────┬─────────────────┐
+     ▼              ▼              ▼                 ▼
+ WebGPU plugins   measure       DOM slots         autoscroll
+ (pixels)         read/patch    (conditional)     (MapGesture)
+```
+
+| Backend | Plugin / slot | Draws |
+|---------|---------------|--------|
+| `PointerCursorPlugin` | `POINTER_CURSORS` (115) | Local mouse / virtual pointer (screen px) |
+| `EditingToolCursorPlugin` | `EDITING_TOOL_CURSOR` (71) | Tile-snapped frames — **every** connected player |
+| `PlayerAvatarPlugin` | ~72–73 | User icon; attaches to tool frame or floats free |
+| `WorldStrokePlugin` | ~74 | Chalk / whiteboard strokes in **world-pixel** space |
+
+**Coordinate modes by tool:**
+
+| Tool class | `anchorSpace` | Cursor behavior |
+|------------|---------------|-----------------|
+| Bulldozer, residential, zone paint | `world-tile` | Tile-snapped nine-slice or center-only bitmap |
+| Chalk, whiteboard, annotation | `world-pixel` | Glides in virtual world pixels; GPU line while mouse down |
+| Pie menu, query magnifier | `screen` | Screen hotspot; pointer plugin |
+
+**DOM is conditional.** `CursorPresence.representations.dom` lists slots (`label`,
+`avatar`, `tooltip`, `infovis`). Remote players in tile-only view often need **WebGPU
+only** — `CursorLayer` creates **no DOM nodes** for them. Local player may get label +
+avatar anchored via `stage.measure()` refs.
+
+Holodeck plugins draw cursor **pixels** when the WebGPU backend is enabled; DOM/SVG draws
+tool frames for the playable vertical slice first. See
+[map-compositing-and-measurement.md §3.2](map-compositing-and-measurement.md#32-dom-vs-webgpu-split).
+
+### 7.1 Incremental cursor backends (`CursorLayer`)
+
+| Backend | When | Role |
+|---------|------|------|
+| **`dom`** (default) | Playable Phase B | SVG/DOM tile frame + ghost; viewport clip math identical to future GPU |
+| **`webgpu`** | After holodeck map migration | `EditingToolCursorPlugin` + measure read/patch |
+| **`both`** | Transition / debug | DOM chrome + GPU pixels in parallel |
+
+Config on `CursorLayer.svelte`: `CursorBackend = 'dom' | 'webgpu' | 'both'`. Same
+`CursorPresence[]` API — no component replacement when GPU lands.
+
+### 7.2 Future: collaborative tools and vehicles (design for, not yet)
+
+The measure protocol + `CursorLayer` should **not** assume one player per tool. North-star
+scenarios (implementation deferred):
+
+- **Pall bearers** — multiple players, one shared rig; each binds to a handle attachment ref.
+- **Shared rectangle** — two players drag opposite corners; each owns writable corner props on
+  one shared measure ref (`topLeftX` vs `bottomRightX`, constraints per role).
+- **Tool-as-vehicle** — bulldozer, road paver, rail layer: body ref + attachments; driver
+  writes locomotion; passenger writes a secondary tool (water balloons, chalk, signals).
+- **Parameterized templates** — Factorio-like blueprints later: template params are the same
+  bindable measure props with `_constraints`; ghost preview = read, commit = command bus.
+
+`CursorPresence` should remain extensible for `role?`, `toolInstanceId?`, and shared
+instances without a protocol break. Full detail:
+[map-compositing-and-measurement.md §3.5](map-compositing-and-measurement.md#35-future-goals-design-for-do-not-implement-yet).
 
 ---
 
@@ -159,7 +223,7 @@ plain DOM it's an absolutely-positioned overlay.
 | **MapGesture** | direct multitouch pan/zoom/rotate (§6) + throw/brake (§5) + autoscroll (§4) |
 | **Graph gliding (MediaGraph)** | environment forces over the slug graph (§8) |
 | **Sims placement** | snap-on-valid / smooth-red-on-invalid (own doc §7) |
-| **Multiplayer** | remote presence cursors on the cursor layer |
+| **Multiplayer** | presence → `EditingToolCursorPlugin` (WebGPU tile frames for all players) |
 | **Accessibility** | eye/head tracking, Dasher, gamepad feed the same unified pointer |
 
 ---
@@ -215,7 +279,7 @@ interface IMapGestureController {                                               
 | Phase | Work |
 |-------|------|
 | **P0** | This doc + interface sketches + integration TODOs (current) |
-| **P1** | `VirtualPointerController`: modes, lock, ref-count, `CursorLayer`, toggle |
+| **P1** | `VirtualPointerController`: modes, lock, ref-count; publish state to WebGPU cursor plugins |
 | **P2** | `MapGestureController`: drag-pan + throw/brake (§5) + autoscroll (§4) |
 | **P3** | Multitouch pan/zoom/rotate pivot + handoff (§6); pie menu consumes virtual pointer |
 | **P4** | `PointerEnvironment` forces; MediaGraph slug-graph gliding (§8) |

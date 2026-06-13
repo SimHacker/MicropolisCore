@@ -9,6 +9,9 @@ export {
 	type HolodeckPlugin,
 	type HolodeckPluginContext,
 	type HolodeckFrameState,
+	type MeasureKind,
+	type MeasureQuery,
+	type MeasureResult,
 	type OverlayPlugin,
 	type OverlayPluginContext,
 } from './holodeck/types.js';
@@ -20,6 +23,8 @@ export { MapScene, type MapSceneBaseLayer } from './scene/MapScene.js';
 
 export * from './schema/description.js';
 export * from './raster/software.js';
+
+export * from './measure/index.js';
 
 export {
 	createGpuCanvas,

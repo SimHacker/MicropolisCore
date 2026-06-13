@@ -21,10 +21,11 @@
 
 **Fallbacks (exception paths, not the product model):**
 
-- **Software raster** (`render/software`) — Node tests, CI, no browser, or explicit “export PNG without GPU” jobs. CPU-only, no Cairo requirement.
-- **WebGL/Canvas scaffold** — old browsers or teaching; not the holodeck compositor.
+- **Software raster** (`render/software`) — **first-class, maintained in lockstep** with WebGPU for map + **sprites** + overlay planes marked `software: true`. Node **print-this-city**, CI, OG images, iconic thumbnails. Sprites are **required**, not optional — see [map-compositing-and-measurement.md §2.4](map-compositing-and-measurement.md#24-sprites--required-on-software-print-iconic-maps-overviews).
+- **WebGL legacy** — **frozen**; not in default renderer chain; must not constrain greenfield work. Optional **clean-slate WebGL rewrite** later (WebGPU + software as references). See [map-compositing-and-measurement.md §1.1](map-compositing-and-measurement.md#11-webgl--frozen-legacy-not-a-constraint-clean-slate-later-optional).
+- **Canvas** — delegates to software (same pixels as Node).
 
-Design APIs (`render-core`, vitamoo, micropolis plugins) assume **the compositor lives in the tab**. Server-side code validates descriptions and stores results; it does not mirror the WGSL pipeline.
+Design APIs assume **interactive compositor = WebGPU in the tab**; **authoritative batch compositor = software** for registered overlay layers. Server stores client-uploaded previews after approval; it does not mirror the full WGSL pipeline.
 
 ```text
 server:  content pack + RenderDescription JSON + tile/IFF URLs
@@ -50,12 +51,13 @@ You are right to reject a **thick API that pretends WebGPU is WebGL**.
 
 **Policy:** `@micropolis/render-core` speaks **WebGPU natively** at the compositor boundary (`GPUDevice`, `GPUCommandEncoder`, `GPURenderPassEncoder`, explicit attachment layouts). It does **not** expose a WebGL2-compatible facade.
 
-WebGL and Canvas remain **scaffolding** in `@micropolis/tile-renderer` (or a tiny `@micropolis/raster-scaffold` package later) that implement **export-only** paths:
+WebGL and Canvas in `@micropolis/tile-renderer` — **legacy / fallback only** (see §1.1 in map-compositing doc):
 
-- `MicropolisMapRenderDescription` → RGBA `Uint8ClampedArray` (software)
-- optional `WebGLTileRenderer` for old browsers
+- `MicropolisMapRenderDescription` → RGBA via **software** (definitive Node path)
+- `WebGLTileRenderer` — **frozen**; opt-in via `prefer: ['webgl']`; not default chain
+- `CanvasTileRenderer` — software delegate; default fallback when WebGPU unavailable
 
-They do **not** implement `HolodeckStage`, pick buffers, or display-list execution. No compromise to the holodeck model.
+They do **not** implement `HolodeckStage`, pick buffers, display-list execution, or `HolodeckMeasure`.
 
 ```text
 @micropolis/render-core     ← schemas, MapViewport, HolodeckStage, pick contract (WebGPU)
