@@ -18,6 +18,8 @@ the linked documents.
 | [Playable Micropolis game](#playable-micropolis-game) | Phase C: message/zone/budget overlays + disaster surfacing | High |
 | [Playable Micropolis game](#playable-micropolis-game) | Pie/cursor substrate + memory-palace graph editor (cauldron) | Medium |
 | [Micropolis renderer](#micropolis-renderer) | Holodeck map migration — **after playable A–C** | Medium (gated) |
+| [Micropolis renderer](#micropolis-renderer) | Tileset packs: MOP atlas mixing + per-set sprite overrides (helicopter, etc.) | Medium |
+| [Micropolis renderer](#micropolis-renderer) | Fix `ancientasia/tiles.bmp` (use `asia.bmp`) — [#9](https://github.com/SimHacker/MicropolisCore/issues/9) | Medium |
 | [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ | ~~High~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Add PR workflow (structure + build-ts + svelte-check + Vitest)~~ ✅ | ~~High~~ |
 | [Code quality](#code-quality) | `noUncheckedIndexedAccess` in tsconfig files | Low |
@@ -26,7 +28,6 @@ the linked documents.
 | [Micropolis WASM testing](#micropolis-wasm-testing) | Expand bridge test coverage | Medium |
 | [Micropolis WASM testing](#micropolis-wasm-testing) | ~~Add CI for Vitest~~ ✅ | ~~High~~ |
 | [Micropolis callbacks](#micropolis-callbacks--events) | Normalized event envelopes | Medium |
-| [Micropolis renderer](#micropolis-renderer) | Holodeck map migration — **after playable A–C** | Medium (gated) |
 | [VitaMoo — Holodeck](#vitamoo--holodeck) | Terrain/floor/wall/roof pipeline | Medium |
 | [VitaMoo — renderer polish](#vitamoo--webgpu-renderer-polish) | GPU pass timing, richer validation UX | Medium |
 | [VitaMoo — UI overlays](#vitamoo--ui-overlays) | Pie-menu head, speech bubbles, censorship pass | Low–Medium |
@@ -190,7 +191,8 @@ but is not on the critical path to “playable.”
 - Keep `renderMicropolisMapSoftware` aligned (server `/render`, CI fixtures).
 - Enable `CursorLayer` **`webgpu`** backend + `EditingToolCursorPlugin` (parallel to DOM; user/config toggles `dom` | `webgpu` | `both`).
 - Generalized MOP overlay schema + software pass + WebGPU tint pass.
-- **Software sprite compositor (required)** — print/export/overview modes; WebGPU plugin parity.
+- **Tileset packs** — virtualized tile atlases via MOP; per-set sprite sheets (`chopper.bmp`, …); plugin override/add/replace for original Maxis + new content ([map-compositing §2.5](designs/map-compositing-and-measurement.md#25-tileset-packs-mop-mixing-and-per-set-sprites)). Fix Ancient Asia tile atlas: `tiles.bmp` ← `asia.bmp` ([#9](https://github.com/SimHacker/MicropolisCore/issues/9)).
+- **Software sprite compositor (required)** — print/export/overview modes; WebGPU plugin parity; sprite lookup follows active tileset pack.
 - Legacy WebGL **off default chain** (frozen); whiteboard / vote preview / §3.5 on software + WebGPU only.
 
 ### R2. Design north star (not yet)

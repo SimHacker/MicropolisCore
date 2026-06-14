@@ -63,15 +63,16 @@ server → catalog version
 2. **Micropolis (after playable A–C):** `MicropolisMapPlugin` — absorb `WebGPUTileRenderer`; software raster aligned.
 3. **Micropolis (with holodeck):** `CursorLayer` **`webgpu`** backend + `EditingToolCursorPlugin` (parallel to DOM/SVG).
 4. **Overlays:** Generalized MOP/color overlay layer — software pass + WebGPU plugin, same schema.
-5. **Measure:** holodeck `measure()` on tool-cursor + pointer plugins (DOM path uses viewport helpers until then).
-6. **Micropolis:** **Sprite layer — software compositor (required)** + WebGPU plugin; `SpriteRenderProfile` for print/overview — [§2.4](map-compositing-and-measurement.md#24-sprites--required-on-software-print-iconic-maps-overviews).
-7. **Apps:** `TileView` → `HolodeckStage` when playable ships; `/render` + server → software (map + sprites + overlays).
-8. **Legacy WebGL:** removed from default `createMapTileRenderer` chain; frozen — no greenfield features. Optional clean-slate WebGL rewrite later.
-9. Vitamoo: Environment, pie menu plugins (existing roadmap items).
-10. Extend `RenderDescription` for catalog thumbnails and lot scenes.
-11. Headless batch worker (Chromium WebGPU when available).
-12. Pie menu → command-bus metadata.
-13. **Later:** Whiteboard layer, multiplayer vote preview (“bouncing zone”) — [map-compositing-and-measurement.md §5](map-compositing-and-measurement.md#5-multiplayer-voting-preview-historical--target).
+5. **Tileset packs (MOP + atlases + sprites):** selectable Maxis city sets (`classic`, `ancientasia`, `wildwest`, … under `content/micropolis/tilesets/`). The **mop** buffer is the hook for mixing tile indices across virtualized atlases; plugins register tile + sprite content. Original Maxis sets ship **per-set sprite sheets** (e.g. `chopper.bmp` differs for Ancient Asia vs Classic — helicopter animation is not global). Renderer must resolve sprite atlases from the **active tileset pack**, allow **override / add / replace** per sprite id, and accept plugin-supplied atlases alongside engine `SimSprite` snapshots. Aligns with existing plugin zones and plugin agents/sprites; same holodeck/content-plugin publishing model as map layers. See [map-compositing §2.5](map-compositing-and-measurement.md#25-tileset-packs-mop-mixing-and-per-set-sprites). Asset fix: `ancientasia/tiles.bmp` was a Classic duplicate — use `asia.bmp` ([#9](https://github.com/SimHacker/MicropolisCore/issues/9)).
+6. **Measure:** holodeck `measure()` on tool-cursor + pointer plugins (DOM path uses viewport helpers until then).
+7. **Micropolis:** **Sprite layer — software compositor (required)** + WebGPU plugin; `SpriteRenderProfile` for print/overview — [§2.4](map-compositing-and-measurement.md#24-sprites--required-on-software-print-iconic-maps-overviews). Sprite atlas lookup must follow active tileset pack (TODO 5).
+8. **Apps:** `TileView` → `HolodeckStage` when playable ships; `/render` + server → software (map + sprites + overlays).
+9. **Legacy WebGL:** removed from default `createMapTileRenderer` chain; frozen — no greenfield features. Optional clean-slate WebGL rewrite later.
+10. Vitamoo: Environment, pie menu plugins (existing roadmap items).
+11. Extend `RenderDescription` for catalog thumbnails and lot scenes.
+12. Headless batch worker (Chromium WebGPU when available).
+13. Pie menu → command-bus metadata.
+14. **Later:** Whiteboard layer, multiplayer vote preview (“bouncing zone”) — [map-compositing-and-measurement.md §5](map-compositing-and-measurement.md#5-multiplayer-voting-preview-historical--target).
 
 **Ambitious (globe):** [globe-city-navigation.md](globe-city-navigation.md) — icosphere, POI-facing rotation, fish-eye magnify, inverse pick (phases G0–G5).
 

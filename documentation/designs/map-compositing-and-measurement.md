@@ -159,6 +159,34 @@ remain distinguishable — a deliberate “cartographic emphasis” pass, not in
 tiles (+ optional MOP). WebGPU `MicropolisSpritePlugin` uses the same profile for parity tests.
 Default `layers` for export/print: `['map', 'sprites']`.
 
+### 2.5 Tileset packs, MOP mixing, and per-set sprites
+
+SimCity Classic **city sets** (Maxis add-on tilesets: Ancient Asia, Wild West, Moon Colony, …)
+are not just a replacement `tiles.bmp`. Each pack under `content/micropolis/tilesets/<id>/`
+includes:
+
+| Asset class | Examples | Notes |
+|-------------|----------|--------|
+| Tile atlas | `tiles.bmp` (from set-specific source, e.g. `asia.bmp`) | 1024×16×16 index tiles; drives map raster |
+| Animated agents | `chopper.bmp`, `plane.bmp`, `train.bmp`, `ship.bmp`, `tornado.bmp`, … | **Per-set art** — Ancient Asia overrides helicopter frames; not shared with Classic |
+| Disasters / UI chrome | `monster.bmp`, `explode.bmp`, scenario splash bmps, toolbar | Some shared across sets, some unique — audit per pack |
+| Source receipt | `scus*.rc2` | Windows resource stubs; bitmaps extracted at import time |
+
+**MOP role:** the engine **mop** buffer is how we mix tile indices, overlay tints, and (eventually)
+which virtualized atlas slice to use when multiple tileset packs are registered. Renderer plugins
+should treat a tileset pack as a **content plugin**: atlas URLs + sprite sheet manifest + optional
+zone/agent extensions (existing plugin zones / plugin agents in the engine).
+
+**Target behavior:**
+
+1. **Select active pack(s)** — keyboard / command-bus tile-set toggle (already partially wired); default `classic`.
+2. **Virtualized atlases** — one WebGPU texture array or bindless table; map tile index → (pack, local index) without copying full atlases per frame.
+3. **Sprite atlas resolution** — `SimSprite.type` + `frame` + **active tileset pack id** → bitmap rect in the correct `chopper.bmp` (or plugin override).
+4. **Override / add / replace** — plugins may supply new sprite sheets or patch individual animation frames; same publishing slug model as [content-plugins-and-autodiscovery.md](content-plugins-and-autodiscovery.md).
+5. **Software + WebGPU parity** — export/print uses the same pack + sprite manifest as the interactive holodeck.
+
+**Receipt / bug:** [#9](https://github.com/SimHacker/MicropolisCore/issues/9) — `ancientasia/tiles.bmp` was accidentally copied from Classic at import (`ee9e1b1`); correct atlas is `asia.bmp` in the same directory. Per-set `chopper.bmp` files were extracted correctly and already differ by MD5 across packs.
+
 ---
 
 ## 3. Holodeck measurement API

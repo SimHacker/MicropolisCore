@@ -659,7 +659,7 @@ void Micropolis::setValves()
 
     resRatio = min(resRatio, resRatioMax);
     comRatio = min(comRatio, comRatioMax);
-    resRatio = min(indRatio, indRatioMax);
+    indRatio = min(indRatio, indRatioMax);
 
     // Global tax and game level effects.
     short z = min((short)(cityTax + gameLevel), taxMax);
