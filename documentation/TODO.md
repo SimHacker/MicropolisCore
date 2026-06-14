@@ -18,8 +18,10 @@ the linked documents.
 | [Playable Micropolis game](#playable-micropolis-game) | Phase C: message/zone/budget overlays + disaster surfacing | High |
 | [Playable Micropolis game](#playable-micropolis-game) | Pie/cursor substrate + memory-palace graph editor (cauldron) | Medium |
 | [Micropolis renderer](#micropolis-renderer) | Holodeck map migration — **after playable A–C** | Medium (gated) |
-| [Micropolis renderer](#micropolis-renderer) | Tileset packs: MOP atlas mixing + per-set sprite overrides (helicopter, etc.) | Medium |
-| [Micropolis renderer](#micropolis-renderer) | Fix `ancientasia/tiles.bmp` (use `asia.bmp`) — [#9](https://github.com/SimHacker/MicropolisCore/issues/9) | Medium |
+| [Micropolis renderer](#micropolis-renderer) | Sprite compositor (engine simulates; client does not draw) — [#4](https://github.com/SimHacker/MicropolisCore/issues/4) | Medium |
+| [Micropolis renderer](#micropolis-renderer) | Tileset packs: MOP atlas mixing + per-set sprite overrides | Medium |
+| [Micropolis renderer](#micropolis-renderer) | ~~Ancient Asia tile atlas (`tiles.bmp` ← `asia.bmp`)~~ ✅ [#9](https://github.com/SimHacker/MicropolisCore/issues/9) | ~~Medium~~ |
+| [CI / build integrity](#ci--build-integrity) | ~~Concurrent `dev` + C++ watch/rebuild ([PR #6](https://github.com/SimHacker/MicropolisCore/pull/6))~~ ✅ | ~~Medium~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ | ~~High~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Add PR workflow (structure + build-ts + svelte-check + Vitest)~~ ✅ | ~~High~~ |
 | [Code quality](#code-quality) | `noUncheckedIndexedAccess` in tsconfig files | Low |
@@ -117,9 +119,16 @@ Default for that checkbox is **off** so you can verify a full build before publi
 | `emscripten_build.yml` | manual only | Only if `deploy_to_pages` ✓ |
 | `vitamoo-pages.yml` | manual only | VitaMooSpace (separate site) |
 
-**Local dev:** `pnpm --filter micropolis dev` — test playable work before any publish.
+**Local dev:** `pnpm --filter micropolis dev` — Vite plus watched engine rebuild (requires
+Emscripten). Use `pnpm --filter micropolis run dev:vite` for Vite only with committed WASM.
+See [DEVELOPMENT.md](../DEVELOPMENT.md).
 
-### 1. Emscripten + Pages workflow
+### 1. ✅ Concurrent `dev` + engine watch — done ([PR #6](https://github.com/SimHacker/MicropolisCore/pull/6))
+
+Landed in monorepo: `apps/micropolis` `dev` / `dev:vite` / `dev:engine` (`concurrently` +
+`chokidar-cli` → `pnpm --filter @micropolis/engine-wasm run build`). Close stale PR #6.
+
+### 2. Emscripten + Pages workflow
 
 `.github/workflows/emscripten_build.yml` — manual-only; Jekyll step uses `apps/micropolis/website/`.
 Use **`deploy_to_pages: false`** (default) while developing; re-run with deploy enabled when ready.
@@ -128,12 +137,12 @@ Use **`deploy_to_pages: false`** (default) while developing; re-run with deploy 
 
 ---
 
-### 2. ✅ Wire `verify:structure` into CI — done
+### 3. ✅ Wire `verify:structure` into CI — done
 
 `pnpm run verify:structure` (20 assertions) now runs in both `emscripten_build.yml`
 (after WASM build) and `vitamoo-pages.yml` (after `pnpm install`).
 
-### 3. ✅ Lightweight PR workflow — done
+### 4. ✅ Lightweight PR workflow — done
 
 **File:** `.github/workflows/pr-checks.yml`
 
@@ -191,8 +200,9 @@ but is not on the critical path to “playable.”
 - Keep `renderMicropolisMapSoftware` aligned (server `/render`, CI fixtures).
 - Enable `CursorLayer` **`webgpu`** backend + `EditingToolCursorPlugin` (parallel to DOM; user/config toggles `dom` | `webgpu` | `both`).
 - Generalized MOP overlay schema + software pass + WebGPU tint pass.
-- **Tileset packs** — virtualized tile atlases via MOP; per-set sprite sheets (`chopper.bmp`, …); plugin override/add/replace for original Maxis + new content ([map-compositing §2.5](designs/map-compositing-and-measurement.md#25-tileset-packs-mop-mixing-and-per-set-sprites)). Fix Ancient Asia tile atlas: `tiles.bmp` ← `asia.bmp` ([#9](https://github.com/SimHacker/MicropolisCore/issues/9)).
-- **Software sprite compositor (required)** — print/export/overview modes; WebGPU plugin parity; sprite lookup follows active tileset pack.
+- **Tileset packs** — virtualized tile atlases via MOP; per-set sprite sheets; plugin override/add/replace ([map-compositing §2.5](designs/map-compositing-and-measurement.md#25-tileset-packs-mop-mixing-and-per-set-sprites)). ~~Ancient Asia atlas fix~~ ✅ ([#9](https://github.com/SimHacker/MicropolisCore/issues/9)). Per-set sprite PNGs preserved colocated with renderer atlases (`<set>-sprite-<name>.png` in `apps/micropolis/src/lib/images/tilesets/`); mono/snow sprites still TBD (Mac resource extraction).
+- **Software sprite compositor (required)** — [#4](https://github.com/SimHacker/MicropolisCore/issues/4): engine `SimSprite` snapshots exist; `TileView` does not composite them yet. Print/export/overview + WebGPU holodeck parity; atlas lookup follows active tileset pack ([map-compositing §2.4](designs/map-compositing-and-measurement.md#24-sprites--required-on-software-print-iconic-maps-overviews)).
+- ~~WebGL tile edge duplication~~ — [#5](https://github.com/SimHacker/MicropolisCore/issues/5) closed; not reproduced on default WebGPU → canvas chain (legacy WebGL only).
 - Legacy WebGL **off default chain** (frozen); whiteboard / vote preview / §3.5 on software + WebGPU only.
 
 ### R2. Design north star (not yet)

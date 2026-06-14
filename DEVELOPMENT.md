@@ -58,9 +58,14 @@ pnpm --filter micropolis run check:watch # Watch mode
 ## Dev servers
 
 ```bash
-pnpm --filter micropolis dev             # Micropolis app → http://localhost:5177
+pnpm --filter micropolis dev             # Vite + watched C++ rebuild (needs Emscripten)
+pnpm --filter micropolis run dev:vite    # Vite only (uses committed WASM)
 pnpm --filter vitamoospace dev           # VitaMooSpace   → http://localhost:5173
 ```
+
+`dev` runs Vite and `chokidar` on `packages/micropolis-engine/src/*.{cpp,h}`; each save
+runs `pnpm run build:engine` (same as [PR #6](https://github.com/SimHacker/MicropolisCore/pull/6),
+adapted for the monorepo).
 
 Or use the VS Code **Debug Micropolis SvelteKit App** launch config (`.vscode/launch.json`).
 
