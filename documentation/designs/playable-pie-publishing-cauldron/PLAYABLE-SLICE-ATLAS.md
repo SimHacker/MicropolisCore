@@ -63,6 +63,8 @@ Verified symbol/path table for all the above: [wisdom/code-anchors.md](wisdom/co
 
 **Next batch (skeleton, gated on this one):** holodeck cutover —
 [HOLODECK-CUTOVER-ATLAS.md](HOLODECK-CUTOVER-ATLAS.md) + [playbooks-holodeck/](playbooks-holodeck/).
+**Parallel:** software sprite overlay —
+[SPRITE-OVERLAY-ATLAS.md](SPRITE-OVERLAY-ATLAS.md) (DOM layer + skywriting; in progress).
 Pie substrate + publishing stay in [GATHERING.md](GATHERING.md) (STIR).
 
 ## Operational discipline (Micropolis)

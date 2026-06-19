@@ -40,6 +40,8 @@ export class MapViewport {
 	zoom = 1;
 	zoomMin = 1 / 32;
 	zoomMax = 256;
+	/** Matches Canvas/WebGL tile renderers that pass `4 * zoom` into the software path. */
+	screenZoomFactor = 1;
 
 	configure(config: MapViewportConfig): void {
 		if (config.mapWidth !== undefined) this.mapWidth = config.mapWidth;
@@ -59,6 +61,11 @@ export class MapViewport {
 		if (config.zoom !== undefined) this.zoom = config.zoom;
 		if (config.zoomMin !== undefined) this.zoomMin = config.zoomMin;
 		if (config.zoomMax !== undefined) this.zoomMax = config.zoomMax;
+		if (config.screenZoomFactor !== undefined) this.screenZoomFactor = config.screenZoomFactor;
+	}
+
+	private effectiveZoom(): number {
+		return this.zoom * this.screenZoomFactor;
 	}
 
 	setScreenSize(width: number, height: number): void {
@@ -75,6 +82,24 @@ export class MapViewport {
 		this.panTo(this.panX + dx, this.panY + dy);
 	}
 
+	/**
+	 * Direct-manipulation pan: keep `world` anchored under `screen`.
+	 * The grabbed map point stays exactly under the cursor — zero slip by construction.
+	 */
+	panToKeepWorldAtScreen(world: Vec2, screen: Vec2): void {
+		const z = this.effectiveZoom();
+		if (Math.abs(z) < EPS || Math.abs(this.tileWidth) < EPS || Math.abs(this.tileHeight) < EPS) {
+			return;
+		}
+		const [worldX, worldY] = world;
+		const [screenX, screenY] = screen;
+		const panX =
+			worldX - (screenX - this.screenWidth * this.screenAnchorX) / (z * this.tileWidth);
+		const panY =
+			worldY - (screenY - this.screenHeight * this.screenAnchorY) / (z * this.tileHeight);
+		this.panTo(panX, panY);
+	}
+
 	zoomTo(zoom: number): void {
 		this.zoom = clamp(zoom, this.zoomMin, this.zoomMax);
 	}
@@ -89,8 +114,8 @@ export class MapViewport {
 		const [screenX, screenY] = screen;
 		const anchoredScreenX = screenX - this.screenWidth * this.screenAnchorX;
 		const anchoredScreenY = screenY - this.screenHeight * this.screenAnchorY;
-		const scaledX = anchoredScreenX / this.zoom;
-		const scaledY = anchoredScreenY / this.zoom;
+		const scaledX = anchoredScreenX / this.effectiveZoom();
+		const scaledY = anchoredScreenY / this.effectiveZoom();
 		const tileX = scaledX / this.tileWidth + this.panX;
 		const tileY = scaledY / this.tileHeight + this.panY;
 		return [tileX, tileY];
@@ -98,21 +123,22 @@ export class MapViewport {
 
 	screenToWorldTileDelta(screenDelta: Vec2): MutableVec2 {
 		const [screenDX, screenDY] = screenDelta;
-		return [screenDX / this.zoom / this.tileWidth, screenDY / this.zoom / this.tileHeight];
+		return [screenDX / this.effectiveZoom() / this.tileWidth, screenDY / this.effectiveZoom() / this.tileHeight];
 	}
 
 	worldTileToScreen(world: Vec2): MutableVec2 {
 		const [tileX, tileY] = world;
 		const unpannedX = tileX - this.panX;
 		const unpannedY = tileY - this.panY;
-		const screenX = unpannedX * this.zoom * this.tileWidth + this.screenWidth * this.screenAnchorX;
-		const screenY = unpannedY * this.zoom * this.tileHeight + this.screenHeight * this.screenAnchorY;
+		const z = this.effectiveZoom();
+		const screenX = unpannedX * z * this.tileWidth + this.screenWidth * this.screenAnchorX;
+		const screenY = unpannedY * z * this.tileHeight + this.screenHeight * this.screenAnchorY;
 		return [screenX, screenY];
 	}
 
 	worldTileToScreenDelta(tileDelta: Vec2): MutableVec2 {
 		const [tileDX, tileDY] = tileDelta;
-		return [tileDX * this.zoom * this.tileWidth, tileDY * this.zoom * this.tileHeight];
+		return [tileDX * this.effectiveZoom() * this.tileWidth, tileDY * this.effectiveZoom() * this.tileHeight];
 	}
 
 	// --- world-tile ↔ world-pixel (sprite / engine space) ---
@@ -142,7 +168,7 @@ export class MapViewport {
 	 */
 	worldTileToScreenMatrix(out?: Mat3): Mat3 {
 		const m = (out ?? new Float32Array(9)) as Mat3;
-		const z = this.zoom;
+		const z = this.effectiveZoom();
 		const tw = this.tileWidth;
 		const th = this.tileHeight;
 		m[0] = z * tw;
@@ -160,7 +186,7 @@ export class MapViewport {
 	/** Inverse of {@link worldTileToScreenMatrix}. */
 	screenToWorldTileMatrix(out?: Mat3): Mat3 {
 		const m = (out ?? new Float32Array(9)) as Mat3;
-		const z = this.zoom;
+		const z = this.effectiveZoom();
 		const tw = this.tileWidth;
 		const th = this.tileHeight;
 		if (Math.abs(z) < EPS || Math.abs(tw) < EPS || Math.abs(th) < EPS) {

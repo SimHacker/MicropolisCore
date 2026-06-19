@@ -109,6 +109,7 @@
 		line-height: 1.2;
 		font-size: 0.85rem;
 		min-width: 70px;
+		min-height: 2.75em;
 		box-sizing: border-box;
 		border-radius: 4px;
 		border: 1px solid transparent;
@@ -117,11 +118,17 @@
 		background-color: transparent;
 		transition: background-color 0.15s linear, color 0.15s linear, box-shadow 0.15s linear;
 		font-weight: 600;
-		white-space: nowrap;
+	}
+
+	.tab-label {
+		text-align: center;
+		display: inline-block;
+		line-height: 1.2;
 	}
 
 	nav.main-nav a.logo-link {
 		min-width: auto;
+		min-height: auto;
 		width: auto;
 		padding: 0.4em 0.8em; /* Same padding as other tabs */
 		border: 1px solid transparent;

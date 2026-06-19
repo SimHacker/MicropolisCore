@@ -141,6 +141,14 @@ describe('micropolisReactive simulation and callbacks', () => {
 		expect(micropolisReactive.budgetModalRequested).toBe(false);
 	});
 
+	it('poke.doBudget clears budgetModalRequested', () => {
+		(micropolisReactive.engineCallback as unknown as Record<string, (...a: unknown[]) => void>)
+			.showBudgetAndWait?.(micropolis, {});
+		expect(micropolisReactive.budgetModalRequested).toBe(true);
+		micropolisReactive.poke.doBudget();
+		expect(micropolisReactive.budgetModalRequested).toBe(false);
+	});
+
 	// --- Zone status lifecycle ---
 
 	it('showZoneStatus populates zoneStatus; clearZoneStatus resets it', () => {

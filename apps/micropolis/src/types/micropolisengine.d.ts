@@ -1,5 +1,7 @@
 // TypeScript bindings for emscripten-generated code.  Automatically generated at compile time.
 declare namespace RuntimeExports {
+    let HEAPU16: Uint16Array;
+    let wasmMemory: any;
     function FS_createPath(...args: any[]): any;
     function FS_createDataFile(...args: any[]): any;
     function FS_preloadFile(parent: any, name: any, url: any, canRead: any, canWrite: any, dontCreateFile: any, canOwn: any, preFinish: any): Promise<void>;
@@ -394,6 +396,7 @@ export interface Micropolis extends ClassHandle {
   setPasses(_0: number): void;
   setCityTax(_0: number): void;
   doTool(_0: EditingTool, _1: number, _2: number): ToolResult;
+  getActiveSprites(): any;
   generateMap(_0: number): void;
   clearMap(): void;
   simRandom(): number;

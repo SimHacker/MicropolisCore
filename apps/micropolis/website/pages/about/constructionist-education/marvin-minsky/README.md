@@ -11,8 +11,4 @@ nav:
 
 **Marvin Minsky** (1927–2016) was a founder of **artificial intelligence** and co-founder of the **MIT AI Lab**. In ***The Society of Mind*** he argued that intelligence emerges from many simple, mindless **agents** working together. He originated **frames** (structured knowledge representation) and **K-lines** (a theory of memory) — and, with [**Seymour Papert**](/pages/about/constructionist-education/seymour-papert), wrote *Perceptrons*. Turing Award, 1969.
 
-His "society of agents" view of mind resonates with simulation games like SimCity, where rich behavior emerges from many simple interacting rules rather than one central controller.
-
-*Representational portrayal — Marvin Minsky is represented here through his documented work and legacy, with reverence; no invented words or inner thoughts.*
-
-<!-- Representational portrayal authored by Don Hopkins. Not Marvin Minsky; does not speak as them. -->
+He taught at MIT for decades, mentoring generations of AI researchers. His view of mind as a society of simple parts influenced how many fields think about complexity and emergence.

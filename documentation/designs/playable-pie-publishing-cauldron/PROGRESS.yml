@@ -4,25 +4,54 @@
 meta:
   cauldron: playable-pie-publishing-cauldron
   batch: playable-slice-1
-  updated: "2026-06-12"
-  batch_1_status: ready_to_execute
+  updated: "2026-06-15"
+  batch_1_status: in_progress
 
 playbooks:
   PB-01-viewport-tile-frame-helper:
-    status: not_started
-    steps: {}
+    status: complete
+    steps:
+      step-1-confirm-mapviewport-api: { status: complete, verified: "2026-06-15" }
+      step-2-create-viewportTileFrame: { status: complete, verified: "2026-06-15" }
+      step-3-export-getMapViewport: { status: complete, verified: "2026-06-15" }
+      step-4-typecheck: { status: complete, verified: "2026-06-15" }
   PB-02-mount-cursor-layer:
-    status: not_started
-    steps: {}
+    status: complete
+    steps:
+      step-1-domFrameRects: { status: complete, verified: "2026-06-15" }
+      step-2-micropolis-view-wire: { status: complete, verified: "2026-06-15" }
+      step-3-typecheck: { status: complete, verified: "2026-06-15" }
+      step-4-browser-smoke: { status: pending, verified: null }
   PB-03-budget-modal:
-    status: not_started
-    steps: {}
+    status: complete
+    steps:
+      step-1-poke-doBudget: { status: complete, verified: "2026-06-15" }
+      step-2-budget-modal-svelte: { status: complete, verified: "2026-06-15" }
+      step-3-mount-micropolis-view: { status: complete, verified: "2026-06-15" }
+      step-4-unit-test: { status: complete, verified: "2026-06-15" }
+      step-5-typecheck: { status: complete, verified: "2026-06-15" }
   PB-04-tool-commands:
     status: not_started
     steps: {}
   PB-05-vertical-slice-verify:
     status: not_started
     steps: {}
+
+# Batch 1.5 (software sprite overlay) — parallel to playable batch 1
+sprite_batch:
+  status: shipped_initial
+  updated: "2026-06-15"
+  playbooks:
+    SB-01-manifest-schema:
+      status: shipped
+    SB-02-engine-sprite-sync:
+      status: shipped
+    SB-03-software-sprite-layer:
+      status: shipped
+    SB-04-skywriting-plugin:
+      status: shipped
+    SB-05-atmospheric-layers:
+      status: shipped
 
 # Batch 2 (holodeck cutover) — skeleton; not executable until batch 1 complete
 # and atlas open questions OQ-1..OQ-6 resolved. See HOLODECK-CUTOVER-ATLAS.md.

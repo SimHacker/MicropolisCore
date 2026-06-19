@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Header from './Header.svelte';
 	import Footer from './Footer.svelte';
+	import PlayBackButton from '$lib/PlayBackButton.svelte';
 	import './styles.css';
 	import { page } from '$app/state';
 	let { children } = $props();
@@ -11,6 +12,8 @@
 	//   DESIGN: virtual-cursor-layer.md §7; map-compositing-and-measurement.md §3.2
 	//   CursorLayer coordinates WebGPU plugins + conditional DOM (not cursor pixels in DOM).
 
+	const isPlayRoute = $derived(page.url.pathname.startsWith('/play/'));
+
 	const currentNodeData = $derived(findNodeByUrl(page.url.pathname));
 	const currentPath = $derived(currentNodeData?.fullPath ?? []);
 	const activeFirstLevel = $derived(currentPath[0] ?? null);
@@ -20,58 +23,68 @@
 		return currentPath.includes(node) || node.showSubTabs === true;
 	}
 
-	const showSecondLevel = $derived(!!(activeFirstLevel && shouldShowChildren(activeFirstLevel)));
-	const showThirdLevel = $derived(!!(activeSecondLevel && shouldShowChildren(activeSecondLevel)));
+	const showSecondLevel = $derived(
+		!isPlayRoute && !!(activeFirstLevel && shouldShowChildren(activeFirstLevel))
+	);
+	const showThirdLevel = $derived(
+		!isPlayRoute && !!(activeSecondLevel && shouldShowChildren(activeSecondLevel))
+	);
 </script>
 
 <svelte:head>
 	<link rel="icon" href="/favicon.png" />
 </svelte:head>
 
-<div class="app-container">
-	<div class="navigation-area">
-		<Header />
+<div class="app-container" class:play-mode={isPlayRoute}>
+	{#if isPlayRoute}
+		<PlayBackButton />
+	{:else}
+		<div class="navigation-area">
+			<Header />
 
-		<!-- Second level navigation - only show for active first level node -->
-	{#if showSecondLevel && (activeFirstLevel?.children ?? []).length > 0}
-			<nav class="sub-nav dynamic-nav second-level">
-				<ul>
-		{#each (activeFirstLevel?.children ?? []) as childNode}
-						{@const href = childNode.url}
-						{#if href && !childNode.hideFromNav}
-			{@const isActive = currentPath.includes(childNode as SiteNode) || currentPath.some((node: SiteNode) => node.url?.startsWith((childNode as SiteNode).url + '/'))}
-							<li><a {href} class:active={isActive} title={childNode.tooltip || ''}>
-								<span class="tab-label">{@html childNode.title.replace(' ', '<br/>')}</span>
-							</a></li>
-						{/if}
-					{/each}
-				</ul>
-			</nav>
-		{/if}
+			<!-- Second level navigation - only show for active first level node -->
+		{#if showSecondLevel && (activeFirstLevel?.children ?? []).length > 0}
+				<nav class="sub-nav dynamic-nav second-level">
+					<ul>
+			{#each (activeFirstLevel?.children ?? []) as childNode}
+							{@const href = childNode.url}
+							{#if href && !childNode.hideFromNav}
+				{@const isActive = currentPath.includes(childNode as SiteNode) || currentPath.some((node: SiteNode) => node.url?.startsWith((childNode as SiteNode).url + '/'))}
+								<li><a {href} class:active={isActive} title={childNode.tooltip || ''}>
+									<span class="tab-label">{@html childNode.title.replace(' ', '<br/>')}</span>
+								</a></li>
+							{/if}
+						{/each}
+					</ul>
+				</nav>
+			{/if}
 
-		<!-- Third level navigation - only show for active second level node -->
-	{#if showThirdLevel && (activeSecondLevel?.children ?? []).length > 0}
-			<nav class="sub-nav dynamic-nav third-level">
-				<ul>
-		{#each (activeSecondLevel?.children ?? []) as childNode}
-						{@const href = childNode.url}
-						{#if href && !childNode.hideFromNav}
-			{@const isActive = currentPath.includes(childNode as SiteNode)}
-							<li><a {href} class:active={isActive} title={childNode.tooltip || ''}>
-								<span class="tab-label">{@html childNode.title.replace(' ', '<br/>')}</span>
-							</a></li>
-						{/if}
-					{/each}
-				</ul>
-			</nav>
-		{/if}
-	</div>
+			<!-- Third level navigation - only show for active second level node -->
+		{#if showThirdLevel && (activeSecondLevel?.children ?? []).length > 0}
+				<nav class="sub-nav dynamic-nav third-level">
+					<ul>
+			{#each (activeSecondLevel?.children ?? []) as childNode}
+							{@const href = childNode.url}
+							{#if href && !childNode.hideFromNav}
+				{@const isActive = currentPath.includes(childNode as SiteNode)}
+								<li><a {href} class:active={isActive} title={childNode.tooltip || ''}>
+									<span class="tab-label">{@html childNode.title.replace(' ', '<br/>')}</span>
+								</a></li>
+							{/if}
+						{/each}
+					</ul>
+				</nav>
+			{/if}
+		</div>
+	{/if}
 
-	<main class="content-area" class:no-scroll={page.url.pathname === '/play/micropolis'}>
+	<main class="content-area" class:play-fullscreen={isPlayRoute}>
 		{@render children()}
 	</main>
-	
-	<Footer />
+
+	{#if !isPlayRoute}
+		<Footer />
+	{/if}
 
 	<!-- TODO(virtual-cursor): map chrome (labels/dialogs) above holodeck canvas — not cursor pixels -->
 </div>
@@ -133,6 +146,7 @@
 		line-height: 1.2;
 		font-size: 0.85rem;
 		min-width: 70px;
+		min-height: 2.75em;
 		box-sizing: border-box;
 		border-radius: 4px;
 		border: 1px solid transparent;
@@ -141,7 +155,6 @@
 		background-color: transparent;
 		transition: background-color 0.15s linear, color 0.15s linear, box-shadow 0.15s linear;
 		font-weight: 600;
-		white-space: nowrap;
 	}
 	
 	/* Tab label formatting */
@@ -215,6 +228,24 @@
 		overflow-y: auto; /* Enable scrolling for content */
 		padding: 1.5em;
 		background-color: var(--color-bg-2, #f0f0f0);
+	}
+
+	.content-area.play-fullscreen {
+		overflow: hidden;
+		padding: 0;
+		margin: 0;
+		background-color: #1a2030;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		height: 100vh;
+		height: 100dvh;
+	}
+
+	.app-container.play-mode {
+		min-height: 100vh;
+		min-height: 100dvh;
+		overflow: hidden;
 	}
 
 	.content-area.no-scroll {

@@ -66,3 +66,6 @@ PRs, parallelizable once the shape is known.
 [../micropolis-playable-game-readiness.md §6](../micropolis-playable-game-readiness.md#6-prioritized-plan--minimal-playable-vertical-slice)
 (Phases A–C) can be ladled into playbooks immediately while the pie/graph and publishing
 pillars keep simmering.
+
+**Parallel ladle (sprites):** software DOM sprite overlay + JSON manifests + skywriting plugin —
+[SPRITE-OVERLAY-ATLAS.md](SPRITE-OVERLAY-ATLAS.md) · [playbooks-sprites/](playbooks-sprites/README.md).

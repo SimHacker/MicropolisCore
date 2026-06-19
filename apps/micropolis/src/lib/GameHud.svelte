@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { micropolisReactive } from '$lib/MicropolisReactive.svelte';
+	import { toolState } from '$lib/ToolState.svelte';
 
 	const funds = $derived(micropolisReactive.totalFunds);
 	const dateLabel = $derived(
@@ -19,15 +20,18 @@
 </script>
 
 <div class="game-hud" aria-live="polite">
-	<div class="hud-row">
+	<div class="hud-row hud-row-primary">
 		<span class="hud-funds">${funds.toLocaleString()}</span>
-		<span class="hud-date">{dateLabel}</span>
+		<span class="hud-date" title={dateLabel}>{dateLabel}</span>
 	</div>
 	<div class="hud-row hud-meta">
-		<span>{demand}</span>
-		<span>{taxLabel}</span>
-		<span class:paused={micropolisReactive.simPaused}>{simLabel}</span>
+		<span class="hud-demand">{demand}</span>
+		<span class="hud-tax">{taxLabel}</span>
+		<span class="hud-speed" class:paused={micropolisReactive.simPaused}>{simLabel}</span>
 	</div>
+	{#if toolState.lastToolFeedback}
+		<div class="hud-feedback">{toolState.lastToolFeedback}</div>
+	{/if}
 </div>
 
 <style>
@@ -45,20 +49,56 @@
 		border: 1px solid rgba(255, 255, 255, 0.15);
 		border-radius: 6px;
 		padding: 0.45rem 0.65rem;
-		min-width: 14rem;
+		width: 20.5rem;
+		box-sizing: border-box;
 		backdrop-filter: blur(4px);
 	}
 
 	.hud-row {
-		display: flex;
-		justify-content: space-between;
-		gap: 1rem;
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.hud-row-primary {
+		grid-template-columns: 7.25rem 1fr;
+		align-items: baseline;
 	}
 
 	.hud-meta {
 		margin-top: 0.25rem;
-		opacity: 0.9;
+		grid-template-columns: 1fr 4.25rem 4.5rem;
+		align-items: baseline;
 		font-size: 0.75rem;
+		color: #dce4f8;
+	}
+
+	.hud-funds,
+	.hud-date,
+	.hud-demand,
+	.hud-tax,
+	.hud-speed {
+		font-variant-numeric: tabular-nums;
+	}
+
+	.hud-date {
+		text-align: right;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.hud-tax,
+	.hud-speed {
+		text-align: right;
+	}
+
+	.hud-feedback {
+		margin-top: 0.35rem;
+		padding-top: 0.3rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+		font-size: 0.78rem;
+		font-weight: 600;
+		color: #ffc840;
 	}
 
 	.hud-funds {

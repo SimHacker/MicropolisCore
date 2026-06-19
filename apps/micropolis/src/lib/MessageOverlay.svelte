@@ -57,6 +57,6 @@
 		display: block;
 		margin-top: 0.2rem;
 		font-size: 0.75rem;
-		opacity: 0.75;
+		color: #ffc840;
 	}
 </style>

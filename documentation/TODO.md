@@ -18,6 +18,7 @@ the linked documents.
 | [Playable Micropolis game](#playable-micropolis-game) | Phase C: message/zone/budget overlays + disaster surfacing | High |
 | [Playable Micropolis game](#playable-micropolis-game) | Pie/cursor substrate + memory-palace graph editor (cauldron) | Medium |
 | [Micropolis renderer](#micropolis-renderer) | Holodeck map migration — **after playable A–C** | Medium (gated) |
+| [Software sprite overlay](#software-sprite-overlay) | SB-01..04: manifests, DOM layer, engine sync, skywriting plugin | **High** (parallel PB) |
 | [Micropolis renderer](#micropolis-renderer) | Sprite compositor (engine simulates; client does not draw) — [#4](https://github.com/SimHacker/MicropolisCore/issues/4) | Medium |
 | [Micropolis renderer](#micropolis-renderer) | Tileset packs: MOP atlas mixing + per-set sprite overrides | Medium |
 | [Micropolis renderer](#micropolis-renderer) | ~~Ancient Asia tile atlas (`tiles.bmp` ← `asia.bmp`)~~ ✅ [#9](https://github.com/SimHacker/MicropolisCore/issues/9) | ~~Medium~~ |
@@ -183,6 +184,27 @@ See naming conventions: [documentation/designs/naming-conventions.md](designs/na
 
 ---
 
+## Software sprite overlay
+
+**Details:** [documentation/designs/playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md](designs/playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md),
+[playbooks-sprites/](designs/playable-pie-publishing-cauldron/playbooks-sprites/README.md)
+
+Parallel to playable batch 1 — does not block PB-01..05. DOM/SVG `SoftwareSpriteLayer` first;
+Node print + WebGPU holodeck plugin share JSON manifests and measure-compatible hotspots.
+
+### S1. Batch 1.5 — manifests + DOM layer + skywriting — **High**
+- SB-01 JSON manifests (classic pack) + types
+- SB-02 `getActiveSprites()` Embind + engine sync
+- SB-03 `Sprite.svelte` + `SoftwareSpriteLayer` mount
+- SB-04 Skywriting airplane plugin (smoke letters, population milestones)
+
+### S2. Deferred
+- SB-06 MOP scalar overlays (pollution, population, crime) — same layer stack, colormap + smooth
+- SB-07 Chalk / whiteboard tool plugins + multiplayer patches
+- SB-08 Node print + holodeck GPU read same raster buffers
+
+---
+
 ## Micropolis renderer
 
 **Details:** [documentation/designs/renderer-plugin-roadmap.md](designs/renderer-plugin-roadmap.md),
@@ -201,7 +223,7 @@ but is not on the critical path to “playable.”
 - Enable `CursorLayer` **`webgpu`** backend + `EditingToolCursorPlugin` (parallel to DOM; user/config toggles `dom` | `webgpu` | `both`).
 - Generalized MOP overlay schema + software pass + WebGPU tint pass.
 - **Tileset packs** — virtualized tile atlases via MOP; per-set sprite sheets; plugin override/add/replace ([map-compositing §2.5](designs/map-compositing-and-measurement.md#25-tileset-packs-mop-mixing-and-per-set-sprites)). ~~Ancient Asia atlas fix~~ ✅ ([#9](https://github.com/SimHacker/MicropolisCore/issues/9)). Per-set sprite PNGs preserved colocated with renderer atlases (`<set>-sprite-<name>.png` in `apps/micropolis/src/lib/images/tilesets/`); mono/snow sprites still TBD (Mac resource extraction).
-- **Software sprite compositor (required)** — [#4](https://github.com/SimHacker/MicropolisCore/issues/4): engine `SimSprite` snapshots exist; `TileView` does not composite them yet. Print/export/overview + WebGPU holodeck parity; atlas lookup follows active tileset pack ([map-compositing §2.4](designs/map-compositing-and-measurement.md#24-sprites--required-on-software-print-iconic-maps-overviews)).
+- **Software sprite compositor (required)** — [#4](https://github.com/SimHacker/MicropolisCore/issues/4): **in progress** — DOM `SoftwareSpriteLayer` + JSON manifests ([SPRITE-OVERLAY-ATLAS](designs/playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md)); Node print + WebGPU holodeck parity deferred (SB-05/SB-06).
 - ~~WebGL tile edge duplication~~ — [#5](https://github.com/SimHacker/MicropolisCore/issues/5) closed; not reproduced on default WebGPU → canvas chain (legacy WebGL only).
 - Legacy WebGL **off default chain** (frozen); whiteboard / vote preview / §3.5 on software + WebGPU only.
 

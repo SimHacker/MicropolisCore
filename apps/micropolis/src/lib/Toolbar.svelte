@@ -12,83 +12,100 @@
 		<button
 			type="button"
 			class:active={toolState.activeToolId === tool.id}
-			title="{tool.label} ({tool.shortcut})"
+			title="{tool.tooltip ?? tool.label} ({tool.shortcut})"
 			onclick={() => selectTool(tool.id)}
 		>
 			<span class="tool-shortcut">{tool.shortcut}</span>
 			<span class="tool-label">{tool.label}</span>
 		</button>
 	{/each}
-	{#if toolState.hoverTile}
-		<span class="hover-coords">{toolState.hoverTile[0]}, {toolState.hoverTile[1]}</span>
-	{/if}
-	{#if toolState.lastToolFeedback}
-		<span class="tool-feedback">{toolState.lastToolFeedback}</span>
-	{/if}
 </div>
 
 <style>
 	.toolbar {
 		position: absolute;
-		left: 0.5rem;
-		bottom: 0.5rem;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		z-index: 20;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
-		max-width: min(100%, 42rem);
-		padding: 0.4rem;
-		background: rgba(8, 12, 20, 0.88);
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 8px;
-		backdrop-filter: blur(4px);
+		display: grid;
+		grid-template-columns: repeat(9, minmax(0, 1fr));
+		align-items: stretch;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		background: #1a1a2e;
+		border: none;
+		border-top: 2px solid #6a6a8a;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+		font-family: ui-monospace, 'Chicago', 'Geneva', monospace;
+		contain: layout style;
 	}
 
 	button {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.1rem;
-		min-width: 4.5rem;
-		padding: 0.35rem 0.45rem;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 6px;
-		background: rgba(255, 255, 255, 0.06);
-		color: #eef2ff;
+		justify-content: center;
+		gap: 0.22rem;
+		min-width: 0;
+		min-height: 2.65rem;
+		padding: 0.25rem 0.1rem 0.3rem;
+		border: none;
+		border-right: 1px solid #3a3a58;
+		border-radius: 0;
+		background: #22223a;
+		color: #f0f4ff;
 		cursor: pointer;
 		font: inherit;
-		font-size: 0.72rem;
+		font-size: 0.58rem;
+		line-height: 1;
+		box-sizing: border-box;
+		outline: none;
+	}
+
+	button:last-child {
+		border-right: none;
 	}
 
 	button:hover {
-		background: rgba(255, 255, 255, 0.12);
+		background: #2e2e50;
+		color: #fff;
 	}
 
 	button.active {
-		background: rgba(80, 140, 255, 0.35);
-		border-color: rgba(140, 180, 255, 0.65);
+		background: #304878;
+		color: #fff;
+		box-shadow: inset 0 2px 0 #8ab8ff;
 	}
 
 	.tool-shortcut {
 		font-weight: 700;
-		font-size: 0.8rem;
-		color: #ffd27a;
+		font-size: 0.78rem;
+		color: #ffc840;
+		line-height: 1;
+	}
+
+	button.active .tool-shortcut {
+		color: #ffe566;
 	}
 
 	.tool-label {
-		opacity: 0.92;
+		font-size: 0.54rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		color: #e8eeff;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+		line-height: 1.1;
 	}
 
-	.hover-coords,
-	.tool-feedback {
-		align-self: center;
-		padding: 0.25rem 0.5rem;
-		font-family: ui-monospace, monospace;
-		font-size: 0.72rem;
-		opacity: 0.85;
-	}
-
-	.tool-feedback {
-		color: #ffb347;
+	@media (max-width: 480px) {
+		.toolbar {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
 	}
 </style>

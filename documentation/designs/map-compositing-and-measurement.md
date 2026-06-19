@@ -78,11 +78,22 @@ interface MapOverlayLayerSpec {
   software: boolean;
   /** If true, WebGPU plugin implements this pass (client). */
   webgpu: boolean;
-  data: OverlayDataSource;       // mop buffer, scalar field, bitmap, vector strokes
+  data: OverlayDataSource;       // mop buffer, scalar field, bitmap, vector strokes, tile-substitute rules
 }
 ```
 
-Extend `MicropolisMapRenderDescription.layers` beyond `'map' | 'mop' | 'overlay'` toward named overlay ids with blend/opacity (schema already has `tile_layers[]` with blend modes).
+**Overlay context:** interactive passes receive `mapData`, optional `mopData`, scalar maps, and
+`blinkPhase` together so predicates can be multidimensional — see
+[SPRITE-OVERLAY-ATLAS § Multidimensional overlay context](playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md#multidimensional-overlay-context)
+and [§ Unpowered zone blink](playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md#unpowered-zone-blink-first-display-time-effect).
+
+**Playable bridge:** scalar fields and atmospheric deposits both use
+`AtmosphericLayer` + `AtmosphericLayerView` (`apps/micropolis/src/lib/sprites/layers/`).
+Tile-grid data -> `fillFromTileGrid` + colormap + `smooth`; deposit tools -> `deposit` +
+`step`. Same viewport blit, same future holodeck/WebGPU texture. See
+[SPRITE-OVERLAY-ATLAS § Scalar field overlays](playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md#scalar-field-overlays-pollution-population-crime-)
+and [§ Phased path: DOM canvas now, WebGPU later](playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md#phased-path-dom-canvas-now-webgpu-later)
+(raw WASM scalar → dynamic WGSL colormap, gradient particles, stink lines — interactive-only).
 
 ### 2.2 Per-layer software policy
 
@@ -90,6 +101,7 @@ Extend `MicropolisMapRenderDescription.layers` beyond `'map' | 'mop' | 'overlay'
 |------------|-----------------|-----------------|-------|
 | Base tile map | ✅ required | ✅ | Same tile indices + atlas |
 | MOP / color overlays (population, pollution, …) | ✅ **high value** | ✅ | Server thumbnails, social previews, API |
+| Display-time tile substitution (unpowered blink, …) | ❌ not implemented | ✅ holodeck only | Interactive WebGPU; **not** on Node print — see SPRITE-OVERLAY-ATLAS § Unpowered zone blink |
 | Sprites (train, plane, …) | ✅ **required** | ✅ | **Print this city**, OG/thumbnails, iconic overviews — see §2.4 |
 | Tool / tile cursor frame | ❌ | ✅ | All players — local + remote; see §3.3 |
 | Mouse / virtual pointer | ❌ | ✅ | Screen px; local (+ optional remote if ever needed) |
@@ -129,9 +141,16 @@ composite the sprite layer** — this is not optional for server-side output.
 | **Overview / whole-city at low zoom** | Small image, many tiles per pixel | **Enhanced overview mode** (see below) |
 | **Interactive client** | WebGPU holodeck | Animated sprites every frame |
 
-**Data source:** `SimSprite` list from engine/WASM snapshot (type, world position, frame) +
-atlas metadata in `apps/micropolis/src/lib/sprites.ts` (hotspot, frame size). Same inputs for
-software and WebGPU plugins.
+**Data source:** `SimSprite` list from engine/WASM (`getActiveSprites()`) + **plugin instances**
+(skywriting, agents, tools) unified as `SpriteInstance[]`. Atlas metadata in JSON manifests under
+`apps/micropolis/src/lib/sprites/manifests/<pack>/` (hotspot + named attachment measurements).
+Legacy `sprites.ts` enums migrate into manifests. Same inputs for DOM overlay, Node print, and
+WebGPU holodeck plugins. See [playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md](playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md).
+
+**Interactive client (playable bridge):** `SoftwareSpriteLayer` + **plugin-owned atmospheric
+layers** (RGBA canvas, CA diffusion/fade, viewport blit). Skywriting smoke = atmospheric
+whiteboard; chalk/annotation tools reuse the same layer contract. See
+[SPRITE-OVERLAY-ATLAS.md § Plugin-owned atmospheric layers](playable-pie-publishing-cauldron/SPRITE-OVERLAY-ATLAS.md#plugin-owned-atmospheric-layers).
 
 **Render modes** (`RenderDescription.sprite_render`):
 

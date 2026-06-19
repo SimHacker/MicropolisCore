@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "explosion",
+  "engineType": 7,
+  "sheet": "classic-sprite-explode.png",
+  "frameWidth": 48,
+  "frameHeight": 48,
+  "defaultMeasurements": {
+    "hotspot": { "kind": "attachment", "x": 40, "y": 16 }
+  },
+  "frames": [
+    { "index": 0, "atlas": { "x": 0, "y": 0 } },
+    { "index": 1, "atlas": { "x": 48, "y": 0 } },
+    { "index": 2, "atlas": { "x": 96, "y": 0 } },
+    { "index": 3, "atlas": { "x": 144, "y": 0 } },
+    { "index": 4, "atlas": { "x": 192, "y": 0 } },
+    { "index": 5, "atlas": { "x": 240, "y": 0 } }
+  ]
+}

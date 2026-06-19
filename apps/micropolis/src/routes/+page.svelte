@@ -21,7 +21,7 @@
 	<ul class="cards">
 		<li>
 			<a href="/play/micropolis" class="card micropolis">
-				<span class="card-title">Micropolis</span>
+				<span class="card-title">Micropolis City</span>
 				<span class="card-desc">Pan and zoom the tile engine; WebGL / WebGPU renderers.</span>
 			</a>
 		</li>

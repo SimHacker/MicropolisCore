@@ -34,6 +34,8 @@ export interface MapViewportConfig {
 	zoom?: number;
 	zoomMin?: number;
 	zoomMax?: number;
+	/** Extra zoom applied by Micropolis tile renderers (Canvas/WebGL use 4× for parity). */
+	screenZoomFactor?: number;
 }
 
 /** 3×3 column-major affine: screen = matrix × [tileX, tileY, 1]ᵀ */

@@ -1,6 +1,7 @@
 import { commandBus, type Command, type CommandContext } from './CommandBus';
 import type { MicropolisSimulator } from './MicropolisSimulator';
 import type { TileRenderer } from '@micropolis/tile-renderer';
+import { cssPixelsPerTile, syncViewportScreenScale } from './input/viewportSync';
 
 export interface MicropolisCommandContext extends CommandContext {
   simulator?: MicropolisSimulator | null;
@@ -16,6 +17,11 @@ let registered = false;
 
 export function registerMicropolisCommands(): void {
   if (registered) return;
+  // HMR reloads this module but the singleton command bus keeps prior registrations.
+  if (commandBus.get('sim.toggle-pause')) {
+    registered = true;
+    return;
+  }
   commandBus.registerAll(createMicropolisCommands());
   registered = true;
 }
@@ -293,8 +299,12 @@ function panBy(context: MicropolisCommandContext, dx: number, dy: number): void 
   const { simulator, tileRenderer } = context;
   if (!simulator || !tileRenderer) return;
 
-  const scale = Number(context.args?.scale ?? 1);
-  tileRenderer.panBy((dx * scale) / tileRenderer.zoom, (dy * scale) / tileRenderer.zoom);
+  syncViewportScreenScale(tileRenderer, false);
+  const ppt = cssPixelsPerTile(tileRenderer);
+  if (ppt <= 0) return;
+
+  const screenStep = 48 * Number(context.args?.scale ?? 1);
+  tileRenderer.panBy((dx * screenStep) / ppt, (dy * screenStep) / ppt);
   simulator.render();
 }
 

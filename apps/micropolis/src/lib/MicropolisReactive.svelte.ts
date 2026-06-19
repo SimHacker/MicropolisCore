@@ -38,6 +38,7 @@ let simPasses = $state(1);
 let simPaused = $state(false);
 let cityTax = $state(0);
 let mapRevision = $state(0);
+let mapCameraRevision = $state(0);
 let budgetRevision = $state(0);
 let evaluationRevision = $state(0);
 let historyRevision = $state(0);
@@ -540,6 +541,15 @@ export const micropolisReactive = {
 			requireMicropolis().updateFunds();
 			syncFromEngine();
 		},
+		doBudget(): void {
+			requireMicropolis().doBudget();
+			syncFromEngine();
+			budgetModalRequested = false;
+		},
+		setAutoBudget(enabled: boolean): void {
+			requireMicropolis().setAutoBudget(enabled);
+			syncFromEngine();
+		},
 		/** After raw writes into `memory.mapU16`, bump observers. */
 		bumpMap(): void {
 			mapRevision++;
@@ -603,6 +613,12 @@ export const micropolisReactive = {
 	},
 	get mapRevision() {
 		return mapRevision;
+	},
+	get mapCameraRevision() {
+		return mapCameraRevision;
+	},
+	bumpMapCameraRevision() {
+		mapCameraRevision++;
 	},
 	get budgetRevision() {
 		return budgetRevision;

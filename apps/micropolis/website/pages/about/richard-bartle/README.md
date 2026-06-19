@@ -16,14 +16,9 @@ player types** (Killers ♠️, Achievers ♦️, Socializers ♥️, Explorers 
 expanded 2003) and wrote ***Designing Virtual Worlds*** (2003) and ***MMOs from
 the Inside Out*** (2015).
 
-## Why he belongs here
-
-The **MUD → MOO → MOOLLM** lineage runs directly through his work — the "MOO" in
-MOO and MOOLLM is no coincidence. His thinking about player motivation and the
-social life of virtual worlds underpins how Micropolis and its federation imagine
-multiplayer, shared, persistent simulated places.
-
-This is a representational portrayal — material published *about* Richard Bartle,
-drawing on his own prolific writing and talks. He writes far better about himself
-than anyone could paraphrase, so prefer his cited words, and heed his warning:
-*"Quotes can be taken out of context."*
+Bartle and Trubshaw shared MUD freely across universities and early networks.
+Bartle continued at Essex as a researcher and writer on virtual worlds — why
+shared persistent spaces work, and how different players use them. ***Designing
+Virtual Worlds*** covers world architecture, history, and player psychology;
+***MMOs from the Inside Out*** develops his later analysis of commercial online
+worlds.

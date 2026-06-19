@@ -2,18 +2,18 @@
   {
     "comment": "Home — hub for Micropolis + Sims playing pages",
     "url": "/",
-    "title": "Micropolis",
-    "header": "Micropolis",
+    "title": "Home",
+    "header": "Micropolis City",
     "description": "🏙️🧑‍🤝‍🧑 Combined Micropolis city view and Sims (VitaMoo) animation playground.",
-    "tooltip": "Home — Micropolis & Sims"
+    "tooltip": "Home — Micropolis City hub"
   },
   {
     "comment": "Play — Micropolis city tile view",
     "url": "/play/micropolis",
-    "title": "Micropolis",
-    "header": "Micropolis",
+    "title": "Micropolis City",
+    "header": "Micropolis City",
     "description": "🏙️ Pan and zoom the SimCity tile engine in the browser (WASM + WebGL/WebGPU).",
-    "tooltip": "Play Micropolis city view"
+    "tooltip": "Play Micropolis City"
   },
   {
     "comment": "Play — The Sims (VitaMoo)",

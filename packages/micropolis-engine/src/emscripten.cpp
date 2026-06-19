@@ -1217,6 +1217,23 @@ function createTypedArrayFromMap(mapInstance) {
     .property("cityFileName", &Micropolis::cityFileName)
     .property("cityName", &Micropolis::cityName)
     .function("doTool", &Micropolis::doTool)
+    .function("getActiveSprites", +[](Micropolis &self) {
+        emscripten::val arr = emscripten::val::array();
+        int i = 0;
+        for (SimSprite *s = self.spriteList; s != NULL; s = s->next) {
+            if (s->frame != 0) {
+                emscripten::val o = emscripten::val::object();
+                o.set("type", s->type);
+                o.set("frame", s->frame);
+                o.set("x", s->x);
+                o.set("y", s->y);
+                o.set("xHot", s->xHot);
+                o.set("yHot", s->yHot);
+                arr.set(i++, o);
+            }
+        }
+        return arr;
+    })
     .function("generateMap", &Micropolis::generateMap)
     .function("clearMap", &Micropolis::clearMap)
     //.function("getDemands", &Micropolis::getDemands, allow_raw_pointers()) // TODO: wrap

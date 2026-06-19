@@ -27,8 +27,6 @@ These static diagrams serve as the foundation for our ongoing project to create 
 
 ## Simulation Loop {#simulation-loop}
 
-**Simulation Loop (Simulate)**
-
 The main **simulation loop** is broken down into 16 steps. Each revolution advances the city time by 1. Every frame of the game, one of these 16 steps is performed.
 
 ![SimCity Simulation Loop Diagram](/images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png)
@@ -38,8 +36,6 @@ This diagram reveals the core heartbeat of **SimCity**. It shows how [**Will Wri
 Notice the different frequencies: some processes like **DoPowerScan()** or **PTLScan()** (Pollution & Land Value) run more often than, say, **FireAnalysis()** or **DoDisasters()**, as detailed in the frequency table (Slow/Medium/Fast). The loop also includes crucial updates like calculating **RCI Valves**, performing the **Census** (which happens at different intervals depending on speed), evaluating the city via **CityEvaluation**, and triggering map generation (**GenerateMap**) and messages (**SendMessages**). This careful timing balances computational load with the perceived speed of different urban processes. Making this loop interactive will allow users to step through the simulation, pause it, inspect data at each stage, and even potentially modify the sequence or parameters, directly addressing the "black box" critique by exposing the fundamental temporal structure of the simulation.
 
 ## Map Data Flow {#map-data-flow}
-
-**Map Data Flow**
 
 This diagram shows how data flows between different map layers and representations in the simulation.
 
@@ -53,8 +49,6 @@ Making this data flow interactive is a key goal. Imagine clicking on the **Polic
 
 ## Maps {#maps}
 
-**Maps**
-
 **SimCity's** spatial data is modeled in multiple maps that can be conceptualized as overlaid upon one another. The main Map is 120x100 and encodes seven different data layers.
 
 ![SimCity Maps Diagram](/images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png)
@@ -66,8 +60,6 @@ The **Primary Map Data** section shows the 16-bit structure of each main map til
 Understanding these layered, multi-resolution maps is key to grasping how the simulation achieves its effects efficiently. Interactive versions could allow users to toggle individual map layers, visualize the bit flags within each main map tile, zoom between resolutions, and directly see the data values stored for different properties at different locations and scales, making the underlying representation tangible.
 
 ## Map Scan {#map-scan}
-
-**Map Scan**
 
 The main tile map is scanned incrementally over eight simulation frames. One 15x100 column is scanned at a time (1/8th of the map). Tile map based processes and objects tallies are updated.
 
@@ -81,8 +73,6 @@ This incremental approach contributes to the game's temporal feel – changes do
 
 ## Make Traffic {#make-traffic}
 
-**Make Traffic**
-
 **Make Traffic** can be invoked when **Map Scan** evaluates Residential, Commercial, and Industrial Zones. It returns either success (1: destination found), failure (0: destination not found), or hard failure (-1: no perimeter road found).
 
 ![SimCity Make Traffic Diagram](/images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png)
@@ -92,8 +82,6 @@ Perhaps one of the most elegant parts of **SimCity's** design, the **Make Traffi
 The success or failure of these pathfinding attempts directly contributes (`SetTrafMem()`) to the **Traffic Density** map ([Maps](#maps) diagram), creating emergent traffic patterns based on the efficiency of the road network. This brilliantly connects micro-level pathfinding attempts to macro-level traffic visualization and land value calculation, teaching players about good road design through implicit feedback. The diagram shows how the origin (`FindRoad()`) and destination searches (`DriveDone()`) work, the stack-based path memory (`TryDrive()`), and how accumulated traffic density (`> 240`) triggers the **helicopter** animation (`CopterHeli()`), providing a visual cue for major traffic jams. An interactive version could allow tracing individual pathfinding attempts, visualizing the stack, and seeing how failures or successes update the traffic density map in real-time.
 
 ## Animation Characters {#animation-characters}
-
-**Animation Characters**
 
 **SimCity** uses various **animation characters** to bring the city to life, from power outages to bridge animations, airport radar, park fountains and telecommunications.
 

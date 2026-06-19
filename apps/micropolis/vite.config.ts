@@ -8,7 +8,9 @@ export default defineConfig({
     noExternal: ['@micropolis/render-core', '@micropolis/tile-renderer']
   },
   optimizeDeps: {
-    include: ['@micropolis/render-core', '@micropolis/tile-renderer']
+    // Workspace packages must stay out of the prebundle cache or HMR serves stale classes
+    // missing methods like syncViewportScreenScale / panToKeepWorldAtScreen.
+    exclude: ['@micropolis/render-core', '@micropolis/tile-renderer'],
   },
   plugins: [
     sveltekit(),

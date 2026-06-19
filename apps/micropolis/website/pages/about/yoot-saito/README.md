@@ -14,14 +14,10 @@ nav:
 successor **Yoot Tower** (1998), as well as the cult Dreamcast pet **Seaman**
 (1999) and the GameCube game **Odama**. He founded the studio **Vivarium**.
 
-## Why he belongs here
-
-His tower simulations grew from the same Maxis "software toy" culture as
-[**Will Wright's**](/pages/about/will-wright) SimCity, and they share its spirit of
-emergent, systems-driven play. He also conducted a celebrated **interview of
-[Alan Kay](/pages/about/constructionist-education/alan-kay)** — connecting the
-tower-sim line directly to the constructionist computing tradition that runs
-through this whole project.
-
-This is a representational portrayal — material published *about* Yoot Saito,
-drawn from his published work and interviews.
+**SimTower** / **The Tower** is a vertical building-management simulation: the
+player develops a skyscraper, placing offices, condos, shops, and elevators while
+balancing tenant happiness and income. **Seaman** used voice recognition and a
+grotesque human-faced fish to create an unsettling virtual pet. **Odama** combined
+pinball with real-time strategy. Saito published a long **interview with
+[Alan Kay](/pages/about/constructionist-education/alan-kay)** on the history of
+personal computing.

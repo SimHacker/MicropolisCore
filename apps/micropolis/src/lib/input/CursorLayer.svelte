@@ -22,6 +22,7 @@
 		EdgeAutoscrollPolicy,
 		UnifiedPointer
 	} from './types';
+	import type { ScreenRect } from './viewportTileFrame';
 
 	interface Props {
 		/** Holodeck stage — required only when backend includes `webgpu`. */
@@ -36,6 +37,8 @@
 		autoscroll?: EdgeAutoscrollPolicy;
 		/** Show dashed dev overlay when stage/plugins not wired. */
 		dev?: boolean;
+		/** Screen rects for DOM frames when holodeck measure is not wired (playable bridge). */
+		domFrameRects?: Record<string, ScreenRect>;
 	}
 
 	let {
@@ -44,7 +47,8 @@
 		presences = [],
 		localPointer,
 		autoscroll: _autoscroll,
-		dev = false
+		dev = false,
+		domFrameRects = {}
 	}: Props = $props();
 
 	const useWebGpu = $derived(backend === 'webgpu' || backend === 'both');
@@ -151,14 +155,17 @@
 
 <!-- DOM/SVG: tool frames (playable default) + optional chrome slots -->
 {#if useDom}
+	<div class="cursor-layer-root" aria-hidden="true">
 	{#each domPresences as presence (presence.playerId)}
 		{#if domSlots(presence).includes('label') || (domSlots(presence).length === 0 && presence.anchorSpace === 'world-tile')}
+			{@const domRect = domFrameRects[presence.playerId]}
 			{@const bounds = getMeasure(`editing-tool-cursor/${presence.playerId}/outer/bounds`)}
-			<!-- TODO(playable-B): SVG tile frame from viewport/tile-renderer when measure not wired -->
-			{#if bounds?.bounds}
+			{#if domRect || bounds?.bounds}
+				{@const r = domRect ?? bounds!.bounds!}
 				<div
 					class="cursor-tool-frame"
-					style="left:{bounds.bounds.x}px; top:{bounds.bounds.y}px; width:{bounds.bounds.w}px; height:{bounds.bounds.h}px;"
+					class:local={presence.local}
+					style="left:{r.x}px; top:{r.y}px; width:{r.w}px; height:{r.h}px;"
 				></div>
 			{/if}
 		{/if}
@@ -184,6 +191,7 @@
 			{/if}
 		{/if}
 	{/each}
+	</div>
 {/if}
 
 {#if dev && localPointer && !stage}
@@ -195,23 +203,39 @@
 {/if}
 
 <style>
+	:global(.cursor-layer-root) {
+		position: absolute;
+		inset: 0;
+		z-index: 15;
+		pointer-events: none;
+		overflow: hidden;
+	}
+
 	.cursor-tool-frame {
-		position: fixed;
+		position: absolute;
 		z-index: 998;
 		pointer-events: none;
 		box-sizing: border-box;
-		border: 2px solid currentColor;
-		opacity: 0.75;
+		border: 2px solid rgba(255, 210, 122, 0.85);
+		opacity: 0.9;
+	}
+	.cursor-tool-frame.local {
+		border-width: 2px;
+		border-color: #ffd27a;
+	}
+	.cursor-tool-frame:not(.local) {
+		border-width: 1px;
+		opacity: 0.6;
 	}
 	.cursor-label {
-		position: fixed;
+		position: absolute;
 		z-index: 1000;
 		pointer-events: none;
 		font-size: 0.75rem;
 		opacity: 0.85;
 	}
 	.cursor-avatar {
-		position: fixed;
+		position: absolute;
 		z-index: 999;
 		pointer-events: none;
 		border-radius: 50%;
@@ -219,7 +243,7 @@
 		opacity: 0.5;
 	}
 	.cursor-layer-dev {
-		position: fixed;
+		position: absolute;
 		z-index: 99999;
 		width: 24px;
 		height: 24px;

@@ -88,4 +88,24 @@ describe('MapViewport', () => {
 		v.zoomTo(100);
 		expect(v.zoom).toBe(4);
 	});
+
+	it('panToKeepWorldAtScreen keeps the grabbed world point under the cursor', () => {
+		const v = make();
+		const grab: [number, number] = [42.25, 17.5];
+		const screen: [number, number] = [220, 410];
+		v.panToKeepWorldAtScreen(grab, screen);
+		const back = v.screenToWorldTile(screen);
+		approx(back[0], grab[0]);
+		approx(back[1], grab[1]);
+	});
+
+	it('screenZoomFactor scales tile footprint on screen', () => {
+		const v = make();
+		v.configure({ screenZoomFactor: 4, zoom: 1 });
+		const base = v.worldTileToScreenRect(0, 0, 1, 1);
+		v.configure({ screenZoomFactor: 1 });
+		const unscaled = v.worldTileToScreenRect(0, 0, 1, 1);
+		expect(base.w / unscaled.w).toBeCloseTo(4, 4);
+		expect(base.h / unscaled.h).toBeCloseTo(4, 4);
+	});
 });

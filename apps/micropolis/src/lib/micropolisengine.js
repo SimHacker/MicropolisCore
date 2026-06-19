@@ -88,7 +88,7 @@ if (ENVIRONMENT_IS_NODE) {
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmppjp4p081.js
+// include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmpkkkgbbly.js
 
   if (!Module['expectedDataFileDownloads']) Module['expectedDataFileDownloads'] = 0;
   Module['expectedDataFileDownloads']++;
@@ -221,21 +221,21 @@ Module['FS_createPath']("/", "cities", true, true);
 
   })();
 
-// end include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmppjp4p081.js
-// include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmp1ebfa_ig.js
+// end include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmpkkkgbbly.js
+// include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmp9cazitgs.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if ((typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER) || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD) || (typeof ENVIRONMENT_IS_AUDIO_WORKLET != 'undefined' && ENVIRONMENT_IS_AUDIO_WORKLET)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmp1ebfa_ig.js
-// include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmpxxspu8c5.js
+  // end include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmp9cazitgs.js
+// include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmpbrr8dyda.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmpxxspu8c5.js
+  // end include: /var/folders/78/byld8t797qb4qt1fj9r1xz_w0000gn/T/tmpbrr8dyda.js
 
 
 var arguments_ = [];
@@ -553,7 +553,7 @@ function updateMemoryViews() {
   HEAP8 = new Int8Array(b);
   HEAP16 = new Int16Array(b);
   HEAPU8 = new Uint8Array(b);
-  HEAPU16 = new Uint16Array(b);
+  Module['HEAPU16'] = HEAPU16 = new Uint16Array(b);
   HEAP32 = new Int32Array(b);
   HEAPU32 = new Uint32Array(b);
   HEAPF32 = new Float32Array(b);
@@ -5966,12 +5966,26 @@ ${functionBody}
       return emval_methodCallers[caller](handle, methodName, destructorsRef, args);
     };
 
+  var __emval_new_array = () => Emval.toHandle([]);
+
+  
+  var __emval_new_cstring = (v) => Emval.toHandle(getStringOrSymbol(v));
+
+  var __emval_new_object = () => Emval.toHandle({});
+
   
   
   var __emval_run_destructors = (handle) => {
       var destructors = Emval.toValue(handle);
       runDestructors(destructors);
       __emval_decref(handle);
+    };
+
+  var __emval_set_property = (handle, key, value) => {
+      handle = Emval.toValue(handle);
+      key = Emval.toValue(key);
+      value = Emval.toValue(value);
+      handle[key] = value;
     };
 
   var _emscripten_date_now = () => Date.now();
@@ -6188,6 +6202,8 @@ ${functionBody}
   }
   }
   
+
+
 
 
   var FS_createPath = (...args) => FS.createPath(...args);
@@ -6448,7 +6464,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'HEAP8',
   'HEAPU8',
   'HEAP16',
-  'HEAPU16',
   'HEAP32',
   'HEAPU32',
   'HEAPF32',
@@ -6476,7 +6491,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'alignMemory',
   'mmapAlloc',
   'wasmTable',
-  'wasmMemory',
   'getUniqueRunDependency',
   'noExitRuntime',
   'addOnPreRun',
@@ -6804,7 +6818,7 @@ function assignWasmExports(wasmExports) {
   __emscripten_stack_restore = wasmExports['_emscripten_stack_restore'];
   __emscripten_stack_alloc = wasmExports['_emscripten_stack_alloc'];
   _emscripten_stack_get_current = wasmExports['emscripten_stack_get_current'];
-  memory = wasmMemory = wasmExports['memory'];
+  memory = wasmMemory = Module['wasmMemory'] = wasmExports['memory'];
   __indirect_function_table = wasmTable = wasmExports['__indirect_function_table'];
 }
 
@@ -6864,7 +6878,15 @@ var wasmImports = {
   /** @export */
   _emval_invoke: __emval_invoke,
   /** @export */
+  _emval_new_array: __emval_new_array,
+  /** @export */
+  _emval_new_cstring: __emval_new_cstring,
+  /** @export */
+  _emval_new_object: __emval_new_object,
+  /** @export */
   _emval_run_destructors: __emval_run_destructors,
+  /** @export */
+  _emval_set_property: __emval_set_property,
   /** @export */
   emscripten_date_now: _emscripten_date_now,
   /** @export */

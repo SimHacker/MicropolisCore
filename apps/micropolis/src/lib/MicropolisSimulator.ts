@@ -138,6 +138,16 @@ export class MicropolisSimulator {
         this.isInitialized = true;
     }
 
+	/** Re-bind map/mop views after WASM heap growth (loadCity, etc. detaches old subarrays). */
+	syncMapViews(): boolean {
+		if (!this.micropolisengine || !this.micropolis) return false;
+		const views = createMapMopViews(this.micropolisengine, this.micropolis);
+		if (!views) return false;
+		this.mapData = views.mapData;
+		this.mopData = views.mopData;
+		return true;
+	}
+
 	fillMopTiles(value: number) {
 		if (!this.mopData) return;
 
@@ -260,6 +270,7 @@ export class MicropolisSimulator {
 		if (this.micropolis && !this.hasLoadedCity) {
 			this.micropolis.loadCity(this.cityFileName);
 			this.hasLoadedCity = true;
+			this.syncMapViews();
 		}
 	}
 }

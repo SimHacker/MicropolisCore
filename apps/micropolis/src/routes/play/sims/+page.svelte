@@ -24,16 +24,17 @@
 		<a class="primary" href="https://vitamoo.space/" target="_blank" rel="noopener noreferrer">
 			Open VitaMooSpace (current deployment)
 		</a>
-		<a class="secondary" href="/play/micropolis">Micropolis city view</a>
-		<a class="secondary" href="/">Home</a>
+		<a class="secondary" href="/play/micropolis">Micropolis City</a>
 	</p>
 </div>
 
 <style>
 	.sims-play-placeholder {
 		max-width: 42rem;
-		padding: 1rem 1.5rem 2rem;
+		margin: 0 auto;
+		padding: 3rem 1.5rem 2rem;
 		line-height: 1.55;
+		color: #eef2ff;
 	}
 
 	h1 {
@@ -49,7 +50,8 @@
 		font-size: 0.92em;
 		padding: 0.1em 0.35em;
 		border-radius: 4px;
-		background: rgba(0, 0, 0, 0.06);
+		background: rgba(255, 255, 255, 0.12);
+		color: #ffffff;
 	}
 
 	.actions {
@@ -79,12 +81,14 @@
 	}
 
 	a.secondary {
-		background: var(--color-bg-2, #f0f0f0);
-		color: inherit;
-		border-color: rgba(0, 0, 0, 0.12);
+		background: #243048;
+		color: #ffffff;
+		border: 2px solid var(--rci-R-green, #00c000);
 	}
 
 	a.secondary:hover {
-		background: #e6e6e6;
+		background: #2d4060;
+		border-color: #40e040;
+		color: #ffffff;
 	}
 </style>

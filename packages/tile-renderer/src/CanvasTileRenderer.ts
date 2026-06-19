@@ -38,10 +38,10 @@ class CanvasTileRenderer extends TileRenderer<CanvasRenderingContext2D> {
 
 		const atlas = this.atlases[this.tileLayer] ?? this.atlases.find((candidate) => candidate !== null);
 		if (!atlas) {
-			throw new Error('CanvasTileRenderer requires at least one loaded tile atlas.');
+			return;
 		}
 
-		this.setScreenSize(this.canvas.width, this.canvas.height);
+        this.syncViewportScreenScale(false);
 
 		const description = defaultMicropolisMapRenderDescription({
 			renderer: 'canvas',

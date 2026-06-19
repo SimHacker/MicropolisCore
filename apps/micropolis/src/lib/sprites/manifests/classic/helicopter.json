@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "helicopter",
+  "engineType": 2,
+  "sheet": "classic-sprite-chopper.png",
+  "frameWidth": 32,
+  "frameHeight": 32,
+  "defaultMeasurements": {
+    "hotspot": { "kind": "attachment", "x": 40, "y": -8 }
+  },
+  "frames": [
+    { "index": 0, "atlas": { "x": 0, "y": 0 } },
+    { "index": 1, "atlas": { "x": 32, "y": 0 } },
+    { "index": 2, "atlas": { "x": 64, "y": 0 } },
+    { "index": 3, "atlas": { "x": 96, "y": 0 } },
+    { "index": 4, "atlas": { "x": 128, "y": 0 } },
+    { "index": 5, "atlas": { "x": 160, "y": 0 } },
+    { "index": 6, "atlas": { "x": 192, "y": 0 } },
+    { "index": 7, "atlas": { "x": 224, "y": 0 } }
+  ]
+}

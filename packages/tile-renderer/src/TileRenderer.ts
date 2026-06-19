@@ -182,17 +182,21 @@ abstract class TileRenderer<TContext> {
     public tileRotate: number = 0;
     public tileLayer: number = 0;
 
+    /** Atlas texel size per map tile (e.g. 16×16). Viewport uses tile index units (1×1). */
+    public atlasTileWidth = 16;
+    public atlasTileHeight = 16;
+
     /**
      * The URL of the tile texture.
      */
     public tileLayers: ResolvedTileLayerSpec[] = [];
     public tileTextureURLs: (string | null)[] | null = null;
  
-    get tileWidth(): number { return this.viewport.tileWidth; }
-    set tileWidth(value: number) { this.viewport.tileWidth = value; }
+    get tileWidth(): number { return this.atlasTileWidth; }
+    set tileWidth(value: number) { this.atlasTileWidth = value; }
 
-    get tileHeight(): number { return this.viewport.tileHeight; }
-    set tileHeight(value: number) { this.viewport.tileHeight = value; }
+    get tileHeight(): number { return this.atlasTileHeight; }
+    set tileHeight(value: number) { this.atlasTileHeight = value; }
 
     get panX(): number { return this.viewport.panX; }
     set panX(value: number) { this.viewport.panX = value; }
@@ -241,8 +245,8 @@ abstract class TileRenderer<TContext> {
         this.viewport.configure({
             mapWidth: this.mapWidth,
             mapHeight: this.mapHeight,
-            tileWidth: this.tileWidth,
-            tileHeight: this.tileHeight,
+            tileWidth: 1,
+            tileHeight: 1,
         });
     }
 
@@ -277,8 +281,8 @@ abstract class TileRenderer<TContext> {
         this.mopData = mopData;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+        this.atlasTileWidth = tileWidth;
+        this.atlasTileHeight = tileHeight;
         this.tileLayers = tileTextureURLs.map((source) => resolveTileLayerSource(source, tileWidth, tileHeight));
         this.tileTextureURLs = this.tileLayers.map((layer) => layer.url);
         this.panXMax = this.mapWidth;
@@ -294,8 +298,101 @@ abstract class TileRenderer<TContext> {
      */
     abstract render(): void;
 
-    setScreenSize(width: number, height: number): void {
+    /** Canvas CSS layout width/height (matches mouse `getBoundingClientRect` coords). */
+    cssLayoutSize(): { width: number; height: number; backingStoreScale: number } {
+        if (!this.canvas) {
+            return { width: 0, height: 0, backingStoreScale: 1 };
+        }
+        const rect = this.canvas.getBoundingClientRect();
+        const cssW = rect.width > 0 ? rect.width : this.canvas.clientWidth;
+        const cssH = rect.height > 0 ? rect.height : this.canvas.clientHeight;
+        if (cssW <= 0 || cssH <= 0) {
+            return { width: 0, height: 0, backingStoreScale: 1 };
+        }
+        return {
+            width: cssW,
+            height: cssH,
+            backingStoreScale: this.canvas.width / cssW,
+        };
+    }
+
+    /** Canvas backing-store pixels per CSS layout pixel (often ≈ `devicePixelRatio`). */
+    backingStoreScale(): number {
+        return this.cssLayoutSize().backingStoreScale;
+    }
+
+    /** One map tile in CSS pixels — matches the canvas software/WebGL `4×` atlas path. */
+    cssPixelsPerTile(): number {
+        return (this.atlasTileWidth * 4 * this.zoom) / this.backingStoreScale();
+    }
+
+    /**
+     * Keep viewport screen scale aligned with the live canvas so cursor frames match tiles.
+     * @param adjustPanBounds When true, recompute pan limits (render/resize/zoom only).
+     */
+    setScreenSize(width: number, height: number, backingStoreScale?: number, adjustPanBounds = false): void {
         this.viewport.setScreenSize(width, height);
+        this.applyViewportScreenScale(backingStoreScale, adjustPanBounds);
+    }
+
+    /** Re-read canvas CSS size and backing-store scale. */
+    syncViewportScreenScale(adjustPanBounds = false): void {
+        const { width, height, backingStoreScale } = this.cssLayoutSize();
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        this.setScreenSize(width, height, backingStoreScale, adjustPanBounds);
+    }
+
+    protected applyViewportScreenScale(backingStoreScale?: number, adjustPanBounds = false): void {
+        const scale = backingStoreScale && backingStoreScale > 0
+            ? backingStoreScale
+            : this.backingStoreScale();
+        const z = this.viewport.zoom;
+        if (z <= 0 || scale <= 0) {
+            return;
+        }
+        const cssPixelsPerTile = (this.atlasTileWidth * 4 * this.zoom) / scale;
+        // Viewport pan/zoom is in tile indices (tileWidth=1); scale matches rendered canvas.
+        this.viewport.configure({
+            tileWidth: 1,
+            tileHeight: 1,
+            screenZoomFactor: cssPixelsPerTile / z,
+        });
+        if (adjustPanBounds) {
+            this.updatePanBounds();
+        }
+    }
+
+    /** Keep pan limits so the map can scroll until edges meet the viewport, not at tile 0/W. */
+    protected updatePanBounds(): void {
+        const ppt = this.cssPixelsPerTile();
+        if (ppt <= 0 || this.viewport.screenWidth <= 0 || this.viewport.screenHeight <= 0) {
+            return;
+        }
+        const halfTilesX = this.viewport.screenWidth / (2 * ppt);
+        const halfTilesY = this.viewport.screenHeight / (2 * ppt);
+        let panXMin = halfTilesX;
+        let panXMax = this.mapWidth - halfTilesX;
+        let panYMin = halfTilesY;
+        let panYMax = this.mapHeight - halfTilesY;
+        if (panXMin > panXMax) {
+            const cx = this.mapWidth / 2;
+            panXMin = cx;
+            panXMax = cx;
+        }
+        if (panYMin > panYMax) {
+            const cy = this.mapHeight / 2;
+            panYMin = cy;
+            panYMax = cy;
+        }
+        this.viewport.configure({ panXMin, panXMax, panYMin, panYMax });
+        if (
+            this.viewport.panX < panXMin || this.viewport.panX > panXMax ||
+            this.viewport.panY < panYMin || this.viewport.panY > panYMax
+        ) {
+            this.viewport.panTo(this.viewport.panX, this.viewport.panY);
+        }
     }
 
     panTo(panX: number, panY: number): void {
@@ -306,12 +403,18 @@ abstract class TileRenderer<TContext> {
         this.viewport.panBy(dx, dy);
     }
 
+    /** Direct-manipulation pan — keeps `worldTile` fixed under `screenCss`. */
+    panToKeepWorldAtScreen(worldTile: [number, number], screenCss: [number, number]): void {
+        this.viewport.panToKeepWorldAtScreen(worldTile, screenCss);
+    }
+
     zoomTo(zoom: number): void {
         this.viewport.zoomTo(zoom);
+        this.updatePanBounds();
     }
 
     zoomBy(zoomFactor: number): void {
-        this.viewport.zoomBy(zoomFactor);
+        this.zoomTo(this.zoom * zoomFactor);
     }
 
 }
