@@ -19,6 +19,10 @@ Read these alongside:
 
 ## Documents
 
+### 🛗 Elevator pitch (link people here first)
+
+- **[ELEVATOR-PITCH.md](ELEVATOR-PITCH.md)** — the Micropolis Federation in one page: characters as portable soul-files, the Bifrost and city bridges, companion-tools-only posture, what's real vs. proposed. Links into the full suite below.
+
 ### 🍲 Active cauldron + playable-game plan (start here for "make it a game")
 
 - **[playable-pie-publishing-cauldron/](playable-pie-publishing-cauldron/README.md)** — **the gathering.** A MOOLLM `cauldron` brew for three entangled pillars: **playable game**, **pie/cursor/graph substrate**, **federated publishing**. Phase 1 monolith: [GATHERING.md](playable-pie-publishing-cauldron/GATHERING.md). **Batch 1 runbooks** (playable vertical slice): [playbooks/](playable-pie-publishing-cauldron/playbooks/) + [PLAYABLE-SLICE-ATLAS.md](playable-pie-publishing-cauldron/PLAYABLE-SLICE-ATLAS.md).

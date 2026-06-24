@@ -17,6 +17,7 @@ Everything under this directory is **project documentation**: manuals for player
 
 ## Quick links
 
+- **30-second pitch (link people here):** **`designs/ELEVATOR-PITCH.md`** ← the Micropolis Federation in one page
 - **What to build next:** **`TODO.md`** ← start here
 - **The top-level framing — characters as hydrogen, Micropolis Federation:** **`designs/characters-as-hydrogen.md`** ← read this first to understand what the Federation actually is
 - **The unified Micropolis + Sims vision:** **`designs/simopolis.md`**
