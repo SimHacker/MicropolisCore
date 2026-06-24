@@ -6,9 +6,6 @@
 	const dateLabel = $derived(
 		`${micropolisReactive.cityMonth}/${micropolisReactive.cityYear} · ${micropolisReactive.cityName || 'Micropolis'}`
 	);
-	const demand = $derived(
-		`R${micropolisReactive.demandR} C${micropolisReactive.demandC} I${micropolisReactive.demandI}`
-	);
 	const simLabel = $derived(
 		micropolisReactive.simPaused
 			? 'Paused'
@@ -25,7 +22,11 @@
 		<span class="hud-date" title={dateLabel}>{dateLabel}</span>
 	</div>
 	<div class="hud-row hud-meta">
-		<span class="hud-demand">{demand}</span>
+		<span class="hud-rci">
+			<span class="rci-item"><span class="rci-letter">R</span> {micropolisReactive.demandR}</span>
+			<span class="rci-item"><span class="rci-letter">C</span> {micropolisReactive.demandC}</span>
+			<span class="rci-item"><span class="rci-letter">I</span> {micropolisReactive.demandI}</span>
+		</span>
 		<span class="hud-tax">{taxLabel}</span>
 		<span class="hud-speed" class:paused={micropolisReactive.simPaused}>{simLabel}</span>
 	</div>
@@ -72,9 +73,26 @@
 		color: #dce4f8;
 	}
 
+	.hud-rci {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.rci-item {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.35rem;
+	}
+
+	.rci-letter {
+		font-weight: 700;
+		min-width: 0.65rem;
+	}
+
 	.hud-funds,
 	.hud-date,
-	.hud-demand,
 	.hud-tax,
 	.hud-speed {
 		font-variant-numeric: tabular-nums;

@@ -98,22 +98,24 @@
 </script>
 
 <div class="view-container">
-  <div class="map-stack">
-    <TileView bind:this={tileView} />
-    <SoftwareSpriteLayer getViewport={getMapViewport} simulator={micropolisSimulator} />
-    <CursorLayer
-      backend="dom"
-      presences={localCursorPresence}
-      domFrameRects={domFrameRects}
-    />
-  </div>
-
-  <GameHud />
   <Toolbar />
-  <MessageOverlay />
-  <ZoneStatusPanel />
-  <BudgetModal />
-  <HelpModal />
+  <div class="play-main">
+    <div class="map-stack">
+      <TileView bind:this={tileView} />
+      <SoftwareSpriteLayer getViewport={getMapViewport} simulator={micropolisSimulator} />
+      <CursorLayer
+        backend="dom"
+        presences={localCursorPresence}
+        domFrameRects={domFrameRects}
+      />
+      <GameHud />
+      <ZoneStatusPanel />
+      <BudgetModal />
+      <HelpModal />
+    </div>
+
+    <MessageOverlay />
+  </div>
 </div>
 
 <style>
@@ -122,6 +124,17 @@
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  --message-bar-height: 2.5rem;
+}
+
+.play-main {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -132,7 +145,6 @@
   flex: 1;
   min-height: 0;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 

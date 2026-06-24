@@ -23,7 +23,7 @@
   import { registerMicropolisCommands, type MicropolisCommandContext } from '$lib/micropolisCommands';
   import { micropolisReactive } from '$lib/MicropolisReactive.svelte';
   import { toolState } from '$lib/ToolState.svelte';
-  import { resolveEditingTool, toolCursor } from '$lib/gameTools';
+  import { resolveEditingTool, toolCursor, TOOL_BY_SHORTCUT } from '$lib/gameTools';
   import {
     syncViewportScreenScale,
     panToKeepWorldAtScreen,
@@ -558,6 +558,19 @@
 
     if (key === 'Shift') {
       shiftPanHeld = true;
+    }
+
+    if (
+      key.length === 1 &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.altKey
+    ) {
+      const toolId = TOOL_BY_SHORTCUT[key.toLowerCase()];
+      if (toolId) {
+        toolState.setActiveTool(toolId);
+        return;
+      }
     }
 
     switch (key) {

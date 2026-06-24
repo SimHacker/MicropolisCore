@@ -1,4 +1,5 @@
 import type { ToolId } from './gameTools';
+import { micropolisReactive } from './MicropolisReactive.svelte';
 
 let activeToolId = $state<ToolId>('road');
 let hoverTile = $state<[number, number] | null>(null);
@@ -15,6 +16,9 @@ export const toolState = {
 	},
 	setActiveTool(id: ToolId) {
 		if (activeToolId === id) return;
+		if (activeToolId === 'query') {
+			micropolisReactive.clearZoneStatus();
+		}
 		activeToolId = id;
 		lastToolFeedback = null;
 		toolRevision += 1;
