@@ -21,7 +21,8 @@ version of this story lives at **[donhopkins.com](https://donhopkins.com)**.
   University of Maryland HCIL (with John Callahan, Mark Weiser, and Ben Shneiderman)
   through implementations in NeWS, X11, The Sims, OLPC, the web, and Unity.
 - **SimCity on Unix** — ports to NeWS/HyperLook and X11/TCL/Tk, plus a cooperative
-  multiplayer version (SimCityNet).
+  multiplayer version (SimCityNet) shipped across **Sun, SGI, NCD X terminal, DEC, HP,
+  Linux**, and later **OLPC**.
 - **The Sims** (Maxis, 1997–2000) — the pie-menu interface, architectural editing
   tools, internal tools (Edith/SimAntics, the 3ds Max pipeline), advocacy for
   inclusive relationships, and the user-creation tools (**SimShow**,

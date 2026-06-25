@@ -65,7 +65,25 @@ Email harvest: [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-wi
 
 ---
 
-## 4. Don Hopkins career thread (1997 → 2015)
+## 4. Don Hopkins career thread (~1991 → 2015)
+
+### Pre-Maxis — SimCity / DUX (~1991 → 1996)
+
+Don first met **Will Wright** around **1991**, contracting for **DUX Software** to port **SimCity to Unix**. Roughly a **decade of SimCity development** followed — not Maxis employment, but the work that **earned Will's trust** and led to Maxis after Don saw **Dollhouse** at **Terry Winograd's** UI seminar (1996). Don was hired at Maxis **January 1997** (§1 timeline).
+
+| Period | Work |
+|--------|------|
+| ~1991 | Met Will; **DUX Software** contract — SimCity → Unix |
+| ~1991–92 | **HyperLook edition** — **Turing Institute, Glasgow**; SimCity running *on* HyperLook; **dogfooding HyperLook + NeWS** to ship a real game |
+| ~early 1990s | **DUX online publishing** — downloadable unlockable demo (play free; unlock with credit card over phone if you like it) — early venture in online software distribution |
+| ~1992+ | **X11 / Tcl/Tk** multiplayer SimCity (SimCityNet) — portable branch after NeWS was canceled; published by DUX; demonstrated at **InterCHI** (~1993); ported across Unix platforms: **Sun**, **SGI**, **NCD X terminal**, **DEC**, **HP**, **Linux**, and later **OLPC** |
+| 1996 | Winograd seminar — Dollhouse demo; capstone on a decade of demonstrated SimCity/UI credibility |
+
+**Why this matters here:** Andrew Willmott never met Don at Maxis ([simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) §2), but the **HyperLook**, **X11/Tcl/Tk**, and **multiplayer** milestones are the pre-Maxis proof that Don could deliver simulation + UI at Will's bar — the trust that made the Sims hire possible.
+
+**Full stack evolution after DUX** (Linux → OLPC/GPL → Micropolis C++ → Python/SWIG → PyGTK → TurboGears/AMF/Flash/OpenLaszlo → WASM → SvelteKit/WebGPU → MicropolisCore monorepo with Micropolis City + Micropolis Home): **[platform-lineage-index.md](platform-lineage-index.md)** — not repeated here.
+
+### Maxis, SFC, and after (1997 → 2015)
 
 | Period | Work |
 |--------|------|
