@@ -150,15 +150,7 @@ Andrew’s Sims 2 work validates preserving **documented, commented** Sims 1 ani
 
 ---
 
-## 9. Personal / contact (historical)
-
-Andrew (2013): [awillmott@gmail.com](mailto:awillmott@gmail.com), London (020) 7209 8993 — invited Don for drink/dinner if in London or Amsterdam.
-
-*Correspondence archived for lineage only; verify before any outreach.*
-
----
-
-## 10. MicropolisCore checklist
+## 9. MicropolisCore checklist
 
 
 | Theme from emails                   | Action                                                                          |
@@ -174,7 +166,7 @@ Andrew (2013): [awillmott@gmail.com](mailto:awillmott@gmail.com), London (020) 7
 
 ---
 
-## 11. See also
+## 10. See also
 
 - [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) — Origin vs Maxis (Lucy Bradshaw, Ocean Quigley) from Don HN 2015
 - [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) — Wright ↔ Miyamoto week; SC2000 lineage
