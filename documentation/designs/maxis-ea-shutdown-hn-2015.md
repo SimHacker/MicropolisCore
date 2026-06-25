@@ -8,38 +8,50 @@
 
 ---
 
+
+
 ## 1. Timeline correction (context)
 
 **davidgay** on thread: EA bought Maxis **1997**; *The Sims* shipped **2000** — not compatible with “EA killed Maxis immediately” theories.
 
 **mjn** (second-hand, affirmed by Don): Will Wright’s clout protected Maxis autonomy until ~mid-2000s; *The Sims* success bought hands-off years; Walnut Creek merged to Redwood City; Emeryville remnant under Wright through **Spore (2008)**; Wright left **2009** → industry expected full absorption.
 
-| Date | Event |
-|------|--------|
-| Jan 1997 | Don hired at Maxis — pre–*The Sims* name |
-| Jul 1997 | **EA acquires Maxis** |
-| Feb 2000 | **The Sims 1** ships — best-selling PC game of its era |
-| 2008 | Spore — ambitious, not financial hit; procedural-gen influence |
-| 2009 | Will Wright leaves EA |
-| 2013 | SimCity (Glassbox) — server/Origin problems |
-| Mar 2015 | Maxis Emeryville effectively shut down (news cycle) |
+
+| Date     | Event                                                          |
+| -------- | -------------------------------------------------------------- |
+| Jan 1997 | Don hired at Maxis — pre–*The Sims* name                       |
+| Jul 1997 | **EA acquires Maxis**                                          |
+| Feb 2000 | **The Sims 1** ships — best-selling PC game of its era         |
+| 2008     | Spore — ambitious, not financial hit; procedural-gen influence |
+| 2009     | Will Wright leaves EA                                          |
+| 2013     | SimCity (Glassbox) — server/Origin problems                    |
+| Mar 2015 | Maxis Emeryville effectively shut down (news cycle)            |
+
 
 ---
+
+
 
 ## 2. Don’s counter-narrative on “EA destroys studios”
 
 Don rejects caricature: *“Buy studio, make them shovel incomplete games, close studio, repeat.”*
 
-| Fact | Don’s claim |
-|------|-------------|
-| EA + Maxis | Enabled finishing and shipping **The Sims** |
-| The Sims division | One of **three main EA studios**; huge revenue for years |
-| Post-Will team | Original Maxis / early Sims people “did a wonderful job” without Will |
-| SC2013 disaster | **Origin’s fault** — Maxis fought and lost; took public blame |
+
+| Fact              | Don’s claim                                                           |
+| ----------------- | --------------------------------------------------------------------- |
+| EA + Maxis        | Enabled finishing and shipping **The Sims**                           |
+| The Sims division | One of **three main EA studios**; huge revenue for years              |
+| Post-Will team    | Original Maxis / early Sims people “did a wonderful job” without Will |
+| SC2013 disaster   | **Origin’s fault** — Maxis fought and lost; took public blame         |
+
 
 ---
 
+
+
 ## 3. Key people (Don’s 2015 account)
+
+
 
 ### Lucy Bradshaw
 
@@ -65,50 +77,67 @@ Email harvest: [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-wi
 
 ---
 
+
+
 ## 4. Don Hopkins career thread (~1991 → 2015)
+
+
 
 ### Pre-Maxis — SimCity / DUX (~1991 → 1996)
 
 Don first met **Will Wright** around **1991**, contracting for **DUX Software** to port **SimCity to Unix**. Roughly a **decade of SimCity development** followed — not Maxis employment, but the work that **earned Will's trust** and led to Maxis after Don saw **Dollhouse** at **Terry Winograd's** UI seminar (1996). Don was hired at Maxis **January 1997** (§1 timeline).
 
-| Period | Work |
-|--------|------|
-| ~1991 | Met Will; **DUX Software** contract — SimCity → Unix |
-| ~1991–92 | **HyperLook edition** — **Turing Institute, Glasgow**; SimCity running *on* HyperLook; **dogfooding HyperLook + NeWS** to ship a real game |
-| ~early 1990s | **DUX online publishing** — downloadable unlockable demo (play free; unlock with credit card over phone if you like it) — early venture in online software distribution |
-| ~1992+ | **X11 / Tcl/Tk** multiplayer SimCity (SimCityNet) — portable branch after NeWS was canceled; published by DUX; demonstrated at **InterCHI** (~1993); ported across Unix platforms: **Sun**, **SGI**, **NCD X terminal**, **DEC**, **HP**, **Linux**, and later **OLPC** |
-| 1996 | Winograd seminar — Dollhouse demo; capstone on a decade of demonstrated SimCity/UI credibility |
 
-**Why this matters here:** Andrew Willmott never met Don at Maxis ([simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) §2), but the **HyperLook**, **X11/Tcl/Tk**, and **multiplayer** milestones are the pre-Maxis proof that Don could deliver simulation + UI at Will's bar — the trust that made the Sims hire possible.
+| Period       | Work                                                                                                                                                                                                                                                                    |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~1991        | Met Will; **DUX Software** contract — SimCity → Unix                                                                                                                                                                                                                    |
+| ~1991–92     | **HyperLook edition** — **Turing Institute, Glasgow**; SimCity running *on* HyperLook; **dogfooding HyperLook + NeWS** to ship a real game                                                                                                                              |
+| ~early 1990s | **DUX online publishing** — downloadable unlockable demo (play free; unlock with credit card over phone if you like it) — early venture in online software distribution                                                                                                 |
+| ~1992+       | **X11 / Tcl/Tk** multiplayer SimCity (SimCityNet) — portable branch after NeWS was canceled; published by DUX; demonstrated at **InterCHI** (~1993); ported across Unix platforms: **Sun**, **SGI**, **NCD X terminal**, **DEC**, **HP**, **Linux**, and later **OLPC** |
+| 1996         | Winograd seminar — Dollhouse demo; capstone on a decade of demonstrated SimCity/UI credibility                                                                                                                                                                          |
+
+
+**Why this matters here:** Andrew Willmott never met Don at Maxis ([simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) §2), but the **HyperLook**, **X11/Tcl/Tk**, and **multiplayer** milestones are the pre-Maxis proof that Don could deliver simulation + UI + multiplayer networking at Will's bar — the trust that made the Sims hire possible.
 
 **Full stack evolution after DUX** (Linux → OLPC/GPL → Micropolis C++ → Python/SWIG → PyGTK → TurboGears/AMF/Flash/OpenLaszlo → WASM → SvelteKit/WebGPU → MicropolisCore monorepo with Micropolis City + Micropolis Home): **[platform-lineage-index.md](platform-lineage-index.md)** — not repeated here.
 
-### Maxis, SFC, and after (1997 → 2015)
+### Maxis, SFC, TomTom, and after (1997 → 2015)
+
+After **The Sims 1** shipped (**February 2000**), Don left **EA** around **March 2000** and started working with Will at **Stupid Fun Club** — Will's independent think tank, not yet a full-time post-EA company. Early SFC work: **talking toys**, **robot brains**, **robot one-minute movies**, **speech recognition and synthesis**, **feedback**, and **looping**. Don later moved to **Amsterdam** for a day job at **TomTom** (automotive UI — see [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md)). When Will left EA (**2009**) and **EA invested in SFC**, Don left his TomTom day job to work **remotely** with Will and the SFC team — **Urban Safari**, **MediaGraph**, **Bar Karma**, and other stupid-fun experiments. Lineage: [family-album-as-storymaker.md](family-album-as-storymaker.md).
 
 | Period | Work |
-|--------|------|
-| 1997–2000 | The Sims 1 — animation/UI; left soon after ship |
+| ---------- | -------------------------------------------------------------------------------------------------------------------- |
+| 1997–Feb 2000 | **The Sims 1** at Maxis — animation/UI |
+| ~Mar 2000 | Left **EA**; joined **Stupid Fun Club** (think tank) — talking toys, robot brains, robot one-minute movies, speech I/O, feedback loops |
 | Contract | **Sims Transmogrifier** (user content tools) |
-| SFC (side) | Will’s **Stupid Fun Club** while still at EA — robotics, TV pilots **Empathy**, **Servitude** (unaired) |
-| 2009+ | Will leaves EA; **EA invests in SFC**; Don joins full time |
-| SFC | **Bar Karma** (Current TV, viewer-scripted) — [family-album-as-storymaker.md](family-album-as-storymaker.md) lineage |
+| ~2000s | **Amsterdam** — day job at **TomTom**; continued SFC collaboration on the side |
+| SFC (parallel) | TV pilots **Empathy**, **Servitude** (unaired) while Will was still at EA |
+| 2009 | Will leaves EA; **EA invests in SFC** |
+| ~2009+ | Don leaves TomTom day job → **remote** with Will and the SFC team |
+| SFC | **Urban Safari**, **MediaGraph**, and other experiments |
+| SFC TV | **Bar Karma** (Current TV, viewer-scripted) — [family-album-as-storymaker.md](family-album-as-storymaker.md) lineage |
 | HiveMind | Spin-off social-game company → **litigation**, frozen |
 
-**Bar Karma:** https://en.wikipedia.org/wiki/Bar_Karma — federated story / viewer participation precursor to Micropolis Family Album graph.
+
+**Bar Karma:** [https://en.wikipedia.org/wiki/Bar_Karma](https://en.wikipedia.org/wiki/Bar_Karma) — federated story / viewer participation precursor to Micropolis Family Album graph.
 
 ---
+
+
 
 ## 5. HiveMind / Jawad Ansari (2012 litigation)
 
 Don’s 2015 comment documents SFC spin-off meltdown (primary links preserved):
 
-| Resource | URL |
-|----------|-----|
-| HiveMind (Wikipedia) | https://en.wikipedia.org/wiki/HiveMind |
-| VentureBeat exclusive | http://venturebeat.com/2012/06/03/game-pioneer-will-wrights-personal-gaming-startup-falls-apart-in-litigation-exclusive/ |
-| Uproxx summary | http://uproxx.com/gammasquad/2012/06/will-wrights-social-game-is-in-legal-limbo/ |
-| Polygon settlement | http://www.polygon.com/2012/11/2/3589520/simcity-creator-will-wright-settles-lawsuit-over-hivemind-studio-control |
-| Ansari “apology” video | https://www.youtube.com/watch?v=XA8PXbTb7OQ |
+
+| Resource               | URL                                                                                                                                                                                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HiveMind (Wikipedia)   | [https://en.wikipedia.org/wiki/HiveMind](https://en.wikipedia.org/wiki/HiveMind)                                                                                                                                                                     |
+| VentureBeat exclusive  | [http://venturebeat.com/2012/06/03/game-pioneer-will-wrights-personal-gaming-startup-falls-apart-in-litigation-exclusive/](http://venturebeat.com/2012/06/03/game-pioneer-will-wrights-personal-gaming-startup-falls-apart-in-litigation-exclusive/) |
+| Uproxx summary         | [http://uproxx.com/gammasquad/2012/06/will-wrights-social-game-is-in-legal-limbo/](http://uproxx.com/gammasquad/2012/06/will-wrights-social-game-is-in-legal-limbo/)                                                                                 |
+| Polygon settlement     | [http://www.polygon.com/2012/11/2/3589520/simcity-creator-will-wright-settles-lawsuit-over-hivemind-studio-control](http://www.polygon.com/2012/11/2/3589520/simcity-creator-will-wright-settles-lawsuit-over-hivemind-studio-control)               |
+| Ansari “apology” video | [https://www.youtube.com/watch?v=XA8PXbTb7OQ](https://www.youtube.com/watch?v=XA8PXbTb7OQ)                                                                                                                                                           |
+
 
 Wright (2012): HiveMind “has no money … frozen” due to litigation; eventual board settlement with Ansari.
 
@@ -116,14 +145,18 @@ Wright (2012): HiveMind “has no money … frozen” due to litigation; eventua
 
 ---
 
+
+
 ## 6. SimCity 2013 — Origin vs Maxis (synthesis)
 
 Two independent primary sources agree:
 
-| Source | Claim |
-|--------|--------|
-| **Willmott email (2013)** | Andrew designed offline sync buffer; EA online team imposed shards + 20 min limit |
-| **Don HN (2015)** | Origin insisted on online play + lied that offline was impossible; Maxis fought unsuccessfully |
+
+| Source                    | Claim                                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Willmott email (2013)** | Andrew designed offline sync buffer; EA online team imposed shards + 20 min limit              |
+| **Don HN (2015)**         | Origin insisted on online play + lied that offline was impossible; Maxis fought unsuccessfully |
+
 
 **Not** “Maxis forgot how to SimCity” — **platform mandate + broken online stack**.
 
@@ -131,18 +164,24 @@ MicropolisCore design consequence: **client-authoritative sim**, optional sync, 
 
 ---
 
+
+
 ## 7. MicropolisCore implications
 
-| Theme | Where it lands |
-|-------|----------------|
-| Ocean’s low-end 2.5D holodeck | Sims 1 ran everywhere → browser WASM + WebGPU holodeck for city + Sims overlays |
-| Free-form roads vs tiles | SC2013 Glassbox — different from Micropolis **tile** sim; Micropolis keeps classic grid + better UI |
-| Pie menus (Don offered 2013) | [piecraft/](piecraft/README.md), [virtual-pointer-and-pie-cursors.md](virtual-pointer-and-pie-cursors.md) |
-| GPL Micropolis / constructionist | OLPC line — [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md), education docs |
-| Bar Karma / branching stories | [family-album-as-storymaker.md](family-album-as-storymaker.md) |
-| Simulator Effect / cheap metadata | [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) |
+
+| Theme                             | Where it lands                                                                                            |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Ocean’s low-end 2.5D holodeck     | Sims 1 ran everywhere → browser WASM + WebGPU holodeck for city + Sims overlays                           |
+| Free-form roads vs tiles          | SC2013 Glassbox — different from Micropolis **tile** sim; Micropolis keeps classic grid + better UI       |
+| Pie menus (Don offered 2013)      | [piecraft/](piecraft/README.md), [virtual-pointer-and-pie-cursors.md](virtual-pointer-and-pie-cursors.md) |
+| GPL Micropolis / constructionist  | OLPC line — [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md), education docs                        |
+| Bar Karma / branching stories     | [family-album-as-storymaker.md](family-album-as-storymaker.md)                                            |
+| Simulator Effect / cheap metadata | [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md)                        |
+
 
 ---
+
+
 
 ## 8. See also
 
@@ -151,3 +190,4 @@ MicropolisCore design consequence: **client-authoritative sim**, optional sync, 
 - [simopolis.md](simopolis.md) — Sims 1 uplift under EA Legacy Collection
 - [collaborative-microworld-lineage.md](collaborative-microworld-lineage.md)
 - [the-computer-as-portal.md](the-computer-as-portal.md) — Transmogrifier lineage
+

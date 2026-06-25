@@ -7,7 +7,7 @@
 
 | Person              | Role (2013)                                                                                              |
 | ------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Don Hopkins**     | Sims 1 animation/UI code; Unix/GPL Micropolis; Amsterdam / Stupid Fun Club → MediaGraph; Unity pie menus |
+| **Don Hopkins**     | Sims 1 animation/UI; left EA ~Mar 2000 → **Stupid Fun Club** (talking toys, robot brains, speech I/O); **TomTom** Amsterdam; remote SFC → **MediaGraph** / **Urban Safari**; Unix/GPL Micropolis; Unity pie menus |
 | **Andrew Willmott** | SimCity (2013) — UI architecture (JavaScript), filters; ex-Maxis London (~12 years); CMU 1994–2000       |
 
 
