@@ -49,6 +49,18 @@ Two reasons:
 
 But hydrogen's metaphor must not mislead us: **without carbon there's no backbone, without oxygen there's no reactivity, without provenance there's no trust**. The substrate is multi-element. This doc focuses on the hydrogen because the hydrogen is what most directly carries identity across game-runtime boundaries. The rest of the periodic table is documented in the suite of companion docs cited above.
 
+### Before hydrogen: the primordial quarks (Little Computer People, 1985)
+
+If the Sims-style character is the first stable, freely-bonding **atom**, then it had to condense out of something more primordial. That something is **[Little Computer People](federation-peer-games.md#little-computer-people-activision-1985--the-headwater)** (Activision, 1985 — David Crane + Rich Gold's "House-on-a-Disk").
+
+In the cosmology of this substrate, LCP is the **quark era**: the pre-atomic constituents that *later coalesce into hydrogen*. A Little Computer Person is a proto-character — a named, persistent individual (and his dog!) with needs, moods, and personality that change over time and persist to disk. All the *raw stuff* of a character is already there: persistence, individuality, a personality that responds to you. But it has not yet condensed into the high-valence **atom** the Sims character would become — there is no relationship graph binding many characters, no mobility between lots and worlds, no rich content-atoms to bond with. It is the quark soup before recombination.
+
+Will Wright [cited Little Computer People directly](federation-peer-games.md#little-computer-people-activision-1985--the-headwater) as an ancestor of The Sims. So the lineage reads as a literal cosmological sequence:
+
+> **Quarks (Little Computer People, 1985) → the first hydrogen atom (the Sims-style character) → molecules (households, neighborhoods, cities, dreams) → all the chemistry in this document.**
+
+This is why the [Little Computer People bridge](federation-peer-games.md#little-computer-people-activision-1985--the-headwater) is the most poignant in the whole Federation: reading its persistent on-disk character data and bringing that proto-person *forward* into the substrate that descends from it is, in the metaphor, **watching the first hydrogen condense out of the primordial quarks** — and being able to do it on a 1985 disk image, live.
+
 ---
 
 ## Inverting the usual game-design framing

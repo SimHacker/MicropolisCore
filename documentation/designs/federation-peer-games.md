@@ -135,6 +135,33 @@ These are the games where character-substrate bridging is *both* spiritually alm
 | Caveats | The intricacy of DF's character model is its own caveat: we map *what we can* and store the rest as an opaque `dfhack_extension:` block. Tarn has been famously supportive of community efforts; the bridge stays in user-companion-tool territory. |
 | Why this first | DF is the *moral north star* of procedurally-narrated lives. A bridge that brings a 9000-year-old DF historical figure into the Goth household as a long-lost ancestor — with their kill list intact — is a culturally extraordinary feature, and well within reach because DFHack already does 90% of the read work. |
 
+### Shattered Pixel Dungeon (Evan Debenham / "00-Evan", 2014 — fork of Watabou's Pixel Dungeon)
+
+Full design: **[shattered-pixel-dungeon-bridge.md](shattered-pixel-dungeon-bridge.md)**. The *contrast* peer — a brutal roguelike to the cozy world — and the **best technical fit on the board** because it is itself **open source (GPLv3)**.
+
+| Aspect | Notes |
+|---|---|
+| Spiritual fit | 8/10. Run-based roguelike, but the **Hero** (class/subclass/endgame ability/talents/inventory/level) is a personal character the player invests in, and permadeath makes every run a story. The *opposite* of cozy is the point: send a Sim **down to die** in the dungeon; bring a scarred survivor **up** into a Sims house. Honors its own upstream (Watabou's Pixel Dungeon; Evan shares 30% revenue upstream) — our seed-sharing ethic mirrored. |
+| Technical fit | **10/10 — the highest possible.** We don't reverse-engineer a binary or rely on a third-party tool; the data model **is the public source** (GPLv3). Saves are **GZIP'd JSON** (`game.dat`, `depth%d.dat`) via the `Bundle`/`Bundlable` system, with a `__className` polymorphism key and a built-in `aliases` migration table. `gunzip` → JSON → done. |
+| What the bridge ships | SPD Hero → soul-file (the 6 classes — Warrior/Mage/Rogue/Huntress/Duelist/Cleric — + subclass + ability + stats + belongings); Sim → Hero export (descend the dungeon). **Non-destructive + regenerable**: permadeath in the runtime, no loss at the canonical soul-file. |
+| Bifrost mapping highlights | `heroClass`/`subClass` → archetype + `mind_mirror`; `belongings` (weapons/armor/artifacts/wands) → objects; talents + armor abilities → skills/behaviors; badges + journal/catalog → `memories/`; dungeon depth/branch → `lots/`. Unknown fields (+ `__className`) passed through verbatim (mirror SPD's own `aliases` discipline). |
+| Caveats | GPLv3 — our derived tooling licenses accordingly; we interoperate with the public source, don't vendor it. The repo **does not accept PRs** (publish-to-learn, not committee) — perfect for the fork model. Permadeath handled by non-destructive bridging. |
+| Why interesting | Open source = **high fidelity + low cost + clean legality**. The author (Evan Debenham) is a great Repo-Show guest AND a verified solo-dev funding exemplar (free GPL game, cosmetic-only donations, 30% to Watabou). Three wins in one peer. |
+
+### Little Computer People (Activision, 1985) — ⭐ the HEADWATER
+
+*David Crane (Pitfall!) + Rich Gold's "House-on-a-Disk": a little person and his dog live in a house on your screen — named, persistent, with a personality, responding to you over time. **The literal ancestor of The Sims** (Will Wright cited it directly). Bridging its persistent character data closes the lineage all the way back to the source.*
+
+> **In the characters-as-hydrogen cosmology, LCP is the *quark era*** — the [primordial constituents that later condense into the first hydrogen atom](characters-as-hydrogen.md#before-hydrogen-the-primordial-quarks-little-computer-people-1985) (the Sims-style character). All the raw stuff of a character is present — persistence, individuality, a responsive personality — but not yet the high-valence *atom* it would become. Bringing the proto-person forward is *watching the first hydrogen condense out of the quarks*, on a 1985 disk image, live.
+
+| Aspect | Notes |
+|---|---|
+| Spiritual fit | **11/10 — foundational.** This is the ur-character: a virtual person living in a dollhouse with persistent state, 15 years before The Sims, 4 before SimCity. Importing *the first computer person* into the modern characters-as-hydrogen substrate is the single most poignant bridge in the Federation. The headwater of the whole lineage ([platform-lineage-index.md](platform-lineage-index.md), [collaborative-microworld-lineage.md](collaborative-microworld-lineage.md)). |
+| Technical fit | 5/10 — retro, but tractable. Original platforms C64 / Apple II / Amiga / Atari ST / Amstrad / Spectrum (1985). The person's state **persists to the disk** — so the bridge = read/write the on-disk character data from a **disk image**, running the title in a web emulator. **House-platform preference: target the Apple ][ version** (`apple2js`/`AppleWin` → wasm) — we are an Apple ][ shop when we can be (same reusable retro stack as the Apple ][ Wizardry target: TS disk-image + filesystem libs → parse/edit the save → emulator in the browser). The C64 path (VICE/x64 → wasm) stays available as a fallback. Format needs reverse-engineering (community knowledge + the disk dump). |
+| What the bridge ships | LCP person → characters-as-hydrogen soul-file (name, personality, needs, the dog!); the most reverent possible incarnation — the first computer person, reborn, able to visit a Sims house or Simopolis. Likely import-direction first. |
+| Caveats | Activision-era IP (nominative use; operate on disk images the user owns, like all retro targets). Lower-fidelity character model than later games — but that's the point; it's the seed everything grew from. |
+| Why it matters | It's the *origin story*, demonstrable. On a Repo Show: boot the 1985 disk in an emulator, read the little person's data live, and bring them forward into the substrate that descends from them. The full circle of the whole project, in one character. |
+
 ---
 
 ## Tier 2 — strong fits (🟢🟢)
@@ -168,6 +195,18 @@ Excellent additions to the Federation; ship after Tier 1 is mature, or in parall
 | Technical fit | 7/10. SEGA publishes; saves are accessible; modding is welcomed but not as mature as Stardew or CK3. |
 | Bridge highlights | Hospital staff / students → soul-files; patient narratives → albums; building layouts → lots |
 | Why interesting | A Goth Sim who falls ill and recovers at Two Point Hospital, with the doctor's perspective written into the album, is the kind of weird-good moment that makes a Federation tangibly useful. |
+
+### Pets & animal companions — dog/cat bridges (incl. for Sims pets)
+
+*Pets are first-class characters in [characters-as-hydrogen](characters-as-hydrogen.md) (H). Sims dogs/cats (The Sims: Unleashed 2002; Sims 2/3/4 pet packs) can bridge out, and animals can bridge in.*
+
+| Target | Notes |
+|---|---|
+| **Petz — Dogz / Catz** (PF Magic 1995→; later Mindscape / Ubisoft) | **The most lineage-apt** — proto-Sims virtual creatures with real behavior; Petz designer Andrew Stern later made *Façade*. Active community tooling for `.pet` files (PetzA, the "hexing" scene). Spiritual sibling to the Sims. **Top pet-bridge candidate.** |
+| **Stardew Valley** / **RimWorld** | Already Tier-1 peers — both carry **animals** (Stardew dog/cat/horse + farm animals; RimWorld tameable colonist-bonded animals). A Sims cat retiring to a Stardew farm rides the existing bridge. |
+| **Nintendogs (+ Cats)** (Nintendo DS/3DS) | The iconic dog/cat game — but **Nintendo-locked** proprietary saves (same caveat as Animal Crossing / Pokémon: user-exported only, high barrier). Aspirational, not near-term. |
+| **Creatures** (Norns; Cyberlife/Steve Grand 1996) | Alife-adjacent (not dogs/cats) but the creature-AI lineage; the open-source **openc2e** engine reimplementation exists. Watch-list. |
+| **The Sims' own pet packs** | The native home for Sims dogs/cats; the bridge's job is moving them OUT (to Petz/Stardew) and other animals IN. |
 
 ### Cities: Skylines / Cities: Skylines II (Colossal Order / Paradox, 2015 / 2023)
 
@@ -354,9 +393,11 @@ A separate section because these are *family*. Bridges within the lineage that h
 | Aspect | Notes |
 |---|---|
 | Spiritual fit | 9/10. Spore's Creature Creator and the [Sporepedia](https://en.wikipedia.org/wiki/Sporepedia) community-sharing system were the most ambitious creature-DNA-as-shareable-content effort of their era — *exactly* the Federation's substrate, ahead of its time. |
-| Technical fit | 7/10. Spore creature files (`.PNG`-with-embedded-data) are well-documented by the modding community; the Sporepedia is partially archived. [SporeModder FX](https://github.com/Spore-Community/SporeModder-FX) (the current data-modding tool) and the [Spore ModAPI Launcher Kit](https://launcherkit.sporecommunity.com/) (mod installer / loader) are mature. |
-| Bridge highlights | Spore creatures → MOOLLM citizens with biological-trait extensions; Sporepedia recovery → analogue of the Tornado for Spore content. |
-| Why eventually | Will Wright's last Maxis project; closing the loop with a Federation bridge is appropriate. |
+| Technical fit — **data** | 7/10. Spore creature files (`.PNG`-with-embedded-data) are well-documented by the modding community; the Sporepedia is partially archived. [SporeModder FX](https://github.com/Spore-Community/SporeModder-FX) (the current data-modding tool) and the [Spore ModAPI Launcher Kit](https://launcherkit.sporecommunity.com/) (mod installer / loader) are mature. Reading/writing creature *data* is tractable today. |
+| Technical fit — **pipeline** | 3/10 (a real research project, not a weekend bridge). The high prize isn't the save format — it's the *procedural pipeline*: a clean-room, web-native re-creation of the creature **renderer + animator + editor + builder** (procedural creature-DNA → rigged, posed, textured, walking creature, with **procedural animation** that rigs *arbitrary user-built morphologies* without hand-authored skeletons). That is reverse-engineering an animation system, and it is the most ambitious single target in this whole catalogue. |
+| Bridge highlights | **Phase 1:** Spore creatures → MOOLLM citizens with biological-trait extensions; Sporepedia recovery → analogue of the Tornado for Spore content. **Phase 2+:** the re-created creature editor + procedural rig/animation + renderer, built incrementally. |
+| The right way to build it | **Interview-driven, not AI-guessed.** This is the clearest case of the project's anti-slop thesis: don't have a model hallucinate Spore's procedural-animation pipeline — interview **Will Wright and the people who built it** (creature-creator designers, procedural-animation engineers, Sporepedia/content-sharing people) about *how and why it works*, then implement from real design knowledge. The natural home is a multi-episode show arc on Spore, user-created content, direct-manipulation editing, and content sharing. |
+| Why eventually | Will Wright's last Maxis project; closing the loop with a Federation bridge is the appropriate **capstone** of the Maxis lineage. Operate on user-owned creature files + clean-room reimplementation from interviews and public docs — never vendor EA engine or assets. |
 
 ### SimCity 4 (Maxis / EA, 2003)
 
