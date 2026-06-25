@@ -168,7 +168,7 @@ Andrew’s Sims 2 work validates preserving **documented, commented** Sims 1 ani
 
 ## 10. See also
 
-- [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) — Origin vs Maxis (Lucy Bradshaw, Ocean Quigley) from Don HN 2015
+- [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) — Origin vs Maxis (Lucy Bradshaw, Ocean Quigley) from Don HN 2015; **§4 HN catalog** of Don’s Stupid Fun Club comments
 - [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) — Wright ↔ Miyamoto week; SC2000 lineage
 - [simopolis.md](simopolis.md) — Sims + city umbrella
 - [family-album-as-storymaker.md](family-album-as-storymaker.md) — MediaGraph maps + pies

@@ -2,7 +2,7 @@
 
 **Primary thread:** [EA Shuts Down ‘SimCity’ and ‘The Sims’ Developer Maxis](https://news.ycombinator.com/item?id=9148746) (March 2015) — Kotaku/Polygon coverage of Maxis Emeryville closure.
 
-**Don Hopkins comment:** [HN 9149874](https://news.ycombinator.com/item?id=9149874) (parent) — rebuts oversimplified “EA buys studio, shovels junk, closes” narrative; documents Will Wright era, Lucy Bradshaw, **Ocean Quigley**, Origin vs Maxis on SC2013, Don’s own timeline, Stupid Fun Club, HiveMind litigation.
+**Don Hopkins comment:** [HN 9149874](https://news.ycombinator.com/item?id=9149874) (parent) — rebuts oversimplified “EA buys studio, shovels junk, closes” narrative; documents Will Wright era, Lucy Bradshaw, **Ocean Quigley**, Origin vs Maxis on SC2013, Don’s own timeline, Stupid Fun Club, HiveMind litigation. **More HN threads:** §4 catalog (`site:news.ycombinator.com "stupid fun club"`).
 
 **Companion:** [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) (Andrew Willmott email — Origin online debacle from inside engineering).
 
@@ -109,6 +109,7 @@ After **The Sims 1** shipped (**February 2000**), Don left **EA** around **March
 | ---------- | -------------------------------------------------------------------------------------------------------------------- |
 | 1997–Feb 2000 | **The Sims 1** at Maxis — animation/UI |
 | ~Mar 2000 | Left **EA**; joined **Stupid Fun Club** (think tank) — talking toys, robot brains, robot one-minute movies, speech I/O, feedback loops |
+| ~2003 | **Phoneloper** — expressive speech / chatterbot prototype; Flite + XML Phonelopes + phonoscoping ([phoneloper-sfc-speech-toy.md](phoneloper-sfc-speech-toy.md)) |
 | Contract | **Sims Transmogrifier** (user content tools) |
 | ~2000s | **Amsterdam** — day job at **TomTom**; continued SFC collaboration on the side |
 | SFC (parallel) | TV pilots **Empathy**, **Servitude** (unaired) while Will was still at EA |
@@ -121,13 +122,40 @@ After **The Sims 1** shipped (**February 2000**), Don left **EA** around **March
 
 **Bar Karma:** [https://en.wikipedia.org/wiki/Bar_Karma](https://en.wikipedia.org/wiki/Bar_Karma) — federated story / viewer participation precursor to Micropolis Family Album graph.
 
+### Phoneloper (~2003)
+
+Speech-synthesis **chatterbot prototype** for SFC: **Python + Tkinter + CMU Flite** (C++ modifications) with XML **Phonelope** import/export — timed **diphones**, **pitch** and **amplitude** envelopes, edited visually and in real time. **Phonoscoping** loads audio, draws a spectrogram + pitch tracker, and lets you rotoscope synthetic **expressive speech and singing** over captured clips. Demo: [YouTube — Phoneloper Demo](https://www.youtube.com/watch?v=qy5cqV8ypIs). Full write-up: **[phoneloper-sfc-speech-toy.md](phoneloper-sfc-speech-toy.md)** (future sketch: TypeScript + Web Audio port; same playful space as [Pink Trombone](https://dood.al/pink-trombone/)).
+
+### Hacker News primary sources (Don Hopkins / SFC)
+
+Don has documented much of this timeline in **first-person Hacker News comments** — searchable via Google [`site:news.ycombinator.com "stupid fun club"`](https://www.google.com/search?q=site%3Anews.ycombinator.com+%22stupid+fun+club%22) or [HN Algolia](https://hn.algolia.com/) (`author:DonHopkins` + `Stupid Fun Club`). Verified threads below; the **canonical long-form career narrative** is [HN 9149874](https://news.ycombinator.com/item?id=9149874) on the Maxis shutdown thread.
+
+| Topic | Thread | Don comment | What it adds |
+| --- | --- | --- | --- |
+| **Maxis shutdown — full career arc** | [9148746](https://news.ycombinator.com/item?id=9148746) | [9149874](https://news.ycombinator.com/item?id=9149874) | EA timeline, Ocean holodeck, Origin/SC2013, Lucy Bradshaw, SFC side project → HiveMind litigation, Bar Karma |
+| **HiveMind / Ansari litigation** | [18011332](https://news.ycombinator.com/item?id=18011332) *Ask HN: startup fail* | [18015780](https://news.ycombinator.com/item?id=18015780), [18044422](https://news.ycombinator.com/item?id=18044422) | Ansari vs Wright/SFC IP; “serial hacktreprenuer”; Friendly follow-on company |
+| **Robot one-minute movies (2003)** | [9107065](https://news.ycombinator.com/item?id=9107065) *Stop Robot Abuse* | [9107206](https://news.ycombinator.com/item?id=9107206) | Hidden-camera robot films at SFC; Oakland streets/restaurants |
+| **Empathy + Servitude films** | [17482910](https://news.ycombinator.com/item?id=17482910) | [17483925](https://news.ycombinator.com/item?id=17483925) | Robot brain/personality sim by Don; YouTube links; NBC one-minute format |
+| **Why NBC never aired them** | [12514296](https://news.ycombinator.com/item?id=12514296) | [12520558](https://news.ycombinator.com/item?id=12520558) | NBC/SAG contract problems; hidden-camera + wizard-of-oz tele-robotics (also [9993071](https://news.ycombinator.com/item?id=9993071) on HitchBOT) |
+| **Phoneloper / speech synthesis (2003)** | [31416098](https://news.ycombinator.com/item?id=31416098) *NaturalSpeech* | [31418659](https://news.ycombinator.com/item?id=31418659) | Flite + XML Phonelopes; phonoscoping; [YouTube demo](https://www.youtube.com/watch?v=qy5cqV8ypIs) — [phoneloper-sfc-speech-toy.md](phoneloper-sfc-speech-toy.md) |
+| **MediaGraph + iLoci / Nototo** | [22088509](https://news.ycombinator.com/item?id=22088509) *Nototo* | [22089694](https://news.ycombinator.com/item?id=22089694) | Unity MediaGraph (2012) + iPhone iLoci (2008) for Will's SFC; pie menus, map roads, CA |
+| **MediaGraph music navigation** | [47385272](https://news.ycombinator.com/item?id=47385272) *Spotify AI DJ* | [47386278](https://news.ycombinator.com/item?id=47386278) | MediaGraph music spatial organization; pie-menu navigation prototype for SFC |
+| **MediaGraph / Fitts / pie maps** | [11208463](https://news.ycombinator.com/item?id=11208463) *Fitt's Law* | [11219792](https://news.ycombinator.com/item?id=11219792) | MediaGraph demo; hierarchical vs geographic pie menus |
+| **Method of loci + MediaGraph** | [31596787](https://news.ycombinator.com/item?id=31596787) *How To Remember Anything* | [31598929](https://news.ycombinator.com/item?id=31598929) | iLoci + MediaGraph; memory-palace editing (“kissing” islands) |
+| **Scott Adams + iLoci lineage** | [29330015](https://news.ycombinator.com/item?id=29330015) | [29330901](https://news.ycombinator.com/item?id=29330901) | Adventure games ↔ memory palaces; iLoci + MediaGraph for SFC |
+| **Winograd 1996 talk → Sims** | [44906662](https://news.ycombinator.com/item?id=44906662) *Citybound* | [44911071](https://news.ycombinator.com/item?id=44911071) | Don at Winograd seminar; Dollhouse; Simulator Effect; post-Sims retrospective |
+| **Demo catalog (HyperLook, pies, PSIBER)** | [22455722](https://news.ycombinator.com/item?id=22455722) *Sun NeWS* | [22456831](https://news.ycombinator.com/item?id=22456831) | YouTube links including HyperLook SimCity; pre-Maxis lineage receipts |
+| **TomTom / car UI / MediaGraph** | [7261003](https://news.ycombinator.com/item?id=7261003) *A New Car UI* | (see [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md)) | Amsterdam day-job era; pie menus vs blind multitouch ([7328476](https://news.ycombinator.com/item?id=7328476) thread) |
+
+**Note:** Don's [9149874](https://news.ycombinator.com/item?id=9149874) comment also describes SFC **while Will was still at EA** (Transmogrifier contract, side-project robotics/TV) — which overlaps the **~Mar 2000 → 2009** period in the table above before Will left EA and Don went remote full-time. Peer comment [9148853](https://news.ycombinator.com/item?id=9148853) (not Don) summarizes the same SFC-while-at-EA context on the shutdown thread.
+
 ---
 
 
 
 ## 5. HiveMind / Jawad Ansari (2012 litigation)
 
-Don’s 2015 comment documents SFC spin-off meltdown (primary links preserved):
+Don’s 2015 comment documents SFC spin-off meltdown (primary links preserved). **Don’s first-person HN comments on HiveMind/SFC:** §4 HN catalog — especially [9149874](https://news.ycombinator.com/item?id=9149874), [18015780](https://news.ycombinator.com/item?id=18015780), [18044422](https://news.ycombinator.com/item?id=18044422).
 
 
 | Resource               | URL                                                                                                                                                                                                                                                  |
@@ -175,6 +203,7 @@ MicropolisCore design consequence: **client-authoritative sim**, optional sync, 
 | Free-form roads vs tiles          | SC2013 Glassbox — different from Micropolis **tile** sim; Micropolis keeps classic grid + better UI       |
 | Pie menus (Don offered 2013)      | [piecraft/](piecraft/README.md), [virtual-pointer-and-pie-cursors.md](virtual-pointer-and-pie-cursors.md) |
 | GPL Micropolis / constructionist  | OLPC line — [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md), education docs                        |
+| SFC talking toys / Phoneloper | Future **TypeScript + Web Audio** speech toy; Phonelope timeline editor — [phoneloper-sfc-speech-toy.md](phoneloper-sfc-speech-toy.md) |
 | Bar Karma / branching stories     | [family-album-as-storymaker.md](family-album-as-storymaker.md)                                            |
 | Simulator Effect / cheap metadata | [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md)                        |
 
@@ -185,6 +214,7 @@ MicropolisCore design consequence: **client-authoritative sim**, optional sync, 
 
 ## 8. See also
 
+- [phoneloper-sfc-speech-toy.md](phoneloper-sfc-speech-toy.md) — SFC expressive speech editor; phonoscoping; browser port sketch
 - [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md)
 - [platform-lineage-index.md](platform-lineage-index.md)
 - [simopolis.md](simopolis.md) — Sims 1 uplift under EA Legacy Collection
