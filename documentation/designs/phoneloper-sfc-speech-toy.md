@@ -18,6 +18,14 @@ Resume summary: [donhopkins.com/home/resume.html](https://donhopkins.com/home/re
 
 ---
 
+## Open source (2026)
+
+**Will Wright** has generously granted Don permission to **publish Phoneloper as open source**. A dedicated GitHub repo is coming soon (Python/Tkinter + modified Flite + Phonelope editor).
+
+**Repo Show (planned):** [phoneloper-speech-synthesis](https://github.com/SimHacker/DonHopkins/blob/main/projects/micropolis-moollm/shows/phoneloper-speech-synthesis.yml) — invite **Kevin Lenzo** (Flite author; [Cepstral](https://en.wikipedia.org/wiki/Cepstral) co-founder with Alan W. Black). Don corresponded with Kevin while building Phoneloper (~2003), found a bug in Flite, and submitted a fix. Show Kevin what was built on his engine — and the path toward a browser vocal jam duet with [Pink Trombone](https://dood.al/pink-trombone/). Cepstral’s embedded/handheld TTS deployment class matches the **talking toys** SFC researched (never shipped, but the stack was real).
+
+---
+
 ## Phonelope data model
 
 A **Phonelope** is an XML file representing synthetic speech as editable structure, not opaque audio:
@@ -73,6 +81,8 @@ Phoneloper fed the broader SFC speech stack documented on Don’s resume: ViaVoi
 
 **Someday:** reimplement the C++/Flite customizations and Python/Tkinter UI as **TypeScript + Web Audio** (WASM Flite or a modern diphone engine; canvas/Svelte timeline editor; Web Audio API for real-time audition). Goal: a **fun speech toy** in the browser — same playful lane as **[Pink Trombone](https://dood.al/pink-trombone/)** (Neil Thurlwell’s interactive vocal-tract synthesizer): immediate, weird, hands-on voice play rather than cloud TTS.
 
+**Why reinvent:** the [YouTube demo](https://www.youtube.com/watch?v=qy5cqV8ypIs) still lands because of what a **text transcript cannot carry** — the synthesized vocal sounds (inflected “dude”s, granular loops, phonoscoped licks) **and** Don’s delighted voice performing alongside the tool. That dual-voice jam is the motivation: a **web-based vocal musical jamming instrument** that could **sing along with Pink Trombone** — tract synthesis (sister) + diphone timeline editor (Phoneloper) as a browser duet.
+
 Not on the critical path for Micropolis sim/runtime; a **companion microworld** aligned with constructionist tooling and Federation “soul-file” expressiveness.
 
 ---
@@ -91,6 +101,7 @@ Not on the critical path for Micropolis sim/runtime; a **companion microworld** 
 
 ## See also
 
+- DonHopkins `shows/phoneloper-speech-synthesis.yml` — Kevin Lenzo Repo Show seed (open-source release + Flite lineage)
 - [family-album-as-storymaker.md](family-album-as-storymaker.md) — MediaGraph / iLoci map editing (another SFC visual editor lineage)
 - [platform-lineage-index.md](platform-lineage-index.md) — Python/Tk → SvelteKit/WebGPU trajectory
 - [characters-as-hydrogen.md](characters-as-hydrogen.md) — character voice/expressiveness as federation atom
