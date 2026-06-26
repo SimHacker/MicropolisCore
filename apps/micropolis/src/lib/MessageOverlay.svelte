@@ -4,14 +4,11 @@
 
 	const DEFAULT_MESSAGE = 'Welcome to Micropolis.';
 
-	let displayText = $state(DEFAULT_MESSAGE);
-
-	$effect(() => {
-		const index = micropolisReactive.messageIndex;
-		if (index >= 0) {
-			displayText = messageText(index);
-		}
-	});
+	const displayText = $derived(
+		micropolisReactive.messageIndex >= 0
+			? messageText(micropolisReactive.messageIndex)
+			: DEFAULT_MESSAGE,
+	);
 
 	const showCoords = $derived(
 		micropolisReactive.messageIndex >= 0 && micropolisReactive.messageX >= 0,

@@ -64,6 +64,8 @@
   let panButton = $state<number | null>(null);
   let panGrabWorld: [number, number] | null = null;
   let toolDragging = false;
+  // Future drawing autoscroll should be time-driven/world-tile based; pan autoscroll runs the opposite direction.
+  let lastAppliedToolTile: [number, number] | null = null;
   let shiftPanHeld = $state(false);
   let screenPos: [number, number] = [0, 0];
   let tilePos: [number, number] = [0, 0];
@@ -486,6 +488,9 @@
 
     const tileX = Math.floor(tx);
     const tileY = Math.floor(ty);
+    if (lastAppliedToolTile?.[0] === tileX && lastAppliedToolTile[1] === tileY) return;
+    lastAppliedToolTile = [tileX, tileY];
+
     const tool = resolveEditingTool(eng, toolState.activeToolId);
     const result = micropolisReactive.poke.doTool(tool, tileX, tileY);
     const feedback = toolResultMessage(result as { value: number });
@@ -520,6 +525,7 @@
     }
 
     if (event.button === 0) {
+      lastAppliedToolTile = null;
       toolDragging = true;
       applyToolAt(tilePos[0], tilePos[1]);
     }
@@ -546,6 +552,7 @@
     }
     if (event.button === 0) {
       toolDragging = false;
+      lastAppliedToolTile = null;
     }
   }
 
@@ -856,7 +863,7 @@
   onmouseup={onmouseup}
   onkeydown={onkeydown}
   onkeyup={onkeyup}
-  onmouseleave={() => { if (!panning) toolDragging = false; }}
+  onmouseleave={() => { if (!panning) { toolDragging = false; lastAppliedToolTile = null; } }}
   oncontextmenu={(e) => e.preventDefault()}
 ></canvas>
 <!--

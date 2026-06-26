@@ -27,6 +27,7 @@ Each article is *standalone*. None of them ask you to read another file first. T
 | 13 | [`piecraft/README.md`](piecraft/README.md) | **PieCraft** game + runtime-editable pies; Target/Pie/Slice/Item; Unity/MHW/jQuery lineage; Micropolis holodeck binding | …you're implementing pies, `ToolCatalog`, or constructionist UI literacy |
 | 14 | [`automotive-touch-ui-vs-pie-menus.md`](automotive-touch-ui-vs-pie-menus.md) | Car multitouch finger-count UI vs **self-revealing pies**; ConnectedTV; iLoci; 7→8 wedges; TomTom; dual-mode driving | …you're arguing against blind gestures or designing eyes-free + config modes |
 | 15 | [`macos-pie-menu-app-hn-2024.md`](macos-pie-menu-app-hn-2024.md) | Hauken **pie-menu.com** (Aug 2024); Don’s demo links, CHI’88, rehearsal, patent FUD, PIXIE; Micropolis Svelte roadmap | …you're comparing OS shortcut pies to in-game holodeck pies |
+| 16 | [`brad-myers-visual-programming-hn.md`](brad-myers-visual-programming-hn.md) | **Brad Myers** — Garnet/GLASS, *All the Widgets*, VPL taxonomy, spreadsheets-as-VPL, C32, SimAntics, Garnet↔Laszlo constraints; CMU 05-640 archive | …a VPL/spreadsheet/Garnet thread needs Brad’s taxonomy + Don’s HN catalog |
 
 **PieCraft subdocs:** [PIECRAFT.md](piecraft/PIECRAFT.md) · [PIE-MENU-MODEL.md](piecraft/PIE-MENU-MODEL.md) · [RELATED-PROJECTS.md](piecraft/RELATED-PROJECTS.md)
 
@@ -102,6 +103,12 @@ These are the *meaty* comments the articles dig into. Each is cited inline in th
 | [29330901](https://news.ycombinator.com/item?id=29330901) on [29330015](https://news.ycombinator.com/item?id=29330015) | Scott Adams IF + memory palaces → iLoci/MediaGraph (SFC) | [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) §4 |
 | [44911071](https://news.ycombinator.com/item?id=44911071) on [44906662](https://news.ycombinator.com/item?id=44906662) | Winograd 1996 talk → Dollhouse → Sims; **Simulator Effect** | [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) §4 · Will kickoff sources |
 | [22456831](https://news.ycombinator.com/item?id=22456831) on [22455722](https://news.ycombinator.com/item?id=22455722) | Demo catalog — HyperLook SimCity, pies, PSIBER | [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) §4 |
+| [26057530](https://news.ycombinator.com/item?id=26057530) | Brad Myers VPL taxonomy — BradAMyers replies; Don C32/Garnet | [brad-myers-visual-programming-hn.md](brad-myers-visual-programming-hn.md) |
+| [26061576](https://news.ycombinator.com/item?id=26061576) | Spreadsheets are all you need — Brad paper + C32 | [brad-myers-visual-programming-hn.md](brad-myers-visual-programming-hn.md) |
+| [11232154](https://news.ycombinator.com/item?id=11232154) | Garnet toolkit — Don GLASS; constraints article | [brad-myers-visual-programming-hn.md](brad-myers-visual-programming-hn.md) · [openlaszlo/README.md](../openlaszlo/README.md) |
+| [22984831](https://news.ycombinator.com/item?id=22984831) | Excel vs Ruby — “visual programming popularity” debate | [brad-myers-visual-programming-hn.md](brad-myers-visual-programming-hn.md) |
+| [26668885](https://news.ycombinator.com/item?id=26668885) | Spreadsheet software paradigm | [brad-myers-visual-programming-hn.md](brad-myers-visual-programming-hn.md) |
+| [17360883](https://news.ycombinator.com/item?id=17360883) | Homoiconicity — Garnet/Laszlo constraints | [brad-myers-visual-programming-hn.md](brad-myers-visual-programming-hn.md) |
 
 ---
 
@@ -165,3 +172,5 @@ When a thread comes up, here's the article most likely to be the right link.
 | Car touch UI, invisible gestures, physical knobs | (14) [`automotive-touch-ui-vs-pie-menus.md`](automotive-touch-ui-vs-pie-menus.md), (12) [`simcity-tool-palette-design.md`](simcity-tool-palette-design.md) |
 | macOS Pie Menu app, pie-menu.com, OS shortcut radials | (15) [`macos-pie-menu-app-hn-2024.md`](macos-pie-menu-app-hn-2024.md) · compare (13) Kando [kando-cross-platform-pie-menu.md](kando-cross-platform-pie-menu.md) |
 | micropolisweb WASM, browser UI vs emulated Mac | [`micropolis-web-hn-2024.md`](micropolis-web-hn-2024.md) |
+| VPL taxonomy, spreadsheets as programming, Garnet constraints | (16) [`brad-myers-visual-programming-hn.md`](brad-myers-visual-programming-hn.md) |
+| “Why aren't there successful visual languages?” / Excel argument | (16) [`brad-myers-visual-programming-hn.md`](brad-myers-visual-programming-hn.md) |

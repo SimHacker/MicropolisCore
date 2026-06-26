@@ -1,6 +1,6 @@
 # Pie menu model — Target, Pie, Slice, Item
 
-**Primary sources:** [jQuery Pie Menus (Don Hopkins MediaWiki)](https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus); CMU guest lecture outline (Feb 2019); [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md).
+**Primary sources:** [jQuery Pie Menus (Don Hopkins MediaWiki)](https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus); [CMU 05-640 guest lecture slides](./cmu-05640-pie-menus-guest-lecture.md); [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md).
 
 **Implementation in MicropolisCore:** Holodeck `DisplayListEntry` + `PieMenuPlugin`; Svelte `PieTarget` component; `ToolCatalog` maps tools → pie slices. Vitamoo owns GPU wedges, feather, center head ([ui-overlay-encyclopedia.md](../../vitamoo/ui-overlay-encyclopedia.md)).
 
@@ -83,7 +83,7 @@ SimCity totem pole ↔ pie map: [simcity-tool-palette-design.md](../simcity-tool
 
 ---
 
-## 6. Roles & skills (CMU 2019)
+## 6. Roles & skills (CMU 05-640)
 
 | Role | Creates pies when | Tools | Literacy expected |
 |------|-------------------|-------|-------------------|
@@ -157,4 +157,5 @@ Single catalog feeds:
 | Patent / marking menus | [pie-menu-patent-fud.md](../pie-menu-patent-fud.md) |
 | Browser / extension gap | [pie-menus-browser-extensions.md](../pie-menus-browser-extensions.md) |
 | PieCraft game | [PIECRAFT.md](./PIECRAFT.md) |
+| CMU 05-640 lecture | [cmu-05640-pie-menus-guest-lecture.md](./cmu-05640-pie-menus-guest-lecture.md) |
 | Unity / jQuery / MHW | [RELATED-PROJECTS.md](./RELATED-PROJECTS.md) |

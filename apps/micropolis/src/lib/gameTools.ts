@@ -91,7 +91,7 @@ export const TOOL_BY_SHORTCUT: Record<string, ToolId> = Object.fromEntries(
 );
 
 export function toolMenuLabel(tool: ToolDef): string {
-	return `${tool.shortcut}: ${tool.label}`;
+	return `${tool.label} ($${tool.cost})`;
 }
 
 export function resolveEditingTool(module: MainModule, id: ToolId): EditingTool {

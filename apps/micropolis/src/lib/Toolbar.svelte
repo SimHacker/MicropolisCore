@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GAME_TOOL_GROUPS, type ToolId } from '$lib/gameTools';
+	import { GAME_TOOL_GROUPS, toolMenuLabel, type ToolId } from '$lib/gameTools';
 	import { toolState } from '$lib/ToolState.svelte';
 
 	function selectTool(id: ToolId) {
@@ -17,11 +17,11 @@
 				type="button"
 				class="tool-item"
 				class:active={toolState.activeToolId === tool.id}
-				title="{tool.label} ({tool.shortcut})"
+				title="{tool.shortcut}: {toolMenuLabel(tool)}"
 				onclick={() => selectTool(tool.id)}
 			>
 				<span class="tool-key">{tool.shortcut}:</span>
-				<span class="tool-name">{tool.label}</span>
+				<span class="tool-name">{toolMenuLabel(tool)}</span>
 			</button>
 		{/each}
 	{/each}
