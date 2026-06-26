@@ -304,7 +304,7 @@ two-way-linked graph** — an operating environment, not a widget:
     **inertial throw/brake** physics of the virtual-cursor layer (§5,
     [../virtual-cursor-layer.md §5](../virtual-cursor-layer.md)).
   - Composable "lego" features (tabs + pies + rooms + virtual desktop), as in the NeWS OWM /
-    TNT window managers. → **canonical:** [../notes/PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md),
+    TNT window managers. → **canonical:** [../../notes/PIE-TAB-WINDOWS.md](../../notes/PIE-TAB-WINDOWS.md),
     [../four-dimensional-navigation-hci.md](../four-dimensional-navigation-hci.md).
     *(Receipts: NeWS UniPress-Emacs tab windows 1988; TNT 2.0 drag-to-any-edge tab WM
     1990–91; HyperTIES; Wikipedia "Tab (interface)" credits this lineage. Tabs are
@@ -635,7 +635,7 @@ The cauldron stays in Phase 1 until §-numbers stabilize; only then do we ladle.
   substrate offers flexible placement; it does not impose one layout. Pie menus *on the tabs*
   manage windows (raise/lower/close/paste), even when covered. Deep prior art: NeWS/TNT/OWM
   tab windows + pie menus (1988–91), HyperTIES. (See §6;
-  [../notes/PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md).)
+  [../../notes/PIE-TAB-WINDOWS.md](../../notes/PIE-TAB-WINDOWS.md).)
 - **Hybrid pies = directional + target-based items.** A small fixed set of **directional**
   items use screen-edge **wedges** (huge Fitts targets, angle-selected — the important few);
   **target-based** items are placed anywhere (rows/columns/spokes/orbits, hit-test-selected —

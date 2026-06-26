@@ -30,6 +30,14 @@ OLPC-specific and other platform docs are indexed from **[../designs/platform-li
 - **`documentation/designs/`** — durable rationale for **current** MicropolisCore directions (Wasm bridge, command path, multiplayer metaphors).
 - **`documentation/`** (including this OpenLaszlo snapshot) — manuals, talks, **frozen snapshots**, and historical archives. See **[../designs/README.md](../designs/README.md)** (“Documentation layout”).
 
+**Referenced by (design docs):**
+
+| Doc | Link |
+|-----|------|
+| PieCraft lineage | [../designs/piecraft/PIECRAFT.md](../designs/piecraft/PIECRAFT.md), [RELATED-PROJECTS.md](../designs/piecraft/RELATED-PROJECTS.md) |
+| Web pie cursors | [../designs/virtual-pointer-and-pie-cursors.md](../designs/virtual-pointer-and-pie-cursors.md) |
+| Pie cursor source | [classes/piecursor.lzx](classes/piecursor.lzx) |
+
 ---
 ## Micropolis in OpenLaszlo: Hacking RIAs with Constraints & Prototypes Before It Was Cool
 

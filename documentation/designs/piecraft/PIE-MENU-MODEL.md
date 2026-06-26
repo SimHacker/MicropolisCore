@@ -2,7 +2,7 @@
 
 **Primary sources:** [jQuery Pie Menus (Don Hopkins MediaWiki)](https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus); CMU guest lecture outline (Feb 2019); [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md).
 
-**Implementation in MicropolisCore:** Holodeck `DisplayListEntry` + `PieMenuPlugin`; Svelte `PieTarget` component; `ToolCatalog` maps tools → pie slices. Vitamoo owns GPU wedges, feather, center head ([ui-overlay-encyclopedia.md](../vitamoo/ui-overlay-encyclopedia.md)).
+**Implementation in MicropolisCore:** Holodeck `DisplayListEntry` + `PieMenuPlugin`; Svelte `PieTarget` component; `ToolCatalog` maps tools → pie slices. Vitamoo owns GPU wedges, feather, center head ([ui-overlay-encyclopedia.md](../../vitamoo/ui-overlay-encyclopedia.md)).
 
 ---
 
