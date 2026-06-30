@@ -97,4 +97,5 @@ The release of the SimCity source code as "Micropolis" under the GPL ensures its
 
 <ul>
   <li><a href="/pages/reverse-diagrams">SimCity Reverse Diagrams</a> - View the detailed visual diagrams of SimCity's internal architecture</li>
-</ul> 
+  <li><a href="/pages/about/hosted-content">Hosted content</a> - From Sims dialog cards to Micropolis Federation publishing</li>
+</ul>
