@@ -132,7 +132,7 @@ In Micropolis Dream, characters:
 
 Micropolis Dream is the **root identity layer**. The other three apps in the Federation are *instantiations* of Dream-resident characters into specific runtime engines. A character who lives in Dream can be uplifted into Home (incarnated as a Sim), aggregated into City (counted in a zone), assigned a Tower apartment (when that exists). They go back to Dream when they're not currently bound to a runtime.
 
-The Wedding Album reference is appropriate: in Marusek's 1999 story, *Simopolis* is the digital afterlife where simulated people live their parallel lives, between or beyond their bindings to specific games. Micropolis Dream is that, named honestly.
+The Wedding Album reference is appropriate: in Marusek's 1999 story, *Simopolis* is the digital afterlife where simulated people live their parallel lives, between or beyond their bindings to specific games. Read his wedding-day recordings as Sims 1 save files from 2001 — twenty-five years frozen, binary personality data in PersonData, the character wakes up — and the literary map lands on Micropolis Dream. Micropolis Dream is that, named honestly.
 
 Architecturally, Micropolis Dream is **MOOLLM, scoped to the Federation's character substrate**. The directory layout, the room/character/skill model, the Imagine Loop, the Adventure Compiler — these are *the existing implementation of Micropolis Dream*. We've already built it; we haven't been calling it that.
 

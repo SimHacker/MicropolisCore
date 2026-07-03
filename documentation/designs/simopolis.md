@@ -105,7 +105,7 @@ Some earlier passages in this and other design documents still say `apps/simopol
 
 Micropolis (the GPL city simulation descended from the original SimCity) and The Sims were always the same game at different scales.
 
-In Micropolis, each **residential zone** is a **3×3 block of map tiles** — nine cells the engine treats as one unit for density, demand, and aggregate population (the SimCity shorthand of *thousands of anonymous people*). In The Sims, each **person** has a name, a personality, 88 data fields, a family, relationships, a job, memories. Every zone block is a place where dollhouse detail *can* replace that compression. Every Sims lot maps to one or more cells inside that block.
+In Micropolis, each **residential zone** is a **3×3 block of map tiles** — nine cells the engine treats as one unit for density, demand, and aggregate population (the SimCity shorthand of *thousands of anonymous people*). In The Sims, each **person** has a name, a personality, PersonData fields, a family, relationships, a job, memories. Every zone block is a place where dollhouse detail *can* replace that compression. Every Sims lot maps to one or more cells inside that block.
 
 **What if the compression was optional?**
 
@@ -176,7 +176,7 @@ Runs in: apps/micropolis           Runs in: the EA-published Sims 1
 
 Residential zone tile              → Neighborhood.iff
   tax revenue, crime, density      → FamilyData: budget, house#  (file format
-  thousands of anonymous people    → NeighborData: 88 shorts each   only —
+  thousands of anonymous people    → NeighborData: PersonData per Sim   only —
                                                                    parsed,
                                                                    not run)
 
