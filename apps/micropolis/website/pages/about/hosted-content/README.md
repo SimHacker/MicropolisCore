@@ -18,7 +18,7 @@ Don Hopkins's **Dumbold Voting Machine** demonstrated *procedural rhetoric*: rea
 
 Don reimagined **SimFreaks** as an OpenLaszlo interactive catalog (browse, examine, collect, compose, admin). **Steve Alvey's SliceCity** nested SimCity inside The Sims — data portability as shipped entertainment.
 
-Micropolis extends that arc into [**Micropolis Home**](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/will-wright/catalogs/micropolis-home/) — create · publish · share — hosting federated catalogs for [SimFreaks](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/will-wright/catalogs/simfreaks/), [SimSlice](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/will-wright/catalogs/simslice/), [SimProv](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/will-wright/catalogs/simprov/), and [Zombie Sims](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/will-wright/catalogs/zombie-sims/).
+Micropolis extends that arc into [**Soul City**](https://github.com/SimHacker/WillWrightShowForFood/tree/main/catalogs/soul-city/) — create · publish · share — hosting federated catalogs for [SimFreaks](https://github.com/SimHacker/WillWrightShowForFood/tree/main/catalogs/simfreaks/), [SimSlice](https://github.com/SimHacker/WillWrightShowForFood/tree/main/catalogs/simslice/), [SimProv](https://github.com/SimHacker/WillWrightShowForFood/tree/main/catalogs/simprov/), and [Zombie Sims](https://github.com/SimHacker/WillWrightShowForFood/tree/main/catalogs/zombie-sims/).
 
 | Layer | Sims precedent | Micropolis direction |
 |-------|----------------|----------------------|
