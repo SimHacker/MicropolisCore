@@ -1,0 +1,31 @@
+# soul-angel — universal game companion (dev home; spec stage, code next)
+# Read order: README.md -> ARCHITECTURE.yml -> SOUL-ALBUM.yml -> DVR.yml -> SOUL-BRIDGE-SDK.yml
+
+app:
+  id: soul-angel
+  status: spec
+  license: source_available   # LICENSE.md — build on it, plug into it; commercial rights reserved
+  product: paid_steam_software
+  purpose: "Always-on DVR + universal Soul Album + machinima/stream studio + per-game Soul Bridges"
+
+architecture: "Web center of gravity — TypeScript in embedded browser; thin native shell (Windows first, Mac later)"
+
+tiers:
+  1_universal: "DVR ring buffer, scrub-to-card album, narration, Twitch/OBS — ANY game, zero integration"
+  2_soul_bridge: "Per-game TS plugin in web overlay — save/album read-write (The Sims 1 first)"
+  3_broadcast: "Soul City Broadcast Network — TV / radio / magazine channels"
+
+subsumes: stream-gateway   # WWSFF apps/stream-gateway specs -> event bus + broadcast sinks here
+
+specs:
+  overview: README.md
+  architecture: ARCHITECTURE.yml   # shell vs web split, transparent overlay, capture+composite+screencast
+  album: SOUL-ALBUM.yml            # story cards, provenance, narration, game-album bridging
+  dvr: DVR.yml                     # ring buffer, time scrub, still/clip capture, per-OS capture paths
+  bridges: SOUL-BRIDGE-SDK.yml     # per-game plugin interface — FileBridge scoped, overlay-hosted
+  license: LICENSE.md
+
+show_side:   # product/community framing lives in WWSFF
+  product_spec: WillWrightShowForFood/catalogs/soul-city/soul-angel.yml
+  broadcast_network: WillWrightShowForFood/apps/soul-angel/SCBN.yml
+  windows_host_specs: WillWrightShowForFood/apps/micropolis-angel/

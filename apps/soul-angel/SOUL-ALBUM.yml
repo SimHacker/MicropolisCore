@@ -1,0 +1,66 @@
+# SOUL-ALBUM — the universal album schema
+# Generic cross-game "Soul Album"; per-game bridges map native albums onto it
+# (e.g. The Sims Family Album). We uplift, we never co-opt game vocabulary.
+
+meta:
+  id: soul-album
+  status: spec
+  parent: README.md
+
+model:
+  album:
+    what: "Ordered sequence of story cards; per-game or cross-game; local-first, publishable"
+    storage: "Local SQLite + media dir; publish = push to Soul City federation (CARD dirs, git-native)"
+  card:
+    image: "Still from live frame, DVR scrub timestamp, or imported file"
+    clip: "Optional — cards can hold video clips; album order = machinima sequence"
+    caption: "Typed, voice-narrated via STT, or assistant-drafted and human-edited (never auto-published)"
+    audio: "Optional narration track per card — radio channel source"
+    provenance:
+      game: "app id / process fingerprint"
+      save: "save file id + mtime when a bridge is available"
+      souls: "character ids in frame when the bridge can enumerate them"
+      dvr_timestamp: "the moment in the ring buffer this card cites"
+    like_thoughtful_commitment: "Card = commit; DVR = transcript; provenance = trace link"
+
+editing:
+  operations: [capture, caption, narrate, reorder, sequence, split_album, merge_albums, import, export]
+  time_shifted: |
+    Production happens AFTER play: replay the DVR, narrate calmly, caption with voice, let STT
+    transcribe, edit text by hand. Live capture is one hotkey; storytelling is post.
+  voice:
+    narrate: "Mic -> narration track per card or per album"
+    stt: "Speech-to-text -> caption drafts (later phase; local model preferred)"
+    tts: "Read albums aloud — feeds the radio channel"
+
+# ── GAME ALBUM BRIDGING ───────────────────────────────────────────────────────
+game_albums:
+  principle: |
+    Where a game has its own album/photo feature, the Soul Bridge round-trips it:
+    import native pages as Soul Album cards, export cards back into the native format.
+    The game's own name for the feature stays the game's — the bridge translates vocabulary
+    and format both ways.
+  sims1_family_album:
+    status: first_bridge_showcase
+    read_write_while_running: |
+      The Sims stores Family Album pages on disk as paired image + caption files, and rescans
+      that directory when the album UI opens. So SoulAngel can read AND write the album while
+      the game runs, pauses, or is stopped — external edits appear on next album open.
+      No injection, no save surgery. (On-disk behavior, observable in any installed copy.)
+    exchange: "Exported family files carry album pages; import/export supported (VitaMoo file inventory already detects them)"
+    demo: |
+      Launch showcase: freeze a DVR frame, narrate it, and the card lands INSIDE the game's own
+      Family Album. Then export the whole album to Soul City as a magazine story.
+  no_bridge: "Universal album still works — capture + caption + publish; provenance = game + timestamp only"
+  photo_mode_games: "Games with photo/replay modes get bridges that round-trip their formats"
+
+outputs:
+  - published_album_page   # magazine channel
+  - machinima_video        # TV channel — cards sequenced with narration
+  - stream_vod_chapters    # DVR timestamps -> chapter markers
+  - podcast_episode        # radio channel — narration tracks stitched
+
+see_also:
+  - DVR.yml
+  - SOUL-BRIDGE-SDK.yml
+  - ARCHITECTURE.yml

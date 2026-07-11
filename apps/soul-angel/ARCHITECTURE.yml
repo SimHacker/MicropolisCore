@@ -1,0 +1,94 @@
+# SoulAngel architecture — web center of gravity, thin native shell
+# Cordova/Electron approach: TypeScript in an embedded browser is the app;
+# the platform shell hosts the browser and does only what browsers cannot.
+
+meta:
+  id: soul-angel-architecture
+  status: spec
+  platforms:
+    windows: primary          # WinUI 3 + WebView2; ships first
+    macos: after_windows_v1   # same web layer, new shell — ScreenCaptureKit + VideoToolbox
+
+# ── THE SPLIT ─────────────────────────────────────────────────────────────────
+split:
+  rule: "If the browser can do it, the browser does it. The shell earns every line it keeps."
+  web_owns:
+    - "ALL user interface — panels, album editor, DVR timeline, settings, onboarding"
+    - "Overlay drawing — HUD chrome, speech bubbles, pie menus, markers, annotations (canvas/WebGPU)"
+    - "Soul Bridges — per-game TypeScript plugins, hot-swapped on game focus (SOUL-BRIDGE-SDK.yml)"
+    - "File format parsing — saves, albums, archives, in TS/WASM via scoped FileBridge streams"
+    - "Album engine — cards, provenance, narration UI, publish pipeline (SOUL-ALBUM.yml)"
+    - "Twitch/YouTube web APIs — EventSub, Helix chat, OAuth flows"
+    - "Soul City federation sync — publish albums, pull community content"
+    - "Event bus clients — SSE/WebSocket consumers and producers (stream-gateway lineage)"
+    - "Web Audio — narration record/playback, level meters; Web Speech where adequate"
+  shell_owns:
+    - "Window/screen capture — GPU texture per frame (browsers cannot capture other apps usefully)"
+    - "Hardware video encode — DVR ring buffer + streaming (NVENC / Media Foundation / VideoToolbox)"
+    - "Transparent always-on-top overlay window hosting the browser, with click-through toggling"
+    - "Compositing game + overlay for record/screencast output"
+    - "Steam SDK — overlay coexistence, achievements, cloud saves, store hooks"
+    - "Input injection — operator-gated UI automation for bridges that need it"
+    - "OS accessibility — UIA/AX tree reads, high-quality native TTS/STT when web speech falls short"
+    - "Filesystem broker — FileBridge grants scoped per game, per directory, with user consent"
+    - "SQLite — local catalog/album cache (or persistence backend for sql.js in TS)"
+    - "Process/window detection — which game is running/focused, window class fingerprints"
+    - "Autostart, tray, global hotkeys, notifications, crash reporting"
+
+# ── OVERLAY ───────────────────────────────────────────────────────────────────
+overlay:
+  what: |
+    A transparent, always-on-top window covering the game, hosting the web overlay UI.
+    The page renders on transparent background; the shell toggles click-through so the game
+    receives input except over active overlay widgets.
+  windows:
+    window: "Layered transparent top-level window (WS_EX_LAYERED; WS_EX_NOACTIVATE + per-region hit testing)"
+    webview: "WebView2 with transparent background composition (DirectComposition path)"
+    hit_testing: "Web layer reports interactive regions -> shell updates click-through mask"
+    fullscreen_games: "Borderless-windowed preferred; exclusive fullscreen falls back to second-monitor/detached panel"
+  drawing: "Overlay graphics are plain web rendering — DOM, canvas, WebGPU. No native drawing code."
+
+# ── CAPTURE / COMPOSITE / BROADCAST ──────────────────────────────────────────
+pipeline:
+  capture:
+    windows: "Windows.Graphics.Capture per-window D3D11 texture; BitBlt/PrintWindow fallback for stubborn legacy windows"
+    macos_later: "ScreenCaptureKit"
+  composite:
+    what: "Game texture + overlay texture composed on GPU each frame — one output, game + overlay together"
+    modes:
+      clean: "Game only (viewer-safe, no HUD)"
+      show: "Game + overlay chrome — the performance view"
+    audio: "Game audio + mic narration mixed; per-track when container allows"
+  encode: "Hardware encoder feeds BOTH the DVR ring buffer and any live outputs (DVR.yml)"
+  outputs:
+    obs: "OBS WebSocket v5 control + overlay as browser source (studio setups)"
+    direct: "Built-in RTMP to Twitch/YouTube when OBS absent; WHIP experimental"
+    file: "Local recordings, machinima exports"
+    replay: "DVR clips injectable into the live stream — instant-replay segments"
+
+# ── EVENT BUS (stream-gateway subsumed) ──────────────────────────────────────
+bus:
+  what: "SSE/WebSocket event bus between shell, overlay, bridges, and external producers"
+  lineage: "WWSFF apps/stream-gateway — brain bus, cursor-tap, overlay-viewer, bubble-wrangler specs"
+  events: [game_focus, capture_state, dvr_marks, bridge_data, chat_in, chat_out, album_publish]
+  external: "Other local tools can publish to the bus — SoulAngel is the desktop gateway to Soul City"
+
+# ── SHELL IMPLEMENTATIONS ────────────────────────────────────────────────────
+shells:
+  windows:
+    stack: "WinUI 3 + WebView2; C++/C# host"
+    spec_lineage: "WWSFF apps/micropolis-angel/ARCHITECTURE.yml (Windows host + Sims 1 bridge specs)"
+  macos:
+    stack: "Native shell TBD (Swift + WKWebView or Electron); decision deferred to port"
+    spec_lineage: "WWSFF apps/stream-gateway/ Mac-tier research"
+
+security:
+  filesystem: "No ambient FS access from web layer — every path is an explicit, revocable FileBridge grant"
+  bridges: "Third-party bridges run in the overlay sandbox; inject capability is operator-gated per bridge"
+  privacy: "Redaction gate before any frame/audio leaves the machine"
+
+see_also:
+  - SOUL-ALBUM.yml
+  - DVR.yml
+  - SOUL-BRIDGE-SDK.yml
+  - LICENSE.md

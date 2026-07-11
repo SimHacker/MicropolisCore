@@ -1,0 +1,49 @@
+# SOUL-BRIDGE-SDK — per-game plugins for the web overlay
+# A Soul Bridge reads and writes a game's soul: saves, albums, characters.
+
+meta:
+  id: soul-bridge-sdk
+  status: spec
+  parent: README.md
+
+what: |
+  A Soul Bridge is a TypeScript module loaded into the SoulAngel web overlay, switched per game.
+  It declares the game's data paths, parses its formats in-browser, and exposes read/write/edit/
+  generate operations through a consistent UI. The native shell grants scoped filesystem access only.
+
+interface:
+  declare:
+    game_id: "steam appid / process name / window class fingerprints"
+    data_paths: "save dirs, album dirs, downloads — requested as scoped FileBridge grants"
+    capabilities: [read_saves, write_saves, read_albums, write_albums, enumerate_souls, generate_content]
+  provide:
+    souls: "enumerate characters — names, ids, portraits when derivable"
+    album_adapter: "round-trip the game's native album/photo format <-> Soul Album card model"
+    save_adapter: "parse + edit save structures; always save-before-mutate"
+    lifecycle: "game state detection (menu, live, paused) when knowable — gates risky writes"
+  host_services:
+    file_bridge: "Scoped read/write — user consents per game, per directory"
+    sqlite: "Local catalog/album cache"
+    capture: "DVR + still hooks with game window binding"
+    bus: "Publish/subscribe on the SoulAngel event bus"
+    inject: "Optional, operator-gated — only bridges that need UI automation"
+
+switching:
+  what: "Overlay detects the focused game window and hot-swaps the active bridge UI"
+  no_bridge: "Universal tier UI only — DVR, album, streaming still fully functional"
+
+first_bridge:
+  sims1:
+    what: "Family Album round-trip, save parse, character/graveyard enumeration, catalog crawl, TTS showcase"
+    specs: "WWSFF apps/micropolis-angel/ (Windows host + Sims 1 bridge specs; code migrates here)"
+
+third_party:
+  intent: "Bridge SDK docs public — community writes bridges for their favorite games"
+  distribution: "Bridges are free content drops, not paid DLC; federation CARD dirs attribute authors"
+  licensing: "Your bridge is yours — any license, free or paid (see LICENSE.md)"
+  safety: "Bridges run in the overlay sandbox; filesystem grants are explicit and per-game"
+
+see_also:
+  - SOUL-ALBUM.yml
+  - ARCHITECTURE.yml
+  - LICENSE.md

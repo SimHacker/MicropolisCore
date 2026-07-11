@@ -34,6 +34,10 @@ packages/micropolis-engine/   C++ simulation core (makefile + Emscripten → WAS
     simulate.cpp           Simulation loop
     zone.cpp, traffic.cpp, power.cpp, budget.cpp, ...
 
+apps/soul-angel/           SoulAngel — universal game companion (spec stage; source-available,
+                           see apps/soul-angel/LICENSE.md): DVR, Soul Album, machinima/stream
+                           studio, per-game Soul Bridges. Web-first app in a thin native shell.
+
 apps/micropolis/           SvelteKit application
   src/lib/
     wasm/                  Browser/Node WASM loaders and heap helpers

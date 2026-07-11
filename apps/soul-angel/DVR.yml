@@ -1,0 +1,46 @@
+# DVR — always-on ring buffer. "If something happens, it's recorded."
+
+meta:
+  id: dvr
+  status: spec
+  parent: README.md
+
+ring_buffer:
+  what: "Continuous window/region capture into a rolling buffer; configurable minutes; encode on GPU"
+  pattern: "ShadowPlay / Steam Game Recording shape — but WE own it, because provenance is the product"
+  own_vs_piggyback:
+    decision: build_own
+    why: |
+      Steam Game Recording API is Steam-only and opaque; Soul Album cards need frame-exact
+      timestamps, per-game scoping, and Mac parity. Capture is a solved per-OS problem.
+
+time_scrub:
+  flow: "Pause game -> scrub DVR timeline -> freeze frame -> caption/narrate -> card in album"
+  ui: "Timeline in the web overlay; thumbnails from keyframes; frame-step near the moment"
+  clip_grab: "Mark in/out on the timeline -> clip card (machinima source)"
+
+capture_paths:
+  windows:
+    capture: "Windows.Graphics.Capture — per-window D3D11 texture"
+    fallback: "BitBlt / PrintWindow for stubborn legacy windows"
+    encode: "Media Foundation + NVENC; FFmpeg fallback"
+  macos:
+    capture: "ScreenCaptureKit"
+    encode: "VideoToolbox; FFmpeg fallback"
+
+streaming:
+  lineage: "stream-gateway specs (WWSFF apps/stream-gateway/) — subsumed into this tier"
+  paths:
+    obs: "OBS WebSocket v5 — scenes, stream start/stop; overlay as browser source"
+    direct: "RTMP via FFmpeg when OBS not running; WHIP experimental"
+    twitch: "EventSub in + Helix chat out; live performance gateway"
+  replay_to_stream: "DVR clips replayable INTO the live stream — instant-replay show segment"
+
+storage:
+  buffer: "Disk-backed ring; size/minutes configurable; per-game folders"
+  keep: "Freeze/clip promotes segment out of ring into album media dir before it rolls off"
+  privacy: "Redaction gate before any frame leaves the machine"
+
+see_also:
+  - SOUL-ALBUM.yml
+  - ARCHITECTURE.yml
