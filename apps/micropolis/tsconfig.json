@@ -11,7 +11,17 @@
 		"strict": true,
 		"moduleResolution": "bundler",
 		"typeRoots": ["src/types", "node_modules/@types"]
-	}
+	},
+	"exclude": [
+		"node_modules/**",
+		"src/service-worker.js",
+		"src/service-worker/**/*.js",
+		"src/service-worker.ts",
+		"src/service-worker/**/*.ts",
+		"src/service-worker.d.ts",
+		"src/service-worker/**/*.d.ts",
+		"src/lib/micropolisengine.js"
+	]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	// but defining them here can help tooling.
 	//

@@ -25,6 +25,7 @@ the linked documents.
 | [CI / build integrity](#ci--build-integrity) | ~~Concurrent `dev` + C++ watch/rebuild ([PR #6](https://github.com/SimHacker/MicropolisCore/pull/6))~~ ✅ | ~~Medium~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Wire `verify:structure` into CI~~ ✅ | ~~High~~ |
 | [CI / build integrity](#ci--build-integrity) | ~~Add PR workflow (structure + build-ts + svelte-check + Vitest)~~ ✅ | ~~High~~ |
+| [CI / build integrity](#ci--build-integrity) | ~~Fix PR #43 svelte-check + sims-io build failures (Jul 2026)~~ ✅ | ~~High~~ |
 | [Code quality](#code-quality) | `noUncheckedIndexedAccess` in tsconfig files | Low |
 | [Code quality](#code-quality) | `exactOptionalPropertyTypes` in tsconfig files | Low |
 | [Code quality](#code-quality) | Shared root `tsconfig.base.json` for consistent strictness | Low |
@@ -146,6 +147,37 @@ Use **`deploy_to_pages: false`** (default) while developing; re-run with deploy 
 ### 4. ✅ Lightweight PR workflow — done
 
 **File:** `.github/workflows/pr-checks.yml`
+
+### 5. ✅ PR #43 CI failures (Jul 2026) — fixed
+
+**Symptoms:** [run 29151091697](https://github.com/SimHacker/MicropolisCore/actions/runs/29151091697) —
+`Micropolis svelte-check` and `Tests (sims-io, …)` both red on the SoulAngel spec PR.
+
+**Trivial fixes applied:**
+
+| Failure | Fix |
+|---------|-----|
+| `ZoneStatusPanel.svelte` — `MicropolisZoneStatus` not narrowed under `{#if show}` | Use `{#if zs.visible && …}` so TS narrows the discriminated union |
+| `createMeasureStore.svelte.ts` — `MeasureJson \| undefined` getter | Explicit return type on `bindProp().current` |
+| `AtmosphericLayer.ts` — `ImageData` ctor overload | `createImageData()` copies `Uint8ClampedArray` for DOM typing |
+| `micropolisengine.js` — 1321 `checkJs` errors on Emscripten glue | `// @ts-nocheck` prepended; `make install` preserves it |
+| `render-core` — `globalThis.devicePixelRatio` under strict TS | `getDevicePixelRatio()` helper (`packages/render-core/src/dom/`) |
+| `sims-io` build — transitive `render-core` source check without DOM | Added `"DOM"` to `packages/sims-io/tsconfig.json` `lib` |
+
+**Remaining warnings (non-blocking):**
+
+- `MicropolisView.svelte` — `micropolisSimulator` should use `$state` (Svelte 5 migration; see playable cauldron PB-05)
+- `+layout.svelte` — unused `.content-area.no-scroll` CSS selector (delete or wire class)
+
+**Structural follow-ups (not urgent):**
+
+- `@micropolis/render-core` exports **source** (`package.json` → `./src/index.ts`); consumers like
+  `sims-io` type-check render-core with their own `tsconfig`. Long-term: build `render-core` to
+  `dist/` and export declarations only.
+- CI `test` job builds `vitamoo` before `sims-io` but not `render-core` explicitly — fine once
+  DOM + DPR helper land; revisit if render-core gets a real build step.
+- GitHub Actions Node 20 deprecation warning on `actions/checkout@v4` / `setup-node@v4` — bump when
+  upstream defaults stabilize.
 
 ## Micropolis WASM testing
 

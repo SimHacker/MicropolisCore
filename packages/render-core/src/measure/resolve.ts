@@ -1,3 +1,4 @@
+import { getDevicePixelRatio } from '../dom/device-pixel-ratio.js';
 import type { HolodeckPlugin } from '../holodeck/types.js';
 import type { MapViewport } from '../viewport/MapViewport.js';
 import { parseMeasureRef, type MeasureRef, type MeasureValue } from './protocol.js';
@@ -27,7 +28,7 @@ export function resolveMeasureRef(ref: MeasureRef, ctx: MeasureResolverContext):
 			{
 				viewport: ctx.viewport,
 				canvas: ctx.canvas,
-				devicePixelRatio: globalThis.devicePixelRatio ?? 1,
+				devicePixelRatio: getDevicePixelRatio(),
 				time: ctx.time,
 			},
 		);

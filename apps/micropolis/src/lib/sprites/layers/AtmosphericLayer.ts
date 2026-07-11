@@ -160,7 +160,7 @@ export class AtmosphericLayer {
 			this.ctx = this.canvas.getContext('2d');
 		}
 		if (this.ctx) {
-			this.ctx.putImageData(new ImageData(this.data, this.width, this.height), 0, 0);
+			this.ctx.putImageData(this.createImageData(), 0, 0);
 		}
 		return this.canvas!;
 	}
@@ -173,7 +173,12 @@ export class AtmosphericLayer {
 	}
 
 	getImageData(): ImageData {
-		return new ImageData(this.data, this.width, this.height);
+		return this.createImageData();
+	}
+
+	private createImageData(): ImageData {
+		const data = new Uint8ClampedArray(this.data);
+		return new ImageData(data, this.width, this.height);
 	}
 }
 

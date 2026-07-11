@@ -1,5 +1,6 @@
 /// <reference types="@webgpu/types" />
 
+import { getDevicePixelRatio } from '../dom/device-pixel-ratio.js';
 import type { HolodeckPlugin, HolodeckPluginContext } from '../holodeck/types.js';
 import {
 	parseMeasureRef,
@@ -90,7 +91,7 @@ export class HolodeckStage {
 	/** Match canvas backing store and CSS size to {@link MapViewport}. */
 	syncViewportFromCanvas(): void {
 		const canvas = this.gpu.canvas;
-		const dpr = globalThis.devicePixelRatio ?? 1;
+		const dpr = getDevicePixelRatio();
 		const displayWidth = canvas.clientWidth || canvas.width;
 		const displayHeight = canvas.clientHeight || canvas.height;
 		const bufferWidth = Math.max(1, Math.round(displayWidth * dpr));
@@ -329,7 +330,7 @@ export class HolodeckStage {
 		return {
 			viewport: this.viewport,
 			canvas: this.gpu.canvas,
-			devicePixelRatio: globalThis.devicePixelRatio ?? 1,
+			devicePixelRatio: getDevicePixelRatio(),
 			time,
 		};
 	}

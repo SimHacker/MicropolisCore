@@ -1,3 +1,4 @@
+import { getDevicePixelRatio } from '../dom/device-pixel-ratio.js';
 import { MapViewport } from '../viewport/MapViewport.js';
 import type { HolodeckPlugin, HolodeckPluginContext } from '../holodeck/types.js';
 
@@ -41,7 +42,7 @@ export class MapScene {
 
 	async initializePlugins(
 		canvas: HTMLCanvasElement,
-		devicePixelRatio = globalThis.devicePixelRatio ?? 1,
+		devicePixelRatio = getDevicePixelRatio(),
 	): Promise<void> {
 		const ctx = this.makeContext(canvas, devicePixelRatio, 0);
 		for (const plugin of this.sortedPlugins()) {
@@ -49,7 +50,7 @@ export class MapScene {
 		}
 	}
 
-	resize(canvas: HTMLCanvasElement, devicePixelRatio = globalThis.devicePixelRatio ?? 1): void {
+	resize(canvas: HTMLCanvasElement, devicePixelRatio = getDevicePixelRatio()): void {
 		const ctx = this.makeContext(canvas, devicePixelRatio, 0);
 		for (const plugin of this.sortedPlugins()) {
 			plugin.resize?.(ctx);
@@ -58,7 +59,7 @@ export class MapScene {
 
 	render(canvas: HTMLCanvasElement, time = performance.now()): void {
 		this.baseLayer?.render();
-		const ctx = this.makeContext(canvas, globalThis.devicePixelRatio ?? 1, time);
+		const ctx = this.makeContext(canvas, getDevicePixelRatio(), time);
 		for (const plugin of this.sortedPlugins()) {
 			if (plugin.enabled === false) continue;
 			plugin.render(ctx);

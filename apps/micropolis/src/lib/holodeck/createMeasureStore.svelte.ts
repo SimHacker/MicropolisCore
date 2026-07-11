@@ -99,7 +99,7 @@ export function createMeasureStore(stage: HolodeckStage, options: MeasureStoreOp
 		pull();
 
 		return {
-			get current() {
+			get current(): MeasureJson | undefined {
 				return local;
 			},
 			set current(value: MeasureJson) {

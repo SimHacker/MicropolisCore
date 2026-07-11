@@ -3,14 +3,13 @@
 	import { toolState } from '$lib/ToolState.svelte';
 
 	const zs = $derived(micropolisReactive.zoneStatus);
-	const show = $derived(zs.visible && toolState.activeToolId === 'query');
 
 	function close(): void {
 		micropolisReactive.clearZoneStatus();
 	}
 </script>
 
-{#if show}
+{#if zs.visible && toolState.activeToolId === 'query'}
 	<div class="zone-panel" role="dialog" aria-label="Zone query">
 		<div class="zone-header">
 			<span class="zone-title">Zone query</span>

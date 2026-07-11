@@ -168,7 +168,7 @@ install: all
 	ls -la build
 	cp build/micropolisengine.wasm ../../apps/micropolis/src/lib
 	cp build/micropolisengine.data ../../apps/micropolis/src/lib
-	cp build/micropolisengine.js ../../apps/micropolis/src/lib
+	{ printf '%s\n' '// @ts-nocheck'; cat build/micropolisengine.js; } > ../../apps/micropolis/src/lib/micropolisengine.js
 	if [ -f build/micropolisengine.d.ts ]; then cp build/micropolisengine.d.ts ../../apps/micropolis/src/types; else echo "micropolisengine.d.ts was not generated; keeping existing TypeScript bindings"; fi
 
 clean:
