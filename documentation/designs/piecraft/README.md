@@ -54,7 +54,7 @@ ToolCatalog    HolodeckStage    VirtualPointer
 ## External references
 
 - [Unity pie menu demo](https://www.youtube.com/watch?v=sMN1LQ7qx9g) · [Live HTML demo](http://www.donhopkins.com/home/PieMenuDemo/PieMenuDemo.html)
-- [jQuery Pie (GitHub)](https://github.com/SimHacker/jquery-pie) · [MediaWiki doc](https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus)
+- [jQuery Pie (GitHub)](https://github.com/SimHacker/jquery-pie) · [MediaWiki doc (IA)](https://web.archive.org/web/20180726202646/http://www.donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus)
 - [HN: micropolisweb WASM launch (2024)](https://news.ycombinator.com/item?id=40693944) · [HN: *A New Car UI* — palette + PieCraft (2014)](https://news.ycombinator.com/item?id=7328476) · [HN: Pie Menu macOS app (2024)](https://news.ycombinator.com/item?id=41160268) · [HN: multiplayer cursors (2022)](https://news.ycombinator.com/item?id=31987713)
 - [CMU 05-640 guest lecture slides](./cmu-05640-pie-menus-guest-lecture.md) · [Google Slides (2019)](https://docs.google.com/presentation/d/1R9s4EEAwUjI_7A8GgdLYD_U1yUs9omaVqkY9GY-2D78/edit)
 - Tom Carden (2012): “PieCraft sounds fun! … no actual bona fide food pies” (LinkedIn thread, quoted in [PIECRAFT.md](./PIECRAFT.md))

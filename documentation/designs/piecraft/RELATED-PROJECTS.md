@@ -49,7 +49,7 @@ Chronological and topical map of Don Hopkins pie-menu work **as it bears on Micr
 ## jQuery Pie Menus (2014)
 
 - **Repo:** https://github.com/SimHacker/jquery-pie
-- **Doc:** https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus
+- **Doc (IA):** https://web.archive.org/web/20180726202646/http://www.donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus
 - **Model:** Target / Pie / Slice / Item — canonical for web ([PIE-MENU-MODEL.md](./PIE-MENU-MODEL.md))
 
 Micropolis browser client should implement the same resolve algorithm (`findPie`, `pies` cache, DOM fallback) in TypeScript on `TileView`.

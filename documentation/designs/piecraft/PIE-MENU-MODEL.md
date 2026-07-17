@@ -1,6 +1,6 @@
 # Pie menu model — Target, Pie, Slice, Item
 
-**Primary sources:** [jQuery Pie Menus (Don Hopkins MediaWiki)](https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus); [CMU 05-640 guest lecture slides](./cmu-05640-pie-menus-guest-lecture.md); [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md).
+**Primary sources:** [jQuery Pie Menus (Don Hopkins MediaWiki, IA)](https://web.archive.org/web/20180726202646/http://www.donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus); [CMU 05-640 guest lecture slides](./cmu-05640-pie-menus-guest-lecture.md); [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md).
 
 **Implementation in MicropolisCore:** Holodeck `DisplayListEntry` + `PieMenuPlugin`; Svelte `PieTarget` component; `ToolCatalog` maps tools → pie slices. Vitamoo owns GPU wedges, feather, center head ([ui-overlay-encyclopedia.md](../../vitamoo/ui-overlay-encyclopedia.md)).
 
@@ -65,7 +65,7 @@ Degenerate case: **one slice** + pull-out items = traditional linear menu.
 
 SimCity totem pole ↔ pie map: [simcity-tool-palette-design.md](../simcity-tool-palette-design.md).
 
-> Pies as **graphs** instead of trees … **Method of Loci / Memory Palaces** — [Don, 2015 email to Simon Gladman](https://donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus)
+> Pies as **graphs** instead of trees … **Method of Loci / Memory Palaces** — [Don, 2015 email to Simon Gladman (IA)](https://web.archive.org/web/20180726202646/http://www.donhopkins.com/mediawiki/index.php/JQuery_Pie_Menus)
 
 ---
 
