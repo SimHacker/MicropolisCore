@@ -154,7 +154,7 @@ This addendum deepens the intent and explains why the design choices align with 
 - Maxis Tradition (Will Wright): The UI’s true product is the user’s mental model. Keep numbers out of the user’s face; visualize relationships; enable playful exploration and storytelling.
 - Empirical Foundations (HCIL): Pie menus and dynamic queries are validated to be fast, precise, and reliable. Design to leverage spatial memory and shorten visual search.
 - Historic Tools: HyperTIES (embedded, contextual menus and previews), NeWS/HyperLook (composable, scriptable, direct-manipulation UI), and The Sims (contextual radial menus) inform embedded controls, tab behavior, and object-centric workflows.
- - Building SimCity (Chaim Gingold): The book and its [reverse diagrams](/pages/reverse-diagrams) are a key inspiration and direction for opening the simulator’s "black box"—guiding our plan to make live, tweakable diagrams first‑class Cards. See [Chaim Gingold](/pages/about/chaim-gingold).
+- Building SimCity (Chaim Gingold): The book and its [reverse diagrams](/pages/reverse-diagrams) are the scholarly foundation for opening the simulator’s "black box." Chaim has given explicit permission to bring those diagrams to life as interactive first‑class Cards (Bret Victor–inspired, as the reverse-diagram notes explain). See [Chaim Gingold](/pages/about/chaim-gingold) · [*Building SimCity*](/pages/building-simcity).
 
 #### Why a Desktop‑Class Windowing Workspace (Web)
 - Multiple Concurrent Surfaces: Modern Micropolis requires many live surfaces (editors, minimaps, overlays, chat, notices, graphs, reverse diagrams, info panels). A desktop‑class workspace lets users arrange and compare them side‑by‑side.
@@ -164,7 +164,7 @@ This addendum deepens the intent and explains why the design choices align with 
 - LLM Orchestration: An assistant can open/arrange Cards, wire live diagrams to sim parameters, and create mash‑ups for specific analyses while preserving user agency via explain‑then‑do.
 
 #### Will Wright–Inspired Principles (Simulation, Game, Interface, User Model)
-- Mental Model as Product: Treat the computer model as a compiler for the player’s mental model. The UI must surface relationships, not raw internals; our [interactive reverse diagrams](/pages/reverse-diagrams) serve this by exposing causal structure without breaking the illusion.
+- Mental Model as Product: Treat the computer model as a compiler for the player’s mental model. The UI must surface relationships, not raw internals; [interactive reverse diagrams](/pages/reverse-diagrams) (Chaim Gingold / *Building SimCity*, Bret Victor–inspired liveness) serve this by exposing causal structure without breaking the illusion.
 - Implication over Simulation: Favor readable signals over exhaustive internals. Overlays, messages, and animations should imply causes (power, traffic, crime) with clarity; details are revealed on demand in tweakable diagrams.
 - Toys before Goals: Support open-ended play where users set goals (toy first), with optional scenarios/challenges layered on top. Stacks/Cards enable multiple concurrent “toys” (views, tools, overlays) in one workspace.
 - Failure Modes and Undo: Make failure interesting and recoverable. Provide granular undo/redo via CommandBus; allow safe destructive tools (the “Calvin Syndrome”) with previews and reversible actions.
@@ -206,10 +206,14 @@ This addendum deepens the intent and explains why the design choices align with 
 - Lessons: Prefer embedded contextual affordances; visible structure; immediate previews; authorable behaviors that maintain legibility.
 
 #### Interactive Reverse Diagrams as First‑Class Cards
+
+**Credit — Chaim Gingold, *Building SimCity*.** The static reverse diagrams are Chaim’s work for [*Building SimCity: How to Put the World in a Machine*](/pages/building-simcity) (MIT Press, 2024) — see the [Reverse Diagrams](/pages/reverse-diagrams) page and [Chaim Gingold](/pages/about/chaim-gingold). With **Chaim’s explicit permission and encouragement**, Micropolis brings those diagrams further as live, tweakable first‑class Cards. The interaction model is inspired by [Bret Victor](/pages/about/bret-victor) (explorable explanations / immediate connection to the medium), as the notes on the reverse diagrams already explain. Credit Chaim whenever these Cards appear on stream, in UI chrome, or in docs.
+
 - Live State: Diagrams (Simulation Loop, Map Data Flow, Maps, Map Scan, Make Traffic) attach to sim snapshots and update in sync with time.
 - Tweak & Learn: Parameter controls (e.g., smoothing kernels, path search depth) live on the diagram Card; changes preview their effects in linked views before committing.
 - Linked Selection: Selecting a node highlights affected tiles/overlays in Editor/Map Cards; stepping the loop updates visible changes.
 - Presets & Reset: Provide canonical defaults, safe ranges, and quick reset; align with educator and researcher presets.
+- Attribution: Card chrome and educator presets name Chaim / *Building SimCity*; deep link to [/pages/reverse-diagrams](/pages/reverse-diagrams) for the static originals and provenance.
 
 #### Edge Tabs, Widescreen Rationale, and Label Legibility
 - Widescreen Bias: On modern displays, lateral space is less scarce than vertical space. Favor left/right tab placement by default when tab counts rise, to preserve vertical room for content.
@@ -220,15 +224,49 @@ This addendum deepens the intent and explains why the design choices align with 
 - Stack Rails: When windows are stacked/piled, tabs can act as “rail-constrained” handles. Dragging along the rail reorders within the pile; pulling away beyond a threshold pops a window off the pile; dropping snaps it back at any depth.
 - Direct Manipulation: Provide preview ghosts and insertion indicators while sliding on the rail. Keep interactions reversible; a quick “flick off” detaches; a close drop target reattaches.
 - Mixed Mode Rails: Rails operate both for tiled and floating piles. Preserve footprint metadata so popped windows can rejoin their prior pile predictably.
+- Typed Rails (below): stacking rails are one *kind* of docking surface; windows may expose several typed rails that accept different tab attachments.
 
-#### Tabs as Proxies (Manage Without Raising)
-- Proxy Controls: Tabs represent their windows even when obscured. Invoke pie menus on tabs for window management and content-specific actions without raising the window.
-- Iconify/Expand: Tabs support iconify/expand and peek. Hover/long-press may show live thumbnail previews; selection can raise or focus as needed.
-- Attention Without Theft: Tabs display activity badges/animations to signal updates without stealing focus.
+#### Tabs as Proxies (Compact Surfaces, Pies, Drag Sources/Destinations)
+- Compact Representation: A tab is a live, compact face of its Card — title, icon, badges, optional mini-preview — whether the window is on-screen, iconified, or off-screen (other workspace, other monitor metaphor, minimized sheet).
+- Pie Menus on Tabs: Invoke management and content pies without raising the window; directional slices send to destinations (HyperTIES “click then gesture”).
+- Drag Sources: Drag a tab to reorder on a rail, detach into a float, dock onto a typed rail of another window, or drop onto a compatible socket (patch-cord style — see Tab Linking).
+- Drag Destinations: Tabs and rails accept drops of other tabs, links, messages, overlay refs, reverse-diagram nodes, or command streams — typed compatibility decides accept vs reject with preview.
+- On-Screen / Off-Screen: Off-screen windows remain first-class via their tabs (edge strip, dock, or Swiss-army fold-out). Raising is optional; linking and commanding do not require visibility.
+- Attention Without Theft: Badges and ambient motion signal activity; never steal focus for routine updates.
+
+#### Typed Tab Docking Surfaces (Rails of Different Kinds)
+- Edge Rails Are Typed: A window may expose multiple docking surfaces along (and beyond) its edges. Each rail declares what kinds of tab attachments it accepts — e.g. `stack` (sibling Cards), `view-link` (camera/overlay peer), `dataflow` (patch cord), `controlflow`, `schema`, `chat-pin`, `diagram-node`.
+- Compatibility Preview: Dragging a tab over a rail shows accept/reject and a ghost of the resulting topology before commit.
+- Multiple Parallel Networks: The same Card can wear several tabs — or one tab with several sockets — participating in different networks at once (data flow, control flow, functional/closure flow, schema wiring) without collapsing them into one spaghetti graph.
+- Lineage: Paul Haeberli’s [ConMan](https://people.cs.vt.edu/~north/infoviz/conman.pdf) (SIGGRAPH ’88); Max/MSP / Pure Data patch cords; Blender node editors; federation notes in [brad-myers-visual-programming-hn.md](../designs/brad-myers-visual-programming-hn.md) and [command-path-collaboration-modes.md](../designs/command-path-collaboration-modes.md).
+
+#### Polyfaceted Surfaces (Beyond Four Edges)
+- Four edges are a floor, not a ceiling. A window can fold out additional attachment rails / dimensions — Swiss-army-knife facets — for dense wiring without crowding the content face.
+- Fold-Out Rails: Extra rails reveal on demand (gesture, pie slice, or assistant layout) and tuck away; they are first-class docking geometry, not modal dialogs.
+- Facet Types: Spatial facets (N/E/S/W + diagonals), semantic facets (data / control / function / schema / story), and role facets (educator chalk, streamer clean, kiosk locked).
+- Progressive Disclosure: Novices see four stack edges; power users unfold ConMan/Max/Blender-grade surfaces; always reversible.
+
+#### Tab Linking and Multi-Network Visual Programming
+Tabs can be **linked to other tabs** the way ConMan / Max/MSP / Blender nodes wire ports — not only as window-management handles.
+
+- Patch-Cord Semantics: A link is typed (data, control, functional, schema, …). Visual style and rail type encode the network; one Card may sit in several networks simultaneously.
+- Blender Geometry Nodes Lesson: Effectively pass around **closures**; control flow can “pop upstream” into functions passed in — confusing at first, brilliant once internalized. Federation Cards should allow the same: a functional-flow rail carries callable/continuation-shaped values; control-flow edges may target upstream sockets when the payload is a higher-order function.
+- Snap! Answers (Differently): [Snap!](https://snap.berkeley.edu/) (first-class procedures, continuations, metaprogramming, the Y combinator) answers the same VPL questions with blocks instead of patch cords. Micropolis should speak both dialects — node rails *and* Snap! blocks — generating the same [command streams](../designs/command-path-collaboration-modes.md).
+- Open VPL Representation Questions (design space, not settled):
+  | Concept | Candidate surface |
+  |---|---|
+  | Functions / lambdas | Functional-flow rails; Snap! rings/blocks; pie-slice “apply” |
+  | Closures | Captured environment badges on a tab; Geometry-Nodes-style upstream pop |
+  | Scopes | Nested Cards / stack trees; schema rails that bound names |
+  | Continuations / control flow | Control-flow network distinct from data-flow; resume sockets on tabs |
+  | Macros / metaprogramming | Schema + quote/unquote rails; Snap! `call` / `run` / custom blocks |
+  | Data vs schema | Parallel networks — instance values on data rails, types/shapes on schema rails |
+  | Mixed widgets in pies | Overflow / Blender-style pie contents — [pie-menu-patent-fud.md](../designs/pie-menu-patent-fud.md) |
 
 #### Directional Pie Menus for Destinations
 - Two-Panel Destinations: Use directional slices to target destination panes (e.g., send link to left/right/top/bottom panel), echoing the HyperTIES approach of “click then directional gesture.”
 - Spatial Mnemonics: Map common window actions to canonical directions (raise/front/back, tile/floating, send-to-edge) to build muscle memory and speed without visual search.
+- Typed Destinations: Pie slices can target a *rail type* (dock to dataflow facet, pin to chat, wire schema) as well as a spatial pane.
 
 #### Customizability Over Standardization
 - Anti-Monoculture: Do not lock tabs to the top edge or menus to vertical lists. Encourage per-window/per-workspace customization with sensible defaults and sharable presets.
@@ -240,6 +278,10 @@ This addendum deepens the intent and explains why the design choices align with 
 
 #### Terminology
 - Stack Rail (Spike): A visual/interaction affordance representing a stack’s ordering axis. Tabs slide along the rail to reorder; crossing a threshold pops windows off/on the pile.
+- Typed Rail: A docking surface that accepts only compatible tab attachments (stack, dataflow, controlflow, functional, schema, …).
+- Facet: A fold-out attachment dimension beyond the four window edges (Swiss-army polyfaceted chrome).
+- Tab Link / Patch Cord: A typed connection between tabs (or tab sockets), ConMan / Max / Blender lineage.
+- Compact Tab Face: The on-rail representation of a Card used for pies, DnD, and off-screen presence.
 
 #### LLM-Driven Collaboration: Rationale and Guardrails
 - Role: Assistant as a skilled collaborator that observes, proposes, previews, and acts—subject to scope and permission—without usurping user agency.
@@ -257,10 +299,16 @@ This addendum deepens the intent and explains why the design choices align with 
 - M12: Assistant Workflows—explain-then-do previews; scoped permissions integrated with undo.
 - M13: Stack Rails & Pop‑Off—rail-constrained reordering, pop-off thresholds, insertion indicators.
 - M14: Directional Destinations—pie-menu gestures to choose pane destination and send/clone window.
+- M15: Typed Rails—compatibility rules, accept/reject preview, multi-rail window chrome.
+- M16: Tab Linking—ConMan/Max/Blender-style cords; parallel data/control/functional/schema networks.
+- M17: Polyfaceted Fold-Outs—Swiss-army extra rails; Snap! ↔ node dual dialect for the same command streams.
+- M18: Higher-Order Flow—Geometry-Nodes-style closures / upstream control-flow; Snap! first-class procedures as the block answer.
 
 #### Risks and Open Questions (extended)
 - Tree-Style Tabs Cognitive Load: Ensure hierarchies aid navigation; rely on strong defaults and progressive disclosure.
 - Piles UX: Design spread/fan gestures that feel natural on mouse and touch without accidental activation.
 - Attention Signaling: Avoid notification overload; prefer ambient signals over disruptive modals.
 - Label Legibility: Maintain readable horizontal labels on vertical stacks; avoid rotated text; define overflow and tooltip policies.
+- Typed-Rail Complexity: Defaults must stay simple; facet unfold is progressive. Reject spaghetti by separating network types visually.
+- VPL Dual Dialect: Keep node-rail and Snap! block surfaces generating one command path — no second hidden runtime.
 

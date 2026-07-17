@@ -108,7 +108,7 @@ From the modern HN reception of [Kando Show HN (Dec 2024)](https://news.ycombina
 | *"I have to read in a circle"* | Novices read once; experts *flick* by direction without reading. The training path is the rehearsal path — see [gesture-space-and-pie-menus.md](gesture-space-and-pie-menus.md). |
 | *"Submenu hacks work fine"* | The classical Mac `<` corridor does work, but it's invisible, undefined, rarely tested, and almost never re-implemented correctly on the web. See [submenu-aiming-and-fitts-law.md](submenu-aiming-and-fitts-law.md). |
 | *"Keyboard shortcuts win"* | True for *rare, named* commands a user can memorise. Pies win for *spatial toolsets* (city tools, Sim verbs, Blender modes) where the right tool is "the one over there", not a name. |
-| *"How do you handle more than 8 items?"* | Hierarchy: nested pies that branch by direction. Or windowed pies (radial scrollwheels). The patented *radial+linear overflow* combo is *one* option and not a good one — [pie-menu-patent-fud.md](pie-menu-patent-fud.md). |
+| *"How do you handle more than 8 items?"* | Nest by direction; windowed / scrollable pies; general overflow (shipped in The Sims and Don's OLE/ActiveX pies); Blender-style mixed widgets and arbitrary layouts; or the old Alias radial+linear overflow now that the patent is expired. User-defined pies compose these freely — [pie-menu-patent-fud.md](pie-menu-patent-fud.md). |
 | *"They're not discoverable"* | Pop them up with a delay; experts skip the pop-up by mousing ahead before it renders. Same "rehearsal" dynamic Buxton describes for marking menus ([billbuxton.com/MMUserLearn.html](https://www.billbuxton.com/MMUserLearn.html)). |
 
 ---

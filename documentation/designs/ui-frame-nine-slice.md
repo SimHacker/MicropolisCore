@@ -52,8 +52,8 @@ Standard 3×3 decomposition:
 
 **Sources:**
 
-1. **Atlas** — texture + `slice` insets in source pixels; GPU draws 9 quads with UVs.
-2. **Procedural** — WGSL or 2D path: dual stroke (bright + dark), dashed edges, animated pulse.
+1. **Atlas** — texture + `slice` insets in source pixels; GPU draws 9 quads with UVs. Atlases are **skin-owned** ([GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) bridge skins) — Sims pack first; other game bridges swap atlases, not Frame code.
+2. **Procedural** — WGSL or 2D path: dual stroke (bright + dark), dashed edges, animated pulse. Stroke colors come from skin tokens, not hardcoded game palettes.
 
 All regions scale with a global **`scale`** factor so palette icons and map cursor share the same **screen-pixel** line weight.
 

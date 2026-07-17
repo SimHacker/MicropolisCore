@@ -38,7 +38,7 @@ What we refuse (the Las Vegas of chrome):
 | Error shame | Red banners that punish exploration |
 
 **Fear:** shipping another strip of flat blue pills that could belong to any SaaS.  
-**Loathing:** pretending the city under the cursor is a spreadsheet with a theme pack.
+**Loathing:** pretending the city under the cursor is a spreadsheet — or locking Gonzo to one game’s chrome so the next bridge has nowhere to live.
 
 ---
 
@@ -62,8 +62,59 @@ Stagecraft rules we *do* keep:
 4. **Pies saturate gesture space.** Prefer self-revealing radials over blind multitouch counts ([automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md)).
 5. **Tabs and stacks are HyperCard with nap.** Cards on any edge; pie on the tab without raising the wrong overlay ([PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md)).
 6. **Maps are places, not charts.** Zoom, pan, and overlays should feel like moving a camera through a city — measures are costumes the world wears ([map-compositing-and-measurement.md](map-compositing-and-measurement.md)).
-7. **No EA assets in the kit.** Themes may *evoke* Sims-era shell language; ship no copyrighted art. Users bring their own game files and screenshots.
+7. **No EA assets in the kit.** Skins may *evoke* a game’s shell language; ship no copyrighted art. Users bring their own game files and screenshots.
 8. **Name decompresses.** *Gonzo Pie Menus*, *Gonzo Tabbed Windows* — HST + shop history. Package ids may stay `gonzo-*` / `GZ` without requiring a Disney story.
+9. **Totally skinnable — never Sims-hardcoded.** Gonzo is the *hands* (interaction kernel). Skins are the *costume*. Structure, gesture, DM, pies, tabs, frames stay skin-agnostic; tokens, nine-slice atlases, fonts, cursors, splash voice, and motion accents live in a **skin pack**. First ship skin: **Sims-evoking** for the Sims ↔ Soul City bridge. Next skins match their games. Hardcoding Sims chrome into components paints us into a corner.
+
+---
+
+## Bridge skins (Soul City hub-and-spoke)
+
+Soul City routes characters and content through many game bridges. Each active bridge UI should **read as that game at a glance** — so when several bridges are open and souls are moving between them, you never wonder which world you’re touching.
+
+| Layer | Owns | Must not own |
+|-------|------|----------------|
+| **Gonzo kernel** | Gesture model, pie geometry, tab/stack behavior, Frame layout, DM contracts, a11y tree | Hardcoded Sims colors, fonts, diamond chrome, or any one game’s art |
+| **Skin pack** | CSS/theme tokens, nine-slice atlases, cursor sets, iconography, splash/error voice, motion accents, optional SFX | Interaction semantics (slice count logic, commit rules, undo) |
+| **Bridge binding** | Which skin pack attaches to which spoke (Sims, Micropolis, Stardew, Tiny Life, Shattered, Afterlife, …) | A second pie/tab implementation per game |
+
+**Rules of the road**
+
+1. **One kernel, many skins.** New game bridge ⇒ new skin pack (or fork of an existing pack), not a fork of `PieMenu.svelte`.
+2. **Distinctive by design.** Two bridges open at once must be visually unmistakable — silhouette, palette, chrome language — without relying on a tiny logo badge.
+3. **Sims first, not Sims forever.** `skin-sims` (working id) is the v1 pack for the Sims bridge: plumbob-adjacent cues, warm panel chrome, need-bar grammar *evoked*, not copied from EA assets.
+4. **Soul City hub chrome** may use a neutral or heavenly host skin; spoke windows wear their game skins. Dragging a character across the hub should feel like changing airports, not changing themes on the same SaaS tab.
+5. **Tokens only at the leaf.** Components consume `var(--gonzo-*)` / Frame atlas ids from the active skin context — never hex literals for “the Sims look” inside shared modules.
+6. **Evoke, don’t infringe.** Same rule as directive 7: fan-legible resemblance; no ripped UI bitmaps from commercial installs in the repo.
+
+```text
+  Soul City hub
+       │
+       ├── bridge: Sims        → skin-sims
+       ├── bridge: Micropolis  → skin-micropolis (city / RCI grammar)
+       ├── bridge: Tiny Life   → skin-tiny-life
+       ├── bridge: Stardew     → skin-stardew
+       └── bridge: …           → skin-<game>
+            │
+            └── all mount the same Gonzo kernel (pies, tabs, frames, DM)
+```
+
+Companion primitives: [ui-frame-nine-slice.md](ui-frame-nine-slice.md) (atlas per skin) · [federation-peer-games.md](federation-peer-games.md) (which spokes exist).
+
+### GUIDB as design corpus — reinterpret bad chrome, keep the soul
+
+Skinnable Gonzo is also a **rescue mission**. Many shipped game UIs look distinctive but *feel* bad: mystery-meat radials, inventory grids that fight Fitts, modal stacks that trap the world, HUDs that hide state. Soul City bridge UIs get to **wear that game’s face** while swapping in Gonzo hands — pies, tabbed frames, inhabited chrome, stunt affordances.
+
+**Primary guidance source:** Edd Coates’s [Game UI Database](https://www.gameuidatabase.com/) (Guinness World Record; 73k+ screens) — the industry’s curated catalog of what games actually shipped. Pull real examples (hits *and* misses) as briefs for each skin pack. Do not scrape GUIDB for training corpora; cite screens on-air and in design notes with attribution, per Edd’s terms and the Repo Show anti-slop posture.
+
+| GUIDB finds | Gonzo / skin response |
+|-------------|------------------------|
+| Great look, awful gesture | Keep silhouette/palette in the skin; replace interaction with pies + mouse-ahead |
+| Good radial, unstable slices | Stable 8/12-way directions; items move *inside* slices |
+| Beautiful panels, modal trap | Same frame language as tabbed/stack cards that peel and return |
+| Genre HUD clichés that hide state | Evoked HUD costume + classical visible-state HCI underneath |
+
+**Talk-with-Edd thread** (WWSFF): [pie-menus-piecraft.yml](https://github.com/SimHacker/WillWrightShowForFood/blob/main/repo-shows/edd-coates/pie-menus-piecraft.yml) — live GUIDB browse → annotate failure modes → co-design bridge skins that reinterpret those screens without losing game-legible identity.
 
 ---
 
@@ -146,14 +197,17 @@ Micropolis renamed the *city* product. Gonzo names the *hands* — the shell you
 
 ```text
 Miyamoto (hands/face inward) ──┐
-Classical HCI (visible state) ─┼──► Gonzo UI (inhabited, stunt-capable chrome)
-Felt-creature stagecraft ──────┘
-         │
-         ▼
-  PieCraft · PIE-TAB-WINDOWS · TileView · Overlays · Holodeck
+Classical HCI (visible state) ─┼──► Gonzo kernel (inhabited, stunt-capable chrome)
+Felt-creature stagecraft ──────┘              │
+                                              ▼
+                         Skin packs (Sims first; one pack per bridge)
+                                              │
+                                              ▼
+              PieCraft · PIE-TAB-WINDOWS · TileView · Overlays · Holodeck
 ```
 
-If a change makes the city harder to *feel with*, it fails this manifest even if it screenshots cleaner.
+If a change makes the city harder to *feel with*, it fails this manifest even if it screenshots cleaner.  
+If a change bakes one game’s look into the kernel so the next bridge can’t wear its own face, it also fails.
 
 ---
 
@@ -164,3 +218,7 @@ If a change makes the city harder to *feel with*, it fails this manifest even if
 - **FEAR AND LOATHING** — refuse sterilized chrome and gaslight errors
 - **STUNT AFFORDANCE** — pies, bounce, talking labels
 - **INHABITED CHROME** — authorship visible; splash text allowed to smirk
+- **BRIDGE SKIN** — spoke UI matches its game; multi-bridge sessions stay obvious
+- **SKINNABLE KERNEL** — tokens/atlases out; Sims is v1 costume, not the architecture
+- **GUIDB BRIEF** — use Game UI Database examples (cite, don’t scrape) as skin + gesture redesign briefs
+- **REINTERPRET** — keep the game’s face; replace bad hands with Gonzo pies/tabs/frames

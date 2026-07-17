@@ -5,7 +5,7 @@
 **Status:** Active design (forward-looking catalogue; nothing committed)
 **Monorepo:** MicropolisCore
 **Read first:** [characters-as-hydrogen.md](characters-as-hydrogen.md) — the character substrate and the Federation framing
-**Companion documents:** [moollm-microworld-os.md](moollm-microworld-os.md) (Bifrost protocol) · [simopolis.md](simopolis.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [the-imagine-loop.md](the-imagine-loop.md) · [sims-content-registry.md](sims-content-registry.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) · [Sunny Street outreach (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md)
+**Companion documents:** [moollm-microworld-os.md](moollm-microworld-os.md) (Bifrost protocol) · [simopolis.md](simopolis.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [the-imagine-loop.md](the-imagine-loop.md) · [sims-content-registry.md](sims-content-registry.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) · [GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) (skinnable bridge chrome — one skin pack per spoke) · [Sunny Street outreach (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md)
 
 > **Trademark notice.** All game titles below are trademarks of their respective owners. References here are nominative use for the purpose of describing technical interoperability via documented save-file formats and community modding ecosystems. No affiliation with or endorsement by any listed studio is implied. The Federation is an *open-source interoperability proposal*, not a partnership or license arrangement.
 
@@ -23,6 +23,8 @@ A **federation peer game** is any game where:
 4. **Players want their characters elsewhere** — the player community already shows demand for backups, transfers, cross-playthrough imports, "what if my character moved to..." stories.
 
 When all four are true, a character bridge is *technically* possible and *culturally* welcome. The Bifrost protocol ([moollm-microworld-os.md → The Bifrost](moollm-microworld-os.md#the-bifrost-the-bridge-as-a-structured-ontological-transition)) is designed exactly for this: a structured ontological transition between two substrates that each hold a sovereign incarnation of the same identity.
+
+**Bridge UI skins.** Each spoke’s operator UI wears a **Gonzo skin pack** that matches that game — Sims-evoking first for the Sims bridge; Micropolis, Tiny Life, Stardew, etc. get their own packs. Same interaction kernel; distinctive chrome so multi-bridge sessions (souls moving hub ↔ spokes) stay obvious. See [GONZO-UI-MANIFEST.md → Bridge skins](GONZO-UI-MANIFEST.md#bridge-skins-soul-city-hub-and-spoke).
 
 Below: graded by spiritual fit, technical fit, and combined priority. Nothing committed; this is a strategic catalogue.
 

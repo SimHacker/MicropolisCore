@@ -162,7 +162,7 @@ Pie menus are the federation's primary command surface — verb rings around Sim
 2. **Self-revealing.** Wedges pop after a short delay; experts skip the pop-up by mousing ahead.
 3. **Previews on tracking callbacks.** Hovered wedges preview their reversible effect (city tool overlays, Sim verb outcomes, [sims-content-registry.md](sims-content-registry.md) entry summaries).
 4. **Why-disabled text in the wedge itself**, not in a separate dialog — the [Sims-Online style explanation surface](sims-content-registry.md) belongs *here*.
-5. **No radial+linear overflow** — see [pie-menu-patent-fud.md](pie-menu-patent-fud.md). Nest if you need more items.
+5. **Overflow and mixed layouts are allowed** — nest, scroll, general overflow (The Sims / ActiveX lineage), Alias-style radial+linear if it fits, or Blender-style widgets in the pie. Patent expired; see [pie-menu-patent-fud.md](pie-menu-patent-fud.md). Keep the gesture-space contract clear.
 6. **8-item compass default**, 4 for terse menus, 12 for time/calendar-shaped data. Avoid odd N.
 7. **Touch path-of-least-astonishment** — labels off-finger, large wedges, no surprise gestures.
 

@@ -123,13 +123,19 @@ Documenting it doesn't expire it. The Alias brochure (PDF: [aliasdesign10_detail
 
 ## What Micropolis takes from this
 
-The [Micropolis Federation](simopolis.md) ships pie menus throughout — verb rings around Sims, tool rings in city mode, command rings in [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md). All of them are *ordinary* pies. We do not use the radial+linear overflow pattern even though the relevant patent expired a decade ago, because:
+The [Micropolis Federation](simopolis.md) ships pie menus throughout — verb rings around Sims, tool rings in city mode, command rings in [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md). Default shells are ordinary compass pies; that is a *starting* grammar, not a ban on richer layouts.
 
-1. The narrow technique never carried its weight visually — it always felt like two different controls glued together.
-2. Documenting *which* prior art our pies inherit from (HyperTIES, SimCity, The Sims, [historical/drupal-blog/2004-02-05-xml-pie-menus.md](../historical/drupal-blog/2004-02-05-xml-pie-menus.md)) is good federation hygiene anyway.
-3. Future federation peers ([federation-peer-games.md](federation-peer-games.md)) should not have to do this research again — the cautionary tale needs to live in the repo, not a Medium post.
+**Overflow and mixed widgets are in scope.** Alias's radial+linear overflow patent expired ~2015 — the simple limited overflow layout they patented is safe to ship. Don had already implemented **more general overflow** in The Sims pie menus and in the free open-source OLE/ActiveX pie menus he published — not just a glued-on linear dump. Modern Blender pies go further still: arbitrary layouts, checkboxes, sliders, dropdowns, and elaborate compositions inside the pie. Federation pies should learn from that lineage, not freeze at "eight wedges forever."
 
-This is *not legal advice*. It is a design-cultural note: **when you ship UI primitives in an open ecosystem, write down where they come from, why they are unencumbered, and which historical IP claims attached to them.** Bad patents and FUD survive on opacity.
+**User-defined pies compose layout techniques.** Authors (and players) may lay menus out however they please — automatic packing, manual placement, LLM-driven arrangement, nested rings, overflow bands, and mixed widget types — as long as the gesture-space contract stays clear ([gesture-space-and-pie-menus.md](gesture-space-and-pie-menus.md)). The Alias combo is one optional tool among many, not a forbidden zone and not the only way to grow past eight items.
+
+What the FUD story still demands of the federation:
+
+1. Document *which* prior art our pies inherit from (HyperTIES, SimCity, The Sims, [historical/drupal-blog/2004-02-05-xml-pie-menus.md](../historical/drupal-blog/2004-02-05-xml-pie-menus.md)) — hygiene, not superstition about expired claims.
+2. Future federation peers ([federation-peer-games.md](federation-peer-games.md)) should not have to rediscover the patent scare — the cautionary tale lives in the repo, not only a Medium post.
+3. Prefer layouts that feel like one control (including general overflow and Blender-style mixed widgets) over cargo-cult avoidance of anything that once looked like Alias marketing.
+
+This is *not legal advice*. It is a design-cultural note: **when you ship UI primitives in an open ecosystem, write down where they come from, why they are unencumbered, and which historical IP claims attached to them.** Bad patents and FUD survive on opacity — and also survive as cargo-cult bans after the patent dies.
 
 ---
 

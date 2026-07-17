@@ -33,7 +33,7 @@ Read these alongside:
 
 [interaction-design-articles-index.md](interaction-design-articles-index.md) — includes [Brad Myers / Garnet / VPL HN corpus](brad-myers-visual-programming-hn.md)
 
-**Gonzo UI constitution:** [GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) — fear & loathing of sterilized chrome; felt-creature stagecraft; Gonzo applied to pies, tabs, tile views, overlays, DM, zoom/scroll/map. HST method + Sims Framework shop codename (no franchise mascots).
+**Gonzo UI constitution:** [GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) — fear & loathing of sterilized chrome; felt-creature stagecraft; **totally skinnable** kernel (Sims-evoking pack first; each bridge wears its game). **GUIDB briefs** — cite Edd Coates’s Game UI Database examples to reinterpret bad UIs (keep the face, Gonzo pies/tabs for the hands). HST method + Sims Framework shop codename (no franchise mascots).
 
 **Pie menus & PieCraft:** [piecraft/README.md](piecraft/README.md) — runtime-editable pies, game design, Target/Pie/Slice/Item model, links to holodeck + SimCity palette
 
