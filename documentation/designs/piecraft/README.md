@@ -36,6 +36,7 @@ ToolCatalog    HolodeckStage    VirtualPointer
 
 | MicropolisCore artifact                                                     | PieCraft / pie lineage                                       |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [GONZO-UI-MANIFEST.md](../GONZO-UI-MANIFEST.md)                             | Constitutional chrome: inhabited, stunt-capable, felt-creature |
 | [simcity-tool-palette-design.md](../simcity-tool-palette-design.md)         | Curated totem pole = **designer** pies; MP cursor legend     |
 | [virtual-pointer-and-pie-cursors.md](../virtual-pointer-and-pie-cursors.md) | Virtual mouse, no menu-warp; tile autoscroll                 |
 | [ui-frame-nine-slice.md](../ui-frame-nine-slice.md)                         | Tool cursor frames = palette border language                 |

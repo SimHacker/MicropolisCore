@@ -12,6 +12,7 @@ Open work for all of these areas is consolidated at **[documentation/TODO.md](..
 
 Read these alongside:
 
+- `documentation/designs/GONZO-UI-MANIFEST.md` — UI constitution (pies, tabs, tiles, overlays)
 - `documentation/notes/PIE-TAB-WINDOWS.md`
 - `documentation/notes/MultiPlayerIdeas.txt`
 - `skills/micropolis/`
@@ -31,6 +32,8 @@ Read these alongside:
 ### Interaction design articles (HCI / pie menus / accessibility / agents)
 
 [interaction-design-articles-index.md](interaction-design-articles-index.md) — includes [Brad Myers / Garnet / VPL HN corpus](brad-myers-visual-programming-hn.md)
+
+**Gonzo UI constitution:** [GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) — fear & loathing of sterilized chrome; felt-creature stagecraft; Gonzo applied to pies, tabs, tile views, overlays, DM, zoom/scroll/map. HST method + Sims Framework shop codename (no franchise mascots).
 
 **Pie menus & PieCraft:** [piecraft/README.md](piecraft/README.md) — runtime-editable pies, game design, Target/Pie/Slice/Item model, links to holodeck + SimCity palette
 
