@@ -2,7 +2,7 @@
 
 ## Thesis
 
-MicropolisHub should not be framed as "multiplayer SimCity" in the narrow sense. It should be a collaborative microworld: a shared, inspectable, programmable environment where people and AI agents build, argue, simulate, branch, explain, and learn together.
+Soul City should not be framed as "multiplayer SimCity" in the narrow sense. It should be a collaborative microworld: a shared, inspectable, programmable environment where people and AI agents build, argue, simulate, branch, explain, and learn together.
 
 The lineage is not just game design. It runs through Engelbart's augmentation program, Piaget's constructivism, Papert's constructionism, Kay's Dynabook and Smalltalk tradition, Will Wright's simulation toys, and Don Hopkins' cooperative SimCityNet experiments.
 
@@ -117,7 +117,7 @@ This gives Micropolis an advantage over generic multiplayer surfaces:
 - A canvas is not a reason to collaborate.
 - A city with scarce funds, disasters, tradeoffs, and visible consequences is a reason to collaborate.
 
-## Design Principles for MicropolisHub
+## Design Principles for Soul City
 
 1. Shared state should be visible and consequential.
 2. Major actions should be proposals before they become facts.

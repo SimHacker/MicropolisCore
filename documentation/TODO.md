@@ -52,7 +52,7 @@ the linked documents.
 | [GUID collision tooling](#sims-guid-collision-tooling) | Wire collision scanner into VitaMooSpace UI | Medium |
 | [GPU asset tooling](#vitamoo--gpu-assets--interchange) | Readback → BMP/IFF export; glTF import/export | Medium |
 | [Package scoping](#package-naming--scoping) | Scope vitamoo/mooshow names (`@vitamoo/…`) | Low |
-| [MicropolisHub / MOOLLM](#micropolishub--moollm-integration) | MCP service, command bus, LLM proposals | Long-horizon |
+| [Soul City / MOOLLM](#soul-city--moollm-integration) | MCP service, command bus, LLM proposals | Long-horizon |
 | [Multiplayer / Git-as-multiverse](#multiplayer--git-as-multiverse) | Command timeline, branch objects | Long-horizon |
 
 ---
@@ -580,7 +580,7 @@ imports. Do in one coordinated PR.
 
 ---
 
-## MicropolisHub / MOOLLM integration
+## Soul City / MOOLLM integration
 
 **Details:** [documentation/designs/moollm-micropolis-integration.md](designs/moollm-micropolis-integration.md),
 [documentation/designs/command-path-collaboration-modes.md](designs/command-path-collaboration-modes.md),

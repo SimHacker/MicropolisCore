@@ -110,7 +110,7 @@ cat city.cty | pnpm run micropolis -- city info -
 
 Full test suite and command reference: [documentation/notes/micropolis-js-tests.md](documentation/notes/micropolis-js-tests.md)
 
-## MicropolisHub: The Vision
+## Soul City: The Vision
 
 Micropolis is not a "killer app." It is a **nurturing environment** -- a term from Don Hopkins' [DreamScape demo at WWDC 1995](https://donhopkins.medium.com/1995-apple-world-wide-developers-conference-kaleida-labs-scriptx-demo-64271dd65570):
 
@@ -123,7 +123,7 @@ Micropolis is not a "killer app." It is a **nurturing environment** -- a term fr
 | Consumes users | Cultivates creators |
 | Zero-sum | Fertile ground for seeds |
 
-**MicropolisHub** is the full vision: the simulation engine orchestrated by [MOOLLM](https://github.com/SimHacker/moollm) AI characters, running on a SvelteKit multiplayer platform, using **GitHub as MMORPG**:
+**Soul City** is the full vision — the heavenly hub (open borders; Micropolis stays the GPL city engine): simulation orchestrated by [MOOLLM](https://github.com/SimHacker/moollm) AI characters, on a SvelteKit multiplayer platform, using **GitHub as MMORPG**:
 
 - **The filesystem is the city.** All game state lives in git-controlled files.
 - **Git is the multiverse.** Branches are alternate timelines. PRs merge histories.
@@ -203,7 +203,7 @@ Full details: [MOOLLM: A Microworld Operating System for LLM Orchestration](http
 
 ### The Bigger Picture
 
-MOOLLM is kind of like The Sims meets LambdaMOO in Cursor, then steals all the great ideas from Factorio. Micropolis is one microworld within that system. The [logistic-container](https://github.com/SimHacker/moollm/tree/main/skills/logistic-container) skill treats directories as Factorio logistics boxes. The [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) skill makes the filesystem a navigable space. The [character](https://github.com/SimHacker/moollm/tree/main/skills/character) and [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) skills give AI agents Sims-style personalities on Leary's Interpersonal Circumplex. All of these compose with the micropolis skill to create MicropolisHub.
+MOOLLM is kind of like The Sims meets LambdaMOO in Cursor, then steals all the great ideas from Factorio. Micropolis is one microworld within that system. The [logistic-container](https://github.com/SimHacker/moollm/tree/main/skills/logistic-container) skill treats directories as Factorio logistics boxes. The [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) skill makes the filesystem a navigable space. The [character](https://github.com/SimHacker/moollm/tree/main/skills/character) and [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) skills give AI agents Sims-style personalities on Leary's Interpersonal Circumplex. All of these compose with the micropolis skill to create Soul City.
 
 The full MOOLLM skill registry: [121 skills](https://github.com/SimHacker/moollm/blob/main/skills/INDEX.yml) | [Narrative index](https://github.com/SimHacker/moollm/blob/main/skills/INDEX.md)
 
@@ -243,9 +243,9 @@ His key trick: recursive weight-sharing in fractal convolutional blocks, where e
 
 ## Building
 
-### MicropolisHub setup (Cursor + MOOLLM)
+### Soul City setup (Cursor + MOOLLM)
 
-**MicropolisHub** ties this repository to [MOOLLM](https://github.com/SimHacker/moollm) — the microworld skill framework where the **micropolis** skill, AI tutors, and related designs live. To work across engine code, the SvelteKit app, and MOOLLM skills in one flow:
+**Soul City** ties this repository to [MOOLLM](https://github.com/SimHacker/moollm) — the microworld skill framework where the **micropolis** skill, AI tutors, and related designs live. To work across engine code, the SvelteKit app, and MOOLLM skills in one flow:
 
 1. **Check out MOOLLM and MicropolisCore in the same directory** (sibling folders under one parent, e.g. `~/Developer/` or `~/src/`):
 
@@ -406,7 +406,7 @@ pnpm --filter micropolis run micropolis -- sim smoke --ticks 1
 pnpm --filter micropolis dev
 ```
 
-For MicropolisHub-style development with MOOLLM, follow **MicropolisHub setup (Cursor + MOOLLM)** at the top of this section before or alongside these steps.
+For Soul City-style development with MOOLLM, follow **Soul City setup (Cursor + MOOLLM)** at the top of this section before or alongside these steps.
 
 ## Links
 

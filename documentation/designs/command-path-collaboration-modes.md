@@ -2,7 +2,7 @@
 
 ## Thesis
 
-MicropolisHub should have one command path that works across live play, asynchronous GitHub collaboration, LLM proposals, visual programming, macros, blueprints, and replay.
+Soul City should have one command path that works across live play, asynchronous GitHub collaboration, LLM proposals, visual programming, macros, blueprints, and replay.
 
 The central rule:
 

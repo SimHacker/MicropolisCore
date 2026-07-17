@@ -41,7 +41,7 @@ Read these alongside:
 
 - `platform-lineage-index.md` — Platform eras (NeWS, X11, OLPC, OpenLaszlo, Wasm) and where each layer’s docs live; maps **`documentation/`** (reference + archive) to **`documentation/designs/`** (forward-looking specs).
 - `collaborative-microworld-lineage.md` — Engelbart, Kay, Papert, Piaget, SimCityNet, and constructionist multiplayer.
-- `multiplayer-browser-lessons.md` — Lessons from Sail/Muddy and the Hacker News discussion for MicropolisHub.
+- `multiplayer-browser-lessons.md` — Lessons from Sail/Muddy and the Hacker News discussion for Soul City.
 - `command-path-collaboration-modes.md` — End-to-end command path, live/async collaboration modes, object placement, manifests, and source-of-truth rules.
 - `naming-conventions.md` — Big-endian Micropolis naming across files, branches, commands, events, callbacks, and serialized records.
 - `callback-interface-roadmap.md` — Simulator callback naming, event envelopes, reactive state bridge, and future introspection callbacks.

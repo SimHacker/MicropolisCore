@@ -17,7 +17,7 @@ Loose files that support **development**, **CLI / save-file work**, and **agent 
 |------|-------------|
 | **`city-save-files.md`** | Dense reference for `.cty` / save layout, tools, and multi-tile buildings (CLI and tooling). |
 | **`micropolis-js-tests.md`** | Vitest / CLI command cheat sheet for the `micropolis` package. |
-| **`PIE-TAB-WINDOWS.md`** | Pie menus, tabs, docking, collaboration UI concepts tied to MicropolisHub. |
+| **`PIE-TAB-WINDOWS.md`** | Pie menus, tabs, docking, collaboration UI concepts tied to Soul City. |
 | **`MultiPlayerIdeas.txt`** | SimCityNet-style multiplayer, voting, Git / universe metaphors — overlaps **`../designs/`** but preserved as primary brain-dump. |
 | **`prompt-code-review-*.txt`** | Short reusable prompts for code review. |
 | **`references-academic.txt`** | Tiny external citation capture (e.g. related games criticism). |

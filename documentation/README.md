@@ -32,5 +32,5 @@ Everything under this directory is **project documentation**: manuals for player
 - **Phased build plan (Phases 0 → 5, incl. 1C / 1D / 1E / 1F):** **`designs/simopolis-uplift-roadmap.md`**
 - **Play the game / use the CLI:** root **`README.md`**, **`notes/micropolis-js-tests.md`**, **`notes/city-save-files.md`**
 - **Platform eras (NeWS → Wasm):** **`designs/platform-lineage-index.md`**
-- **MicropolisHub / Git-as-world:** **`designs/github-as-mmorpg-multiverse.md`**
+- **Soul City / Git-as-world:** **`designs/github-as-mmorpg-multiverse.md`**
 - **VitaMoo renderer status:** **`vitamoo/webgpu-renderer-status.md`**

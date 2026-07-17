@@ -2,7 +2,7 @@
 
 ## Source Context
 
-This note distills lessons from Alejandro's "Get Your Reps" retrospective about Sail and Muddy, plus the Hacker News discussion around it, and applies them to MicropolisHub.
+This note distills lessons from Alejandro's "Get Your Reps" retrospective about Sail and Muddy, plus the Hacker News discussion around it, and applies them to Soul City.
 
 Sail and Muddy were attempts to build a multiplayer browser: live websites on an infinite canvas, then chat plus embedded browser tabs. The architecture was impressive, but adoption did not follow.
 
@@ -188,7 +188,7 @@ It has:
 
 This gives collaboration a reason to exist.
 
-## Product Tests for MicropolisHub
+## Product Tests for Soul City
 
 Adapt the blog's landing-page and launch-video tests:
 

@@ -2,7 +2,7 @@
 
 ## Thesis
 
-MicropolisHub can use GitHub as a multiplayer world server without pretending GitHub is a game engine.
+Soul City can use GitHub as a multiplayer world server without pretending GitHub is a game engine.
 
 Git already provides durable timelines, branching, merging, diffs, authorship, review, comments, permissions, automation, CI/CD, bots, webhooks, Actions, artifacts, and public/private sharing. Those are exactly the primitives needed for a collaborative constructionist microworld where cities branch into alternate histories.
 
@@ -43,7 +43,7 @@ The prefix is not cosmetic. It lets tooling distinguish worlds, scenarios, exper
 
 A branch is a world, but it lives inside a repository. The repository plugs that world into GitHub's account, organization, team, permission, issue, PR, and audit infrastructure.
 
-This matters because MicropolisHub is not only a technical branching system. It is also an institutional system.
+This matters because Soul City is not only a technical branching system. It is also an institutional system.
 
 Possible repository owners:
 

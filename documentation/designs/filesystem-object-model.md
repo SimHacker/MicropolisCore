@@ -2,7 +2,7 @@
 
 ## Thesis
 
-MicropolisHub should model world objects as filesystem trees.
+Soul City should model world objects as filesystem trees.
 
 This follows the MOOLLM/Self/LambdaMOO lineage: objects are not opaque database rows. They are inspectable directories with slots, behaviors, advertisements, state, history, and links to other objects.
 
