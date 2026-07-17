@@ -217,7 +217,7 @@ MicropolisCore design consequence: **client-authoritative sim**, optional sync, 
 - [phoneloper-sfc-speech-toy.md](phoneloper-sfc-speech-toy.md) — SFC expressive speech editor; phonoscoping; browser port sketch
 - [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md)
 - [platform-lineage-index.md](platform-lineage-index.md)
-- [simopolis.md](simopolis.md) — Sims 1 uplift under EA Legacy Collection
+- [soul-city.md](soul-city.md) — Sims 1 uplift under EA Legacy Collection
 - [collaborative-microworld-lineage.md](collaborative-microworld-lineage.md)
 - [the-computer-as-portal.md](the-computer-as-portal.md) — Transmogrifier lineage
 

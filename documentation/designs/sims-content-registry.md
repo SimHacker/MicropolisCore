@@ -2,10 +2,10 @@
 
 **Status:** Active design  
 **Monorepo:** MicropolisCore  
-**Companion documents:** [simopolis.md](simopolis.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)  
+**Companion documents:** [soul-city.md](soul-city.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)  
 **Touches:** existing [packages/vitamoo/vitamoo/io/guid-collision.ts](../../packages/vitamoo/vitamoo/io/guid-collision.ts), planned `packages/sims-io/src/l4/`
 
-> **Scope.** Tooling that runs *across* the user's content directories and incoming Tornado-recovered content. Does not modify EA-shipped binaries; operates on user-owned `.iff` files, custom objects, skins, lots, and saves. See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical positioning.
+> **Scope.** Tooling that runs *across* the user's content directories and incoming Tornado-recovered content. Does not modify EA-shipped binaries; operates on user-owned `.iff` files, custom objects, skins, lots, and saves. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
@@ -13,7 +13,7 @@
 
 A Sims save file is not self-contained. A household lot references objects by GUID; those objects live in custom IFFs that may or may not be installed; skins reference body-part meshes by GUID; lots reference templates; family records reference lot files. When *any* of those references fails to resolve, the engine can crash, silently swap in placeholders, or render broken content. This was the Sims-modding community's most persistent pain for two decades.
 
-The pain compounds in Simopolis. We are about to:
+The pain compounds in Soul City. We are about to:
 
 - Drop user-authored objects into the install via the [Adventure Compiler](the-computer-as-portal.md).
 - Bulk-import [Tornado](the-tornado-and-the-archives.md)-recovered content from `archive.org` snapshots.
@@ -27,7 +27,7 @@ This doc specifies the registry, the validation walk, the repair strategies, GUI
 
 ## The registry
 
-A single content registry per user install (and an in-memory variant per Tornado batch). Built by scanning `Downloads/`, `Custom*/`, and any user-tracked locations. Stored as a SQLite database alongside the user's git-overlaid Sims directory (see [simopolis.md → Git-managed user Sims directory](simopolis.md#git-managed-user-sims-directory)).
+A single content registry per user install (and an in-memory variant per Tornado batch). Built by scanning `Downloads/`, `Custom*/`, and any user-tracked locations. Stored as a SQLite database alongside the user's git-overlaid Sims directory (see [soul-city.md → Git-managed user Sims directory](soul-city.md#git-managed-user-sims-directory)).
 
 ```sql
 -- one row per IFF (object, skin, lot, etc.)
@@ -168,7 +168,7 @@ The LLM is doing *empathic matching*, not invention. It picks from existing IFFs
 | **Adventure Compiler integration** | `tools/adventure-compiler/validator/dependencies.ts` | Validation walk runs as part of any compile-time check; failures block flatten |
 | **Tornado integration** | `tools/tornado/import/` | Every imported batch updates the registry; collisions and missing refs surface for curation before binding |
 
-Each surface ultimately writes through git (per [simopolis.md → Git-managed user Sims directory](simopolis.md#git-managed-user-sims-directory)), so every registry decision is a commit with structured trailers.
+Each surface ultimately writes through git (per [soul-city.md → Git-managed user Sims directory](soul-city.md#git-managed-user-sims-directory)), so every registry decision is a commit with structured trailers.
 
 ---
 
@@ -188,7 +188,7 @@ The registry is the substrate that all five flows lean on. Without it, every flo
 
 ## Roadmap placement
 
-A small first vertical fits in [Phase 0](simopolis-uplift-roadmap.md#phase-0--end-to-end-uplift-of-one-save-file-1-2-weeks): scan → validate → annotate-only repair. About 3–4 days on top of the existing GUID-collision utilities. The richer repair strategies, LLM-assisted matching, and UI surfaces land in [Phase 1A/1B](simopolis-uplift-roadmap.md#phase-1--moollm-enrichment--family-album-server-3-4-weeks) and become mandatory before Phase 3 Tornado import.
+A small first vertical fits in [Phase 0](soul-city-uplift-roadmap.md#phase-0--end-to-end-uplift-of-one-save-file-1-2-weeks): scan → validate → annotate-only repair. About 3–4 days on top of the existing GUID-collision utilities. The richer repair strategies, LLM-assisted matching, and UI surfaces land in [Phase 1A/1B](soul-city-uplift-roadmap.md#phase-1--moollm-enrichment--family-album-server-3-4-weeks) and become mandatory before Phase 3 Tornado import.
 
 Suggested next task to add to the roadmap:
 

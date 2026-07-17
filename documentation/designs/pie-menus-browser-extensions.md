@@ -166,7 +166,7 @@ Don also proposed splitting additional work out of #15 — menu management, tabb
 | **Micropolis Home / aQuery** | OS overlay + AX selectors — inherit Slate pattern or Cua Driver lower layer ([aquery-programmable-accessibility.md](aquery-programmable-accessibility.md)). |
 | **Standards advocacy** | Vocabulary for a **new** overlay-window + global-capture spec — not satisfied by #160 / `openPopup` wins alone |
 
-Phase 0 Simopolis does not depend on extension pies. Phase 1F streaming overlays ([designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a) benefit from understanding why **OBS browser sources** and **in-app overlays** are the shippable path while **extension-global pies** wait on standards.
+Phase 0 Soul City does not depend on extension pies. Phase 1F streaming overlays ([designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a) benefit from understanding why **OBS browser sources** and **in-app overlays** are the shippable path while **extension-global pies** wait on standards.
 
 ---
 

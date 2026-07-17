@@ -119,7 +119,7 @@ Not in scope for Micropolis v1; documented as rationale for why **curated** layo
 
 ## 8. Relation to car touch UI (2014 thread)
 
-The parent HN thread ([*A New Car UI*](https://news.ycombinator.com/item?id=7328476)) criticized **undifferentiated touch strips** and **invisible finger-count gestures** in automotive UI. Don’s counterpoint: **differentiation through layout, size, color, and spatial memory** — the same problem SimCity solved with totem-pole palette + **self-revealing** pies (not blind multitouch). Full harvest: [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md). Applies to Simopolis build mode, vitamoo lot editor, streamer overlay toolbars.
+The parent HN thread ([*A New Car UI*](https://news.ycombinator.com/item?id=7328476)) criticized **undifferentiated touch strips** and **invisible finger-count gestures** in automotive UI. Don’s counterpoint: **differentiation through layout, size, color, and spatial memory** — the same problem SimCity solved with totem-pole palette + **self-revealing** pies (not blind multitouch). Full harvest: [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md). Applies to Soul City build mode, vitamoo lot editor, streamer overlay toolbars.
 
 ---
 

@@ -136,14 +136,14 @@ Unity component: [PIECRAFT.md](piecraft/PIECRAFT.md) · video [sMN1LQ7qx9g](http
 
 ---
 
-## 8. Sims animation code lineage (mooshow / Simopolis)
+## 8. Sims animation code lineage (mooshow / Soul City)
 
 Andrew’s Sims 2 work validates preserving **documented, commented** Sims 1 animation sources in MicropolisCore:
 
 
 | Artifact                                 | Repo direction                                                                    |
 | ---------------------------------------- | --------------------------------------------------------------------------------- |
-| Don’s Sims 1 animation C++               | `packages/mooshow`, Simopolis uplift                                              |
+| Don’s Sims 1 animation C++               | `packages/mooshow`, Soul City uplift                                              |
 | EA permission / Unity port thread (2013) | [piecraft/RELATED-PROJECTS.md](piecraft/RELATED-PROJECTS.md) § Sims animation lib |
 | “Edit vs Lua”                            | Prefer scriptable/modular boundaries in new UI                                    |
 
@@ -160,7 +160,7 @@ Andrew’s Sims 2 work validates preserving **documented, commented** Sims 1 ani
 | Pie menus in city builder           | Holodeck `PieMenuPlugin` + virtual pointer                                      |
 | Offline-first multiplayer           | No SC2013-style forced shard + 20 min tether                                    |
 | Commented engine code               | Keep animation/sim docs for future ports                                        |
-| 3–6 month visible progress          | Roadmap phases ([simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md))     |
+| 3–6 month visible progress          | Roadmap phases ([soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md))     |
 | Data-layer visualization            | Grafana/D3 export (Don HN 2024) + map overlays                                  |
 
 
@@ -170,7 +170,7 @@ Andrew’s Sims 2 work validates preserving **documented, commented** Sims 1 ani
 
 - [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) — Origin vs Maxis (Lucy Bradshaw, Ocean Quigley) from Don HN 2015; **§4 HN catalog** of Don’s Stupid Fun Club comments
 - [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) — Wright ↔ Miyamoto week; SC2000 lineage
-- [simopolis.md](simopolis.md) — Sims + city umbrella
+- [soul-city.md](soul-city.md) — Sims + city umbrella
 - [family-album-as-storymaker.md](family-album-as-storymaker.md) — MediaGraph maps + pies
 - [platform-lineage-index.md](platform-lineage-index.md)
 - [piecraft/RELATED-PROJECTS.md](piecraft/RELATED-PROJECTS.md)

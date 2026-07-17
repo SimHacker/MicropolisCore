@@ -1,8 +1,8 @@
-# Designing inward from the player: Miyamoto principles for Simopolis
+# Designing inward from the player: Miyamoto principles for Soul City
 
 **Status:** Design notes (cultural / craft, with concrete features)  
 **Monorepo:** MicropolisCore  
-**Companion documents:** [characters-as-hydrogen.md](characters-as-hydrogen.md) · [simopolis.md](simopolis.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [federation-peer-games.md](federation-peer-games.md) · [og-cozy-games.md](og-cozy-games.md)
+**Companion documents:** [characters-as-hydrogen.md](characters-as-hydrogen.md) · [soul-city.md](soul-city.md) · [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [federation-peer-games.md](federation-peer-games.md) · [og-cozy-games.md](og-cozy-games.md)
 
 > *"He approaches the games playfully, which seems kind of obvious, but most people don't. And he approaches things from the players' point of view, which is part of his magic."*  
 > — Will Wright, on Shigeru Miyamoto, *The New Yorker* ("Master of Play"), December 2010
@@ -11,11 +11,11 @@
 
 ## Why this doc exists
 
-Simopolis inherits from two design lineages we should name and study deliberately. One is Will Wright's Maxis lineage — the open-ended toy / nurturing-environment / simulator-effect tradition, already documented across [simopolis.md](simopolis.md), [characters-as-hydrogen.md](characters-as-hydrogen.md), and the rest of the design suite. The other is **Shigeru Miyamoto's Nintendo lineage** — designing inward from the player's body, the player's face, the player's spectators; building tools before content; subverting one's own genre.
+Soul City inherits from two design lineages we should name and study deliberately. One is Will Wright's Maxis lineage — the open-ended toy / nurturing-environment / simulator-effect tradition, already documented across [soul-city.md](soul-city.md), [characters-as-hydrogen.md](characters-as-hydrogen.md), and the rest of the design suite. The other is **Shigeru Miyamoto's Nintendo lineage** — designing inward from the player's body, the player's face, the player's spectators; building tools before content; subverting one's own genre.
 
-The two lineages are tangled. In 1989, Miyamoto licensed SimCity for the SNES on the spot — sliding a million-dollar check across the table to Maxis CEO Jeff Braun ([PC Gamer, June 16 2024](https://www.pcgamer.com/games/sim/in-1989-a-nintendo-bigwig-licensed-simcity-on-the-spot-by-sliding-a-million-dollar-check-across-the-table/)). Will Wright then spent a week in Kyoto with Miyamoto, apprenticing under him. Chaim Gingold's *Building SimCity* (MIT Press, 2024) makes the case directly: that week shaped SimCity 2000, which shaped The Sims, which shapes everything Simopolis is doing now. Miyamoto's homage character "Dr Wright" lives in Nintendo's SimCity port to this day.
+The two lineages are tangled. In 1989, Miyamoto licensed SimCity for the SNES on the spot — sliding a million-dollar check across the table to Maxis CEO Jeff Braun ([PC Gamer, June 16 2024](https://www.pcgamer.com/games/sim/in-1989-a-nintendo-bigwig-licensed-simcity-on-the-spot-by-sliding-a-million-dollar-check-across-the-table/)). Will Wright then spent a week in Kyoto with Miyamoto, apprenticing under him. Chaim Gingold's *Building SimCity* (MIT Press, 2024) makes the case directly: that week shaped SimCity 2000, which shaped The Sims, which shapes everything Soul City is doing now. Miyamoto's homage character "Dr Wright" lives in Nintendo's SimCity port to this day.
 
-So when we read Miyamoto's design principles, we are reading principles that were *already encoded into the project we are continuing*. This doc names them, attributes them, and connects each one to a specific Simopolis design choice.
+So when we read Miyamoto's design principles, we are reading principles that were *already encoded into the project we are continuing*. This doc names them, attributes them, and connects each one to a specific Soul City design choice.
 
 Sources throughout are Don's first-hand Hacker News notes from 2014–2024, Miyamoto's GDC 1999 and 2007 keynotes, the [Wikipedia article on Shigeru Miyamoto](https://en.wikipedia.org/wiki/Shigeru_Miyamoto), Will Wright's [Stanford 1996 talk](https://www.youtube.com/watch?v=nsxoZXaYJSk), Gingold's *Building SimCity*, and [simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) (SC2013 / SC2000 audience, Ocean, EA online).
 
@@ -34,7 +34,7 @@ The canonical image from the 2007 keynote: a little girl sitting in her grandfat
 > *"The Wii was so successful as a social party game, because the players themselves were more fun to watch than the game on the screen, because they make spectacles of themselves, which is much more entertaining to watch than the computer graphics. And you don't get bored waiting for your turn to play, because it's fun watching other people play."*  
 > — Don Hopkins, Hacker News, April 22 2014
 
-**For Simopolis.** Our design starts further out still: from the **chat the player is having with a friend about their household**, or **the screenshot they're about to share**, or **the Family Album page they're about to upload**. The substrate then designs inward — what visualization makes that share moment land? What content compiler does the visualization need? What LLM call does the compiler need? What data does the LLM call need?
+**For Soul City.** Our design starts further out still: from the **chat the player is having with a friend about their household**, or **the screenshot they're about to share**, or **the Family Album page they're about to upload**. The substrate then designs inward — what visualization makes that share moment land? What content compiler does the visualization need? What LLM call does the compiler need? What data does the LLM call need?
 
 This is the inverse of "build a runtime and then ask what's fun." It is also why we are explicitly **not** building a runtime — see [characters-as-hydrogen.md](characters-as-hydrogen.md). The user's social moment with their character is the substrate's starting point.
 
@@ -42,9 +42,9 @@ This is the inverse of "build a runtime and then ask what's fun." It is also why
 
 ## 2. Fukuwarai is the substrate
 
-Fukuwarai is the New Year's blindfold game where players slap paper eyes and noses onto a blank face so everyone can laugh at the results. Miyamoto carried this into Nintendo's Mii system (Wii, 2006) and from there into Tomodachi Collection (2009), Tomodachi Life (2013), and *Living the Dream* (2026). The entire architecture is mismatched-face energy, played for hours instead of for seconds, with the blindfold off (see [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md)).
+Fukuwarai is the New Year's blindfold game where players slap paper eyes and noses onto a blank face so everyone can laugh at the results. Miyamoto carried this into Nintendo's Mii system (Wii, 2006) and from there into Tomodachi Collection (2009), Tomodachi Life (2013), and *Living the Dream* (2026). The entire architecture is mismatched-face energy, played for hours instead of for seconds, with the blindfold off (see [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md)).
 
-We already have this in Simopolis as one of the [WigOMatic / HeadShop / Character Customization Studio](the-computer-as-portal.md#6-wigomatic-and-the-character-customization-studio) shops — Mii-style face composition, but with browser-native tools, LLM assistance, image-gen for the wig texture, and palette-quantize to Sims-1 head SPR2. The fukuwarai connection just makes the lineage explicit: this is a *25+ century-old Japanese party game* expressed in a 2026 IFF authoring tool. *That's* the lineage we're in. Don't be shy about it.
+We already have this in Soul City as one of the [WigOMatic / HeadShop / Character Customization Studio](the-computer-as-portal.md#6-wigomatic-and-the-character-customization-studio) shops — Mii-style face composition, but with browser-native tools, LLM assistance, image-gen for the wig texture, and palette-quantize to Sims-1 head SPR2. The fukuwarai connection just makes the lineage explicit: this is a *25+ century-old Japanese party game* expressed in a 2026 IFF authoring tool. *That's* the lineage we're in. Don't be shy about it.
 
 ---
 
@@ -60,7 +60,7 @@ Will Wright's complement to Miyamoto's player-inward thinking — articulated ac
 >
 > — Don, Hacker News, June 16 2024 (summarizing Will Wright)
 
-**For Simopolis.** The Imagine Loop is a *literal generalization of this principle*. We are explicitly offloading the moment-to-moment simulation to **the EA-published Sims 1** (the runtime the player owns). We are offloading the long-form narrative simulation to **the LLM** (running on the player's request, in the player's chosen tonal universe). We are offloading the *aesthetic interpretation* of the city map to **the player's imagination** (per [simopolis.md → How Sims save files actually bind to Micropolis tiles](simopolis.md#how-sims-save-files-actually-bind-to-micropolis-tiles), our zone aggregation is intentionally sparse — the player fills in the texture).
+**For Soul City.** The Imagine Loop is a *literal generalization of this principle*. We are explicitly offloading the moment-to-moment simulation to **the EA-published Sims 1** (the runtime the player owns). We are offloading the long-form narrative simulation to **the LLM** (running on the player's request, in the player's chosen tonal universe). We are offloading the *aesthetic interpretation* of the city map to **the player's imagination** (per [soul-city.md → How Sims save files actually bind to Micropolis tiles](soul-city.md#how-sims-save-files-actually-bind-to-micropolis-tiles), our zone aggregation is intentionally sparse — the player fills in the texture).
 
 The Sims-Astrological-sign anecdote from Don's HN post (June 16 2024 — [micropolisweb launch thread](https://news.ycombinator.com/item?id=40693944), full harvest: [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md)) is the perfect illustration:
 
@@ -76,7 +76,7 @@ From the [Wikipedia article on Miyamoto](https://en.wikipedia.org/wiki/Shigeru_M
 
 > *"Miyamoto wants players to experience kyokan; he wants 'the players to feel about the game what the developers felt themselves.'"*
 
-This is the deepest connection between Miyamoto and the Maxis tradition. It is also the cleanest statement of *what the soul-file represents in the Simopolis substrate*: the character's `CHARACTER.yml` is *the developer's affection for the character, exposed to the player*. The YAML Jazz comments, the mind-mirror, the relationship feelings — these are not internal-representation data. They are the developer feeling *about* the character, written down in a form the LLM can read and the player can edit. That's *kyokan* in YAML.
+This is the deepest connection between Miyamoto and the Maxis tradition. It is also the cleanest statement of *what the soul-file represents in the Soul City substrate*: the character's `CHARACTER.yml` is *the developer's affection for the character, exposed to the player*. The YAML Jazz comments, the mind-mirror, the relationship feelings — these are not internal-representation data. They are the developer feeling *about* the character, written down in a form the LLM can read and the player can edit. That's *kyokan* in YAML.
 
 > "Compared to others, I make over $12,000 each month." — spam comment from rich.homingservice.com, Kotaku, Feb 13 2026. Not relevant. Just noting that the spam algorithm has also internalized *kyokan*: it wants you to feel about money what the bot was prompted to feel.
 
@@ -86,7 +86,7 @@ The Gavin Clayton quote Don preserved from `alt.games.the-sims` in April 2000 is
 
 > *"When making myself, my dad and my sister, I attributed points to all the personality categories, and I found I had points left over. But when I made my mum I ran out of available points and was wishing for more — I wanted to give her more points than are available. It made me realise for the first time in years how much I love my mum."*
 
-That feeling — *the budget runs out, and you wish for more, and that wish reveals something to you about your relationships* — is the unit of value Simopolis exists to deliver. Every other thing we ship is in service of producing more of those moments.
+That feeling — *the budget runs out, and you wish for more, and that wish reveals something to you about your relationships* — is the unit of value Soul City exists to deliver. Every other thing we ship is in service of producing more of those moments.
 
 ---
 
@@ -97,7 +97,7 @@ Miyamoto in 1992 ([Wikipedia](https://en.wikipedia.org/wiki/Shigeru_Miyamoto)):
 > *"the important thing is that it feels good when you're playing it… quality is not determined by the story, but by the controls, the sound, and the rhythm and pacing."*  
 > But he also requires *"a compatibility [between] the story and gameplay [because] a good story can smooth over that discrepancy and make it all feel natural."*
 
-The Family Album as Simopolis's narrative output is *exactly* this: story compatible with — *generated from* — gameplay. The Sim's day produces an album page; the album page is the story; the story is auditable as gameplay events; no separate narrative system has to lie to the engine. This validates a lot of the design suite's commitment to the album as the canonical output form ([the-computer-as-portal.md → Foreign Photo Album](the-computer-as-portal.md#4-the-photo-album-with-foreign-pages); [the-imagine-loop.md → Use case I](the-imagine-loop.md#i-off-screen-job-school-narration-the-rabbit-hole-problem-solved)).
+The Family Album as Soul City's narrative output is *exactly* this: story compatible with — *generated from* — gameplay. The Sim's day produces an album page; the album page is the story; the story is auditable as gameplay events; no separate narrative system has to lie to the engine. This validates a lot of the design suite's commitment to the album as the canonical output form ([the-computer-as-portal.md → Foreign Photo Album](the-computer-as-portal.md#4-the-photo-album-with-foreign-pages); [the-imagine-loop.md → Use case I](the-imagine-loop.md#i-off-screen-job-school-narration-the-rabbit-hole-problem-solved)).
 
 ---
 
@@ -106,7 +106,7 @@ The Family Album as Simopolis's narrative output is *exactly* this: story compat
 > *"Miyamoto, and Nintendo as a whole, do not use focus groups. Instead, Miyamoto figures out if a game is fun for himself. He says that if he enjoys it, others will too… He then tests it with friends and family. He encourages younger developers to consider people who are new to gaming, for example by having them switch their dominant hand with their other hand to feel the experience of an unfamiliar game."*  
 > — Wikipedia, [Shigeru Miyamoto § Development philosophy](https://en.wikipedia.org/wiki/Shigeru_Miyamoto#Development_philosophy)
 
-This matters now because the *opposite* of this approach is what produced Nintendo's [Tomodachi *Living the Dream* image-sharing restriction](tomodachi-life-and-simopolis.md#what-nintendo-restricted-and-why) — a focus-group-cautious, "spirit-of-the-game" decision that the actual creator Miyamoto would not have made. Miyamoto's stated principle was *make the thing you love and then show it to your friends and family*. Tomodachi's launch policy was *anticipate what corporate counsel will worry about and pre-disable it*. The first principle is the one Simopolis follows; the second is the one we explicitly do not.
+This matters now because the *opposite* of this approach is what produced Nintendo's [Tomodachi *Living the Dream* image-sharing restriction](tomodachi-life-and-soul-city.md#what-nintendo-restricted-and-why) — a focus-group-cautious, "spirit-of-the-game" decision that the actual creator Miyamoto would not have made. Miyamoto's stated principle was *make the thing you love and then show it to your friends and family*. Tomodachi's launch policy was *anticipate what corporate counsel will worry about and pre-disable it*. The first principle is the one Soul City follows; the second is the one we explicitly do not.
 
 (And Miyamoto's quote about testing with the non-dominant hand — switching hands to feel the unfamiliarity — is a beautiful design discipline that has *no* equivalent in chat-product development culture. Don should put a "switch hands" prompt somewhere in the Phase 0 dev workflow. Genuinely.)
 
@@ -117,11 +117,11 @@ This matters now because the *opposite* of this approach is what produced Ninten
 > *"Similar to how manga artists subverted their genre, Miyamoto hopes to subvert some of the basic principles he had popularized in his early games, retaining some elements but eliminating others."*  
 > — Wikipedia, summarizing *The New Yorker*
 
-This is permission, from the most successful video game designer of all time, to **subvert one's own previous work**. For Simopolis, "the previous work" includes:
+This is permission, from the most successful video game designer of all time, to **subvert one's own previous work**. For Soul City, "the previous work" includes:
 
 - The walled-garden one-runtime model that EA's Sims has used for 25 years — we subvert by being a *companion* to the EA runtime, not a replacement, and by making the substrate cross-runtime
 - The single-island Tomodachi model — we subvert by making the character substrate the durable thing, with games as ephemeral substrates underneath it
-- The single-player Sims model — we subvert with the [Family Album server](simopolis-uplift-roadmap.md#track-b-family-album-server), [federated mirror](simopolis-uplift-roadmap.md#phase-5--federated-mirror--recurring-sweep-months-ongoing), and [tornado-as-cross-time-community](the-tornado-and-the-archives.md)
+- The single-player Sims model — we subvert with the [Family Album server](soul-city-uplift-roadmap.md#track-b-family-album-server), [federated mirror](soul-city-uplift-roadmap.md#phase-5--federated-mirror--recurring-sweep-months-ongoing), and [tornado-as-cross-time-community](the-tornado-and-the-archives.md)
 
 Will Wright himself was apprenticed in this discipline (Kyoto, 1989). The subversion of *his* previous work — single-runtime, single-platform — is the appropriate next move.
 
@@ -129,11 +129,11 @@ Will Wright himself was apprenticed in this discipline (Kyoto, 1989). The subver
 
 ## 8. Watching the player IS the game
 
-The Wii's social-party-game principle (per Don's GDC 2007 notes and the granddaughter-on-grandfather's-lap photo) lands directly on a Simopolis design choice that's been understated so far:
+The Wii's social-party-game principle (per Don's GDC 2007 notes and the granddaughter-on-grandfather's-lap photo) lands directly on a Soul City design choice that's been understated so far:
 
 **The spectator matters.** When the player asks the [Imagine Loop](the-imagine-loop.md) to skip five years forward and reads the resulting Family Album with their sibling next to them on the couch — *the sibling is also playing*. They're not waiting for a turn; they're reading along, reacting, suggesting edits, watching the player's face. Same dynamic Park describes in his *Washington Post* Tomodachi review: *"Why am I texting my friends about what they're doing in my game like it's real life?"*
 
-Simopolis should privilege the spectator's experience as a first-class user. Concretely:
+Soul City should privilege the spectator's experience as a first-class user. Concretely:
 
 - The Family Album page must be **legible to a stranger** (i.e. someone who didn't author the household). The auto-internationalizer helps; the album-page composition rules should also ensure visual readability without lore preload.
 - Slideshow-pace controls in the album-book IFFs should let the spectator pace through at their reading speed, not a fixed engine-tick rate.
@@ -174,7 +174,7 @@ The first vertical (T.5 + T.7 + T.8 — overlay sources, VOD markers, save-file 
 > *"I am not an engineer, but I have had the opportunities to learn the principles of game [design] from scratch, over a long period of time. And because I am so pioneering and trying to keep at the forefront, I have grown accustomed to first creating the very tools necessary for game creation."*  
 > — Shigeru Miyamoto, translated (Wikipedia source [11])
 
-This is Maxis's secret sauce per Gingold's *Building SimCity*, and it's our design discipline by default in Simopolis: the **Transmoogrifier**, the **Adventure Compiler**, the **Content Registry**, the **Tornado** are not features bolted onto a Sims clone. *They are the products.* The content comes from the player, from the LLM, from the recovered archive. We ship tools.
+This is Maxis's secret sauce per Gingold's *Building SimCity*, and it's our design discipline by default in Soul City: the **Transmoogrifier**, the **Adventure Compiler**, the **Content Registry**, the **Tornado** are not features bolted onto a Sims clone. *They are the products.* The content comes from the player, from the LLM, from the recovered archive. We ship tools.
 
 Miyamoto-the-designer and Maxis-the-content-tool-shop converge here.
 
@@ -182,17 +182,17 @@ Miyamoto-the-designer and Maxis-the-content-tool-shop converge here.
 
 ## 10. Don's first-hand Sims design anecdotes worth preserving
 
-Three from the HN posts that aren't covered elsewhere in the design suite but should be, briefly, because they validate specific Simopolis design choices:
+Three from the HN posts that aren't covered elsewhere in the design suite but should be, briefly, because they validate specific Soul City design choices:
 
-**The astrological-signs incident** (HN, June 16 2024). The team added Sims zodiac signs with *zero behavioral effect*; testers immediately reported that the signs had too much effect on personality. This is the cheapest possible content type — purely interpretive metadata — and it produced enormous Simulator-Effect value. **Simopolis should ship cheap interpretive metadata aggressively**: zodiac, Myers-Briggs, Enneagram, household color palettes, family crests, theme music suggestions — all derived from existing trait data via simple deterministic mapping, with no behavioral effect, surfaced prominently in Micropolis Home's character cards.
+**The astrological-signs incident** (HN, June 16 2024). The team added Sims zodiac signs with *zero behavioral effect*; testers immediately reported that the signs had too much effect on personality. This is the cheapest possible content type — purely interpretive metadata — and it produced enormous Simulator-Effect value. **Soul City should ship cheap interpretive metadata aggressively**: zodiac, Myers-Briggs, Enneagram, household color palettes, family crests, theme music suggestions — all derived from existing trait data via simple deterministic mapping, with no behavioral effect, surfaced prominently in Micropolis Home's character cards.
 
-**The astrological-sign-zero-personality bug** (same HN post). Showing a sign for an all-zero personality would be insulting to 1/12th of the players. The create-a-sim UI hid the sign in that case. **Simopolis should generalize this defensiveness**: never surface a derivation that maps a *neutral / empty / pre-author* state to a *valued / labeled / loaded* output. The character-card UI should leave interpretive fields blank for empty states, not produce a placeholder. There are many Mind Mirror parameters, but you only need to set the ones that are important for that character. The missing ones don't imply "0" along their axis, it just means "not known, so no effect". 
+**The astrological-sign-zero-personality bug** (same HN post). Showing a sign for an all-zero personality would be insulting to 1/12th of the players. The create-a-sim UI hid the sign in that case. **Soul City should generalize this defensiveness**: never surface a derivation that maps a *neutral / empty / pre-author* state to a *valued / labeled / loaded* output. The character-card UI should leave interpretive fields blank for empty states, not produce a placeholder. There are many Mind Mirror parameters, but you only need to set the ones that are important for that character. The missing ones don't imply "0" along their axis, it just means "not known, so no effect". 
 
 **The "muckety-muck architecture magazine" exchange** (same HN post):
 
 > *"Some muckety-muck architecture magazine was interviewing Will Wright about SimCity, and they asked him a question something like 'which ontological urban paradigm most influenced your design of the simulator…' He replied, 'I just kind of optimized for game play.'"*
 
-**Simopolis should commit to "just kind of optimize for the player's moment-by-moment experience" as the answer to any design question that's getting too theoretical.** The design suite is at 4,000+ lines now. If a feature decision can't be resolved by "what makes the player's next 15 seconds better," it's the wrong question.
+**Soul City should commit to "just kind of optimize for the player's moment-by-moment experience" as the answer to any design question that's getting too theoretical.** The design suite is at 4,000+ lines now. If a feature decision can't be resolved by "what makes the player's next 15 seconds better," it's the wrong question.
 
 ---
 
@@ -224,7 +224,7 @@ The Mii arc from 2006 to 2026 demonstrates the principle publicly in three produ
 | **Family Album scene rendering** ([family-album-as-storymaker.md](family-album-as-storymaker.md)) | Characters stylized (WebGPU semi-iso, Sims-1 album palette); environments can be detailed. Imagine-Loop image-gen prompts default to "characters stylized, environments detailed." |
 | **Mind-mirror and YAML Jazz** ([moollm-microworld-os.md](moollm-microworld-os.md)) | LLM-readable character is *deliberately abstract*: sparse traits, few-fielded mind-mirror, narrative-flavor comments. The astrological-signs anecdote (§3) is the same principle in trait data. |
 | **Imagine Loop intent presets** ([the-imagine-loop.md](the-imagine-loop.md)) | Tonal hints land in prompts; specific facial detail does not. |
-| **Sims-Online-map rendering inside Micropolis City** ([simopolis.md](simopolis.md)) | Lots and architecture detailed; residents stylized at the same scale. |
+| **Sims-Online-map rendering inside Micropolis City** ([soul-city.md](soul-city.md)) | Lots and architecture detailed; residents stylized at the same scale. |
 | **Twitch overlays** ([§8a](#8a-the-twitch-corollary-make-streamers-radically-powerful)) | Characters render as stylized portraits, not photoreal model renders. |
 
 Rules out: photorealistic Sim portraits as album headshots; image-gen heads shipped without stylization or palette-quantization; trying to push *both* character and environment into photoreal mode (the Sportsmates configuration).
@@ -239,7 +239,7 @@ Composes with fukuwarai (§2 — same principle from the playable-face angle), t
 
 ## On respect (separating designer from platform)
 
-Throughout this doc I have been positive about Miyamoto. That sits next to a previous design doc, [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md), that was sharply critical of Nintendo's image-sharing restrictions in *Living the Dream*.
+Throughout this doc I have been positive about Miyamoto. That sits next to a previous design doc, [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md), that was sharply critical of Nintendo's image-sharing restrictions in *Living the Dream*.
 
 These are not in tension. **Miyamoto-the-designer** is one of the most thoughtful, generous, principled people in the field. The PC Gamer story of him sliding a $1M check across the table to Maxis in 1989 — and then spending a week in Kyoto with Will Wright as host, treating him "as family and like royalty" (Gingold) — is the same Miyamoto who designs from his granddaughter's face inward, who invents "Dr Wright" as a manga-style homage character, who keeps the deliberately-robotic TTS because *robotic is funnier*.
 

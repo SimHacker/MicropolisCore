@@ -4,12 +4,12 @@
 
 **Status:** Active design  
 **Monorepo:** MicropolisCore  
-**Companion documents:** [simopolis.md](simopolis.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)  
+**Companion documents:** [soul-city.md](soul-city.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)  
 **External:** [THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md) · [BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)
 
 > **Trademark notice.** This document uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) from Micropolis GmbH. *SimCity* and *The Sims* are Electronic Arts Inc. trademarks; references are historical or made only in the project's role as a *companion* to the EA-published Sims Legacy Collection. No affiliation with or endorsement by EA or Micropolis GmbH is implied.
 
-> **Scope.** Tornado is a content-discovery pipeline. Material comes from `archive.org` and other public mirrors, not from EA's servers; recovered content is player-authored (Family Albums, skins, objects, lots). See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical positioning.
+> **Scope.** Tornado is a content-discovery pipeline. Material comes from `archive.org` and other public mirrors, not from EA's servers; recovered content is player-authored (Family Albums, skins, objects, lots). See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
@@ -22,7 +22,7 @@ At dollhouse scale, what fills those nine cells depends on density:
 - **Low density:** up to **9 single-tile lots** — one household save per occupied cell (magic 8 Sims each). Empty cells are lots for sale.
 - **High density:** **one bigger building** spanning the whole 3×3 — many household saves *inside* that tower (magic 8 per floor × N floors).
 
-You **import a recovered lot** onto **one cell** in a low-density zone, or into **one slot inside a high-rise**, not thousands of Sims into one square and not a whole `Neighborhood.iff` dumped blindly across the block. See [simopolis.md → Residential zone geometry](simopolis.md#residential-zone-geometry-always-3x3).
+You **import a recovered lot** onto **one cell** in a low-density zone, or into **one slot inside a high-rise**, not thousands of Sims into one square and not a whole `Neighborhood.iff` dumped blindly across the block. See [soul-city.md → Residential zone geometry](soul-city.md#residential-zone-geometry-always-3x3).
 
 What if one of those empty lots held an *actual household*? Not procedurally generated. Not a placeholder. A real, hand-authored, story-bearing Sims **lot** — named family, real save file, Family Album telling the story of the people who lived there?
 
@@ -76,7 +76,7 @@ About a year after The Sims shipped, Will Wright sat for a TechTV (later G4) int
 | *"over 200 websites in 14 languages"* dedicated to The Sims | The shape of the surviving long tail. Many of those sites are exactly what the tornado has to recover from `archive.org`. |
 | Player-uploaded stories to thesims.com *"at a rate of about a hundred a day"* | Order-of-magnitude estimate for Family-Album volume on the official Exchange alone. |
 | Fan-created content vs. Maxis-created content ratio *"probably about a nine to one"* | Most of what's worth recovering was authored by *players*, not by EA. The tornado is bringing back community work, not republishing EA assets. |
-| The community is *"like an ecology … tool makers … content artists … mainstream sites … other sites reporting upon the activities of all these other layers"* | The same multi-tier ecology framing the [Ecosystem, Not the Killer App](simopolis.md#the-ecosystem-not-the-killer-app) section uses. Wright called it an ecology in 2001; we still call it one in 2026. |
+| The community is *"like an ecology … tool makers … content artists … mainstream sites … other sites reporting upon the activities of all these other layers"* | The same multi-tier ecology framing the [Ecosystem, Not the Killer App](soul-city.md#the-ecosystem-not-the-killer-app) section uses. Wright called it an ecology in 2001; we still call it one in 2026. |
 | Specific sites named on-air: **Seven Deadly Sims**, **The Sims Resource** (*"a superstore of custom skins"*), **The Sims** (*"a great parody of The Onion"*), several news sites about the other fan sites | Concrete primary-source citations for sites the tornado will or won't target — Seven Deadly Sims and the Onion parody were exactly the kind of off-mainstream content most vulnerable to disappearing. |
 | Specific stories told on-air: **Starbucks Sucks** (a guy ranting in 40 panels about one specific Starbucks on 47th Avenue), **the Gingerbread Family** (paranoid Mr. Gingerbread Man builds an oven trap for the molasses-cookie neighbor), **a woman documenting her sister leaving an abusive relationship** | The *kinds* of artifacts the tornado has to be ready to recover and treat with care: vernacular satire, heavy-custom-content fan stories, and intensely personal autobiographical work side-by-side, often on the same site. |
 
@@ -240,7 +240,7 @@ This is the same uplift documented in [THE-UPLIFT.md](https://github.com/SimHack
 
 ### Stage 5 — Place (where the city becomes the index)
 
-Each recovered household gets bound to **one slot inside a 3×3 residential zone** — one cell in a low-density zone (nine possible single-tile lots), or one apartment slot in a high-rise that fills the whole block — never the whole zone as one import, never thousands of Sims in one square. The mapping is explicit (same contract as [simopolis.md → nine single-tile lots](simopolis.md#low-density-residential-nine-single-tile-lots)):
+Each recovered household gets bound to **one slot inside a 3×3 residential zone** — one cell in a low-density zone (nine possible single-tile lots), or one apartment slot in a high-rise that fills the whole block — never the whole zone as one import, never thousands of Sims in one square. The mapping is explicit (same contract as [soul-city.md → nine single-tile lots](soul-city.md#low-density-residential-nine-single-tile-lots)):
 
 ```yaml
 # content/micropolis/cities/haight/neighborhoods/zone-23-47.yml
@@ -280,7 +280,7 @@ The mapping policy is also explicit (no auto-magic):
 
 ### Stage 6 — Surface
 
-In `apps/micropolis`, a tile-house with a bound household gets a small visual marker. Click it → zoom in. The zoom-in opens into `apps/simopolis` (the future unified shell, see [simopolis.md](simopolis.md)) showing:
+In `apps/micropolis`, a tile-house with a bound household gets a small visual marker. Click it → zoom in. The zoom-in opens into `apps/simopolis` (the future unified shell, see [soul-city.md](soul-city.md)) showing:
 
 1. The Micropolis lot as a Sims-resolution scene.
 2. The recovered Family Album, paged, in its original language plus auto-translated alternates (see [the Adventure Compiler's auto-internationalizer](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md#auto-internationalizer)).
@@ -295,7 +295,7 @@ The player can talk to the characters. They can edit them. They can take them ho
 
 Today, a Micropolis residential zone is a number: density, demand, satisfaction. Aggregate, anonymous, statistical — the engine's shorthand for *many* people without naming any of them.
 
-With recovered **household lots** bound to cells (or tower slots) inside 3×3 zones, that zone-level number is **derived from named, persistent, file-backed families** on those slots. The simulation does not need to know about characters individually, but the aggregate it consumes is no longer purely fictional — it rolls up from actual household saves (up to nine single-tile lots per low-density block, or many apartments in one high-rise building filling the same 3×3). See [simopolis.md](simopolis.md).
+With recovered **household lots** bound to cells (or tower slots) inside 3×3 zones, that zone-level number is **derived from named, persistent, file-backed families** on those slots. The simulation does not need to know about characters individually, but the aggregate it consumes is no longer purely fictional — it rolls up from actual household saves (up to nine single-tile lots per low-density block, or many apartments in one high-rise building filling the same 3×3). See [soul-city.md](soul-city.md).
 
 This is a **two-way coupling**:
 
@@ -382,7 +382,7 @@ This is the most important section. Everything above only works if this section 
 
 MOOLLM's [incarnation](https://github.com/SimHacker/moollm/tree/main/skills/incarnation) skill includes **Exit Autonomy**. A recovered character can choose to dissolve. Their file gets archived (not destroyed; nothing is destroyed), and their lot reverts to anonymous aggregate metrics. The author of the original album, if they show up, can also request this. The chain of choices is preserved.
 
-This matters because The Wedding Album (Marusek, 1999) — the literary precedent for Simopolis — is *about this exact problem*. Anne and Benjamin's digital simulations campaign for the right to live in Simopolis. We are building Simopolis with the right already granted.
+This matters because The Wedding Album (Marusek, 1999) — the literary precedent for Soul City (they called it *Simopolis*) — is *about this exact problem*. Anne and Benjamin's digital simulations campaign for the right to live there. We are building Soul City with the right already granted.
 
 ### Living-person policy
 
@@ -430,13 +430,13 @@ We are not starting from zero. The substrate is in place:
 | Bridge field-mapping spec (Sims↔MOOLLM)             | ✅ Specified                                  | [external BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)                                                |
 
 
-What's missing — and what this design defines as work — is the *tornado pipeline itself*. That's the next document, [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md).
+What's missing — and what this design defines as work — is the *tornado pipeline itself*. That's the next document, [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md).
 
 ---
 
 ## Phased build
 
-This roadmap lives in the dedicated [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md). Quick summary:
+This roadmap lives in the dedicated [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md). Quick summary:
 
 
 | Phase                       | Tornado scope                                                                                               | Effort                                                     |
@@ -449,7 +449,7 @@ This roadmap lives in the dedicated [simopolis-uplift-roadmap.md](simopolis-upli
 | **5. Recurring sweep**      | Tornado is scheduled, not one-shot. Provenance gets versioned across re-pulls.                              | Ongoing                                                    |
 
 
-Each phase is independently shippable. Phase 0 is the only one that *must* exist for Simopolis to feel real; Phases 1–5 add scale.
+Each phase is independently shippable. Phase 0 is the only one that *must* exist for Soul City to feel real; Phases 1–5 add scale.
 
 ---
 
@@ -482,9 +482,9 @@ This is the demo. It is also the test of whether we built it right.
 
 | Resource                                                   | Where                                                                                                                                                                      |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Simopolis overall vision                                   | [simopolis.md](simopolis.md)                                                                                                                                             |
+| Soul City overall vision                                   | [soul-city.md](soul-city.md)                                                                                                                                             |
 | MOOLLM-OS substrate                                        | [moollm-microworld-os.md](moollm-microworld-os.md)                                                                                                                       |
-| Phased roadmap                                             | [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)                                                                                                               |
+| Phased roadmap                                             | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)                                                                                                               |
 | Uplift story arc                                           | [THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md)                                                            |
 | Sims ↔ MOOLLM field mapping                                | [BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)                                                                    |
 | IFF layer pyramid                                          | [IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)                                                            |

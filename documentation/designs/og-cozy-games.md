@@ -1,22 +1,22 @@
 ## OG Cozy Games
 
-# The Sims, Simopolis, Micropolis, and the cozy lineage Gamergate quietly avoided
+# The Sims, Soul City, Micropolis, and the cozy lineage Gamergate quietly avoided
 
 **Status:** Design notes (cultural / strategic, with citable historical receipts)
 **Monorepo:** MicropolisCore
-**Companion documents:** [simopolis.md](simopolis.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [characters-as-hydrogen.md](characters-as-hydrogen.md)
+**Companion documents:** [soul-city.md](soul-city.md) · [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [characters-as-hydrogen.md](characters-as-hydrogen.md)
 
 > *"What Gamergate was actually about: every claim it made about commercial viability, audience demographics, inclusive design, and ideology-in-games was undermined by a single game shipped 14 years before — The Sims. So Gamergate didn't talk about The Sims."*
 
 > **Trademark notice.** *Micropolis* is used under license from Micropolis GmbH. *SimCity*, *The Sims*, and *Maxis* are EA Inc. trademarks; references are nominative use only.
 
-> **Scope.** Cultural / strategic positioning, with documented historical sources. Not engineering. See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical project posture.
+> **Scope.** Cultural / strategic positioning, with documented historical sources. Not engineering. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical project posture.
 
 ---
 
 ## The framing in one paragraph
 
-The word "cozy game" was coined around 2020 (see Izzzyzzz, [*Cozy Games and Misogyny*](https://www.youtube.com/@Izzzyzzz), May 2026, for the contemporary genre history). Academic press reached the same conclusion at The Sims's 25th anniversary: Adam Jerrett (University of Portsmouth), [*How The Sims accidentally invented the cosy game genre*](https://theconversation.com/how-the-sims-accidentally-invented-the-cosy-game-genre-248702) (*The Conversation*, 3 Feb 2025) — before Stardew Valley, Animal Crossing, and Unpacking, The Sims had already normalized games that don't need to be *won* to be fun. The games the label retroactively applied to — slow-paced, character-driven, low-pressure, narrative-friendly, with a broad and majority-female audience — were already 20+ years old when the label arrived. **The Sims (2000) is the canonical OG cozy game.** SimCity (1989) and Micropolis (2008, the GPL'd descendant) are its proto-cozy ancestors in the city-sim direction: open-ended, no failure state, no enemies, no scoreboard, the player's mental model is the gameplay. Simopolis sits *inside* the cozy lineage by inheritance, not by retrofit. This doc names that, documents the historical receipts, and notes what it implies for Micropolis Federation design.
+The word "cozy game" was coined around 2020 (see Izzzyzzz, [*Cozy Games and Misogyny*](https://www.youtube.com/@Izzzyzzz), May 2026, for the contemporary genre history). Academic press reached the same conclusion at The Sims's 25th anniversary: Adam Jerrett (University of Portsmouth), [*How The Sims accidentally invented the cosy game genre*](https://theconversation.com/how-the-sims-accidentally-invented-the-cosy-game-genre-248702) (*The Conversation*, 3 Feb 2025) — before Stardew Valley, Animal Crossing, and Unpacking, The Sims had already normalized games that don't need to be *won* to be fun. The games the label retroactively applied to — slow-paced, character-driven, low-pressure, narrative-friendly, with a broad and majority-female audience — were already 20+ years old when the label arrived. **The Sims (2000) is the canonical OG cozy game.** SimCity (1989) and Micropolis (2008, the GPL'd descendant) are its proto-cozy ancestors in the city-sim direction: open-ended, no failure state, no enemies, no scoreboard, the player's mental model is the gameplay. Soul City sits *inside* the cozy lineage by inheritance, not by retrofit. This doc names that, documents the historical receipts, and notes what it implies for Micropolis Federation design.
 
 ---
 
@@ -67,7 +67,7 @@ Ian Bogost's [*Persuasive Games* (2007)](https://en.wikipedia.org/wiki/Procedura
 
 This is a stronger claim than narrative representation. The Sims is not telling the player *that* same-sex relationships are valid; it is saying the game's universe is one in which they are valid by the same rules as any other relationship. That argument is made by the substrate, not the surface.
 
-Simopolis inherits this discipline at the substrate level:
+Soul City inherits this discipline at the substrate level:
 
 - The Mind Mirror is multi-dimensional and orientation-agnostic by design ([moollm-microworld-os.md](moollm-microworld-os.md)).
 - Relationships in `CHARACTER.yml` use type tags, not gendered slots; the [Bifrost protocol](moollm-microworld-os.md#the-bifrost-the-bridge-as-a-structured-ontological-transition) handles arbitrary relationship structures.
@@ -90,9 +90,9 @@ Drawing on the Izzzyzzz Cozy Games essay, the pattern across two decades is cons
 
 The Sims survived this cycle because it was too big to dismiss — but in many subcultures it still gets the *"not a real game"* treatment, and the dismissal mechanic is identical to the modern *"cozy slop"* dismissal. The Izzzyzzz essay documents that pattern in detail.
 
-Jerrett's *Conversation* piece names the specific cozy DNA The Sims popularized: meticulous environment building, self-paced play with no combat timers, relationship drama instead of survival combat, and a machinima fan culture where players turned gameplay footage into sitcoms and soap operas — emergent social storytelling that prefigured today's share-button meme culture and Simopolis's [Family Album as StoryMaker](family-album-as-storymaker.md) graph. (Farm-life cozy has an earlier antecedent in Harvest Moon, 1997 — Jerrett's article and its comment thread acknowledge that sub-lineage — but the blockbuster proof case for cozy-as-mainstream remains The Sims.)
+Jerrett's *Conversation* piece names the specific cozy DNA The Sims popularized: meticulous environment building, self-paced play with no combat timers, relationship drama instead of survival combat, and a machinima fan culture where players turned gameplay footage into sitcoms and soap operas — emergent social storytelling that prefigured today's share-button meme culture and Soul City's [Family Album as StoryMaker](family-album-as-storymaker.md) graph. (Farm-life cozy has an earlier antecedent in Harvest Moon, 1997 — Jerrett's article and its comment thread acknowledge that sub-lineage — but the blockbuster proof case for cozy-as-mainstream remains The Sims.)
 
-What this implies for Simopolis design language: *we do not call these games "cozy" defensively or apologetically*. They are games. They are commercially massive games. They are the games the medium descends from in this lineage. We treat the term "cozy" as a neutral descriptor of pacing and feel, not as a defensive concession.
+What this implies for Soul City design language: *we do not call these games "cozy" defensively or apologetically*. They are games. They are commercially massive games. They are the games the medium descends from in this lineage. We treat the term "cozy" as a neutral descriptor of pacing and feel, not as a defensive concession.
 
 ---
 
@@ -112,7 +112,7 @@ Micropolis is structurally in the cozy lineage. We don't need to apologize for t
 
 ## The dollhouse framing (1996)
 
-The most-cited cozy-genre origin story credits Animal Crossing (2001) and the wholesome-direct era (2020). The deeper origin is Will Wright's 1996 Stanford talk *Interfacing to Microworlds*, where the prototype of what became The Sims was demoed under the project name **Dollhouse** (see [simopolis.md → Historical proof](simopolis.md#historical-proof-this-was-always-the-plan) and the [Stanford 1996 video](https://www.youtube.com/watch?v=nsxoZXaYJSk)).
+The most-cited cozy-genre origin story credits Animal Crossing (2001) and the wholesome-direct era (2020). The deeper origin is Will Wright's 1996 Stanford talk *Interfacing to Microworlds*, where the prototype of what became The Sims was demoed under the project name **Dollhouse** (see [soul-city.md → Historical proof](soul-city.md#historical-proof-this-was-always-the-plan) and the [Stanford 1996 video](https://www.youtube.com/watch?v=nsxoZXaYJSk)).
 
 "Dollhouse" is a deliberately feminine-coded framing. Will pitched the game as one in 1996, four years before launch, with full awareness of what the gendered connotation meant for who the game was for. That this was the design intent — and the commercial outcome was the best-selling PC game of all time — is a fact worth keeping on the record.
 
@@ -120,16 +120,16 @@ The Dollhouse framing also runs straight into the *Wii Sports family on the couc
 
 ---
 
-## What this means for Simopolis design and language
+## What this means for Soul City design and language
 
 Concrete implications, mostly about discipline rather than mechanics:
 
 | Discipline | Implementation |
 |---|---|
-| Treat the Sims/Sims-content tradition as the cozy lineage's commercial proof. | When documenting Simopolis for a wider audience, name the cozy lineage explicitly. Don't apologize for it. Don't hedge. |
+| Treat the Sims/Sims-content tradition as the cozy lineage's commercial proof. | When documenting Soul City for a wider audience, name the cozy lineage explicitly. Don't apologize for it. Don't hedge. |
 | Encode inclusion at the substrate, not the surface. | Mind Mirror, relationships, family structures, gender, orientation are all schema-level concerns. Surface representation (avatars, text) is the *expression* of the substrate, not a separate retrofit. |
 | Refuse "real game" gatekeeping in our own writing. | The design suite never uses *"casual game"* or *"not a real game"* framings about any genre. Cozy games are games. Mobile games are games. The Sims is a game. So is Dark Souls. None of these descriptors implies value-hierarchy. |
-| Procedural rhetoric is the design language. | Every Simopolis rule is itself an argument about the world it models. We are deliberate about what those rules say. (See [moollm-microworld-os.md → Representation Ethics](moollm-microworld-os.md#representation-ethics-activate-traditions-do-not-impersonate) for the discipline applied to LLM-generated content.) |
+| Procedural rhetoric is the design language. | Every Soul City rule is itself an argument about the world it models. We are deliberate about what those rules say. (See [moollm-microworld-os.md → Representation Ethics](moollm-microworld-os.md#representation-ethics-activate-traditions-do-not-impersonate) for the discipline applied to LLM-generated content.) |
 | Decline the dismissal economy. | When the project's wider documentation mentions cozy games, Family Album streaming, Tomodachi-style ad-libs, or other features the dismissive discourse codes as "casual," the documentation describes them in the same neutral technical register as any other feature. |
 | Honor the receipts. | When the question of *"when did inclusive design enter the medium"* comes up, the answer is *at least 1998, in the design phase of the best-selling PC game ever made*, with public primary sources. Don's [donhopkins.com/home/TheSims/](https://donhopkins.com/home/TheSims/) is the citable record. |
 | The Twitch-friendly stack (Phase 1F) ships into a cozy-friendly streaming culture. | Streamer trust controls, chat-as-writers'-room, sub-named Sims — see [designing-inward-miyamoto-principles.md → §8a](designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful) — are designed with awareness that the audience is majority cozy / Sims / Stardew / Tomodachi viewers, not Call-of-Duty lobbies. |
@@ -138,7 +138,7 @@ Concrete implications, mostly about discipline rather than mechanics:
 
 ## Gamergate → alt-right → MAGA: the documented arc, briefly
 
-The cultural framing here is not original to this project; it is the consensus of the journalistic and academic record on what Gamergate actually produced. We cite it because it informs the design discipline above (why we refuse the dismissal economy, why we encode inclusion at the substrate level, why we expect bad-faith attacks on cozy-friendly Simopolis features). The cited sources:
+The cultural framing here is not original to this project; it is the consensus of the journalistic and academic record on what Gamergate actually produced. We cite it because it informs the design discipline above (why we refuse the dismissal economy, why we encode inclusion at the substrate level, why we expect bad-faith attacks on cozy-friendly Soul City features). The cited sources:
 
 | Source | Summary |
 |---|---|
@@ -150,7 +150,7 @@ The cultural framing here is not original to this project; it is the consensus o
 | ABC Australia, ["Alt-right groups are targeting young video gamers" (July 2022)](https://www.abc.net.au/news/2022-07-15/alt-right-groups-video-games-radicalising-young-men-extremism/101212494) | Contemporary reporting on the ongoing targeting strategy. |
 | Wikipedia, [Gamergate (harassment campaign)](https://en.wikipedia.org/wiki/Gamergate) | Citation-rich summary of the campaign, its principals, and its downstream effects. |
 
-This is not a separate political claim. It is the structural reason why Simopolis-the-tooling needs to be designed *defensively*: the streaming features, the Family Album graph, the inclusive substrate, the takedown discipline are all going into a hostile cultural environment whose tactics are well-documented. The defenses (representation-ethics ambient skill, federated git-as-multiverse rather than central platform, provenance-mandatory content, takedown channels) are direct responses to the known threat model. See [the-tornado-and-the-archives.md → Ethics](the-tornado-and-the-archives.md#ethics) and [moollm-microworld-os.md → Representation Ethics](moollm-microworld-os.md#representation-ethics-activate-traditions-do-not-impersonate) for how the threat model lands in the engineering.
+This is not a separate political claim. It is the structural reason why Soul City-the-tooling needs to be designed *defensively*: the streaming features, the Family Album graph, the inclusive substrate, the takedown discipline are all going into a hostile cultural environment whose tactics are well-documented. The defenses (representation-ethics ambient skill, federated git-as-multiverse rather than central platform, provenance-mandatory content, takedown channels) are direct responses to the known threat model. See [the-tornado-and-the-archives.md → Ethics](the-tornado-and-the-archives.md#ethics) and [moollm-microworld-os.md → Representation Ethics](moollm-microworld-os.md#representation-ethics-activate-traditions-do-not-impersonate) for how the threat model lands in the engineering.
 
 ---
 
@@ -170,9 +170,9 @@ This is not a separate political claim. It is the structural reason why Simopoli
 | Resource | Where |
 |---|---|
 | Character substrate (top-level framing) | [characters-as-hydrogen.md](characters-as-hydrogen.md) |
-| Simopolis strategic vision | [simopolis.md](simopolis.md) |
+| Soul City strategic vision | [soul-city.md](soul-city.md) |
 | Miyamoto / McCloud / Wright design-discipline notes | [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) |
-| Tomodachi-Life cultural / strategic comparison | [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) |
+| Tomodachi-Life cultural / strategic comparison | [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) |
 | Family Album as branching/merging graph | [family-album-as-storymaker.md](family-album-as-storymaker.md) |
 | MOOLLM substrate (Mind Mirror, Bifrost, Representation Ethics) | [moollm-microworld-os.md](moollm-microworld-os.md) |
 | Tornado archive recovery (ethics + takedown discipline) | [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) |

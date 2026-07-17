@@ -39,8 +39,8 @@ A Star-Trek-style cooperative association of sovereign open-source projects — 
 | If you want… | Read |
 |---|---|
 | What the Federation actually is | [characters-as-hydrogen.md](characters-as-hydrogen.md) |
-| Micropolis + The Sims under one roof | [simopolis.md](simopolis.md) |
+| Micropolis + The Sims under one roof | [soul-city.md](soul-city.md) |
 | The agent layer (MOOLLM) | [moollm-microworld-os.md](moollm-microworld-os.md) |
 | Which games we'd bridge to, and why | [federation-peer-games.md](federation-peer-games.md) |
-| The phased build plan | [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) |
+| The phased build plan | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) |
 | Everything | [designs/README.md](README.md) |

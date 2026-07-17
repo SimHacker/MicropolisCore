@@ -24,7 +24,7 @@ Micropolis extends that arc into [**Soul City**](https://github.com/SimHacker/Wi
 |-------|----------------|----------------------|
 | Atoms | Objects + dialog templates | Hosted content **CARD.yml** + host mixins |
 | Collections | SimFreaks themes / Exchange | Federation repos + curated playsets |
-| Nesting | SliceCity, game-in-game | Simopolis bridges, emulators, save linking |
+| Nesting | SliceCity, game-in-game | Soul City bridges, emulators, save linking |
 | Voice | Family Album stories | Branching hypertext + Repo Show artifacts |
 
 See MOOLLM specs: `hosted-content-cards`, `family-album-cards` (DonHopkins `projects/micropolis-moollm/process/`).

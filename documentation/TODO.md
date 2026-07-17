@@ -36,17 +36,17 @@ the linked documents.
 | [VitaMoo — renderer polish](#vitamoo--webgpu-renderer-polish) | GPU pass timing, richer validation UX | Medium |
 | [VitaMoo — UI overlays](#vitamoo--ui-overlays) | Pie-menu head, speech bubbles, censorship pass | Low–Medium |
 | [VitaMooSpace — Roots & Catalog tabs](#vitamoospace--roots--catalog-tabs) | ~~Roots + Catalog~~ ✅ built — smoke test, then SQLite persistence | Medium |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 0: sims-io L4 ContentIndex bridge + MOOLLM `CHARACTER.yml` emit | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 0: SPR2 → PNG export + `.iff` save-file download | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 0: minimal `apps/simopolis/` SvelteKit shell | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 1: MOOLLM enrichment via MCP + Family Album server | High |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1C: Uplifted Computer + custom IFF content (the headline demo)** | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1D: Imagine Loop — Examine → Imagine → Edit → Inject (the LLM-as-narrator alternative to reimplementing the Sims engine)** | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1E: Family Album as StoryMaker — branching/merging graph of scenes; "snippets of DNA"; 35-year SimCity → Bar Karma → MicropolisCore lineage** | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | **Phase 1F: Twitch-friendly streaming features — chat-as-writers'-room, OBS overlays, Twitch Extension, save-file giveaway with provenance** | **High** |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 2: Micropolis residential zone ↔ Sims neighborhood data contract | Medium |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Phase 3: Archive tornado — first source (Sims Exchange via archive.org) | Medium |
-| [Simopolis — The Uplift](#simopolis--the-uplift) | Federation peer-game bridges (post-Phase-2): CK3, RimWorld, Stardew Valley, Dwarf Fortress, VTTs (see [federation-peer-games.md](designs/federation-peer-games.md)) | Medium |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Phase 0: sims-io L4 ContentIndex bridge + MOOLLM `CHARACTER.yml` emit | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Phase 0: SPR2 → PNG export + `.iff` save-file download | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Phase 0: minimal `apps/simopolis/` SvelteKit shell | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Phase 1: MOOLLM enrichment via MCP + Family Album server | High |
+| [Soul City — The Uplift](#simopolis--the-uplift) | **Phase 1C: Uplifted Computer + custom IFF content (the headline demo)** | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | **Phase 1D: Imagine Loop — Examine → Imagine → Edit → Inject (the LLM-as-narrator alternative to reimplementing the Sims engine)** | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | **Phase 1E: Family Album as StoryMaker — branching/merging graph of scenes; "snippets of DNA"; 35-year SimCity → Bar Karma → MicropolisCore lineage** | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | **Phase 1F: Twitch-friendly streaming features — chat-as-writers'-room, OBS overlays, Twitch Extension, save-file giveaway with provenance** | **High** |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Phase 2: Micropolis residential zone ↔ Sims neighborhood data contract | Medium |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Phase 3: Archive tornado — first source (Sims Exchange via archive.org) | Medium |
+| [Soul City — The Uplift](#simopolis--the-uplift) | Federation peer-game bridges (post-Phase-2): CK3, RimWorld, Stardew Valley, Dwarf Fortress, VTTs (see [federation-peer-games.md](designs/federation-peer-games.md)) | Medium |
 | [Sims I/O in TypeScript](#sims-io-typescript-package) | ~~Scaffold `packages/sims-io/` L0–L3~~ ✅ done (48 tests) | ~~High~~ |
 | [Sims I/O in TypeScript](#sims-io-typescript-package) | Add `parseMSH` to vitamoo (prototype-1998 binary mesh, DDD format) | Medium |
 | [GUID collision tooling](#sims-guid-collision-tooling) | Wire collision scanner into VitaMooSpace UI | Medium |
@@ -368,23 +368,23 @@ Currently `files-inventory.ts` holds state **in-process memory** — a server re
 
 ---
 
-## Simopolis — The Uplift
+## Soul City — The Uplift
 
 **Top-level framing:** [documentation/designs/characters-as-hydrogen.md](designs/characters-as-hydrogen.md) — characters as the *hydrogen* (most-abundant, highest-valence content-atom) of the **Micropolis Federation**, with other atom types (lots, objects, behaviors, appearances, memories, stories, sounds) combining into molecules. *Federation* deliberately (Star Trek vibe), not *franchise* — cooperative association of sovereign open-source projects.
-**Strategy:** [documentation/designs/simopolis.md](designs/simopolis.md) — unified Micropolis + Sims vision (introduces the two-product naming: **Micropolis City** + **Micropolis Home**)
+**Strategy:** [documentation/designs/soul-city.md](designs/soul-city.md) — unified Micropolis + Sims vision (introduces the two-product naming: **Micropolis City** + **Micropolis Home**)
 **Substrate:** [documentation/designs/moollm-microworld-os.md](designs/moollm-microworld-os.md) — MOOLLM as the agent layer
 **Recovery pipeline:** [documentation/designs/the-tornado-and-the-archives.md](designs/the-tornado-and-the-archives.md) — sweep the Internet Archive into residential zones
 **Computer-as-portal:** [documentation/designs/the-computer-as-portal.md](designs/the-computer-as-portal.md) — Uplifted Computer + custom IFF content for the EA game
 **Imagine Loop:** [documentation/designs/the-imagine-loop.md](designs/the-imagine-loop.md) — LLM-as-narrator alternative to reimplementing the Sims engine
 **Family Album as StoryMaker:** [documentation/designs/family-album-as-storymaker.md](designs/family-album-as-storymaker.md) — branching / merging community graph of scenes; the 35-year SimCity → DreamScape → Bar Karma → MicropolisCore lineage
-**Federation peer-game bridges:** [documentation/designs/federation-peer-games.md](designs/federation-peer-games.md) — catalogue of "in the spirit of Simopolis" + "wildly popular and great technical fit" bridge candidates (CK3, RimWorld, Stardew, Dwarf Fortress, VTTs, plus the anti-target list)
+**Federation peer-game bridges:** [documentation/designs/federation-peer-games.md](designs/federation-peer-games.md) — catalogue of "in the spirit of Soul City" + "wildly popular and great technical fit" bridge candidates (CK3, RimWorld, Stardew, Dwarf Fortress, VTTs, plus the anti-target list)
 **Design discipline (incl. Twitch-friendly):** [documentation/designs/designing-inward-miyamoto-principles.md](designs/designing-inward-miyamoto-principles.md) — Miyamoto principles + Twitch-friendly streaming features + Wright-vs-EA designer-vs-platform separation
-**Build plan:** [documentation/designs/simopolis-uplift-roadmap.md](designs/simopolis-uplift-roadmap.md) — phases 0–5 (incl. 1C / 1D / 1E / 1F), definitions of done, risk register
+**Build plan:** [documentation/designs/soul-city-uplift-roadmap.md](designs/soul-city-uplift-roadmap.md) — phases 0–5 (incl. 1C / 1D / 1E / 1F), definitions of done, risk register
 **Vision/story (external):** [MOOLLM: THE-UPLIFT.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/THE-UPLIFT.md)  
 **Field mappings (external):** [MOOLLM: BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md)  
 **IFF layer stack (external):** [MOOLLM: IFF-LAYERS.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/IFF-LAYERS.md)
 
-Bringing Micropolis (the GPL city simulator descended from SimCity) and The Sims under one umbrella in MicropolisCore. Python parsing is replaced by TypeScript in `packages/sims-io`. The Python codebase (SimObliterator Suite) remains a reference implementation; this monorepo is the browser-native rewrite. The full phased plan lives in [simopolis-uplift-roadmap.md](designs/simopolis-uplift-roadmap.md); the headlines below are the immediately-actionable items.
+Bringing Micropolis (the GPL city simulator descended from SimCity) and The Sims under one umbrella in MicropolisCore. Python parsing is replaced by TypeScript in `packages/sims-io`. The Python codebase (SimObliterator Suite) remains a reference implementation; this monorepo is the browser-native rewrite. The full phased plan lives in [soul-city-uplift-roadmap.md](designs/soul-city-uplift-roadmap.md); the headlines below are the immediately-actionable items.
 
 ### A. sims-io L4 — ContentIndex bridge to VitaMoo (Phase 0)
 
@@ -410,11 +410,11 @@ Drag-drop a `.iff`, see characters, edit fields, write a new `.iff`. The first t
 
 ### F. Micropolis residential zone ↔ Sims neighborhood data contract (Phase 2)
 
-Define the JSON interface: a residential zone position maps to `content/micropolis/cities/<city>/neighborhoods/zone-<row>-<col>.yml` pointing at a parsed `Neighborhood.iff`. The Micropolis engine reads aggregate metrics (budget, population, education, satisfaction) and folds them into tile simulation. Bound neighborhoods read city signals (unemployment, pollution, disasters) back. Small interface, two-way coupling. See [roadmap Phase 2](designs/simopolis-uplift-roadmap.md#phase-2--two-resolution-coupling-micropolis-zone--sims-neighborhood-4-6-weeks).
+Define the JSON interface: a residential zone position maps to `content/micropolis/cities/<city>/neighborhoods/zone-<row>-<col>.yml` pointing at a parsed `Neighborhood.iff`. The Micropolis engine reads aggregate metrics (budget, population, education, satisfaction) and folds them into tile simulation. Bound neighborhoods read city signals (unemployment, pollution, disasters) back. Small interface, two-way coupling. See [roadmap Phase 2](designs/soul-city-uplift-roadmap.md#phase-2--two-resolution-coupling-micropolis-zone--sims-neighborhood-4-6-weeks).
 
 ### G. Family Album server (Phase 1)
 
-Compatible endpoint for the Steam Sims re-release's upload feature. Receives albums, stores under `content/simopolis/albums/incoming/` with provenance, parses, makes them browsable, makes their characters uplift-able. See [roadmap Phase 1 Track B](designs/simopolis-uplift-roadmap.md#phase-1--moollm-enrichment--family-album-server-3-4-weeks).
+Compatible endpoint for the Steam Sims re-release's upload feature. Receives albums, stores under `content/simopolis/albums/incoming/` with provenance, parses, makes them browsable, makes their characters uplift-able. See [roadmap Phase 1 Track B](designs/soul-city-uplift-roadmap.md#phase-1--moollm-enrichment--family-album-server-3-4-weeks).
 
 ### G2. Uplifted Computer + custom IFF content (Phase 1C — **the headline demo**)
 
@@ -422,7 +422,7 @@ The first player-visible content artifact: a custom IFF Computer object that "ru
 
 **Headline 2-week demo:** Sim plays Micropolis on a custom PC inside the player's EA-published Sims 1. Finishes Will Wright's 1996 Stanford demo.
 
-Full design: [the-computer-as-portal.md](designs/the-computer-as-portal.md). Concrete tasks: [roadmap Phase 1C](designs/simopolis-uplift-roadmap.md#phase-1c--uplifted-computer--custom-iff-content-3-4-weeks-parallelizable-with-2).
+Full design: [the-computer-as-portal.md](designs/the-computer-as-portal.md). Concrete tasks: [roadmap Phase 1C](designs/soul-city-uplift-roadmap.md#phase-1c--uplifted-computer--custom-iff-content-3-4-weeks-parallelizable-with-2).
 
 Key sub-items:
 - **`moollm://` URL scheme** in `packages/sims-io/src/l4/moollm-url.ts` + resolver
@@ -437,7 +437,7 @@ The architectural alternative to reimplementing the Sims runtime. Examine a pars
 
 **Headline 1–2-week demo:** Five years pass for the Goth household, in one LLM call, ending in a valid `.iff` the player loads into their EA Sims 1 and a pageable album book on the shelf summarizing the five years in 20 languages.
 
-Full design: [the-imagine-loop.md](designs/the-imagine-loop.md). Concrete tasks: [roadmap Phase 1D](designs/simopolis-uplift-roadmap.md#phase-1d--the-imagine-loop-4-6-weeks-parallelizable-with-1b--1c--2).
+Full design: [the-imagine-loop.md](designs/the-imagine-loop.md). Concrete tasks: [roadmap Phase 1D](designs/soul-city-uplift-roadmap.md#phase-1d--the-imagine-loop-4-6-weeks-parallelizable-with-1b--1c--2).
 
 Key sub-items:
 - `packages/sims-io/src/l5/` — `examine.ts`, `intent.ts`, `imagine-apply.ts`, `validate.ts`, `compile.ts`, `loop.ts` (valid-or-revise)
@@ -452,7 +452,7 @@ Sims Family Albums become a **branching, merging, geo-tagged graph of scenes** �
 
 **Headline 1–2-week demo:** One user with a small album graph, shares one storyline with one friend via a git remote, both compile to a pageable album book IFF and load it into their EA Sims 1. The smallest visible demo of the StoryMaker reborn.
 
-Full design: [family-album-as-storymaker.md](designs/family-album-as-storymaker.md). Concrete tasks: [roadmap Phase 1E](designs/simopolis-uplift-roadmap.md#phase-1e--family-album-as-storymaker-4-6-weeks-parallelizable-with-1b--1c--1d).
+Full design: [family-album-as-storymaker.md](designs/family-album-as-storymaker.md). Concrete tasks: [roadmap Phase 1E](designs/soul-city-uplift-roadmap.md#phase-1e--family-album-as-storymaker-4-6-weeks-parallelizable-with-1b--1c--1d).
 
 Key sub-items:
 - `packages/family-album/` — schemas, graph builder, local-FS + git-remote federation, CA biome layer
@@ -467,7 +467,7 @@ Key sub-items:
 
 **Headline 1-week demo:** A Sims streamer drops Micropolis Home overlay URLs into OBS, streams with VOD chapter markers, gives viewers the save file at stream end with full stream-derived provenance trail.
 
-Full design: [designing-inward-miyamoto-principles.md → §8a The Twitch corollary](designs/designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful). Concrete tasks: [roadmap Phase 1F](designs/simopolis-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e).
+Full design: [designing-inward-miyamoto-principles.md → §8a The Twitch corollary](designs/designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful). Concrete tasks: [roadmap Phase 1F](designs/soul-city-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e).
 
 Key sub-items:
 - `packages/twitch-bridge/` — IRC integration, EventSub wiring, VOD chapter emission

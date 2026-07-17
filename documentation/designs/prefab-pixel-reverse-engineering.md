@@ -103,13 +103,13 @@ The gap that remains is the **user-extensible glue** — a real aQuery-shaped la
 
 ## Why Micropolis cares
 
-[Simopolis](simopolis.md) ships content for the EA-published Sims 1, which exposes no API for its Buy Mode catalog. Every Simopolis tool that wants to know what's in front of the player — *which* lamp, *which* wallpaper, where it came from — is a Prefab-shaped problem at heart.
+[Soul City](soul-city.md) ships content for the EA-published Sims 1, which exposes no API for its Buy Mode catalog. Every Soul City tool that wants to know what's in front of the player — *which* lamp, *which* wallpaper, where it came from — is a Prefab-shaped problem at heart.
 
 The 2003 [*Simplifier*](cua-computer-use-agents-and-simplifier.md#prehistory-a-simoleon-printing-bot-becomes-a-catalog-reader) solved it the brute-force way: hard-coded knowledge of the catalog frame, template-match the icon region, OCR the known-font Comic Sans description, page through with injected clicks. It worked because the UI never moved.
 
 The 2026 [Simplifier reborn](designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful) cannot rely on that. Custom-content thumbnails are arbitrary, Steam scaling changes coordinates, mods change description fonts. The recognition layer becomes a vision-LLM (OmniParser-shaped, not hand-coded), the semantic layer becomes the [Sims Content Registry](sims-content-registry.md), and the overlay layer is an OBS browser source rather than a pop-up dialog. *But the architectural shape is still Prefab.*
 
-The broader Simopolis tooling — IFF editors, [Tornado](the-tornado-and-the-archives.md) provenance browsers, [Family Album storymakers](family-album-as-storymaker.md) — benefits from the same principle: **treat legacy bitmap UIs as observable surfaces, not dead ends**, then layer semantics on top.
+The broader Soul City tooling — IFF editors, [Tornado](the-tornado-and-the-archives.md) provenance browsers, [Family Album storymakers](family-album-as-storymaker.md) — benefits from the same principle: **treat legacy bitmap UIs as observable surfaces, not dead ends**, then layer semantics on top.
 
 ---
 

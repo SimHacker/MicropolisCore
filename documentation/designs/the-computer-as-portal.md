@@ -4,11 +4,11 @@
 
 **Status:** Active design  
 **Monorepo:** MicropolisCore  
-**Companion documents:** [simopolis.md](simopolis.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-imagine-loop.md](the-imagine-loop.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)
+**Companion documents:** [soul-city.md](soul-city.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-imagine-loop.md](the-imagine-loop.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)
 
 > **Trademark notice.** This project uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) from Micropolis GmbH. *SimCity* and *The Sims* are Electronic Arts Inc. trademarks; references are historical or in this project's role as a *companion* to the EA-published Sims Legacy Collection. No affiliation with or endorsement by EA or Micropolis GmbH is implied.
 
-> **Scope.** Custom Sims 1 content (IFF objects) produced by Micropolis Home tools and loaded by the user into their own Sims 1 install via documented Maxis mechanisms (BHAVs, STR#, SPR2). See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical positioning.
+> **Scope.** Custom Sims 1 content (IFF objects) produced by Micropolis Home tools and loaded by the user into their own Sims 1 install via documented Maxis mechanisms (BHAVs, STR#, SPR2). See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
@@ -39,7 +39,7 @@ This is not a new idea. It is the *finishing* of an old one.
 | **1996, Stanford** | Wright also says: *"I could be in here in a 3D point of view, shooting the person on the toilet if I wanted to. Maybe it's a different game player in a different game, but still running off the same server."*                                                                                                             | Different games sharing a substrate. Worlds embedded in worlds via shared data.                                                     |
 | **2000**           | The Sims ships with a Computer object. Real interactions: "Play Game," "Find a Job," "Chat."                                                                                                                                                                                                                                 | The portal exists in the EA-shipped game. The runtime is already there.                                                             |
 | **2000–2003**      | Maxis-blessed [Transmogrifier](https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf) (Don Hopkins, Maxis) ships. Players author custom objects, including custom *appliances* with custom interactions. Rug-O-Matic, custom tombstones, custom paintings, custom slideshow objects all ship as community content. | Custom IFF content extending the Sims runtime is *Maxis-blessed policy*, not gray-area modding.                                     |
-| **2001 era**       | **Lilliputian Micropolis runs inside The Sims** via SimAntics. (Documented in the SimAntics VM Design Document; referenced in [simopolis.md → "The Ecosystem, Not the Killer App"](simopolis.md#the-ecosystem-not-the-killer-app).) Don has a *working SimCity in a Sims computer object*.                                 | Proof that this works. Already demonstrated, on the original Sims runtime, by the person who wrote the original Sims VM design doc. |
+| **2001 era**       | **Lilliputian Micropolis runs inside The Sims** via SimAntics. (Documented in the SimAntics VM Design Document; referenced in [soul-city.md → "The Ecosystem, Not the Killer App"](soul-city.md#the-ecosystem-not-the-killer-app).) Don has a *working SimCity in a Sims computer object*.                                 | Proof that this works. Already demonstrated, on the original Sims runtime, by the person who wrote the original Sims VM design doc. |
 | **2026**           | We do it again, but properly: production-quality, MOOLLM-aware, screen-snapshot driven, recursive, multi-save-file, with a content authoring pipeline anyone can use.                                                                                                                                                        | This document.                                                                                                                      |
 
 
@@ -146,7 +146,7 @@ goth-album-cd.iff
 CDs serve two purposes:
 
 - **Inventory of installable software.** A player's Sim can collect CDs the way they collect any object. A shelf full of CDs is a shelf full of MOOLLM URLs pointing at content.
-- **A unit of sharing.** A player who uplifts their old city to Simopolis can publish a CD object. Another player downloads the CD into their game and "installs" it on their Sim's PC.
+- **A unit of sharing.** A player who uplifts their old city to Soul City can publish a CD object. Another player downloads the CD into their game and "installs" it on their Sim's PC.
 
 ### 3. The Save-Game Disk (a CD-shaped save file embedded in a save file)
 
@@ -166,7 +166,7 @@ Save files embed save files. The disk is the embedding.
 
 The Sims 1 already has Family Album: each household has a photo album the player edits in-game. Maxis designed it to take screenshots and let the player caption them.
 
-Simopolis ships a custom **Photo Album** IFF object — a *book*, page-turnable, modeled on the slideshow-object pattern Don already shipped — that can hold pages from *another* save file.
+Soul City ships a custom **Photo Album** IFF object — a *book*, page-turnable, modeled on the slideshow-object pattern Don already shipped — that can hold pages from *another* save file.
 
 ```yaml
 # foreign-album.yml — Adventure Compiler source
@@ -319,7 +319,7 @@ WigOMatic. Because of course we have to ship that.
 
 ### 7. The Screen-Snapshot Camera (back-channel)
 
-A custom in-game **Camera** object that, when a Sim uses it, doesn't just take a Sims screenshot — it writes a metadata file the Simopolis companion app can read on the next sync. The metadata identifies the household, the lot, the day-in-game, the action being performed.
+A custom in-game **Camera** object that, when a Sim uses it, doesn't just take a Sims screenshot — it writes a metadata file the Soul City companion app can read on the next sync. The metadata identifies the household, the lot, the day-in-game, the action being performed.
 
 The companion app uses that metadata to:
 
@@ -327,7 +327,7 @@ The companion app uses that metadata to:
 - Optionally publish the page to the Family Album server.
 - Optionally feed it back as a *new screen snapshot* into the Uplifted Computer's catalog — *"The Goths (your friend's family) — recent photos available"*.
 
-This closes the loop. The Sim takes a photo *of* a Sim using the PC. The photo flows out to Simopolis. The photo flows back as a new sprite on a different Sim's PC.
+This closes the loop. The Sim takes a photo *of* a Sim using the PC. The photo flows out to Soul City. The photo flows back as a new sprite on a different Sim's PC.
 
 ---
 
@@ -414,7 +414,7 @@ moollm://provenance/<id>/                        # a provenance.yml addressable 
 Resolution is local-first:
 
 - If the URL points to something under `content/` in this monorepo, resolve directly.
-- If the URL points to something published to the federated mirror, resolve via the mirror's REST surface ([roadmap Phase 5](simopolis-uplift-roadmap.md#phase-5--federated-mirror--recurring-sweep-months-ongoing)).
+- If the URL points to something published to the federated mirror, resolve via the mirror's REST surface ([roadmap Phase 5](soul-city-uplift-roadmap.md#phase-5--federated-mirror--recurring-sweep-months-ongoing)).
 - If the URL points to recovered archive content, resolve via `content/simopolis/archives/<source>/<id>/`.
 - If the URL is unresolved, the consumer (Adventure Compiler, companion app) marks it as such and never silently fabricates content.
 
@@ -424,7 +424,7 @@ Every URL maps to a directory in the monorepo (or in a federated mirror) that co
 - A `provenance.yml` (if recovered or shared).
 - The actual content: `.cty`, `.iff`, image files, character YAML, whatever.
 
-The URL scheme is **how the IFF object inside the EA game references content that lives in Simopolis**. The game has no idea what `moollm://` means — it just reads it as a string from STR# 200 and shows it to the player. But the Adventure Compiler, when it emits the IFF, has already used the URL to bake the right SPR2 sprites and BHAVs into the object. The URL is metadata for *us*; it is flavor text for the *Sim*.
+The URL scheme is **how the IFF object inside the EA game references content that lives in Soul City**. The game has no idea what `moollm://` means — it just reads it as a string from STR# 200 and shows it to the player. But the Adventure Compiler, when it emits the IFF, has already used the URL to bake the right SPR2 sprites and BHAVs into the object. The URL is metadata for *us*; it is flavor text for the *Sim*.
 
 ---
 
@@ -471,7 +471,7 @@ LLM image-gen integration (the [BRIDGE.md skin regenesis](https://github.com/Sim
 
 ## Why the Uplifted Computer is a great Phase 1 deliverable
 
-Looking at [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md), the Uplifted Computer fits cleanly:
+Looking at [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md), the Uplifted Computer fits cleanly:
 
 - **Phase 0 prerequisites** (already scoped): `sims-io` L4, SPR2 export, save-file download, `apps/simopolis` shell.
 - **Phase 1A** (LLM enrichment via MOOLLM): produces the descriptive STR# strings, in-fiction "publisher" text, and 20-language translations.
@@ -541,10 +541,10 @@ It does not turn the Sims into a different game. It uses the Sims's existing obj
 
 | Resource                                                   | Where                                                                                                                                                                     |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Simopolis overall vision                                   | [simopolis.md](simopolis.md)                                                                                                                                            |
+| Soul City overall vision                                   | [soul-city.md](soul-city.md)                                                                                                                                            |
 | MOOLLM microworld substrate                                | [moollm-microworld-os.md](moollm-microworld-os.md)                                                                                                                      |
 | Tornado archive recovery                                   | [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md)                                                                                                      |
-| Phased roadmap                                             | [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)                                                                                                              |
+| Phased roadmap                                             | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)                                                                                                              |
 | Adventure Compiler architecture                            | [external BRIDGE.md → Adventure Compiler](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md#adventure-compiler-moollm--multi-target-export) |
 | Slideshow object pattern (precedent for pageable books)    | [external BRIDGE.md → Slideshow objects](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md)                                             |
 | SimAntics VM Design Document (Don Hopkins, Maxis)          | [https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf](https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf)                                        |

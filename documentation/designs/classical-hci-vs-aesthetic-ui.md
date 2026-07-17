@@ -10,23 +10,23 @@
 
 ## Summary
 
-The Macintosh's 1980s interaction design — Atkinson, Tesler, Tognazzini, Raskin, in conversation with Shneiderman's HCIL and Weiser's calm-technology project — was built around five committed values: **visible state**, **modeless action where possible**, **immediate feedback**, **reversibility**, and **discoverability**. The aesthetic-minimalist UI era that followed (Ive/Dye-era Apple, but the pattern is industry-wide) often kept the *vocabulary* of those values while sacrificing the *substance*: hide the scrollbar; infer the gesture; merge animation with input state; ship beautiful screenshots. Weiser's *calm* meant **less interruption while leaving the user in command**, not **less intelligibility**. This document names the substitution, lists the specific macOS regressions that motivated this corpus of writing, and points at the Sims and Simopolis features that *must not repeat them*.
+The Macintosh's 1980s interaction design — Atkinson, Tesler, Tognazzini, Raskin, in conversation with Shneiderman's HCIL and Weiser's calm-technology project — was built around seven committed values: **visible state**, **modeless action where possible**, **immediate feedback**, **reversibility**, **discoverability**, **predictability**, and **less interruption** (Weiser's calm — user stays in command). The aesthetic-minimalist UI era that followed (Ive/Dye-era Apple, but the pattern is industry-wide) often kept the *vocabulary* of those values while sacrificing the *substance*: hide the scrollbar; infer the gesture; merge animation with input state; ship beautiful screenshots. Weiser's *calm* meant **less interruption while leaving the user in command**, not **less intelligibility**. This document names the substitution, lists the specific macOS regressions that motivated this corpus of writing, and points at the Sims and Soul City features that *must not repeat them*.
 
 ---
 
 ## At a glance
 
-| Classical Mac / HCIL / Weiser | Aesthetic-minimalist substitution |
-|---|---|
-| Visible state | State implied by animation; lost when the animation finishes |
-| Modeless where possible | Hidden gesture modes (multi-finger swipes, edge-pulls, hold-and-drag) |
-| Immediate feedback | Cinematic transitions; "looks done" before it *is* done |
-| Reversibility | Momentum on lift; spurious velocity at release |
-| Discoverability | Screenshot first, learnability later |
-| Predictability | Inference from incomplete signal (palm zoom, accidental Mission Control) |
-| Less interruption | Less *legibility* |
+How to read the table: each row is one classical commitment (left) and the aesthetic-minimalist move that often replaced it (right). **Seven** values on the left — not nostalgia. They are how you ship software that survives streaming, accessibility, multi-monitor, and twenty-year-old users finally trying out The Sims. The seven substitutions on the right are how you ship software that screenshots well in Q3.
 
-The five values on the left are not nostalgia. They are how you ship software that survives streaming, accessibility, multi-monitor, and twenty-year-old users finally trying out The Sims. The values on the right are how you ship software that screenshots well in Q3.
+| # | Classical Mac / HCIL / Weiser | Aesthetic-minimalist substitution |
+|---|---|---|
+| 1 | Visible state | State implied by animation; lost when the animation finishes |
+| 2 | Modeless where possible | Hidden gesture modes (multi-finger swipes, edge-pulls, hold-and-drag) |
+| 3 | Immediate feedback | Cinematic transitions; "looks done" before it *is* done |
+| 4 | Reversibility | Momentum on lift; spurious velocity at release |
+| 5 | Discoverability | Screenshot first, learnability later |
+| 6 | Predictability | Inference from incomplete signal (palm zoom, accidental Mission Control) |
+| 7 | Less interruption | Less *legibility* |
 
 ---
 
@@ -135,7 +135,7 @@ This matters for accessibility (screen readers report state, not animations), fo
 
 ---
 
-## What Simopolis takes from this
+## What Soul City takes from this
 
 The federation runs Wasm UI on top of GPL Micropolis, beside the EA-published Sims 1. Every regression above is one we *cannot* repeat in our own UI, because:
 

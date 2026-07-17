@@ -72,7 +72,7 @@ Don frames the endpoint as a 21st-century [HyperCard](https://en.wikipedia.org/w
 >
 > For example, I'd like to make a direct manipulation pie menu editor, that let you just drag controls out of apps and drop them into your own pie menus, that you can inject into any application, or use in your own guis. If you dragged a slider out of an app into the slice of a pie menu, it could rotate it around to the slice direction, so that the distance you moved from the menu center controlled the slider! — [11520967](https://news.ycombinator.com/item?id=11520967)
 
-Direct manipulation of *other apps' widgets* as if they were primitives in your own. This is the part nobody has shipped, and it is the part [Simopolis](simopolis.md) most wants.
+Direct manipulation of *other apps' widgets* as if they were primitives in your own. This is the part nobody has shipped, and it is the part [Soul City](soul-city.md) most wants.
 
 ---
 
@@ -103,11 +103,11 @@ This matters for Micropolis. [Simplifier §8a T.13](designing-inward-miyamoto-pr
 
 ---
 
-## What Simopolis needs from this layer
+## What Soul City needs from this layer
 
 The Sims 1 catalog has no API. The recovered [Tornado](the-tornado-and-the-archives.md) family albums are scanned bitmaps. Custom-content mods drop arbitrary files into directories without metadata. Every interaction Micropolis Home wants with the EA Sims 1 window — and with archived community content — is exactly an aQuery-shaped problem.
 
-The minimum viable slice for Phase 1F.12 ([`simopolis-uplift-roadmap.md` Phase 1F](simopolis-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e)):
+The minimum viable slice for Phase 1F.12 ([`soul-city-uplift-roadmap.md` Phase 1F](soul-city-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e)):
 
 1. **Selector primitive** over a *very* small accessibility-shaped surface: "the Buy Mode catalog tabs", "the selected item icon", "the description pane". Hand-coded recognisers for now; vision-LLM later.
 2. **Mutation events** — fire when the user changes catalog tabs, hovers an item, switches to Build mode.
@@ -115,7 +115,7 @@ The minimum viable slice for Phase 1F.12 ([`simopolis-uplift-roadmap.md` Phase 1
 4. **Plugin: registry lookup.** Cross-reference [sims-content-registry.md](sims-content-registry.md) and show provenance.
 5. **OBS overlay rendering.** Browser source variant for streamers.
 
-Future steps push toward aQuery proper — generic AX/pixel selectors, drag-controls-out-of-apps composition for [Family Album storymaking](family-album-as-storymaker.md), pie-menu adapters for community Sims authoring tools. But shipping the Simopolis vertical first means we learn the recognition gaps in a known target before pretending to be general-purpose.
+Future steps push toward aQuery proper — generic AX/pixel selectors, drag-controls-out-of-apps composition for [Family Album storymaking](family-album-as-storymaker.md), pie-menu adapters for community Sims authoring tools. But shipping the Soul City vertical first means we learn the recognition gaps in a known target before pretending to be general-purpose.
 
 ---
 
@@ -138,4 +138,4 @@ Future steps push toward aQuery proper — generic AX/pixel selectors, drag-cont
 | Cua Driver (closest 2026 cousin) | [cua-computer-use-agents-and-simplifier.md](cua-computer-use-agents-and-simplifier.md) |
 | Pixel recognition layer | [prefab-pixel-reverse-engineering.md](prefab-pixel-reverse-engineering.md) |
 | Text-entry plugin candidate | [dasher-steering-law-accessibility.md](dasher-steering-law-accessibility.md) |
-| Simopolis vertical | [`designing-inward-miyamoto-principles.md` §8a T.13](designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful) |
+| Soul City vertical | [`designing-inward-miyamoto-principles.md` §8a T.13](designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful) |

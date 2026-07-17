@@ -115,7 +115,7 @@ For **MicropolisCore**:
 - **Study Kando** for gesture rules, theme JSON, editor UX, and submenu geometry — not for bundling Electron into the city sim.
 - **Ship pies in-app** via [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md) and `PieMenu.svelte` — no sandbox escape needed.
 - **Do not wait** on W3C overlay APIs for Federation shell pies; Kando proves the pattern works today as a **sibling desktop utility**, not as a Chrome extension.
-- **Automation vision** (oulipo's `.mdex` sketch on HN) rhymes with command-bus + git-managed config in Simopolis Phase 0 — menus as data, not one-off UI code.
+- **Automation vision** (oulipo's `.mdex` sketch on HN) rhymes with command-bus + git-managed config in Soul City Phase 0 — menus as data, not one-off UI code.
 
 ---
 

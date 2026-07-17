@@ -123,7 +123,7 @@ Documenting it doesn't expire it. The Alias brochure (PDF: [aliasdesign10_detail
 
 ## What Micropolis takes from this
 
-The [Micropolis Federation](simopolis.md) ships pie menus throughout — verb rings around Sims, tool rings in city mode, command rings in [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md). Default shells are ordinary compass pies; that is a *starting* grammar, not a ban on richer layouts.
+The [Micropolis Federation](soul-city.md) ships pie menus throughout — verb rings around Sims, tool rings in city mode, command rings in [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md). Default shells are ordinary compass pies; that is a *starting* grammar, not a ban on richer layouts.
 
 **Overflow and mixed widgets are in scope.** Alias's radial+linear overflow patent expired ~2015 — the simple limited overflow layout they patented is safe to ship. Don had already implemented **more general overflow** in The Sims pie menus and in the free open-source OLE/ActiveX pie menus he published — not just a glued-on linear dump. Modern Blender pies go further still: arbitrary layouts, checkboxes, sliders, dropdowns, and elaborate compositions inside the pie. Federation pies should learn from that lineage, not freeze at "eight wedges forever."
 

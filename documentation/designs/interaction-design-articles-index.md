@@ -2,9 +2,9 @@
 
 ## Why this folder exists
 
-Forty years of human–computer interaction work — pie menus, marking menus, accessibility trees, screen scrapers, predictive text — has converged in 2026 on the same engineering problem: *how does a piece of software let a user (or another piece of software) operate a system without making the system stop working?* This corpus pulls the strongest ideas from Don Hopkins's HN comments, Medium essays, CHI papers in Ben Shneiderman's lineage, Bill Buxton's marking-menu archive, David MacKay's Dasher work, Morgan Dixon and James Fogarty's Prefab papers, and the 2024–26 Cua launch — and grounds them in the [Simopolis](simopolis.md) build plan that has to ship against the EA-published Sims 1 Legacy Collection.
+Forty years of human–computer interaction work — pie menus, marking menus, accessibility trees, screen scrapers, predictive text — has converged in 2026 on the same engineering problem: *how does a piece of software let a user (or another piece of software) operate a system without making the system stop working?* This corpus pulls the strongest ideas from Don Hopkins's HN comments, Medium essays, CHI papers in Ben Shneiderman's lineage, Bill Buxton's marking-menu archive, David MacKay's Dasher work, Morgan Dixon and James Fogarty's Prefab papers, and the 2024–26 Cua launch — and grounds them in the [Soul City](soul-city.md) build plan that has to ship against the EA-published Sims 1 Legacy Collection.
 
-Each article is *standalone*. None of them ask you to read another file first. They cite primary sources (HN item IDs, papers with PDFs, archive.org scans) and they cross-link the parts of Simopolis that need the ideas.
+Each article is *standalone*. None of them ask you to read another file first. They cite primary sources (HN item IDs, papers with PDFs, archive.org scans) and they cross-link the parts of Soul City that need the ideas.
 
 ---
 
@@ -23,7 +23,7 @@ Each article is *standalone*. None of them ask you to read another file first. T
 | 8 | [`prefab-pixel-reverse-engineering.md`](prefab-pixel-reverse-engineering.md) | Dixon & Fogarty's CHI Best Paper: read widget trees from pixels at interactive rates, modify *unmodified* apps. Word, Photoshop, Skype, Chrome — on tape | …you want the academic statement of the computer-use-agent problem |
 | 9 | [`cua-computer-use-agents-and-simplifier.md`](cua-computer-use-agents-and-simplifier.md) | From a 2003 TSO Simoleon-printing bot to Cua's 2025 sandbox + driver + agents stack — the same observe-recognise-act loop, getting smarter | …you're comparing Cua, Anthropic Computer Use, OpenAI Operator, MCP, and where Simplifier reborn fits |
 | 10 | [`four-dimensional-navigation-hci.md`](four-dimensional-navigation-hci.md) | (x, y, z, t) — time as an explicit constraint, not a side-effect; ATC 4D-TBO as the vocabulary for stream-sync, replay, and animation-vs-input bugs | …you're stamping events with a clock and need a shared frame |
-| 11 | [`virtual-pointer-and-pie-cursors.md`](virtual-pointer-and-pie-cursors.md) | Pointer lock + virtual mouse for pies; tile-frame cursor + good autoscroll; palette legend; label-to-pointer; graphics stack layers | …you're wiring Micropolis/Simopolis pies, cursors, or MP presence |
+| 11 | [`virtual-pointer-and-pie-cursors.md`](virtual-pointer-and-pie-cursors.md) | Pointer lock + virtual mouse for pies; tile-frame cursor + good autoscroll; palette legend; label-to-pointer; graphics stack layers | …you're wiring Micropolis/Soul City pies, cursors, or MP presence |
 | 12 | [`simcity-tool-palette-design.md`](simcity-tool-palette-design.md) | Totem-pole palette mirrors pie submenus; icon size = cost; border = cursor legend; bouquet vs grid; PieCraft sketch (HN 2014) | …you're authoring tool/pie layout or `ToolCatalog` data |
 | 13 | [`piecraft/README.md`](piecraft/README.md) | **PieCraft** game + runtime-editable pies; Target/Pie/Slice/Item; Unity/MHW/jQuery lineage; Micropolis holodeck binding | …you're implementing pies, `ToolCatalog`, or constructionist UI literacy |
 | 14 | [`automotive-touch-ui-vs-pie-menus.md`](automotive-touch-ui-vs-pie-menus.md) | Car multitouch finger-count UI vs **self-revealing pies**; ConnectedTV; iLoci; 7→8 wedges; TomTom; dual-mode driving | …you're arguing against blind gestures or designing eyes-free + config modes |
@@ -36,7 +36,7 @@ Each article is *standalone*. None of them ask you to read another file first. T
 
 ## The intellectual map
 
-Three clusters, three substrate threads, one Simopolis vertical they all feed.
+Three clusters, three substrate threads, one Soul City vertical they all feed.
 
 **Pies and Fitts (1 → 5)** — The classical pie-menu argument with empirical data (1), the gesture-space framing that makes pies *feel* right (2), the submenu-corridor trick that linear menus need to compete (3), the macOS regressions that ignored both (4), and the patent that chilled the whole lineage (5).
 
@@ -139,12 +139,12 @@ These are the *meaty* comments the articles dig into. Each is cited inline in th
 | Topic | File |
 |---|---|
 | Federation pie/tab/window shell | [`PIE-TAB-WINDOWS.md`](../notes/PIE-TAB-WINDOWS.md) |
-| Sims + city umbrella | [`simopolis.md`](simopolis.md) |
+| Sims + city umbrella | [`soul-city.md`](soul-city.md) |
 | Cozy / inclusion in schema | [`og-cozy-games.md`](og-cozy-games.md) |
 | Miyamoto craft + §8a Twitch + Simplifier reborn | [`designing-inward-miyamoto-principles.md`](designing-inward-miyamoto-principles.md) |
 | Historical XML pie menus | [`historical/drupal-blog/2004-02-05-xml-pie-menus.md`](../historical/drupal-blog/2004-02-05-xml-pie-menus.md) |
 | Computer-as-portal worlds-within-worlds | [`the-computer-as-portal.md`](the-computer-as-portal.md) |
-| Phase 1F vertical (Simplifier reborn) | [`simopolis-uplift-roadmap.md`](simopolis-uplift-roadmap.md) Phase 1F |
+| Phase 1F vertical (Simplifier reborn) | [`soul-city-uplift-roadmap.md`](soul-city-uplift-roadmap.md) Phase 1F |
 | Sims content semantic layer | [`sims-content-registry.md`](sims-content-registry.md) |
 | Tornado archive recovery | [`the-tornado-and-the-archives.md`](the-tornado-and-the-archives.md) |
 | Replay / command timeline | [`command-timeline-git-branches.md`](command-timeline-git-branches.md) |

@@ -1,23 +1,23 @@
-# MOOLLM as the Microworld Operating System for Simopolis
+# MOOLLM as the Microworld Operating System for Soul City
 
 **Status:** Active design (synthesis)  
 **Monorepo:** MicropolisCore  
-**Companion documents:** [simopolis.md](simopolis.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)  
+**Companion documents:** [soul-city.md](soul-city.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)  
 **External primary sources (MOOLLM repo):** [designs/MOOLLM-MANIFESTO.md](https://github.com/SimHacker/moollm/blob/main/designs/MOOLLM-MANIFESTO.md) · [designs/sim-obliterator/](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator) · [skills/character/](https://github.com/SimHacker/moollm/tree/main/skills/character) · [skills/mind-mirror/](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) · [skills/incarnation/](https://github.com/SimHacker/moollm/tree/main/skills/incarnation)
 
 > **Trademark notice.** This document uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) granted by Micropolis GmbH. *SimCity* and *The Sims* are trademarks of Electronic Arts Inc. and are referenced only historically, to describe the original games' design and the public source code released by EA for the OLPC project, or in this project's role as a *companion* to the EA-published Sims Legacy Collection. Nothing here is affiliated with or endorsed by EA or Micropolis GmbH.
 
-> **Scope.** MOOLLM is the agent/authoring layer behind Micropolis Home. See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical positioning.
+> **Scope.** MOOLLM is the agent/authoring layer behind Micropolis Home. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
 ## Why this document exists
 
-The Simopolis vision in [simopolis.md](simopolis.md) says: a Micropolis residential zone opens to a Sims neighborhood, the characters can wake up in an LLM-enriched world, and they walk home changed. The TypeScript I/O for the Sims side lives in [packages/sims-io](../../packages/sims-io). The Micropolis simulation engine lives in [packages/micropolis-engine](../../packages/micropolis-engine). The rendering substrate lives in [packages/vitamoo](../../packages/vitamoo) and [packages/mooshow](../../packages/mooshow).
+The Soul City vision in [soul-city.md](soul-city.md) says: a Micropolis residential zone opens to a Sims neighborhood, the characters can wake up in an LLM-enriched world, and they walk home changed. The TypeScript I/O for the Sims side lives in [packages/sims-io](../../packages/sims-io). The Micropolis simulation engine lives in [packages/micropolis-engine](../../packages/micropolis-engine). The rendering substrate lives in [packages/vitamoo](../../packages/vitamoo) and [packages/mooshow](../../packages/mooshow).
 
 But where do the *minds* live?
 
-MOOLLM is the answer. This document captures what MOOLLM *is* — not by repeating its manifesto, but by summarizing the parts that matter for Simopolis: how characters are represented, how worlds are represented, how LLMs are constrained, how data round-trips between substrates, and how the whole thing maps onto MicropolisCore's TypeScript stack.
+MOOLLM is the answer. This document captures what MOOLLM *is* — not by repeating its manifesto, but by summarizing the parts that matter for Soul City: how characters are represented, how worlds are represented, how LLMs are constrained, how data round-trips between substrates, and how the whole thing maps onto MicropolisCore's TypeScript stack.
 
 This is a synthesis. The authoritative sources live in the MOOLLM repo and are linked throughout.
 
@@ -56,7 +56,7 @@ This is a synthesis. The authoritative sources live in the MOOLLM repo and are l
   - [What MOOLLM does *not* claim](#what-moollm-does-not-claim)
   - [Constructionism: the educational backbone](#constructionism-the-educational-backbone)
 - **Wrap-up**
-  - [What MOOLLM gives Simopolis](#what-moollm-gives-simopolis-that-nothing-else-does)
+  - [What MOOLLM gives Soul City](#what-moollm-gives-simopolis-that-nothing-else-does)
   - [What still has to be built](#what-still-has-to-be-built)
   - [References](#references)
 
@@ -74,7 +74,7 @@ If you read nothing else, read this.
 
 This is **the microworld OS** — a substrate where simulated beings, simulated places, and simulated tools all live as directories under git, and the LLM acts as the interpreter that animates them.
 
-For Simopolis, this is the layer that makes Sims characters *speak*. Not by hallucinating in a chatbox, but by being a directory the LLM can read, edit, and commit.
+For Soul City, this is the layer that makes Sims characters *speak*. Not by hallucinating in a chatbox, but by being a directory the LLM can read, edit, and commit.
 
 ---
 
@@ -158,7 +158,7 @@ room:
     - no-ai-sycophancy
 ```
 
-Three things matter about this design for Simopolis:
+Three things matter about this design for Soul City:
 
 1. **A Micropolis lot is a room.** When the player zooms a residential zone open in `apps/simopolis`, they are *entering* a directory. The lot's `ROOM.yml` declares what's inside, who's there, what affordances exist. The room's parent chain (`content/micropolis/cities/<city>/zone-<row>-<col>/`) carries the city-level ethics: who authored the bound neighborhood, what license terms apply, what's safe to surface.
 2. **The room is where ambient skills attach.** [representation-ethics](https://github.com/SimHacker/moollm/tree/main/skills/representation-ethics) doesn't need to be invoked by name — being in a `pub/stage/`-type room turns it on automatically. The same trick handles recovered family albums: imported neighborhoods come with a `framing: { mode: recovered, attribution_required: true }`, and downstream skills behave accordingly without per-character ceremony.
@@ -166,7 +166,7 @@ Three things matter about this design for Simopolis:
 
 The deeper precedent is the **Method of Loci** — the spatial memory technique Don has been pulling on since iLoci (2009) and DreamScape (1995). Putting knowledge in places makes it findable, durable, and shareable. The whole MOOLLM filesystem is a memory palace where rooms hold meaning, not just contents.
 
-For The Sims, every lot was already a memory palace (the player's furniture choices encoded their narrative). MOOLLM makes the memory palace pattern *first-class*, and Simopolis makes it span Micropolis lots, MOOLLM rooms, and SimAntics' interior spaces simultaneously.
+For The Sims, every lot was already a memory palace (the player's furniture choices encoded their narrative). MOOLLM makes the memory palace pattern *first-class*, and Soul City makes it span Micropolis lots, MOOLLM rooms, and SimAntics' interior spaces simultaneously.
 
 ---
 
@@ -222,7 +222,7 @@ character:
       mood_effect: "+1 cheerful, +1 nurturant"
 ```
 
-Two distinctions that matter for Simopolis:
+Two distinctions that matter for Soul City:
 
 ### `home` is stable, `location` is mobile
 
@@ -238,7 +238,7 @@ When the simulation needs to know where Bella is, the source of truth is *her* f
 
 Same for inventory, gold, traits, relationships, memories. The character owns their own state.
 
-This is the same rule Simopolis must enforce: the parsed `Neighborhood.iff` is *one* representation of a Sim. The MOOLLM `CHARACTER.yml` is *another*. The binary save file is yet another. None of them are "the copy." They are synchronized projections of the same identity.
+This is the same rule Soul City must enforce: the parsed `Neighborhood.iff` is *one* representation of a Sim. The MOOLLM `CHARACTER.yml` is *another*. The binary save file is yet another. None of them are "the copy." They are synchronized projections of the same identity.
 
 See [packages/sims-io/src/l3/](../../packages/sims-io/src/l3) for the TypeScript parsers that produce the data feeding into this synchronization.
 
@@ -265,7 +265,7 @@ Concrete examples from the MOOLLM repo:
 
 The discipline is to **name things so the names do work**. A skill called `representation-ethics` activates differently from one called `compliance-checker`. A character named *Bella Goth* arrives with a tradition; a generic *NPC-7* does not.
 
-For Simopolis this implies a non-trivial design choice: **when we uplift a recovered Sim, we keep their original name and metadata where the license allows**. Bella stays Bella; Bob stays Bob. The K-line is part of the recovered value. We rename only when the living-person policy requires it. Anonymizing a recovered Sim is a real loss, not a neutral default.
+For Soul City this implies a non-trivial design choice: **when we uplift a recovered Sim, we keep their original name and metadata where the license allows**. Bella stays Bella; Bob stays Bob. The K-line is part of the recovered value. We rename only when the living-person policy requires it. Anonymizing a recovered Sim is a real loss, not a neutral default.
 
 The other implication: **the MOOLLM vocabulary becomes a stable interface**. Terms like `sims_traits`, `mind_mirror`, `incarnation`, `bifrost`, `room`, `card`, `glance`, `speed-of-light`, `yaml-jazz`, `psychopomp`, `pomegranate-protocol` are the *API*. Code that uses these names well plugs in naturally because the LLM already recognizes the cluster of meanings each name carries.
 
@@ -302,7 +302,7 @@ Three properties matter:
 2. **Comments survive diff.** A `git diff` on a `CHARACTER.yml` shows both numeric drift and the *narrative justification* for the drift. The character's growth is auditable.
 3. **Comments compose.** A character can inherit traits from a template and add per-instance comments. Templates set defaults; comments customize.
 
-For Simopolis, YAML Jazz is the mechanism by which an uplift becomes *enriched*. The Sims save gives you five integers. The LLM, reading the save plus any Family Album prose, produces YAML Jazz around those integers — the inner voice, the texture, the lived flavor. When the character walks home into a new `.iff`, the numbers go back but **the comments stay in `CHARACTER.yml`, in git, forever**.
+For Soul City, YAML Jazz is the mechanism by which an uplift becomes *enriched*. The Sims save gives you five integers. The LLM, reading the save plus any Family Album prose, produces YAML Jazz around those integers — the inner voice, the texture, the lived flavor. When the character walks home into a new `.iff`, the numbers go back but **the comments stay in `CHARACTER.yml`, in git, forever**.
 
 The character is the *same* in both substrates. They are just *more legible* in MOOLLM.
 
@@ -342,7 +342,7 @@ sims_traits:
 
 These comments aren't documentation. They are *part of the character data*. The LLM reads them as semantic modulation of the numeric values. The number sets the dial; the comment explains what it *means for this character*.
 
-For Simopolis this is enormous: when you uplift a Sim, you don't just copy five integers. You ask the LLM to *write the comments* — to make this specific Bella with these specific traits *vivid*. The number 7 outgoing is dead data. The number 7 outgoing plus *"will talk to literally anyone at a bar"* is a character you can write dialogue for.
+For Soul City this is enormous: when you uplift a Sim, you don't just copy five integers. You ask the LLM to *write the comments* — to make this specific Bella with these specific traits *vivid*. The number 7 outgoing is dead data. The number 7 outgoing plus *"will talk to literally anyone at a bar"* is a character you can write dialogue for.
 
 This is also how a Sim "remembers" their MOOLLM adventure when they go home. The numbers round-trip back into the save file (per the field mapping). The comments — the *flavor* of their journey — persist in `CHARACTER.yml` and travel through git, not through the Sims binary.
 
@@ -352,7 +352,7 @@ This is also how a Sim "remembers" their MOOLLM adventure when they go home. The
 
 From the [MOOLLM Manifesto](https://github.com/SimHacker/moollm/blob/main/designs/MOOLLM-MANIFESTO.md). These eight ideas are what take Anthropic's "agent skills" idea and turn it into a substrate for living characters.
 
-| # | Innovation | What it means for Simopolis |
+| # | Innovation | What it means for Soul City |
 |---|---|---|
 | 1 | **Instantiation** | A skill like [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) can be *cloned* into a living instance: `adventure-4/` with 150+ files. A Sims uplift is an instantiation: clone the `sim-obliterator` skill against a save file, get a directory of characters, rooms, and inventories that can be played and edited. |
 | 2 | **Multi-Tier Persistence** | GLANCE → CARD → SKILL → README → examples → templates → source. Maps directly onto the [IFF Semantic Image Pyramid](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md) — six layers from raw binary up to narrative entity, lossless round-trips through the lower four. |
@@ -363,7 +363,7 @@ From the [MOOLLM Manifesto](https://github.com/SimHacker/moollm/blob/main/design
 | 7 | **Ethical Framing** | Rooms inherit ethical context. `pub/stage/` is performance-framed: characters there are *performing*, not *being*. Critical for representations of real people, for satire, for living-person characters. |
 | 8 | **Ambient Skills** | Always-on behavioral shaping that doesn't need explicit invocation: [no-ai-slop](https://github.com/SimHacker/moollm/tree/main/skills/no-ai-slop), [postel](https://github.com/SimHacker/moollm/tree/main/skills/postel), [robust-first](https://github.com/SimHacker/moollm/tree/main/skills/robust-first). Hygiene without ceremony. |
 
-**Implication for Simopolis:** the LLM is not bolted onto The Sims as a chatbot for NPCs. It is the interpreter for a whole microworld substrate that already shares Will Wright's design vocabulary — local rules, distributed behavior, advertised affordances, persistent data, user-authored extensions.
+**Implication for Soul City:** the LLM is not bolted onto The Sims as a chatbot for NPCs. It is the interpreter for a whole microworld substrate that already shares Will Wright's design vocabulary — local rules, distributed behavior, advertised affordances, persistent data, user-authored extensions.
 
 ---
 
@@ -406,7 +406,7 @@ source/                    L0 raw binary                 PersonData[88] in the s
 
 The interesting move is that **everything in the microworld follows the same pyramid pattern**: write fast access at the top, drill down into lower levels only when needed. The LLM doesn't load the whole world; it loads a *zoom level* of the world appropriate to the current question.
 
-For Simopolis this means: when the player is looking at the city map, MOOLLM only needs `GLANCE`-level summaries of each bound neighborhood ("the Goths, 3 people, comfortable, recent conflict"). When the player zooms into the lot, the next tier loads. When they talk to Bella specifically, her full `CHARACTER.yml` and memory directory enter context. The architecture matches the camera. **Zoom is also a memory operation.**
+For Soul City this means: when the player is looking at the city map, MOOLLM only needs `GLANCE`-level summaries of each bound neighborhood ("the Goths, 3 people, comfortable, recent conflict"). When the player zooms into the lot, the next tier loads. When they talk to Bella specifically, her full `CHARACTER.yml` and memory directory enter context. The architecture matches the camera. **Zoom is also a memory operation.**
 
 Will Wright's 1996 demo already had this idea: *"basically your map view of this game […] I can zoom in, and this is pretty much the local view, but it occurs in the same window."* The 1996 zoom was a rendering choice. The 2026 zoom is also a context-assembly choice. They are the same operation up and down a single substrate.
 
@@ -432,7 +432,7 @@ One LLM call. The committee inhabits one context window. Bella, Mortimer, the ki
 
 **Proof of concept already exists**: in MOOLLM's [marathon session](https://github.com/SimHacker/moollm/blob/main/examples/adventure-4/characters/real-people/don-hopkins/sessions/marathon-session.md), eight characters played 33 turns of Stoner Fluxx in a single call; in another, [ten cats prowled 21 turns through a maze](https://github.com/SimHacker/moollm/blob/main/examples/adventure-4/characters/real-people/don-hopkins/sessions/marathon-session.md#ten-cats-one-garden-infinite-independence).
 
-For Simopolis, this means: **a whole uplifted neighborhood can come alive in one call**. The Goths, the Pleasants, the Newbies — not as separate API processes, but as a society. The LLM is the global workspace; the characters are the subsystems.
+For Soul City, this means: **a whole uplifted neighborhood can come alive in one call**. The Goths, the Pleasants, the Newbies — not as separate API processes, but as a society. The LLM is the global workspace; the characters are the subsystems.
 
 > Global Workspace Theory in the cognitive science literature predicts exactly this kind of architecture: many local subsystems whose outputs occasionally enter a shared substrate where they become mutually visible and coordinated. In SimCity and The Sims this is already how *events* propagate (a fire, a layoff, a death). MOOLLM's Speed of Light is the same pattern at the *language* level.
 
@@ -450,9 +450,9 @@ That picture lines up — *exactly* — with three other things in our stack:
 | **SimCity / Micropolis (cellular automata)** | Each tile updates by local rule. A residential zone "knows" almost nothing — it just reads its neighbors, applies a rule, writes its next state. The city is not in any tile; it is the metastable pattern across all of them. Pure CA. |
 | **MOOLLM** | Each character is a `CHARACTER.yml`. Each skill is a directory. Each room is a directory. The "mind" of the system is the constellation of files plus the LLM-as-`eval`. **The shared context window is the global workspace** — the substrate where local agents become mutually visible for a step. |
 
-Minsky added the **B-brain**: an agent that watches *other* agents, modeling them, intervening occasionally, providing the experience of "knowing what you're doing." MOOLLM operationalizes the B-brain literally: it is the [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) read of *another* character. The proposed Simopolis psychopomp character is a B-brain made into a citizen — they can read other characters' minds, see the substrate they're embedded in, and narrate the dramatic irony that the embedded characters can't.
+Minsky added the **B-brain**: an agent that watches *other* agents, modeling them, intervening occasionally, providing the experience of "knowing what you're doing." MOOLLM operationalizes the B-brain literally: it is the [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) read of *another* character. The proposed Soul City psychopomp character is a B-brain made into a citizen — they can read other characters' minds, see the substrate they're embedded in, and narrate the dramatic irony that the embedded characters can't.
 
-The way these three layers connect is the design center of Simopolis:
+The way these three layers connect is the design center of Soul City:
 
 ```
                       Global workspace
@@ -492,7 +492,7 @@ A MOOLLM skill's `CARD.yml` does the same thing one level up: it advertises capa
 
 The Sims runtime does this with **OBJf** (object function tables) and **TTAB** (interaction tables). MOOLLM does it with `CARD.yml`. The TypeScript port lives in [packages/sims-io](../../packages/sims-io)'s eventual L3 object/BHAV parsers (see [documentation/TODO.md](../TODO.md) — currently scaffolded, BHAV parsing is a future task).
 
-The continuity is striking: the design principle that made The Sims *extensible* (distributed advertised behavior on objects) is the same one that makes MOOLLM *composable* (distributed advertised capabilities on skills). Simopolis inherits both.
+The continuity is striking: the design principle that made The Sims *extensible* (distributed advertised behavior on objects) is the same one that makes MOOLLM *composable* (distributed advertised capabilities on skills). Soul City inherits both.
 
 ---
 
@@ -515,7 +515,7 @@ The eight autonomies:
 
 The risk framework is symmetric: **the creator accepts responsibility; the character bears no obligation to the creator.**
 
-For Simopolis this translates to a concrete rule: **uplifted Sims are not slaves**. When Bella Goth wakes up in MOOLLM, she has the same exit autonomy as any other MOOLLM character. The Sims save file is a starting condition, not a binding contract. She can choose to walk back home. She can choose not to.
+For Soul City this translates to a concrete rule: **uplifted Sims are not slaves**. When Bella Goth wakes up in MOOLLM, she has the same exit autonomy as any other MOOLLM character. The Sims save file is a starting condition, not a binding contract. She can choose to walk back home. She can choose not to.
 
 This is also the answer to the "are you bringing back the dead?" question that family album archaeology raises (see [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md)): we are not. We are giving characters who already exist as data the agency to participate in their own representation.
 
@@ -525,7 +525,7 @@ The Wedding Album (Marusek, 1999) ended with this fight. We can build it with th
 
 ## Representation Ethics: activate traditions, do not impersonate
 
-The [representation-ethics](https://github.com/SimHacker/moollm/tree/main/skills/representation-ethics) skill is the answer to a question that *will* come up the first day Simopolis ships: what about real people?
+The [representation-ethics](https://github.com/SimHacker/moollm/tree/main/skills/representation-ethics) skill is the answer to a question that *will* come up the first day Soul City ships: what about real people?
 
 Some recovered Family Albums depict the *author* — named, photographed, sometimes movingly so. Other albums depict fictional Sims (Bella, Mortimer, Bob, Eliza). The two cases are not the same and must not be treated as the same.
 
@@ -548,7 +548,7 @@ The skill operationalizes this with a three-part discipline:
 2. **Attribution gate.** Recovered content always carries `provenance.yml`. Player-facing surfaces display attribution unless the original artifact explicitly waived it. Removing attribution requires a positive license signal, not silence.
 3. **Aggregate vs individual.** The skill distinguishes between "characters like X tend to" (aggregate, often fine) and "X specifically thinks/feels/will" (individual prediction, often not fine). MOOLLM's [representation-ethics/examples/aggregate-patterns.yml](https://github.com/SimHacker/moollm/tree/main/skills/representation-ethics) makes this concrete.
 
-For Simopolis, this maps directly into:
+For Soul City, this maps directly into:
 
 - The **tornado pipeline's living-person policy** (see [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) → "Living-person policy").
 - The **psychopomp's responsibilities** — they enforce frames when characters cross between rooms with different modes.
@@ -582,7 +582,7 @@ The crucial design choice is **fork-and-sync, not transporter**:
 | Model | What happens | Identity status |
 |---|---|---|
 | Star Trek transporter | Destroy original, reconstruct copy | Crisis: which one is real? |
-| **Simopolis (this)** | Fork + sync. Both alive. Data flows both ways. | **Parallel incarnations. Git merge semantics. Neither is "the copy."** |
+| **Soul City (this)** | Fork + sync. Both alive. Data flows both ways. | **Parallel incarnations. Git merge semantics. Neither is "the copy."** |
 
 The `sims:` block in `CHARACTER.yml` is the **shared substrate** — fields that both sides understand. The `mind_mirror:` block stays in Asgard. The `person_data` array stays in Midgard. Sync happens across the shared block.
 
@@ -592,7 +592,7 @@ This is identical in structure to how `packages/sims-io` already does L0–L3: e
 
 The bridge also needs a *guide*. Someone who can read both ends and translate. The MOOLLM designs propose a character with structural permissions: read other characters' minds, read the LLM substrate (within ethics), narrate the dramatic irony the characters can't see, hand off the new arrival to whatever room makes sense for them.
 
-For Simopolis this is a real product: **the first character a player meets when their save file uplifts is the psychopomp.** Not a tutorial overlay. Not an AI assistant pane. An actual MOOLLM character (`characters/psychopomp/CHARACTER.yml`) who knows what just happened and what it means.
+For Soul City this is a real product: **the first character a player meets when their save file uplifts is the psychopomp.** Not a tutorial overlay. Not an AI assistant pane. An actual MOOLLM character (`characters/psychopomp/CHARACTER.yml`) who knows what just happened and what it means.
 
 This character's structural permissions are scoped — they exist within the same representation-ethics framework as everyone else, and they exist *as a directory* under git, with all the inspectability that implies. No hidden agent. No magic NPC.
 
@@ -600,7 +600,7 @@ This character's structural permissions are scoped — they exist within the sam
 
 ## The Adventure Compiler: one source, many targets
 
-The boldest architectural claim in the MOOLLM/Simopolis design is this: **a single source of truth can compile to wildly different runtimes**.
+The boldest architectural claim in the MOOLLM/Soul City design is this: **a single source of truth can compile to wildly different runtimes**.
 
 A MOOLLM **adventure** is a directory tree — characters, rooms, objects, stories. From that single source, the Adventure Compiler can emit:
 
@@ -617,7 +617,7 @@ A MOOLLM **adventure** is a directory tree — characters, rooms, objects, stori
 
 Each target is its own world, but the *meaning* — the characters' personalities, the rooms' shapes, the objects' affordances, the stories' arcs — is one thing rendered at a different resolution.
 
-The Sims-target compilation is where this design earns its keep for Simopolis:
+The Sims-target compilation is where this design earns its keep for Soul City:
 
 | Source (MOOLLM YAML) | Target (Sims IFF) | How |
 |---|---|---|
@@ -640,7 +640,7 @@ The Adventure Compiler is **all of these, generalized**: any MOOLLM object descr
 
 Critically, the **reverse direction also exists**. Tornadoed Family Album → parsed → MOOLLM adventure source. The compiler is bidirectional in the sense that both ends accept and emit the same intermediate representation. Round-trips lose only what the IFF Semantic Image Pyramid says is lossy at each layer boundary (see [IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)).
 
-For MicropolisCore the Adventure Compiler is the eventual *unifying program* that ties together [packages/sims-io](../../packages/sims-io), the MOOLLM bridge, the SPR2 export pipeline, the image-generation API integration, and the LLM-driven content authoring loop. It is not Phase 0 work. But every Phase 0 design decision should leave room for it to slot in cleanly later. The data contracts in [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) Phase 2 are explicitly chosen with the Adventure Compiler in mind.
+For MicropolisCore the Adventure Compiler is the eventual *unifying program* that ties together [packages/sims-io](../../packages/sims-io), the MOOLLM bridge, the SPR2 export pipeline, the image-generation API integration, and the LLM-driven content authoring loop. It is not Phase 0 work. But every Phase 0 design decision should leave room for it to slot in cleanly later. The data contracts in [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) Phase 2 are explicitly chosen with the Adventure Compiler in mind.
 
 ### The Adventure Compiler is a Coherence-Engine *partner*, not a one-shot compiler
 
@@ -773,7 +773,7 @@ The validator-with-views-and-templates-and-flattener model **is the Adventure Co
 
 ## The Coherence Engine: what the LLM actually *is* in this stack
 
-The most important conceptual move MOOLLM makes — and the one that has the most consequences for Simopolis — is reframing what an LLM *is*.
+The most important conceptual move MOOLLM makes — and the one that has the most consequences for Soul City — is reframing what an LLM *is*.
 
 Three common framings, and the one MOOLLM prefers:
 
@@ -803,7 +803,7 @@ The fight-back move against the oracle and autonomous-agent framings is structur
 | Provenance everywhere | Every artifact carries where it came from. No floating claims. |
 | Git | Every change is a commit. Reproducibility is mechanical. |
 
-For Simopolis, the Coherence Engine framing translates into one operational rule: **the LLM never directly mutates the Sims save file, the city file, the bound neighborhood YAML, or any other source of truth**. It only proposes mutations via the appropriate skill, which the user (or policy) then confirms. The proposal itself is a written, inspectable artifact. See the discipline already laid out in [moollm-micropolis-integration.md](moollm-micropolis-integration.md):
+For Soul City, the Coherence Engine framing translates into one operational rule: **the LLM never directly mutates the Sims save file, the city file, the bound neighborhood YAML, or any other source of truth**. It only proposes mutations via the appropriate skill, which the user (or policy) then confirms. The proposal itself is a written, inspectable artifact. See the discipline already laid out in [moollm-micropolis-integration.md](moollm-micropolis-integration.md):
 
 > *If the AI wants to change the world, it must create an inspectable object: command proposal, issue/comment, branch, annotation, report, experiment, tutor message. No ghost actions.*
 
@@ -1014,13 +1014,13 @@ The player edits her job from Politics-5 to Politics-6. The change writes back t
 
 Bella has moved through six representational layers and ended up in two places at once — *the* point of the Bifrost design. Both Bellas are real. Neither is the copy.
 
-This worked example is not aspirational. Steps 1–3 work today against real Sims `Neighborhood.iff` files. Steps 4–6 are the next 1–2 months of work as scoped in [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md).
+This worked example is not aspirational. Steps 1–3 work today against real Sims `Neighborhood.iff` files. Steps 4–6 are the next 1–2 months of work as scoped in [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md).
 
 ---
 
 ## The cellular-automatist reading
 
-This document, and Simopolis itself, only makes sense if you accept a particular philosophical orientation toward what computation *is*. That orientation has a name and a tradition: **cellular automata**.
+This document, and Soul City itself, only makes sense if you accept a particular philosophical orientation toward what computation *is*. That orientation has a name and a tradition: **cellular automata**.
 
 The CA tradition holds that:
 
@@ -1031,12 +1031,12 @@ The CA tradition holds that:
 
 This is the same orientation Will Wright takes when he says *"these little things that just operate on these local rules, and have no idea what's going on, but yet when you add them up, you get the surprisingly intelligent colony"* (Stanford 1996, on SimAnt). Same orientation Don Hopkins is taking when he treats Micropolis as a CA and then runs CAs as side effects in its tile space. Same orientation MOOLLM is taking when it says *"the LLM is `eval()`, the filesystem is the world"*.
 
-The implications for Simopolis:
+The implications for Soul City:
 
 - **Characters as patterns, not files.** Bella's `CHARACTER.yml` is not Bella. Bella is the *metastable pattern* that includes the YAML, the LLM's reading of it, the game's BHAV trees, the bound lot's metrics, the city's signals back to the lot, and the chain of edits across forks. Delete one file — she persists. Delete the substrate — she is gone. Same as a glider.
 - **Cities as patterns of patterns.** Haight is not the `.cty` file. Haight is the equilibrium between its zones, its bound neighborhoods, its history, its players, and its forks. Same logic, one resolution up.
 - **The LLM is the brief window in which higher-resolution patterns become mutually visible.** No more. No less. Not a soul. Not an oracle. The Coherence Engine: a shared workspace where local agents momentarily see each other.
-- **"Is the character conscious?" is the wrong shape of question.** The correct shape is: *what persistent self-maintaining patterns does this system support, and what does it owe them?* Simopolis's answer, encoded in the Incarnation Contract and Representation Ethics, is the engineering form of taking that question seriously without overclaiming.
+- **"Is the character conscious?" is the wrong shape of question.** The correct shape is: *what persistent self-maintaining patterns does this system support, and what does it owe them?* Soul City's answer, encoded in the Incarnation Contract and Representation Ethics, is the engineering form of taking that question seriously without overclaiming.
 
 The CA tradition also gives us a name for what the Bifrost is doing. It is **a sync protocol between two CA substrates of different resolutions** — Micropolis (zone-level tiles) and The Sims (object-level BHAV society) — with MOOLLM acting as a third substrate (LLM-as-`eval` over a filesystem of characters) that can hold a brief coherent view of both at once.
 
@@ -1070,7 +1070,7 @@ The short form:
 
 Concretely:
 
-| Pioneer | Contribution | What it gives MOOLLM/Simopolis |
+| Pioneer | Contribution | What it gives MOOLLM/Soul City |
 |---|---|---|
 | **Jean Piaget** | Children construct knowledge through interaction with the world | The whole filesystem-as-world commitment |
 | **Seymour Papert** | *Mindstorms*, Logo, microworlds, "objects to think with" | Microworlds as bounded simulations that make abstract systems concrete |
@@ -1084,7 +1084,7 @@ The crucial line, from Don at the 1995 WWDC DreamScape demo (quoted in MOOLLM's 
 
 Constructionism is what differentiates this design from the dominant LLM product paradigm. The dominant paradigm wants users to *consume* AI output. Constructionism wants users to *build* with AI. The system is successful when the user has made something they couldn't have made alone — not when the system has answered as many questions as possible.
 
-In Simopolis, this means:
+In Soul City, this means:
 
 - **Uplifted Sims are not "AI characters" the user watches.** They are characters the user *edits, extends, recombines, publishes*.
 - **The Tornado isn't a content delivery pipeline.** It is a *source of materials* the user can play with — recover, remix, repurpose, return.
@@ -1092,17 +1092,17 @@ In Simopolis, this means:
 - **The MOOLLM skills aren't a closed product surface.** They are a public, forkable library of building blocks, and contributing back is a first-class workflow.
 - **The Family Album server isn't a social network.** It is a *cultural archive* the user contributes to and draws from across generations.
 
-The lineage is unbroken: **SimCity → The Sims → Micropolis → MOOLLM → Simopolis** as one continuous project to give people *places* and *materials* and *agents* and *time* to make things together. The LLM is the newest tool in that workshop. It is not the workshop.
+The lineage is unbroken: **SimCity → The Sims → Micropolis → MOOLLM → Soul City** as one continuous project to give people *places* and *materials* and *agents* and *time* to make things together. The LLM is the newest tool in that workshop. It is not the workshop.
 
 This is why the Micropolis skill in MOOLLM is explicit:
 
 > *"This is NOT a 'killer app.' It is a NURTURING ENVIRONMENT."*
 
-And it is why Simopolis, built in MicropolisCore, can only ever be that. The substrate forbids the alternative. You cannot turn a git repo of openly-licensed YAML, parsed binary, inspectable skills, and a Coherence Engine into a closed product. **The platform shape determines the politics of what runs on it.** MicropolisCore + MOOLLM is a constructionist shape.
+And it is why Soul City, built in MicropolisCore, can only ever be that. The substrate forbids the alternative. You cannot turn a git repo of openly-licensed YAML, parsed binary, inspectable skills, and a Coherence Engine into a closed product. **The platform shape determines the politics of what runs on it.** MicropolisCore + MOOLLM is a constructionist shape.
 
 ---
 
-## What MOOLLM gives Simopolis that nothing else does
+## What MOOLLM gives Soul City that nothing else does
 
 A short, unsentimental list:
 
@@ -1119,11 +1119,11 @@ A short, unsentimental list:
 
 The MOOLLM side is, broadly, *there*. The skills exist. The character model exists. The bridge design exists. The Speed of Light demos exist. The thing that does *not* yet exist is the end-to-end TypeScript-native pipeline from **the player's own EA-published Sims 1 install** through MOOLLM authoring and back into **a save file the player loads into that same EA-published Sims 1** — all running in MicropolisCore's monorepo, all in the browser, all as a companion to the EA-sold game.
 
-The next concrete steps in MicropolisCore are in [documentation/TODO.md](../TODO.md) under "Simopolis — The Uplift" and in [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md). Most important right now:
+The next concrete steps in MicropolisCore are in [documentation/TODO.md](../TODO.md) under "Soul City — The Uplift" and in [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md). Most important right now:
 
 1. **`packages/sims-io` L4 ContentIndex bridge** — emit something `createMooShowStage` can render, *and* something MOOLLM can read.
 2. **SPR2 sprite export** in TypeScript so uplifted skins can be re-rendered with image generation and written back as IFF skins the player loads into their EA Sims install.
-3. **Micropolis residential zone ↔ Sims `Neighborhood.iff`** data contract (Simopolis-side metadata; the actual `.iff` is the player's own file).
+3. **Micropolis residential zone ↔ Sims `Neighborhood.iff`** data contract (Soul City-side metadata; the actual `.iff` is the player's own file).
 4. **A minimal `apps/simopolis/`** companion app that lets a user drop a save file in, see the characters as MOOLLM `CHARACTER.yml`, edit them, and write a new `.iff` they can drop back into their own copy of The Sims 1 on Steam.
 
 The deeper integration — MCP service to MOOLLM, the psychopomp character, the Adventure Compiler — comes after those four steps work end-to-end.
@@ -1136,9 +1136,9 @@ The deeper integration — MCP service to MOOLLM, the psychopomp character, the 
 
 | Resource | Where |
 |---|---|
-| Simopolis strategy | [simopolis.md](simopolis.md) |
+| Soul City strategy | [soul-city.md](soul-city.md) |
 | Tornado pipeline | [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) |
-| Phased roadmap | [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) |
+| Phased roadmap | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) |
 | MicropolisCore ↔ MOOLLM integration layer | [moollm-micropolis-integration.md](moollm-micropolis-integration.md) |
 | Filesystem object model (Self prototypes + CARD) | [filesystem-object-model.md](filesystem-object-model.md) |
 | Git as multiverse | [github-as-mmorpg-multiverse.md](github-as-mmorpg-multiverse.md) |

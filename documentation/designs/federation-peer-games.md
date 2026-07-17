@@ -5,11 +5,11 @@
 **Status:** Active design (forward-looking catalogue; nothing committed)
 **Monorepo:** MicropolisCore
 **Read first:** [characters-as-hydrogen.md](characters-as-hydrogen.md) — the character substrate and the Federation framing
-**Companion documents:** [moollm-microworld-os.md](moollm-microworld-os.md) (Bifrost protocol) · [simopolis.md](simopolis.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [the-imagine-loop.md](the-imagine-loop.md) · [sims-content-registry.md](sims-content-registry.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) · [GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) (skinnable bridge chrome — one skin pack per spoke) · [Sunny Street outreach (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md)
+**Companion documents:** [moollm-microworld-os.md](moollm-microworld-os.md) (Bifrost protocol) · [soul-city.md](soul-city.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [the-imagine-loop.md](the-imagine-loop.md) · [sims-content-registry.md](sims-content-registry.md) · [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) · [GONZO-UI-MANIFEST.md](GONZO-UI-MANIFEST.md) (skinnable bridge chrome — one skin pack per spoke) · [Sunny Street outreach (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md)
 
 > **Trademark notice.** All game titles below are trademarks of their respective owners. References here are nominative use for the purpose of describing technical interoperability via documented save-file formats and community modding ecosystems. No affiliation with or endorsement by any listed studio is implied. The Federation is an *open-source interoperability proposal*, not a partnership or license arrangement.
 
-> **Scope.** This doc enumerates *candidate* peer games and grades their fit for character-substrate bridging via the Bifrost protocol. Bridges are *user-side companion tools that operate on documented file formats* — the same posture the Sims modding community has used for 25 years. We never link to, embed, or redistribute proprietary engine code or assets. See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical positioning.
+> **Scope.** This doc enumerates *candidate* peer games and grades their fit for character-substrate bridging via the Bifrost protocol. Bridges are *user-side companion tools that operate on documented file formats* — the same posture the Sims modding community has used for 25 years. We never link to, embed, or redistribute proprietary engine code or assets. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
@@ -46,7 +46,7 @@ Below: graded by spiritual fit, technical fit, and combined priority. Nothing co
 
 **Sunny Street** is in active development by **Sungman Cho**. Public description (LinkedIn, May 2026): a **living town** game for kids with **AI characters**, **unexpected problems** (wildfire recovery, crops failing, coordinating villagers), and a goal to build **“thinking muscles”** by learning to **think, create, and solve with AI** — not receive instant answers. First **closed beta** (50 families). We have **not** played the build; this entry is a **conditional** peer slot, not a spec of their product.
 
-Highlighted here because that **pedagogical** framing rhymes with problems [Simopolis](simopolis.md), [MOOLLM](moollm-microworld-os.md), and the [Imagine Loop](the-imagine-loop.md) explore on the open-source side — **if** Sunny Street later wants documented, player-owned character data. Outreach letter (grounded in the public post, not private assumptions): [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md).
+Highlighted here because that **pedagogical** framing rhymes with problems [Soul City](soul-city.md), [MOOLLM](moollm-microworld-os.md), and the [Imagine Loop](the-imagine-loop.md) explore on the open-source side — **if** Sunny Street later wants documented, player-owned character data. Outreach letter (grounded in the public post, not private assumptions): [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md).
 
 | Aspect | Notes |
 |---|---|
@@ -66,7 +66,7 @@ Highlighted here because that **pedagogical** framing rhymes with problems [Simo
 **Hypothetical hub:** Sunny Street ↔ soul-file ↔ Stardew / RimWorld / … — same pattern as other peers; [Family Album](family-album-as-storymaker.md) for player-to-player story merges.
 
 **City scale (optional second primitive).**  
-If Sunny Street later exposes a **region or map** boundary compatible with neighboring-town protocols, the same [city-protocol interop](federation-peer-games.md#cities-skylines--cities-skylines-ii-colossal-order--paradox-2015--2023) used for Cities: Skylines can sit a Micropolis city next to a Sunny Street district — commuters and stats across the edge, characters still bound to lots via [zone-binding](simopolis.md#how-sims-save-files-actually-bind-to-micropolis-tiles). Character bridges and city bridges stay separate primitives; both can be true.
+If Sunny Street later exposes a **region or map** boundary compatible with neighboring-town protocols, the same [city-protocol interop](federation-peer-games.md#cities-skylines--cities-skylines-ii-colossal-order--paradox-2015--2023) used for Cities: Skylines can sit a Micropolis city next to a Sunny Street district — commuters and stats across the edge, characters still bound to lots via [zone-binding](soul-city.md#how-sims-save-files-actually-bind-to-micropolis-tiles). Character bridges and city bridges stay separate primitives; both can be true.
 
 ### Bifrost mapping highlights (draft)
 
@@ -160,7 +160,7 @@ Full design: **[shattered-pixel-dungeon-bridge.md](shattered-pixel-dungeon-bridg
 |---|---|
 | Spiritual fit | **11/10 — foundational.** This is the ur-character: a virtual person living in a dollhouse with persistent state, 15 years before The Sims, 4 before SimCity. Importing *the first computer person* into the modern characters-as-hydrogen substrate is the single most poignant bridge in the Federation. The headwater of the whole lineage ([platform-lineage-index.md](platform-lineage-index.md), [collaborative-microworld-lineage.md](collaborative-microworld-lineage.md)). |
 | Technical fit | 5/10 — retro, but tractable. Original platforms C64 / Apple II / Amiga / Atari ST / Amstrad / Spectrum (1985). The person's state **persists to the disk** — so the bridge = read/write the on-disk character data from a **disk image**, running the title in a web emulator. **House-platform preference: target the Apple ][ version** (`apple2js`/`AppleWin` → wasm) — we are an Apple ][ shop when we can be (same reusable retro stack as the Apple ][ Wizardry target: TS disk-image + filesystem libs → parse/edit the save → emulator in the browser). The C64 path (VICE/x64 → wasm) stays available as a fallback. Format needs reverse-engineering (community knowledge + the disk dump). |
-| What the bridge ships | LCP person → characters-as-hydrogen soul-file (name, personality, needs, the dog!); the most reverent possible incarnation — the first computer person, reborn, able to visit a Sims house or Simopolis. Likely import-direction first. |
+| What the bridge ships | LCP person → characters-as-hydrogen soul-file (name, personality, needs, the dog!); the most reverent possible incarnation — the first computer person, reborn, able to visit a Sims house or Soul City. Likely import-direction first. |
 | Caveats | Activision-era IP (nominative use; operate on disk images the user owns, like all retro targets). Lower-fidelity character model than later games — but that's the point; it's the seed everything grew from. |
 | Why it matters | It's the *origin story*, demonstrable. On a Repo Show: boot the 1985 disk in an emulator, read the little person's data live, and bring them forward into the substrate that descends from them. The full circle of the whole project, in one character. |
 
@@ -216,7 +216,7 @@ Excellent additions to the Federation; ship after Tier 1 is mature, or in parall
 |---|---|
 | Spiritual fit | 6/10 alone; 9/10 *as a Micropolis City peer*. Not character-driven, but its **cims** are aggregated population units like our Micropolis zone aggregates. The natural pairing is City ↔ City, not City ↔ characters. |
 | Technical fit | 8/10. Steam Workshop is mature; saves are accessible. More importantly, Skylines already has a **multi-city region** model where neighboring cities exchange commuters, freight, electricity, water/sewage, and outside-connection traffic — and *Micropolis is GPL3 source-available, so we can implement that protocol on our side*. |
-| Bridge highlights — **the right primitive is neighboring-city interop, not file conversion** | Don't translate Skylines saves ↔ Micropolis `.cty` files (different scales, different eras, the rendered streets don't map). Instead, **let a Micropolis city sit next to a Skylines city in the same region**, exchanging the same boundary signals Skylines uses for Skylines-to-Skylines neighbors: commuters across each outside connection, freight, electricity import/export, water/sewage flow, transit lines crossing the edge. Since the Micropolis engine source is ours, we add an **outside-connection adapter** that translates Micropolis internal state (zone densities, traffic, power surplus, residential demand) into Skylines's region-neighbor message shape, plus the inverse for inbound signals. Each game keeps rendering its own streets natively; the boundary is what bridges. Households whose Sims are bound to specific blocks on either side still get the [Family Album graph](family-album-as-storymaker.md) treatment via the [zone-binding scanner](simopolis.md#how-sims-save-files-actually-bind-to-micropolis-tiles). |
+| Bridge highlights — **the right primitive is neighboring-city interop, not file conversion** | Don't translate Skylines saves ↔ Micropolis `.cty` files (different scales, different eras, the rendered streets don't map). Instead, **let a Micropolis city sit next to a Skylines city in the same region**, exchanging the same boundary signals Skylines uses for Skylines-to-Skylines neighbors: commuters across each outside connection, freight, electricity import/export, water/sewage flow, transit lines crossing the edge. Since the Micropolis engine source is ours, we add an **outside-connection adapter** that translates Micropolis internal state (zone densities, traffic, power surplus, residential demand) into Skylines's region-neighbor message shape, plus the inverse for inbound signals. Each game keeps rendering its own streets natively; the boundary is what bridges. Households whose Sims are bound to specific blocks on either side still get the [Family Album graph](family-album-as-storymaker.md) treatment via the [zone-binding scanner](soul-city.md#how-sims-save-files-actually-bind-to-micropolis-tiles). |
 | Generalizes to | SimCity 4 had regions with neighboring cities — same protocol shape, recoverable. Any future city sim that supports neighboring-city interop can plug Micropolis in as a neighbor by the same adapter pattern. Micropolis becomes a **protocol-bridging hub**: talks to The Sims via documented IFF formats, talks to Skylines via the region-neighbor protocol, can talk to additional city sims by adding adapters without changing the core engine. |
 | Why interesting | Skylines is the dominant city sim; sitting a Micropolis city right next to a Skylines metro on the same region map (with cims commuting across the boundary in both directions) is a much sharper demo than format conversion would ever be. |
 
@@ -226,14 +226,14 @@ Excellent additions to the Federation; ship after Tier 1 is mature, or in parall
 
 Wildly popular games where bridges would unlock huge audiences, but the technical fit is harder (platform restrictions, less character-centric, less established modding tooling).
 
-### Animal Crossing: New Horizons (Nintendo, 2020) — *see also [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md)*
+### Animal Crossing: New Horizons (Nintendo, 2020) — *see also [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md)*
 
 | Aspect | Notes |
 |---|---|
 | Spiritual fit | 9/10. Direct cousin of *Tomodachi Life*; player + villagers as named characters; island as dollhouse. *The* Switch life-sim phenomenon of 2020–22, with millions still playing. |
 | Technical fit | 5/10. Nintendo Switch saves are encrypted; the community has [NHSE](https://github.com/kwsch/NHSE) for *unlocked* (Atmosphere'd) consoles, which is a non-trivial barrier for most players. |
 | Bridge highlights | (Where feasible) NHSE → MOOLLM importer for player + villager data; bridge would operate on the user's exported save with the user's chosen on-Switch tooling |
-| Caveats | Nintendo's posture toward modding is sharply more restrictive than Paradox / Ludeon / ConcernedApe / Bethesda; we propose this bridge *as user-side companion tooling on user-exported saves only*, never anything that requires interfering with the Switch. See the [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) discussion of the same posture. |
+| Caveats | Nintendo's posture toward modding is sharply more restrictive than Paradox / Ludeon / ConcernedApe / Bethesda; we propose this bridge *as user-side companion tooling on user-exported saves only*, never anything that requires interfering with the Switch. See the [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) discussion of the same posture. |
 | Why interesting (with care) | Even a one-way *export* from ACNH to MOOLLM (your villagers become Dream-space citizens, their personalities preserved) would have enormous cultural reach. |
 
 ### Minecraft (Mojang / Microsoft, 2011)
@@ -324,7 +324,7 @@ Tabletop RPG ecosystems are extraordinarily aligned with the character substrate
 | Spiritual fit | 10/10. Foundry and Roll20 are the dominant virtual-tabletop platforms; characters are JSON-shaped sheets with full traits, skills, inventory, relationships, biographical text. *This is the format MOOLLM was already mimicking with `CHARACTER.yml`*. |
 | Technical fit | 9/10. Foundry is plug-in friendly with documented APIs; Roll20 has an export-character-sheet feature; both have mature community ecosystems. |
 | Bridge highlights | D&D 5e / Pathfinder / Cyberpunk RED / Call of Cthulhu / etc. character sheets → MOOLLM citizens; campaign session logs → MOOLLM memories with date / event tags; party relationship graph → relationship cluster. |
-| What "in the spirit of Simopolis" looks like here | A D&D party of six characters retires from adventuring to settle in Pleasantview, where the bard opens a music venue, the rogue runs a tavern, the cleric becomes a town councilor — all imagined-forward in the Imagine Loop, generated into a Sims neighborhood, played in the EA Sims 1. Each character's adventuring backstory is a chapter in their Family Album. |
+| What "in the spirit of Soul City" looks like here | A D&D party of six characters retires from adventuring to settle in Pleasantview, where the bard opens a music venue, the rogue runs a tavern, the cleric becomes a town councilor — all imagined-forward in the Imagine Loop, generated into a Sims neighborhood, played in the EA Sims 1. Each character's adventuring backstory is a chapter in their Family Album. |
 | Why this is huge | D&D / TTRPG culture has produced more *characters players love deeply* per dollar of media spend than any other corner of gaming. Bridging that into the Sims-style life-sim domain is a high-novelty, high-engagement, high-streaming move. |
 
 ### D&D Beyond (Wizards of the Coast / Hasbro, since 2017) + Pathbuilder (community)
@@ -382,7 +382,7 @@ Recently-released or in-development games that are themselves attempting to be S
 
 | Aspect | Notes |
 |---|---|
-| See | [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) for the full discussion. Nintendo's platform restrictions in *Living the Dream* explicitly opt out of cross-platform character sharing — so a bridge would have to rely entirely on user-side console exporting tools, with the same posture as our [ACNH](#animal-crossing-new-horizons-nintendo-2020--see-also-tomodachi-life-and-simopolismd) approach. |
+| See | [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) for the full discussion. Nintendo's platform restrictions in *Living the Dream* explicitly opt out of cross-platform character sharing — so a bridge would have to rely entirely on user-side console exporting tools, with the same posture as our [ACNH](#animal-crossing-new-horizons-nintendo-2020--see-also-tomodachi-life-and-soul-citymd) approach. |
 
 ---
 
@@ -471,7 +471,7 @@ Even with great character data, the bridge would require platform-side jailbreak
 
 ### Tomodachi Life as default-Switch experience (caveat, not anti-target)
 
-See [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md). The Switch sharing restrictions in *Living the Dream* (2026) mean a bridge is only useful for users with on-Switch save extraction tooling. We're willing to ship the bridge for that subset; we're not willing to circumvent Switch DRM ourselves.
+See [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md). The Switch sharing restrictions in *Living the Dream* (2026) mean a bridge is only useful for users with on-Switch save extraction tooling. We're willing to ship the bridge for that subset; we're not willing to circumvent Switch DRM ourselves.
 
 ---
 
@@ -560,9 +560,9 @@ It is **a graded catalogue of candidate peer games**, with technical notes, spir
 |---|---|
 | Character substrate (top-level framing) | [characters-as-hydrogen.md](characters-as-hydrogen.md) |
 | The Bifrost protocol | [moollm-microworld-os.md → The Bifrost](moollm-microworld-os.md#the-bifrost-the-bridge-as-a-structured-ontological-transition) |
-| Simopolis (the Sims 1 ↔ Dream bridge that came first) | [simopolis.md](simopolis.md) |
+| Soul City (the Sims 1 ↔ Dream bridge that came first) | [soul-city.md](soul-city.md) |
 | Family Album as branching/merging graph (the *intra*-game federation) | [family-album-as-storymaker.md](family-album-as-storymaker.md) |
-| Tomodachi Life cultural / strategic comparison | [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) |
+| Tomodachi Life cultural / strategic comparison | [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) |
 | Sunny Street (featured peer, outreach) | [sunny-street-outreach.md (moollm)](https://github.com/SimHacker/moollm/blob/main/designs/email/sunny-street-outreach.md) · [Featured peer §](#sunny-street) |
 | Designer-vs-platform separation (Will Wright vs current EA) | [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md#the-same-separation-applies-to-will-wright-vs-electronic-arts) |
 

@@ -4,11 +4,11 @@
 
 **Status:** Active design  
 **Monorepo:** MicropolisCore  
-**Companion documents:** [simopolis.md](simopolis.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)
+**Companion documents:** [soul-city.md](soul-city.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)
 
 > **Trademark notice.** *Micropolis* is used under license from Micropolis GmbH. *SimCity* and *The Sims* are EA Inc. trademarks; references are historical or made in this project's role as a *companion* to the EA-published Sims Legacy Collection. No affiliation with or endorsement by EA or Micropolis GmbH is implied.
 
-> **Scope.** Imagine Loop is a narrative-simulation companion; it produces valid `.iff` save files; the Sims engine remains the runtime. See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent) for the canonical positioning.
+> **Scope.** Imagine Loop is a narrative-simulation companion; it produces valid `.iff` save files; the Sims engine remains the runtime. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
@@ -16,7 +16,7 @@
 
 We do not need to reimplement The Sims simulator. Far more exciting: **let an LLM EXAMINE the state of the world** (house, people, objects, relationships, history) parsed from a real save file, **IMAGINE** what might happen — at whatever timescale and under whatever rules, constraints, or cheats the player chooses — **EDIT the high-level YAML representations** to reflect the imagined outcome, **RETAIN the narrative** in those representations (mind-mirror nuance, YAML Jazz comments, family album pages, generated or WebGPU-rendered images), **COMPILE the YAML back down into a valid `.iff` save file**, and **INJECT it into the player's EA-published game so the official Sims simulator can take it from there**. The LLM is the *narrator the Sims never had* — not the *simulator the Sims already is*. The two roles complement each other; they do not compete.
 
-This is the **Imagine Loop**. It is the single most important architectural commitment in the whole Simopolis design after the trademark scope statement.
+This is the **Imagine Loop**. It is the single most important architectural commitment in the whole Soul City design after the trademark scope statement.
 
 ---
 
@@ -382,13 +382,13 @@ The cellular-automatist framing (see [moollm-microworld-os.md → The cellular-a
                                    └──────────────────────────────────────┘
 ```
 
-Three apps. Two trademark-safe names. One vision (Simopolis as the umbrella concept). Each app's role is distinct.
+Three apps. Two trademark-safe names. One vision (Soul City as the umbrella concept). Each app's role is distinct.
 
 - **Micropolis City** (`apps/micropolis/`) is the city simulation. It runs the GPL Micropolis engine. It is the visible Micropolis-side of the two-resolution world.
 - **Micropolis Home** (planned `apps/micropolis-home/`, currently scoped as `apps/simopolis/` in earlier docs) is the Sims content tool. It is where the EXAMINE → IMAGINE → EDIT → INJECT loop runs. It hosts the Adventure Compiler, the Family Album server, the Uplifted Computer authoring UI, and the recovered-archive viewer.
 - **EA Sims 1 (Legacy Collection on Steam)** runs the actual Sims simulation. The user's purchase, the user's runtime, the user's data, our content.
 
-The naming clarification is significant for legal positioning: *Micropolis City* and *Micropolis Home* both use the trademark we have licensed (Micropolis GmbH); neither uses the trademark we do not (Sims, EA). Where earlier docs say *apps/simopolis*, the intent is to migrate to *apps/micropolis-home* as the production name. *Simopolis* persists as the umbrella codename and as the literary reference (per Marusek's *Wedding Album*).
+The naming clarification is significant for legal positioning: *Micropolis City* and *Micropolis Home* both use the trademark we have licensed (Micropolis GmbH); neither uses the trademark we do not (Sims, EA). Where earlier docs say *apps/simopolis*, the intent is to migrate to *apps/micropolis-home* as the production name. *Soul City* is the umbrella / hub name; Marusek's *Wedding Album* still uses the literary place-name *Simopolis*.
 
 ---
 
@@ -511,12 +511,12 @@ It is **a coherent-state transformer for valid Sims save files, intent-driven by
 
 | Resource | Where |
 |---|---|
-| Simopolis strategy | [simopolis.md](simopolis.md) |
+| Soul City strategy | [soul-city.md](soul-city.md) |
 | MOOLLM microworld substrate | [moollm-microworld-os.md](moollm-microworld-os.md) |
 | The Computer-as-Portal (Adventure Compiler targets) | [the-computer-as-portal.md](the-computer-as-portal.md) |
 | Tornado archive recovery | [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) |
 | Family Album as branching/merging network (StoryMaker lineage) | [family-album-as-storymaker.md](family-album-as-storymaker.md) |
-| Phased build plan | [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md) |
+| Phased build plan | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) |
 | Sims I/O TypeScript (L0–L3 today, L4–L5 next) | [packages/sims-io/](../../packages/sims-io) |
 | MOOLLM integration layer | [moollm-micropolis-integration.md](moollm-micropolis-integration.md) |
 

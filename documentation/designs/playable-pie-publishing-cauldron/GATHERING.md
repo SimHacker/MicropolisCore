@@ -59,7 +59,7 @@ A single **interaction + content substrate** with three faces:
 - **A graph of content-plugins** (directories with `README.md` + interface files;
   identity = slug, placement = path) that is **two-way linked**, multi-resolution
   (GLANCE → CARD → STONE → README → full), and **transcluded** across federated sites.
-- **A playable world** (Micropolis now; Simopolis/Sims and peer games later) that is
+- **A playable world** (Micropolis now; Soul City/Sims and peer games later) that is
   itself just another graph of objects you navigate, edit, and publish with the same
   substrate.
 
@@ -465,7 +465,7 @@ zoom targets — the MediaGraph/iLoci ancestor). It even debugged and modified *
   → `DonHopkins/characters/don-hopkins/sites/FEDERATION.md`,
   `…/PUBLISHING-DESIGN-LANDSCAPE.md`, `…/PRIOR-ART.md`,
   [../characters-as-hydrogen.md](../characters-as-hydrogen.md),
-  [../simopolis.md](../simopolis.md).
+  [../soul-city.md](../soul-city.md).
 - **Rendering pipeline:** SvelteKit + mdsvex/remark-rehype; markdown→HTML at prerender;
   embeddable Svelte components / typed fenced blocks (graphs, sims, pies) inside content
   (the powerful "hook into how blocks render" goal). → `apps/micropolis/README.md`

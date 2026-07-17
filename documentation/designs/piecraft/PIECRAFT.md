@@ -5,7 +5,7 @@
 
 **Primary sources:** Don Hopkins emails (Aug 2012 Unite Amsterdam, Dec 2013 Lucy Bradshaw, **Mar 2013 Andrew Willmott** — [simcity-2013-willmott-hopkins-correspondence.md](../simcity-2013-willmott-hopkins-correspondence.md), Apr 2014 CMU interview); [HN 7263027](https://news.ycombinator.com/item?id=7263027); Ben Shneiderman / Brad Myers CMU lecture outline (Feb 2019).
 
-**MicropolisCore role:** PieCraft is the **constructionist** reference game for *runtime-editable* radial UI. Micropolis **play mode** ships the **curated** SimCity totem-pole + pies ([simcity-tool-palette-design.md](../simcity-tool-palette-design.md)); Simopolis may add **player-editable** loadouts later. Same [PIE-MENU-MODEL](./PIE-MENU-MODEL.md) and [holodeck](../unified-webgpu-renderer.md) either way.
+**MicropolisCore role:** PieCraft is the **constructionist** reference game for *runtime-editable* radial UI. Micropolis **play mode** ships the **curated** SimCity totem-pole + pies ([simcity-tool-palette-design.md](../simcity-tool-palette-design.md)); Soul City may add **player-editable** loadouts later. Same [PIE-MENU-MODEL](./PIE-MENU-MODEL.md) and [holodeck](../unified-webgpu-renderer.md) either way.
 
 ---
 
@@ -102,7 +102,7 @@ PieCraft **inverts**: the player **authors** the map. Micropolis web app targets
 
 1. **Ship** curated `ToolCatalog` + pies (SimCity fidelity, MP-ready).
 2. **Optional** user loadouts (Monster Hunter / PieCraft-lite) for power users.
-3. **Research** full PieCraft mode as separate demo or Simopolis minigame.
+3. **Research** full PieCraft mode as separate demo or Soul City minigame.
 
 ---
 

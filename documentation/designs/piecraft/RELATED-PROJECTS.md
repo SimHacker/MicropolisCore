@@ -10,7 +10,7 @@ Chronological and topical map of Don Hopkins pie-menu work **as it bears on Micr
 |------|---------|------------------------|
 | 1988–91 | Pie menus CHI / Dr. Dobb’s | [pie-menus-fitts-law.md](../pie-menus-fitts-law.md) |
 | 1993 | **SimCityNet** X11/Tk MP | [simcity-tool-palette-design.md](../simcity-tool-palette-design.md), `micropolis-activity/` |
-| 1993+ | **The Sims** pies | [simopolis.md](../simopolis.md), vitamoo |
+| 1993+ | **The Sims** pies | [soul-city.md](../soul-city.md), vitamoo |
 | 2002 | **ConnectedTV** (Palm) — finger pies, stroke vs poke | [automotive-touch-ui-vs-pie-menus.md](../automotive-touch-ui-vs-pie-menus.md) §5 |
 | 2000s | **OpenLaszlo** Micropolis Online | [openlaszlo/classes/piecursor.lzx](../../openlaszlo/classes/piecursor.lzx) |
 | 2012 | **Unity pies** + **PieCraft** concept | This folder; Asset Store strategy |
@@ -91,7 +91,7 @@ PieCraft delta: menus as **physical**, **damageable** objects with spill mechani
 
 Email thread to Lucy Bradshaw / Will Wright: C# port of 1990s Sims animation code; request Apache-style license for Asset Store + education (CMU Alice precedent for Sims 2).
 
-**MicropolisCore:** `packages/mooshow`, `packages/sims-io`, Simopolis uplift — **orthogonal** to PieCraft but same Unity-era push.
+**MicropolisCore:** `packages/mooshow`, `packages/sims-io`, Soul City uplift — **orthogonal** to PieCraft but same Unity-era push.
 
 ---
 

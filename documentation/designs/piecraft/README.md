@@ -20,7 +20,7 @@
 ## How this connects to MicropolisCore (not abstract HCI only)
 
 ```text
-  PieCraft (research game)          Micropolis / Simopolis (shipping)
+  PieCraft (research game)          Micropolis / Soul City (shipping)
          │                                    │
          └──────────┬─────────────────────────┘
                     ▼
@@ -45,7 +45,7 @@ ToolCatalog    HolodeckStage    VirtualPointer
 | [macos-pie-menu-app-hn-2024.md](../macos-pie-menu-app-hn-2024.md) | HN 2024 pie-menu.com — OS shortcuts vs in-game holodeck pies |
 | [simcity-2013-willmott-hopkins-correspondence.md](../simcity-2013-willmott-hopkins-correspondence.md) | SC2013: Don offered Unity pies; moddable JS UI parallel |
 | [unified-webgpu-renderer.md](../unified-webgpu-renderer.md)                 | `PieMenu` holodeck plugin layer                              |
-| [simopolis.md](../simopolis.md)                                             | Lot view + Sims placement snap/invalid feedback              |
+| [soul-city.md](../soul-city.md)                                             | Lot view + Sims placement snap/invalid feedback              |
 | `apps/micropolis` `TileView`                                                | City builder: pies + `ToolCatalog` (target)                  |
 | `packages/vitamoo`                                                          | Pie shadow, head, GPU wedges                                 |
 | [moollm-micropolis-integration.md](../moollm-micropolis-integration.md)     | Optional: skills/adventures as “pies of commands” for agents |

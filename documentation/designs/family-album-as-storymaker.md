@@ -5,11 +5,11 @@
 **Status:** Active design
 **Monorepo:** MicropolisCore
 **Read first:** [characters-as-hydrogen.md](characters-as-hydrogen.md) — the character substrate this doc extends
-**Companion documents:** [the-imagine-loop.md](the-imagine-loop.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [sims-content-registry.md](sims-content-registry.md) · [github-as-mmorpg-multiverse.md](github-as-mmorpg-multiverse.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)
+**Companion documents:** [the-imagine-loop.md](the-imagine-loop.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [sims-content-registry.md](sims-content-registry.md) · [github-as-mmorpg-multiverse.md](github-as-mmorpg-multiverse.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)
 
 > **Trademark notice.** *Micropolis* is used under license from Micropolis GmbH. *SimCity*, *The Sims*, and *Maxis* are EA Inc. trademarks; references are nominative use only. No affiliation with or endorsement by any listed studio is implied.
 
-> **Scope.** A companion-side extension of the user-authored Sims Family Album. The Sims engine remains the runtime; album pages compile back to documented `.iff` book/album objects. See [simopolis.md → Scope and intent](simopolis.md#scope-and-intent).
+> **Scope.** A companion-side extension of the user-authored Sims Family Album. The Sims engine remains the runtime; album pages compile back to documented `.iff` book/album objects. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent).
 
 > **Lineage.** This design draws on a thread of prior work (HyperLook SimCity, SimCityNet, DreamScape, MediaGraph, iLoci, Bar Karma's StoryMaker, Urban Safari) that is documented elsewhere in the design suite — see the *Lineage* section in [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md), [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) (SFC / Bar Karma / HiveMind), [storymaker/architectural-overview.md](storymaker/architectural-overview.md) (SFC slides + diagram), and the SimCity-to-Bar-Karma chronology referenced from [characters-as-hydrogen.md](characters-as-hydrogen.md). This doc focuses on the design itself; the lineage is not re-litigated here.
 
@@ -93,7 +93,7 @@ Edit operations are direct manipulation in each view: kiss two scenes together t
 
 ### Place kinds
 
-A scene's place can be a Sims lot (`lot_ref`), a real-world point (`geo: { lat, lon }`), a fictional setting, or a Micropolis residential zone (`zone_ref`). The Map View shows the geo-anchored subset; KML / GeoJSON export is standard; nearby photos come from open-licensed sources (Wikimedia / Mapillary / OSM). Scenes tagged to a `micropolis-zone` feed the [zone-binding scanner](simopolis.md#how-sims-save-files-actually-bind-to-micropolis-tiles).
+A scene's place can be a Sims lot (`lot_ref`), a real-world point (`geo: { lat, lon }`), a fictional setting, or a Micropolis residential zone (`zone_ref`). The Map View shows the geo-anchored subset; KML / GeoJSON export is standard; nearby photos come from open-licensed sources (Wikimedia / Mapillary / OSM). Scenes tagged to a `micropolis-zone` feed the [zone-binding scanner](soul-city.md#how-sims-save-files-actually-bind-to-micropolis-tiles).
 
 ---
 
@@ -139,7 +139,7 @@ Same posture as the Tornado's [ethics rules](the-tornado-and-the-archives.md#eth
 
 ## Federation
 
-Each user's family album graph is a git repository inside their [git-managed user Sims directory](simopolis.md#git-managed-user-sims-directory). Federation operations are git operations:
+Each user's family album graph is a git repository inside their [git-managed user Sims directory](soul-city.md#git-managed-user-sims-directory). Federation operations are git operations:
 
 - Share an album → `git push`
 - Subscribe to a friend → `git remote add`
@@ -183,7 +183,7 @@ No new substrate is introduced — this is a recombination.
 
 ## Build plan
 
-Phased tasks live in the roadmap: [Phase 1E in `simopolis-uplift-roadmap.md`](simopolis-uplift-roadmap.md#phase-1e--family-album-as-storymaker-4-6-weeks-parallelizable-with-1b--1c--1d). Headline first vertical: one user with a small graph, sharing one storyline with one friend via `git remote`, both compiling to a pageable album book IFF and loading it into their EA Sims 1.
+Phased tasks live in the roadmap: [Phase 1E in `soul-city-uplift-roadmap.md`](soul-city-uplift-roadmap.md#phase-1e--family-album-as-storymaker-4-6-weeks-parallelizable-with-1b--1c--1d). Headline first vertical: one user with a small graph, sharing one storyline with one friend via `git remote`, both compiling to a pageable album book IFF and loading it into their EA Sims 1.
 
 ---
 
@@ -214,6 +214,6 @@ Phased tasks live in the roadmap: [Phase 1E in `simopolis-uplift-roadmap.md`](si
 
 ## References
 
-In the design suite: [characters-as-hydrogen.md](characters-as-hydrogen.md) · [simopolis.md](simopolis.md) · [the-imagine-loop.md](the-imagine-loop.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [sims-content-registry.md](sims-content-registry.md) · [github-as-mmorpg-multiverse.md](github-as-mmorpg-multiverse.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [simopolis-uplift-roadmap.md](simopolis-uplift-roadmap.md)
+In the design suite: [characters-as-hydrogen.md](characters-as-hydrogen.md) · [soul-city.md](soul-city.md) · [the-imagine-loop.md](the-imagine-loop.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [sims-content-registry.md](sims-content-registry.md) · [github-as-mmorpg-multiverse.md](github-as-mmorpg-multiverse.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) · [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)
 
 External lineage materials (Bar Karma, StoryMaker / Urban Safari demos, MediaGraph, iLoci, Will Wright's 1996 Stanford talk, DreamScape, SimCityNet, HyperLook SimCity, *The Wedding Album*) are listed in [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) References and not duplicated here. SFC StoryMaker layer model and diagram: [storymaker/architectural-overview.md](storymaker/architectural-overview.md).

@@ -148,20 +148,20 @@ The same observe-recognise-act loop, with the recognition layer getting smarter 
 2026 Simplifier reborn — Cua-shaped substrate, Sims-shaped semantics
 ```
 
-The thing Cua is general-purpose; the thing Simopolis Simplifier adds is **IFF knowledge, cozy-game inclusion rules ([og-cozy-games.md](og-cozy-games.md)), provenance via the [Sims Content Registry](sims-content-registry.md), and integration with the [Imagine Loop](the-imagine-loop.md) and [Tornado archives](the-tornado-and-the-archives.md).** General desktop substrate vs domain-specific catalog reader.
+The thing Cua is general-purpose; the thing Soul City Simplifier adds is **IFF knowledge, cozy-game inclusion rules ([og-cozy-games.md](og-cozy-games.md)), provenance via the [Sims Content Registry](sims-content-registry.md), and integration with the [Imagine Loop](the-imagine-loop.md) and [Tornado archives](the-tornado-and-the-archives.md).** General desktop substrate vs domain-specific catalog reader.
 
 ---
 
 ## Why this matters for Micropolis
 
-[Simopolis](simopolis.md) ships content for the EA-published Sims 1 Legacy Collection. We do not run the simulator; the player does. That means *every* interaction with the live game window is the computer-use-agent problem:
+[Soul City](soul-city.md) ships content for the EA-published Sims 1 Legacy Collection. We do not run the simulator; the player does. That means *every* interaction with the live game window is the computer-use-agent problem:
 
 1. **Phase 1F Simplifier (T.13)** reads the Buy Mode catalog of the running game. Vision-LLM recognises items; registry resolves IFF identity; TTS reads price and description. Streamers narrate builds; low-vision users browse without squinting at bitmap Comic Sans; chat can ask *"where did this lamp come from?"* and get a real answer.
 2. **Capture posture** — passive screenshots only at first. The 2003 Simplifier could inject events because it ran on Don's box for Don's use. The 2026 Simplifier runs on streamers' boxes for their audiences' use; we cannot risk stealing focus mid-stream or moving the cursor mid-build. cua-driver-style background injection is an opt-in advanced mode, not the default.
 3. **Bench discipline** — vary catalog mods like Cua-Bench varies OS skins. A Simplifier that works against vanilla Maxis content but breaks on a SimSlice expansion is useless.
 4. **Federation posture** — Cua is MIT, Micropolis is GPL, EA's Sims 1 is closed but documented. We ship integrations via documented file formats and observation, not via reverse-engineering the executable. Same shape as Maxis-blessed Transmogrifier in 2000 ([the-computer-as-portal.md](the-computer-as-portal.md)).
 
-The Simopolis-specific work is *not* the agent loop — Cua and its successors will handle that. The work is the **Sims-shaped recognition** (catalog tabs, IFF semantics, fan-mod metadata) and the **streamer-shaped UX** (overlays, VOD markers, save-file giveaways) in [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a.
+The Soul City-specific work is *not* the agent loop — Cua and its successors will handle that. The work is the **Sims-shaped recognition** (catalog tabs, IFF semantics, fan-mod metadata) and the **streamer-shaped UX** (overlays, VOD markers, save-file giveaways) in [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a.
 
 ---
 
@@ -180,4 +180,4 @@ The Simopolis-specific work is *not* the agent loop — Cua and its successors w
 | aQuery wiki (archive) | [donhopkins.com/mediawiki/index.php/AQuery](https://web.archive.org/web/20180826132551/http://donhopkins.com/mediawiki/index.php/AQuery) |
 | §8a Twitch / Simplifier reborn | [`designing-inward-miyamoto-principles.md` §8a T.13](designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful) |
 | Sims Content Registry (the semantic layer) | [sims-content-registry.md](sims-content-registry.md) |
-| Build plan (Phase 1F, item 1F.12) | [simopolis-uplift-roadmap.md → Phase 1F](simopolis-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e) |
+| Build plan (Phase 1F, item 1F.12) | [soul-city-uplift-roadmap.md → Phase 1F](soul-city-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e) |

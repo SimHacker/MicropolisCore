@@ -130,7 +130,7 @@ Built-in plugins (implementation order aligned with [webgpu-renderer-design.md �
 | Mode | Camera | Map draw |
 |------|--------|----------|
 | **City builder** (Micropolis play) | Orthographic; `MapViewport` pan/zoom | `MicropolisMap` plugin: top-down tile shader pass writing pick type `7` |
-| **Lot view** (Simopolis / Micropolis Home) | Perspective Sims camera | Map as **floor layer** under walls/characters; same pick buffer |
+| **Lot view** (Soul City / Micropolis Home) | Perspective Sims camera | Map as **floor layer** under walls/characters; same pick buffer |
 | **Catalog preview** | User’s browser or headless Chromium | **WebGPU holodeck** (same plugins); software raster only when GPU absent |
 
 `MapViewport` (`screenToWorldTile`, `worldPixelToScreen`, `worldTileToScreenMatrix`) is the **2D contract** every plugin uses — whether the GPU path is `WebGPUTileRenderer` today or a holodeck `MicropolisMap` plugin tomorrow.

@@ -2,7 +2,7 @@
 
 **Status:** Design notes (engineering + strategic) — a character import/export bridge target
 **Monorepo:** MicropolisCore
-**Companion documents:** [characters-as-hydrogen.md](characters-as-hydrogen.md) (the multi-universal character substrate) · [simopolis.md](simopolis.md) (the hub) · [sims-content-registry.md](sims-content-registry.md) (the Sims-side import/export analog) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) (another per-game bridge) · [og-cozy-games.md](og-cozy-games.md) (games-to-look-into) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)
+**Companion documents:** [characters-as-hydrogen.md](characters-as-hydrogen.md) (the multi-universal character substrate) · [soul-city.md](soul-city.md) (the hub) · [sims-content-registry.md](sims-content-registry.md) (the Sims-side import/export analog) · [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) (another per-game bridge) · [og-cozy-games.md](og-cozy-games.md) (games-to-look-into) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)
 
 > **Trademark / license notice.** *Micropolis* is used under license from Micropolis GmbH. *SimCity*, *The Sims*, *Maxis* are EA Inc. trademarks (nominative use only). **Shattered Pixel Dungeon** © 2014–2026 Evan Debenham, and **Pixel Dungeon** © 2012–2015 Oleg Dolya (Watabou), are **GPLv3**; this document describes interoperating with the public GPLv3 source, not vendoring it.
 
@@ -109,11 +109,11 @@ The Sims 1 *already shipped* the destination layers — no third game required:
 
 This is the same expansion-aware mapping the Sims content tools already do; the bridge just feeds it from a roguelike soul-file.
 
-## The bridge into Simopolis (and back)
+## The bridge into Soul City (and back)
 
 - A **Hero** imports as a characters-as-hydrogen soul-file; it can incarnate as a **Sims character** (the cozy contrast), accreting a **Mind Mirror** personality read along the way (see [moollm-microworld-os.md → the double personality model](moollm-microworld-os.md)).
 - A **Sim** can export *down* into SPD as a Hero (pick a class by personality?), descend the dungeon, and — because bridging is **non-destructive** — die heroically and be **regenerated** from the canonical soul-file at will.
-- Same substrate as the other bridges (Stardew, Proxi, Wizardry): **Simopolis is the hub**; characters/objects/memories move between universes (Will Wright's 1996 data-portability "crown jewel").
+- Same substrate as the other bridges (Stardew, Proxi, Wizardry): **Soul City is the hub**; characters/objects/memories move between universes (Will Wright's 1996 data-portability "crown jewel").
 
 ---
 
@@ -127,6 +127,6 @@ This is the same expansion-aware mapping the Sims content tools already do; the 
 
 ## See also
 
-- [characters-as-hydrogen.md](characters-as-hydrogen.md) · [simopolis.md](simopolis.md) · [sims-content-registry.md](sims-content-registry.md) · [tomodachi-life-and-simopolis.md](tomodachi-life-and-simopolis.md) · [og-cozy-games.md](og-cozy-games.md) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)
+- [characters-as-hydrogen.md](characters-as-hydrogen.md) · [soul-city.md](soul-city.md) · [sims-content-registry.md](sims-content-registry.md) · [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md) · [og-cozy-games.md](og-cozy-games.md) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)
 - Repo: <https://github.com/00-Evan/shattered-pixel-dungeon> (GPLv3) · upstream: Watabou's Pixel Dungeon
 - Show (DonHopkins repo): `projects/micropolis-moollm/shows/game-bridge-sims-shattered.yml`
