@@ -46,7 +46,7 @@ This is the family-album archaeology idea from the MOOLLM repo, *upgraded* with 
 
 **The Wizard of Oz.** That's the whole image, and it should be obvious — Dorothy's farmhouse picked up off Kansas in a funnel of debris, set down in Oz, where the familiar people from home (Auntie Em, Uncle Henry, the farmhands) reappear transformed into mythical characters (Glinda, the Wicked Witch, Scarecrow, Tin Man, Lion). The adventure resolves. Dorothy clicks her heels: *there's no place like home.* She wakes up in Kansas. The data is unchanged. The relationships have shifted underneath her.
 
-**There's no place like Micropolis Home.**
+**There's no place like Soul City.**
 
 *In SimCity (Will Wright, 1989) the **Tornado** was one of the canonical disasters from day one — alongside fire, flood, earthquake, monster, plane crash, and nuclear meltdown. It crosses the map, tears up zones, picks up a few cars and buildings, leaves a trail of changed tiles, and then dissipates. Micropolis inherits the tornado from EA's GPL SimCity release. That's the in-engine, city-side manifestation of the same image. But this tornado will be able to pick up and transport across worlds and drop houses, as well as destroying them.*
 

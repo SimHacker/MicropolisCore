@@ -68,7 +68,7 @@ The critical consensus, neutrally summarized: **Nintendo built a uniquely sharea
 
 Nintendo's restriction architecture follows directly from being a Nintendo first-party console game:
 
-| | *Tomodachi Life: Living the Dream* | Soul City (Micropolis Home + The Sims 1) |
+| | *Tomodachi Life: Living the Dream* | Soul City (Soul City + The Sims 1) |
 |---|---|---|
 | **Runtime owner** | Nintendo (single platform, single binary, single update channel) | EA (The Sims 1 Legacy Collection); Soul City is a content companion, not a runtime |
 | **What ships** | A closed game that *is* the world | An open content-creation + content-discovery tool that targets a separately-purchased runtime |
@@ -136,7 +136,7 @@ Adding these to the design suite, all relatively small:
 
 | # | Feature | Where it lands | Effort |
 |---|---|---|---|
-| 1 | **Household-lingo file** (`HOUSEHOLD_LINGO.yml`) — player-fed topics, names, slang; the Adventure Compiler feeds this into every Speed-of-Light LLM call as ambient context | `packages/sims-io/src/l4/household-lingo.ts` + UI in Micropolis Home | 2 days |
+| 1 | **Household-lingo file** (`HOUSEHOLD_LINGO.yml`) — player-fed topics, names, slang; the Adventure Compiler feeds this into every Speed-of-Light LLM call as ambient context | `packages/sims-io/src/l4/household-lingo.ts` + UI in Soul City | 2 days |
 | 2 | **Voice-mode toggle** per character — silent / Simlish / LLM-TTS / player-recorded | `CHARACTER.yml` field + UI toggle | 1 day (TTS integration deferred) |
 | 3 | **Region-targeted starter packs** — Tornado output bundled as installable household sets per region (US 2003 humor / UK Geocities / Japanese fan-site) | `tools/tornado/regional-packs/` | 1 week, as a Phase 3 sub-track |
 | 4 | **"Reality TV mode" preset** for the Imagine Loop UI — multi-week emergent drama with album pages every Sim-week | `apps/micropolis-home/src/routes/imagine/presets/` | 2 days, on top of Phase 1D core |

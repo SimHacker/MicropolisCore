@@ -371,7 +371,7 @@ Currently `files-inventory.ts` holds state **in-process memory** — a server re
 ## Soul City — The Uplift
 
 **Top-level framing:** [documentation/designs/characters-as-hydrogen.md](designs/characters-as-hydrogen.md) — characters as the *hydrogen* (most-abundant, highest-valence content-atom) of the **Micropolis Federation**, with other atom types (lots, objects, behaviors, appearances, memories, stories, sounds) combining into molecules. *Federation* deliberately (Star Trek vibe), not *franchise* — cooperative association of sovereign open-source projects.
-**Strategy:** [documentation/designs/soul-city.md](designs/soul-city.md) — unified Micropolis + Sims vision (introduces the two-product naming: **Micropolis City** + **Micropolis Home**)
+**Strategy:** [documentation/designs/soul-city.md](designs/soul-city.md) — unified Micropolis + Sims vision (introduces the two-product naming: **Micropolis City** + **Soul City**)
 **Substrate:** [documentation/designs/moollm-microworld-os.md](designs/moollm-microworld-os.md) — MOOLLM as the agent layer
 **Recovery pipeline:** [documentation/designs/the-tornado-and-the-archives.md](designs/the-tornado-and-the-archives.md) — sweep the Internet Archive into residential zones
 **Computer-as-portal:** [documentation/designs/the-computer-as-portal.md](designs/the-computer-as-portal.md) — Uplifted Computer + custom IFF content for the EA game
@@ -463,9 +463,9 @@ Key sub-items:
 
 ### G5. Twitch-friendly streaming features (Phase 1F)
 
-"Watching the player IS the game" at Twitch scale. Thirteen concrete streaming-integration features (chat-as-writers'-room, OBS overlay browser sources, bit-cheers as in-narrative events, channel-points redemptions, sub-named Sims, VOD chapter markers, save-file giveaway with provenance, streamer trust controls, multi-streamer crossover, official Twitch Extension, "Twitch Plays Micropolis Home" mode, plus a vision-LLM **Simplifier** screen-scraping agent that reads catalog item descriptions aloud and cross-references online Sims content libraries — useful for streamers narrating builds and for accessibility users). The strategic argument: Sims content streaming is one of the largest non-shooter categories on Twitch; this is the highest-leverage popularity move available to the project.
+"Watching the player IS the game" at Twitch scale. Thirteen concrete streaming-integration features (chat-as-writers'-room, OBS overlay browser sources, bit-cheers as in-narrative events, channel-points redemptions, sub-named Sims, VOD chapter markers, save-file giveaway with provenance, streamer trust controls, multi-streamer crossover, official Twitch Extension, "Twitch Plays Soul City" mode, plus a vision-LLM **Simplifier** screen-scraping agent that reads catalog item descriptions aloud and cross-references online Sims content libraries — useful for streamers narrating builds and for accessibility users). The strategic argument: Sims content streaming is one of the largest non-shooter categories on Twitch; this is the highest-leverage popularity move available to the project.
 
-**Headline 1-week demo:** A Sims streamer drops Micropolis Home overlay URLs into OBS, streams with VOD chapter markers, gives viewers the save file at stream end with full stream-derived provenance trail.
+**Headline 1-week demo:** A Sims streamer drops Soul City overlay URLs into OBS, streams with VOD chapter markers, gives viewers the save file at stream end with full stream-derived provenance trail.
 
 Full design: [designing-inward-miyamoto-principles.md → §8a The Twitch corollary](designs/designing-inward-miyamoto-principles.md#8a-the-twitch-corollary-make-streamers-radically-powerful). Concrete tasks: [roadmap Phase 1F](designs/soul-city-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e).
 

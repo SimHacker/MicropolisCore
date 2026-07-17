@@ -10,7 +10,7 @@
 
 ## Summary
 
-A *computer-use agent* drives an application the way a person would: it reads pixels off the screen, recognises what's there, and posts mouse and keyboard events into the input queue. There is no API contract, no source access, no cooperation from the target app. The technique is older than the term — Don Hopkins shipped one against *The Sims Online* in 2003 — and the engineering problems it raises (focus stealing, cursor warp, brittle templates, theme variance, customer-service load when bots act on behalf of strangers) are the same problems Cua, Anthropic Computer Use, and OpenAI Operator are now wrestling with at scale. This is the lineage and the engineering shape; Micropolis Home re-enters it as Simplifier reborn.
+A *computer-use agent* drives an application the way a person would: it reads pixels off the screen, recognises what's there, and posts mouse and keyboard events into the input queue. There is no API contract, no source access, no cooperation from the target app. The technique is older than the term — Don Hopkins shipped one against *The Sims Online* in 2003 — and the engineering problems it raises (focus stealing, cursor warp, brittle templates, theme variance, customer-service load when bots act on behalf of strangers) are the same problems Cua, Anthropic Computer Use, and OpenAI Operator are now wrestling with at scale. This is the lineage and the engineering shape; Soul City re-enters it as Simplifier reborn.
 
 ---
 

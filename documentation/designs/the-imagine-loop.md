@@ -78,7 +78,7 @@ flowchart TB
 | ✏️ **EDIT** | Write back YAML: traits, `mind_mirror`, memories, family events |
 | 📦 **INJECT** | Compile YAML → `.iff` via the L3 setters + generated album pages |
 | 🎮 **EA Sims 1 plays it** | The Legacy Collection plays the result. *The runtime is theirs, the save state is ours.* |
-| ⟲ Round-trip | Player plays, saves, re-imports into Micropolis Home → back to EXAMINE |
+| ⟲ Round-trip | Player plays, saves, re-imports into Soul City → back to EXAMINE |
 
 Each stage is a well-defined transform with a strict invariant.
 
@@ -356,7 +356,7 @@ The cellular-automatist framing (see [moollm-microworld-os.md → The cellular-a
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                                                                         │
-│  Micropolis City                          Micropolis Home               │
+│  Micropolis City                          Soul City               │
 │  (apps/micropolis/, GPL Micropolis        (apps/micropolis-home/,       │
 │   engine, runs here)                       a.k.a. apps/simopolis/       │
 │                                            during transition)           │
@@ -385,10 +385,10 @@ The cellular-automatist framing (see [moollm-microworld-os.md → The cellular-a
 Three apps. Two trademark-safe names. One vision (Soul City as the umbrella concept). Each app's role is distinct.
 
 - **Micropolis City** (`apps/micropolis/`) is the city simulation. It runs the GPL Micropolis engine. It is the visible Micropolis-side of the two-resolution world.
-- **Micropolis Home** (planned `apps/micropolis-home/`, currently scoped as `apps/simopolis/` in earlier docs) is the Sims content tool. It is where the EXAMINE → IMAGINE → EDIT → INJECT loop runs. It hosts the Adventure Compiler, the Family Album server, the Uplifted Computer authoring UI, and the recovered-archive viewer.
+- **Soul City** (planned `apps/micropolis-home/`, currently scoped as `apps/simopolis/` in earlier docs) is the Sims content tool. It is where the EXAMINE → IMAGINE → EDIT → INJECT loop runs. It hosts the Adventure Compiler, the Family Album server, the Uplifted Computer authoring UI, and the recovered-archive viewer.
 - **EA Sims 1 (Legacy Collection on Steam)** runs the actual Sims simulation. The user's purchase, the user's runtime, the user's data, our content.
 
-The naming clarification is significant for legal positioning: *Micropolis City* and *Micropolis Home* both use the trademark we have licensed (Micropolis GmbH); neither uses the trademark we do not (Sims, EA). Where earlier docs say *apps/simopolis*, the intent is to migrate to *apps/micropolis-home* as the production name. *Soul City* is the umbrella / hub name; Marusek's *Wedding Album* still uses the literary place-name *Simopolis*.
+The naming clarification is significant for legal positioning: *Micropolis City* and *Soul City* both use the trademark we have licensed (Micropolis GmbH); neither uses the trademark we do not (Sims, EA). Where earlier docs say *apps/simopolis*, the intent is to migrate to *apps/micropolis-home* as the production name. *Soul City* is the umbrella / hub name; Marusek's *Wedding Album* still uses the literary place-name *Simopolis*.
 
 ---
 
@@ -406,7 +406,7 @@ The Imagine Loop is mostly composition of pieces that already exist or are in pr
 | L.6 | `compile(edited) → IffBundle` (uses Phase 0 L3 setters + Phase 1C Adventure Compiler for album books) | `packages/sims-io/src/l5/compile.ts` | Phase 0 + Phase 1C |
 | L.7 | "Valid-or-revise" loop: failed invariants feed back to MOOLLM for a corrected diff | `packages/sims-io/src/l5/loop.ts` | L.3, L.5 |
 | L.8 | Family Album page renderer: WebGPU + image-gen paths | `packages/mooshow/src/album-render.ts` + image-gen API integration | Phase 1C |
-| L.9 | Micropolis Home UI: intent input, IMAGINE preview, diff review, INJECT confirm | `apps/micropolis-home/src/routes/imagine/` | Phase 0 shell |
+| L.9 | Soul City UI: intent input, IMAGINE preview, diff review, INJECT confirm | `apps/micropolis-home/src/routes/imagine/` | Phase 0 shell |
 | L.10 | "Time-skip" preset: common time-skip intent templates pre-fillable in the UI | UI templates | L.9 |
 | L.11 | "What-if" preset: branch + reconcile UX | UI templates | L.9 |
 | L.12 | "Backstory" preset: generate-prior-history flow | UI templates | L.9 |
@@ -419,7 +419,7 @@ The first vertical (1–2 weeks for the headline demo): **L.1 + L.2 + L.3 + L.4 
 
 ## A worked example
 
-User opens Micropolis Home. Drags in `Pleasantview/Neighborhood.iff` from their own EA Sims 1 install. EXAMINE produces a YAML snapshot. The UI shows: 8 families, 23 characters, 47 relationships.
+User opens Soul City. Drags in `Pleasantview/Neighborhood.iff` from their own EA Sims 1 install. EXAMINE produces a YAML snapshot. The UI shows: 8 families, 23 characters, 47 relationships.
 
 User picks the Goths. UI shows the Goth household: Bella, Mortimer, Cassandra. Funds, careers, recent memories.
 
@@ -475,7 +475,7 @@ The Sims engine, from this point, *plays normally*. Moment-to-moment motive simu
 | Result is "boring" / "wrong tone" | UI provides preview + edit before INJECT; user can revise intent and re-imagine; no commit until user accepts |
 | Long-running households accumulate too much narrative for the engine to load | Imagine outputs can be "consolidated" — earlier memories archived to `provenance/` files; current Sim memory stays under the engine's documented limits |
 
-The "valid-or-revise" discipline at L.7 is the structural safety net: nothing reaches INJECT without passing the validators. The user has the final approval gate before any file leaves Micropolis Home for their Sims install.
+The "valid-or-revise" discipline at L.7 is the structural safety net: nothing reaches INJECT without passing the validators. The user has the final approval gate before any file leaves Soul City for their Sims install.
 
 ---
 

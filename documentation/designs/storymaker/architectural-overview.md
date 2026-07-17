@@ -1,7 +1,7 @@
 # StoryMaker — Architectural Overview
 
 **Status:** Historical design (Stupid Fun Club, ~2010–2011)
-**Revival:** [family-album-as-storymaker.md](../family-album-as-storymaker.md) — same graph primitives in Micropolis Home
+**Revival:** [family-album-as-storymaker.md](../family-album-as-storymaker.md) — same graph primitives in Soul City
 **Companion:** [maxis-ea-shutdown-hn-2015.md](../maxis-ea-shutdown-hn-2015.md) · [phoneloper-sfc-speech-toy.md](../phoneloper-sfc-speech-toy.md)
 
 > **StoryMaker: An Open, Collaborative, Geo-Social Narrative Engine** — SFC slides by Don Hopkins.
@@ -97,7 +97,7 @@ Integration / JSON Metadata / Extension cylinders in the diagram label the three
 
 ## Relation to MicropolisCore
 
-| SFC StoryMaker | Micropolis Home revival |
+| SFC StoryMaker | Soul City revival |
 |---|---|
 | Scene graph + storylines | [family-album-as-storymaker.md](../family-album-as-storymaker.md) `scene.yml` / `storyline.yml` |
 | Places (geo + virtual) | `place.yml` — lot, geo, fictional, micropolis-zone |

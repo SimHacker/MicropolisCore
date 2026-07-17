@@ -163,7 +163,7 @@ Don also proposed splitting additional work out of #15 — menu management, tabb
 | **`apps/micropolis/`** | In-page pies are tractable today — [renderer-plugin-roadmap.md](renderer-plugin-roadmap.md). No extension sandbox. |
 | **`apps/vitamoospace/`** | WebGPU/HTML overlay inside the app shell — same as Slate recipe but same-origin. |
 | **Browser extension** | Blocked on Track (2) APIs; use [**Kando**](kando-cross-platform-pie-menu.md) pattern as desktop sibling or wait on standards. |
-| **Micropolis Home / aQuery** | OS overlay + AX selectors — inherit Slate pattern or Cua Driver lower layer ([aquery-programmable-accessibility.md](aquery-programmable-accessibility.md)). |
+| **Soul City / aQuery** | OS overlay + AX selectors — inherit Slate pattern or Cua Driver lower layer ([aquery-programmable-accessibility.md](aquery-programmable-accessibility.md)). |
 | **Standards advocacy** | Vocabulary for a **new** overlay-window + global-capture spec — not satisfied by #160 / `openPopup` wins alone |
 
 Phase 0 Soul City does not depend on extension pies. Phase 1F streaming overlays ([designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a) benefit from understanding why **OBS browser sources** and **in-app overlays** are the shippable path while **extension-global pies** wait on standards.

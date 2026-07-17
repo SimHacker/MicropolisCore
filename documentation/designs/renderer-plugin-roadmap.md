@@ -81,5 +81,5 @@ server → catalog version
 ## Related
 
 - [pie-menus-browser-extensions.md](pie-menus-browser-extensions.md) — in-page pies vs extension sandbox
-- [soul-city.md](soul-city.md) — Micropolis Home + vitamoo/mooshow packages
+- [soul-city.md](soul-city.md) — Soul City + vitamoo/mooshow packages
 - [gesture-space-and-pie-menus.md](gesture-space-and-pie-menus.md)

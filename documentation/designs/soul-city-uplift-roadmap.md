@@ -4,7 +4,7 @@
 **Monorepo:** MicropolisCore  
 **Companion documents:** [soul-city.md](soul-city.md) · [characters-as-hydrogen.md](characters-as-hydrogen.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [federation-peer-games.md](federation-peer-games.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) · [sims-content-registry.md](sims-content-registry.md)
 
-> **Naming note.** Throughout this roadmap, "Soul City" is the *umbrella concept name* for the integration of two shipping products: **Micropolis City** (the existing `apps/micropolis/`, the GPL city sim) and **Micropolis Home** (planned `apps/micropolis-home/`, currently scaffolded as `apps/simopolis/`). When the docs say `apps/simopolis/`, read it as "the Micropolis Home companion app, pre-rename." See [soul-city.md → Two products, one umbrella](soul-city.md#two-products-one-umbrella).
+> **Naming note.** Throughout this roadmap, "Soul City" is the *umbrella concept name* for the integration of two shipping products: **Micropolis City** (the existing `apps/micropolis/`, the GPL city sim) and **Soul City** (planned `apps/micropolis-home/`, currently scaffolded as `apps/simopolis/`). When the docs say `apps/simopolis/`, read it as "the Soul City companion app, pre-rename." See [soul-city.md → Two products, one umbrella](soul-city.md#two-products-one-umbrella).
 **Tracks:** open work in [documentation/TODO.md](../TODO.md) under "Soul City — The Uplift"
 
 > **Trademark notice.** *Micropolis* is used under license from Micropolis GmbH. *SimCity* and *The Sims* are EA Inc. trademarks, used historically or in this project's role as a *companion* to the EA-published Sims Legacy Collection. See [MicropolisPublicNameLicense.md](../../MicropolisPublicNameLicense.md) and [MicropolisGPLLicenseNotice.md](../../MicropolisGPLLicenseNotice.md).
@@ -60,7 +60,7 @@ If we ship nothing else, this is the proof. The proof is also the legal position
 | 0.5 | A minimal `apps/simopolis/` SvelteKit app: file-picker, uplift, show characters as cards with traits + family, allow editing the YAML fields, write back | new app | 4–5 days |
 | 0.6 | SPR2 → PNG skin export in TypeScript, called from L4 to populate generated character cards | `packages/sims-io/src/spr2/` | 2–3 days |
 | 0.7 | Download path: re-write modified `sims_traits`, gold, and skill values back into the original `Neighborhood.iff`, save as a new file | extension of L3 setters | 3 days |
-| 0.8 | **Git-managed user Sims directory** (see [soul-city.md → Git-managed user Sims directory](soul-city.md#git-managed-user-sims-directory)): ship platform-specific `.gitignore` templates that exclude EA-shipped binaries; provide an "Initialize git on my Sims directory" one-click action in Micropolis Home; auto-commit on every Micropolis-Home-originated change with structured trailers (`Tool:`, `Prompt:`, `Model:`, `InvariantsClaimed:`); prompt-before-push for any public remote | `apps/micropolis-home/src/lib/git-overlay/` + `assets/gitignore-templates/` | 3–4 days |
+| 0.8 | **Git-managed user Sims directory** (see [soul-city.md → Git-managed user Sims directory](soul-city.md#git-managed-user-sims-directory)): ship platform-specific `.gitignore` templates that exclude EA-shipped binaries; provide an "Initialize git on my Sims directory" one-click action in Soul City; auto-commit on every Micropolis-Home-originated change with structured trailers (`Tool:`, `Prompt:`, `Model:`, `InvariantsClaimed:`); prompt-before-push for any public remote | `apps/micropolis-home/src/lib/git-overlay/` + `assets/gitignore-templates/` | 3–4 days |
 | 0.9 | **Sims Content Registry, first vertical** (see [sims-content-registry.md](sims-content-registry.md)): SQLite schema + `scan` walk over the user's content directories + `validate --strategy=annotate-only` over a save file. Builds on the existing `packages/vitamoo/vitamoo/io/guid-collision.ts` utilities. No repair yet; just inventory and structured warnings. | `tools/content-registry/` + `packages/sims-io/src/l4/registry/` | 3–4 days |
 
 ### Definition of done
@@ -132,12 +132,12 @@ The first **player-visible content artifact** in the project. Full design lives 
 | 1C.11b | Compiler targets: HeadShop, CostumeRack, MakeupBar, AccessoryCounter (the rest of the Character Customization Studio, follow-on after WigOMatic ships) | `tools/adventure-compiler/targets/customization/` | 1 week total |
 | 1C.12 | Compiler target: Screen-Snapshot Camera (back-channel to Family Album) | `tools/adventure-compiler/targets/camera.ts` | 3 days |
 | 1C.13 | Auto-internationalizer pass on STR# output (Phase 1A LLM enrichment reused) | `tools/adventure-compiler/i18n.ts` | 2 days |
-| 1C.14 | Micropolis Home authoring + preview UI for the seven object types (WigOMatic UI is a great first vertical — visible, fun, fast) | `apps/micropolis-home/src/routes/compose/` (currently `apps/simopolis/`) | 1 week core + 3 days per sub-shop UI |
+| 1C.14 | Soul City authoring + preview UI for the seven object types (WigOMatic UI is a great first vertical — visible, fun, fast) | `apps/micropolis-home/src/routes/compose/` (currently `apps/simopolis/`) | 1 week core + 3 days per sub-shop UI |
 
 ### Definition of done
 
 - A user can run `pnpm run compile-uplifted-computer --apps micropolis,my-city,goth-album --out out/`, get a `.iff` they drop into their `~/Documents/EA Games/The Sims/Downloads/`, launch the EA-published Sims 1, find the Uplifted PC in Buy Mode, and watch their Sim "play Micropolis" via real screen snapshots cycling on the PC sprite.
-- A CD object exported from one Micropolis Home user's app can be installed into another user's game and registered into their Uplifted Computer's catalog.
+- A CD object exported from one Soul City user's app can be installed into another user's game and registered into their Uplifted Computer's catalog.
 - A Foreign Photo Album exported from a recovered 2003 family album loads in-game and is page-turnable, in any of 20 supported languages.
 - **A WigOMatic-generated wig** (`"1950s Hollywood platinum finger waves"` typed in the UI) compiles to a Sims-1 head skin IFF, drops into `Downloads/`, and appears on the chosen Sim's head in-game.
 - A Micropolis Rug-O-Matic Rug carrying a `moollm://content/cities/<id>` URL renders the city as cycling SPR2 atlases on the rug surface in-game.
@@ -165,12 +165,12 @@ The architectural alternative to reimplementing the Sims runtime. Full design li
 | 1D.6 | `compile()` — YAML → `.iff` using Phase 0 L3 setters + Phase 1C Adventure Compiler for album books | `packages/sims-io/src/l5/compile.ts` | 4 days |
 | 1D.7 | Valid-or-revise loop: failed invariants → MOOLLM for corrected diff | `packages/sims-io/src/l5/loop.ts` | 3 days |
 | 1D.8 | Family Album page renderer: WebGPU (`mooshow`) + image-gen integration; both paths palette-quantize to SPR2 | `packages/mooshow/src/album-render.ts` | 5 days |
-| 1D.9 | Micropolis Home UI: intent input, IMAGINE preview, diff review, INJECT confirm | `apps/micropolis-home/src/routes/imagine/` | 1 week |
+| 1D.9 | Soul City UI: intent input, IMAGINE preview, diff review, INJECT confirm | `apps/micropolis-home/src/routes/imagine/` | 1 week |
 | 1D.10 | Intent presets: time-skip, what-if branch, retroactive backstory, dream sequence, cheat-with-narrative | UI templates + skill prompts | 3 days |
 
 ### Definition of done
 
-- Drop a `Pleasantview/Neighborhood.iff` into Micropolis Home, type "skip five years for the Goth household, plausible," click Imagine, get a diff preview within ~60s.
+- Drop a `Pleasantview/Neighborhood.iff` into Soul City, type "skip five years for the Goth household, plausible," click Imagine, get a diff preview within ~60s.
 - Approve the diff. Get a new `Neighborhood.iff` + a custom Pageable Album Book IFF for download.
 - Drop both into the player's EA Sims 1 install. Launch. The Goths are five years older with five years of memories. The album book is on the shelf, readable in-game, in any of 20 supported languages.
 - The valid-or-revise loop catches one synthetic invariant violation in the test suite and round-trips a corrected diff successfully.
@@ -206,8 +206,8 @@ The 35-year SimCity → DreamScape → The Sims → Bar Karma / StoryMaker / Urb
 
 ### Definition of done
 
-- A user can drop a `.iff` save into Micropolis Home and see their Family Album as a navigable graph in all five views.
-- The user can publish a storyline to a friend over `git push`; the friend pulls and sees the scenes in their own Micropolis Home; they fork a branch, write their own storyline through the same scenes, and push back.
+- A user can drop a `.iff` save into Soul City and see their Family Album as a navigable graph in all five views.
+- The user can publish a storyline to a friend over `git push`; the friend pulls and sees the scenes in their own Soul City; they fork a branch, write their own storyline through the same scenes, and push back.
 - The user can compile a storyline to a pageable album-book IFF, drop it into their EA Sims 1 install, and page through it in-game in any of 20 languages.
 - A character snippet exported from author A's scene installs into author B's Dream space with full Bifrost merge + provenance.
 
@@ -233,14 +233,14 @@ The "watching the player IS the game" principle expressed at Twitch scale. Full 
 | 1F.6 | **VOD chapter markers** (T.7): emit Twitch-API-compatible chapter markers at story-beat boundaries | `packages/twitch-bridge/src/vod-chapters.ts` | 2 days |
 | 1F.7 | **Save-file giveaway-with-provenance at stream end** (T.8): one-click "publish today's save"; shareable URL with stream-derived provenance trail | UI + federation hooks | 3 days |
 | 1F.8 | **Streamer trust controls** (T.9): per-streamer granular settings for what chat can do; rate limits; sub-only / mod-only gates; banned-keyword filters | UI + config schema | 3 days |
-| 1F.9 | **Multi-streamer crossover** (T.10): two Micropolis Home users running concurrent streams with a household crossover; both chats vote on shared scenes; federated graph records | extends 1E.10 federation + 1F.3 voting | 4 days |
-| 1F.10 | Official **Twitch Extension** for Micropolis Home channels (T.6): published Twitch panel showing household state, soul-files, album sidebar, city map | `apps/twitch-extension/` | 2–3 weeks (separate effort) |
-| 1F.11 | "Twitch Plays Micropolis Home" mode (T.11): chat directly drives Imagine Loop with rate-limited rounds and stronger filters | opt-in event mode | 3 days |
+| 1F.9 | **Multi-streamer crossover** (T.10): two Soul City users running concurrent streams with a household crossover; both chats vote on shared scenes; federated graph records | extends 1E.10 federation + 1F.3 voting | 4 days |
+| 1F.10 | Official **Twitch Extension** for Soul City channels (T.6): published Twitch panel showing household state, soul-files, album sidebar, city map | `apps/twitch-extension/` | 2–3 weeks (separate effort) |
+| 1F.11 | "Twitch Plays Soul City" mode (T.11): chat directly drives Imagine Loop with rate-limited rounds and stronger filters | opt-in event mode | 3 days |
 | 1F.12 | **Simplifier** (T.13): vision-LLM provider abstraction + screenshot capture of the EA Sims 1 window; catalog scraper extracts name / price / description / visual identity per item, feeds the [Sims Content Registry](sims-content-registry.md), and cross-references online libraries ([Tornado-recovered Sims Exchange](the-tornado-and-the-archives.md), ModTheSims, SimFreaks / ZombieSims, donhopkins.com archive); TTS narration (Web Speech API + MOOLLM `tts` skill); desktop overlay + OBS browser-source variant | `packages/sims-vision/src/simplifier/` + `apps/micropolis-home/src/routes/overlays/catalog/` | 1–2 weeks |
 
 ### Definition of done
 
-- A streamer can install Micropolis Home overlays into OBS in under 5 minutes, with no plugins.
+- A streamer can install Soul City overlays into OBS in under 5 minutes, with no plugins.
 - During a stream, chat can pitch intents, vote, and watch them feed into the next Imagine call.
 - At stream end, the save file is downloadable by viewers, with the full stream-derived provenance trail intact.
 - The official Twitch Extension is approved and installable in the Twitch Extension Studio.
@@ -292,7 +292,7 @@ The zone↔save binding has three canonical patterns — see [soul-city.md → H
 | # | Task | Where | Effort |
 |---|---|---|---|
 | 2D.1 | In Micropolis City (`apps/micropolis/`), clicking a bound residential zone opens a panel showing per-pattern household summaries (one list for `tile-houses`, a per-floor scroll for `high-rise-tower`, a single-lot card for `rendered-lot`) | UI work | 4 days |
-| 2D.2 | "Zoom in" routes from Micropolis City to Micropolis Home (`apps/micropolis-home/`) with the zone parameter; back-button returns to Micropolis at the same camera position | routing | 2 days |
+| 2D.2 | "Zoom in" routes from Micropolis City to Soul City (`apps/micropolis-home/`) with the zone parameter; back-button returns to Micropolis at the same camera position | routing | 2 days |
 | 2D.3 | Provenance display: who authored the bound neighborhood(s), when archived, license terms; per-tile-house provenance for the tile-houses pattern, per-floor for the high-rise pattern | UI work | 2 days |
 
 ### Track E: Per-lot rendering and rooftop overlays (the Sims-Online-map mode)
@@ -303,7 +303,7 @@ The zone↔save binding has three canonical patterns — see [soul-city.md → H
 | 2E.2 | Tile slicer: divide a rendered lot into N×M Micropolis-tile-sized fragments; emit per-tile sprite atlases for the city renderer | `packages/tile-renderer/src/lot-slice.ts` | 4 days |
 | 2E.3 | Custom-tile overlay path: Micropolis City's tile renderer reads bound zones' `binding.pattern == 'rendered-lot'` blocks and uses the sliced sprites in place of default residential tile graphics for those tiles | `packages/tile-renderer/src/overlay.ts` + city-map integration | 4 days |
 | 2E.4 | Rooftop-overlay compositor: text and icon overlays read from `roof_content:` blocks composite onto the appropriate tile sprites at the right zoom level; visible on the Micropolis map view, hidden in the lot interior view | `packages/tile-renderer/src/roof-overlay.ts` | 4 days |
-| 2E.5 | Micropolis Home authoring UI for rooftop overlays: pick a lot, type text or pick an icon, preview the resulting tile in context, save to `roof_content:`. Camp-energy welcome. | `apps/micropolis-home/src/routes/rooftop/` | 4 days |
+| 2E.5 | Soul City authoring UI for rooftop overlays: pick a lot, type text or pick an icon, preview the resulting tile in context, save to `roof_content:`. Camp-energy welcome. | `apps/micropolis-home/src/routes/rooftop/` | 4 days |
 
 The first vertical for Track E: pick one demo lot, run it through 2E.1 + 2E.2 + 2E.3, and watch the lot appear in semi-iso on the Micropolis city map in place of the generic residential-zone tiles. ~2 weeks. The headline is *"the city map literally shows the lots, like The Sims Online used to."*
 

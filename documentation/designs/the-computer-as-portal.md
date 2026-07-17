@@ -8,7 +8,7 @@
 
 > **Trademark notice.** This project uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) from Micropolis GmbH. *SimCity* and *The Sims* are Electronic Arts Inc. trademarks; references are historical or in this project's role as a *companion* to the EA-published Sims Legacy Collection. No affiliation with or endorsement by EA or Micropolis GmbH is implied.
 
-> **Scope.** Custom Sims 1 content (IFF objects) produced by Micropolis Home tools and loaded by the user into their own Sims 1 install via documented Maxis mechanisms (BHAVs, STR#, SPR2). See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
+> **Scope.** Custom Sims 1 content (IFF objects) produced by Soul City tools and loaded by the user into their own Sims 1 install via documented Maxis mechanisms (BHAVs, STR#, SPR2). See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 
@@ -265,7 +265,7 @@ The Family Album content type fans out across many surfaces: a recovered 2003 al
 
 ### 6. WigOMatic and the Character Customization Studio
 
-The most fun set of tools in Micropolis Home, and unapologetically camp. The flagship is **WigOMatic**.
+The most fun set of tools in Soul City, and unapologetically camp. The flagship is **WigOMatic**.
 
 WigOMatic is one of the *first* character-editing tools players should reach for: pick a Sim, see their current head skin, type a wig you want — *"1950s Hollywood, platinum blonde, finger waves"*, *"post-apocalyptic mohawk, three colors"*, *"judicial powdered curls"*, *"flame-orange dreadlocks with little brass bells in them"* — image-gen produces the wig texture, the renderer palette-quantizes it back to a Sims-1 head SPR2 atlas, and the result is a new head/skin IFF the player drops into their `Downloads/` directory. The next time the Sim's head loads in the EA-published Sims 1, the wig is on.
 
@@ -284,7 +284,7 @@ The same pattern fans out into a whole **Character Customization Studio**, each 
 | **BodyMod / FelidaeAtelier** | Ear/tail/fur mods for furry-style customization (camp included) | Same atlas pipeline, extended slot table                                                 |
 
 
-The shops live inside Micropolis Home as MOOLLM-aware craft rooms (a `pub/wigomatic/` room with affordances, a `WIGOMATIC.yml` shop card, ambient skills attached). They draw on the same `packages/sims-io` SPR2 writer and the same `packages/mooshow` WebGPU re-renderer as the rug, the album, and the camera — but each shop owns its UI vocabulary and its prompt patterns.
+The shops live inside Soul City as MOOLLM-aware craft rooms (a `pub/wigomatic/` room with affordances, a `WIGOMATIC.yml` shop card, ambient skills attached). They draw on the same `packages/sims-io` SPR2 writer and the same `packages/mooshow` WebGPU re-renderer as the rug, the album, and the camera — but each shop owns its UI vocabulary and its prompt patterns.
 
 #### The Imagine Loop's "style transfer" use case lands here
 
@@ -292,7 +292,7 @@ This is the same machinery the [Imagine Loop](the-imagine-loop.md) uses for its 
 
 This is also a perfect content path for content recovery (the [Tornado](the-tornado-and-the-archives.md)): recovered 2003-era custom hair/skin content gets re-rendered through WigOMatic to clean it up, regenerate at higher fidelity where the original was low-res, and republish with original-author attribution preserved in `provenance.yml`.
 
-Maxis's lineage here is explicit: the original **HeadShop** (a Maxis-era face/head customization tool that lived alongside Transmogrifier in The Sims content ecosystem) was the official content tool for character customization. WigOMatic + the Character Customization Studio are the spiritual successors — browser-native, LLM-assisted, palette-correct, ethically attribution-respecting, and *much* sillier. Underneath, they all run on the **Transmoogrifier** — our modernized successor to Maxis's TMOG, the general IFF-object editor inside Micropolis Home that every craft shop in this document composes on top of.
+Maxis's lineage here is explicit: the original **HeadShop** (a Maxis-era face/head customization tool that lived alongside Transmogrifier in The Sims content ecosystem) was the official content tool for character customization. WigOMatic + the Character Customization Studio are the spiritual successors — browser-native, LLM-assisted, palette-correct, ethically attribution-respecting, and *much* sillier. Underneath, they all run on the **Transmoogrifier** — our modernized successor to Maxis's TMOG, the general IFF-object editor inside Soul City that every craft shop in this document composes on top of.
 
 ```yaml
 # wigomatic-platinum-finger-waves.yml — Adventure Compiler source
@@ -380,7 +380,7 @@ Each embedding has the same shape: **a small artifact in the outer world that po
 | ------------------ | --------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | Sims-in-Sims       | EA Sims 1 household               | Another Sims save file   | CD / Save-Game Disk / Album book (IFF)                                                              | Screen snapshots (SPR2 in the Computer) or pages (SPR2 in the Book)       |
 | Micropolis-in-Sims | EA Sims 1 household               | A Micropolis `.cty`      | CD / Save-Game Disk / App on Uplifted Computer / Rug-O-Matic Rug / future window/painting/boardgame | Screen snapshots of the city map, day/night/disaster views, baked to SPR2 |
-| Sims-in-Micropolis | Micropolis Home / Micropolis City | A Sims neighborhood file | `zone-<row>-<col>.yml` binding (already designed)                                                   | Zoom-in transition to the lot view in Micropolis Home                     |
+| Sims-in-Micropolis | Soul City / Micropolis City | A Sims neighborhood file | `zone-<row>-<col>.yml` binding (already designed)                                                   | Zoom-in transition to the lot view in Soul City                     |
 
 
 The first two are *content* the player loads into their EA game. The third is internal to the companion app.
@@ -501,7 +501,7 @@ It is also the most direct demonstration of the lineage from Maxis's Transmogrif
 | 12. Compiler target: **WigOMatic + Character Customization Studio** (head/body skin atlases) | `tools/adventure-compiler/targets/customization.ts` + sub-shops `wigomatic.ts`, `headshop.ts`, `costume-rack.ts`, `makeup-bar.ts`, `accessory-counter.ts` | 1 week (head + 1 sub-shop first vertical: 3 days)                    | (5) SPR2 writer, `mooshow` head/body atlases |
 | 13. Compiler target: Screen-Snapshot Camera                                                  | `tools/adventure-compiler/targets/camera.ts`                                                                                                              | 3 days                                                               | (6), back-channel                            |
 | 12. Auto-internationalizer pass on all STR# output                                           | `tools/adventure-compiler/i18n.ts`                                                                                                                        | 2 days                                                               | LLM access                                   |
-| 14. Micropolis Home UI for authoring + previewing all object types                           | `apps/micropolis-home/src/routes/compose/` (currently `apps/simopolis/`)                                                                                  | 1 week + 3 days per sub-shop UI (WigOMatic UI is the first vertical) | All of the above                             |
+| 14. Soul City UI for authoring + previewing all object types                           | `apps/micropolis-home/src/routes/compose/` (currently `apps/simopolis/`)                                                                                  | 1 week + 3 days per sub-shop UI (WigOMatic UI is the first vertical) | All of the above                             |
 
 
 Roughly **3–4 weeks of work** after Phase 0 ships, producing the first player-visible content artifact. That's a Phase 1C as defined above.

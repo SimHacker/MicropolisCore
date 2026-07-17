@@ -1,6 +1,6 @@
 # `@micropolis/render-core` — shared GPU plumbing
 
-**Goal:** one package that **vitamoo** and **micropolis** (and mooshow, Micropolis Home, headless catalog) can depend on so they run **separately or together** on the **same** schemas, viewport math, holodeck layers, and pick IDs — without forcing vitamoo to know about city tiles or micropolis to know about CMX.
+**Goal:** one package that **vitamoo** and **micropolis** (and mooshow, Soul City, headless catalog) can depend on so they run **separately or together** on the **same** schemas, viewport math, holodeck layers, and pick IDs — without forcing vitamoo to know about city tiles or micropolis to know about CMX.
 
 **Companion:** [unified-webgpu-renderer.md](unified-webgpu-renderer.md) (holodeck frame graph), [renderer-plugin-roadmap.md](renderer-plugin-roadmap.md) (TODO index), [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md) (June 2024 shared-memory WebGL tile path → holodeck evolution), [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) (Ocean Quigley coined “holodeck” for Sims 1’s 2.5D stack).
 

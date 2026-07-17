@@ -38,7 +38,7 @@
 
 `@micropolis/tile-renderer` is not a parallel forever-world. It is **scaffolding** until the tile grid is a holodeck layer on the shared stage.
 
-WebGL and Canvas tile backends remain **capability fallbacks** for teaching, old browsers, and headless workers without WebGPU — not the compositor model for Sims + Micropolis Home.
+WebGL and Canvas tile backends remain **capability fallbacks** for teaching, old browsers, and headless workers without WebGPU — not the compositor model for Sims + Soul City.
 
 ---
 
@@ -130,7 +130,7 @@ Built-in plugins (implementation order aligned with [webgpu-renderer-design.md �
 | Mode | Camera | Map draw |
 |------|--------|----------|
 | **City builder** (Micropolis play) | Orthographic; `MapViewport` pan/zoom | `MicropolisMap` plugin: top-down tile shader pass writing pick type `7` |
-| **Lot view** (Soul City / Micropolis Home) | Perspective Sims camera | Map as **floor layer** under walls/characters; same pick buffer |
+| **Lot view** (Soul City / Soul City) | Perspective Sims camera | Map as **floor layer** under walls/characters; same pick buffer |
 | **Catalog preview** | User’s browser or headless Chromium | **WebGPU holodeck** (same plugins); software raster only when GPU absent |
 
 `MapViewport` (`screenToWorldTile`, `worldPixelToScreen`, `worldTileToScreenMatrix`) is the **2D contract** every plugin uses — whether the GPU path is `WebGPUTileRenderer` today or a holodeck `MicropolisMap` plugin tomorrow.
@@ -188,7 +188,7 @@ Headless Chromium for batch jobs should prefer WebGPU inside the browser when th
 | **F** | `MicropolisSprites`, interaction highlight/selection | Not started |
 | **G** | `PieMenu` plugin (desaturate, feather, shadow, head) | Not started (design §4 step 8) |
 | **H** | Wire `apps/micropolis` `TileView` to `HolodeckStage` instead of standalone tile canvas | Not started |
-| **I** | `apps/vitamoospace` / Micropolis Home lot view — single canvas, full holodeck | In progress (characters); env not started |
+| **I** | `apps/vitamoospace` / Soul City lot view — single canvas, full holodeck | In progress (characters); env not started |
 
 ---
 

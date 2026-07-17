@@ -99,7 +99,7 @@ Don first met **Will Wright** around **1991**, contracting for **DUX Software** 
 
 **Why this matters here:** Andrew Willmott never met Don at Maxis ([simcity-2013-willmott-hopkins-correspondence.md](simcity-2013-willmott-hopkins-correspondence.md) §2), but the **HyperLook**, **X11/Tcl/Tk**, and **multiplayer** milestones are the pre-Maxis proof that Don could deliver simulation + UI + multiplayer networking at Will's bar — the trust that made the Sims hire possible.
 
-**Full stack evolution after DUX** (Linux → OLPC/GPL → Micropolis C++ → Python/SWIG → PyGTK → TurboGears/AMF/Flash/OpenLaszlo → WASM → SvelteKit/WebGPU → MicropolisCore monorepo with Micropolis City + Micropolis Home): **[platform-lineage-index.md](platform-lineage-index.md)** — not repeated here.
+**Full stack evolution after DUX** (Linux → OLPC/GPL → Micropolis C++ → Python/SWIG → PyGTK → TurboGears/AMF/Flash/OpenLaszlo → WASM → SvelteKit/WebGPU → MicropolisCore monorepo with Micropolis City + Soul City): **[platform-lineage-index.md](platform-lineage-index.md)** — not repeated here.
 
 ### Maxis, SFC, TomTom, and after (1997 → 2015)
 

@@ -1,6 +1,6 @@
 # Family Album as Storymaker
 
-## A branching, merging, geo-tagged graph of scenes for Micropolis Home
+## A branching, merging, geo-tagged graph of scenes for Soul City
 
 **Status:** Active design
 **Monorepo:** MicropolisCore
@@ -148,13 +148,13 @@ Each user's family album graph is a git repository inside their [git-managed use
 
 A central discovery server (provisionally `storymaker.micropolis.host`) is optional and only useful for discovery / voting tallies. Take it offline and the graph keeps working; it's one remote among many.
 
-The client stack is SvelteKit + WebGPU + TypeScript inside Micropolis Home; the server, when present, is a small Node service. Mobile clients (Capacitor / Tauri / PWA) are deferred.
+The client stack is SvelteKit + WebGPU + TypeScript inside Soul City; the server, when present, is a small Node service. Mobile clients (Capacitor / Tauri / PWA) are deferred.
 
 ---
 
 ## How it appears inside the EA-published Sims 1
 
-The graph lives in Micropolis Home. Inside the EA game, the player sees three on-disk artifacts the [Adventure Compiler](moollm-microworld-os.md#the-adventure-compiler-is-a-coherence-engine-partner-not-a-one-shot-compiler) emits:
+The graph lives in Soul City. Inside the EA game, the player sees three on-disk artifacts the [Adventure Compiler](moollm-microworld-os.md#the-adventure-compiler-is-a-coherence-engine-partner-not-a-one-shot-compiler) emits:
 
 1. **Pageable Family Album book IFF objects** — a storyline compiles into a book that drops on a Sim's bookshelf and pages through normally. See [the-computer-as-portal.md → Foreign Photo Album](the-computer-as-portal.md#4-the-photo-album-with-foreign-pages).
 2. **Rug and TV manifestations** — graph subsets cycle on the [Micropolis Rug-O-Matic](the-computer-as-portal.md#5-the-micropolis-rug-o-matic-rug) or on a Sim's TV via screen-snapshot SPR2.

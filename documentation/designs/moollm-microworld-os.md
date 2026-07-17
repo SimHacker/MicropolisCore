@@ -7,7 +7,7 @@
 
 > **Trademark notice.** This document uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) granted by Micropolis GmbH. *SimCity* and *The Sims* are trademarks of Electronic Arts Inc. and are referenced only historically, to describe the original games' design and the public source code released by EA for the OLPC project, or in this project's role as a *companion* to the EA-published Sims Legacy Collection. Nothing here is affiliated with or endorsed by EA or Micropolis GmbH.
 
-> **Scope.** MOOLLM is the agent/authoring layer behind Micropolis Home. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
+> **Scope.** MOOLLM is the agent/authoring layer behind Soul City. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent) for the canonical positioning.
 
 ---
 

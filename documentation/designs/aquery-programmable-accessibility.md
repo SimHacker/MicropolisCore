@@ -10,7 +10,7 @@
 
 ## Summary
 
-In 2015 Don Hopkins proposed *aQuery* — a JavaScript library that does for the operating-system accessibility tree what jQuery did for the DOM. CSS-style selectors over UI elements; event bindings that fire when matching widgets appear; plugins that render pie menus, overlays, and speech UI; a hybrid recogniser that falls back to [Prefab](prefab-pixel-reverse-engineering.md)-style pixel matching when the AX tree is empty. It never shipped. Almost every piece of it shows up somewhere in 2026 — [Hammerspoon](https://www.hammerspoon.org/), MCP servers, [Cua Driver](cua-computer-use-agents-and-simplifier.md), browser extensions, vision-LLM agents — but the *integrated, user-extensible, cross-platform layer* is still missing. Worth reading because the missing layer is the one Micropolis Home needs.
+In 2015 Don Hopkins proposed *aQuery* — a JavaScript library that does for the operating-system accessibility tree what jQuery did for the DOM. CSS-style selectors over UI elements; event bindings that fire when matching widgets appear; plugins that render pie menus, overlays, and speech UI; a hybrid recogniser that falls back to [Prefab](prefab-pixel-reverse-engineering.md)-style pixel matching when the AX tree is empty. It never shipped. Almost every piece of it shows up somewhere in 2026 — [Hammerspoon](https://www.hammerspoon.org/), MCP servers, [Cua Driver](cua-computer-use-agents-and-simplifier.md), browser extensions, vision-LLM agents — but the *integrated, user-extensible, cross-platform layer* is still missing. Worth reading because the missing layer is the one Soul City needs.
 
 ---
 
@@ -105,7 +105,7 @@ This matters for Micropolis. [Simplifier §8a T.13](designing-inward-miyamoto-pr
 
 ## What Soul City needs from this layer
 
-The Sims 1 catalog has no API. The recovered [Tornado](the-tornado-and-the-archives.md) family albums are scanned bitmaps. Custom-content mods drop arbitrary files into directories without metadata. Every interaction Micropolis Home wants with the EA Sims 1 window — and with archived community content — is exactly an aQuery-shaped problem.
+The Sims 1 catalog has no API. The recovered [Tornado](the-tornado-and-the-archives.md) family albums are scanned bitmaps. Custom-content mods drop arbitrary files into directories without metadata. Every interaction Soul City wants with the EA Sims 1 window — and with archived community content — is exactly an aQuery-shaped problem.
 
 The minimum viable slice for Phase 1F.12 ([`soul-city-uplift-roadmap.md` Phase 1F](soul-city-uplift-roadmap.md#phase-1f--twitch-friendly-streaming-features-3-5-weeks-parallelizable-with-1b--1c--1d--1e)):
 

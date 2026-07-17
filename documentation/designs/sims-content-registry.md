@@ -164,7 +164,7 @@ The LLM is doing *empathic matching*, not invention. It picks from existing IFFs
 | **`pnpm run content-registry validate <iff>`** | same | Run the validation walk on a save / lot / object; emit structured errors |
 | **`pnpm run content-registry repair --strategy=...`** | same | Apply a repair strategy interactively or in batch |
 | **`pnpm run content-registry collisions`** | same | Dump collision-cluster report |
-| **Micropolis Home UI** | `apps/micropolis-home/src/routes/registry/` | Interactive browser, collision picker, LLM-guess review, repair undo (via git overlay) |
+| **Soul City UI** | `apps/micropolis-home/src/routes/registry/` | Interactive browser, collision picker, LLM-guess review, repair undo (via git overlay) |
 | **Adventure Compiler integration** | `tools/adventure-compiler/validator/dependencies.ts` | Validation walk runs as part of any compile-time check; failures block flatten |
 | **Tornado integration** | `tools/tornado/import/` | Every imported batch updates the registry; collisions and missing refs surface for curation before binding |
 
