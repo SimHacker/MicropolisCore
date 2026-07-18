@@ -79,7 +79,10 @@ EA would **not greenlight** a single-player PC SimCity → online requirement. T
 
 **Guru design document** (Ocean: sincere, not just mushrooms):
 
-[https://docs.google.com/document/d/1rnvzKdJp9tyEJwEGxsIjoHnT4Rn7Sn5vkrWYR8HvSqM](https://docs.google.com/document/d/1rnvzKdJp9tyEJwEGxsIjoHnT4Rn7Sn5vkrWYR8HvSqM)
+- Markdown (WWSFF): [guru-simcity-3000-requirements-definition.md](https://github.com/SimHacker/WillWrightShowForFood/blob/main/characters/will-wright/sources/2026-simcity-3000-3d-preservation/guru-simcity-3000-requirements-definition.md)
+- Google Doc source: [docs.google.com/document/d/1rnvzKdJp9tyEJwEGxsIjoHnT4Rn7Sn5vkrWYR8HvSqM](https://docs.google.com/document/d/1rnvzKdJp9tyEJwEGxsIjoHnT4Rn7Sn5vkrWYR8HvSqM)
+- Don’s annotated excerpts: [article.md](https://github.com/SimHacker/WillWrightShowForFood/blob/main/characters/will-wright/sources/2026-simcity-3000-3d-preservation/article.md)
+- Preservation hub: [2026-simcity-3000-3d-preservation/](https://github.com/SimHacker/WillWrightShowForFood/tree/main/characters/will-wright/sources/2026-simcity-3000-3d-preservation)
 
 **EA survival rule** (Andrew): show **real progress in 3–6 months** on any new project or die — cites **Spore 2** among failures.
 
