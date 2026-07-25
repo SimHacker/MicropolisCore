@@ -2,7 +2,7 @@
 
 **Status:** Historical design (Stupid Fun Club, ~2010–2011)
 **Revival:** [family-album-as-storymaker.md](../family-album-as-storymaker.md) — same graph primitives in Soul City
-**Companion:** [maxis-ea-shutdown-hn-2015.md](../maxis-ea-shutdown-hn-2015.md) · [phoneloper-sfc-speech-toy.md](../phoneloper-sfc-speech-toy.md)
+**Companion:** [maxis-ea-shutdown-hn-2015.md](../maxis-ea-shutdown-hn-2015.md) · [phoneloper-sfc-speech-toy.md](../phoneloper-sfc-speech-toy.md) · [shneiderman-2011-correspondence.md](shneiderman-2011-correspondence.md)
 
 > **StoryMaker: An Open, Collaborative, Geo-Social Narrative Engine** — SFC slides by Don Hopkins.
 
@@ -95,6 +95,22 @@ Integration / JSON Metadata / Extension cylinders in the diagram label the three
 
 ---
 
+## 2011 operational snapshot
+
+From [shneiderman-2011-correspondence.md](shneiderman-2011-correspondence.md) (Don ↔ Ben Shneiderman, August–September 2011):
+
+| Item | Status (2011) |
+|---|---|
+| **Server** | Geo support added |
+| **Clients** | iPhone / iPad native app |
+| **Distribution** | Ad-hoc builds via device UUID |
+| **Academic use** | Janet Murray / GA Tech Experimental Television Group — student projects; [Georgia Tech wiki](http://storymaker.stupidfunclub.com/mediawiki/index.php/Georgia_Tech) |
+| **Peer tool cited** | Ben Bederson's **StoryKit** (ICDL) — mobile book authoring + free web viewer ([Wes Fryer, 2010](https://www.speedofcreativity.org/2010/09/13/publish-student-stories-online-with-artwork-text-and-audio-narration-with-storykit-free/)) |
+
+Same period: **Bar Karma** on air; **Urban Safari** exercising the Places layer in the field — see [../bar-karma/overview.md](../bar-karma/overview.md) and [../urban-safari/overview.md](../urban-safari/overview.md).
+
+---
+
 ## Relation to MicropolisCore
 
 | SFC StoryMaker | Soul City revival |
@@ -110,6 +126,8 @@ Integration / JSON Metadata / Extension cylinders in the diagram label the three
 
 ## References
 
+- [shneiderman-2011-correspondence.md](shneiderman-2011-correspondence.md) — geo server + iOS app; GA Tech; StoryKit pointer
 - [family-album-as-storymaker.md](../family-album-as-storymaker.md)
+- [bar-karma/overview.md](../bar-karma/overview.md) · [urban-safari/overview.md](../urban-safari/overview.md)
 - [federation-peer-games.md](../federation-peer-games.md) — Bar Karma / StoryMaker / Urban Safari
 - [playable-pie-publishing-cauldron/GATHERING.md](../playable-pie-publishing-cauldron/GATHERING.md) — MediaGraph / iLoci map editing lineage

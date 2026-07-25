@@ -430,6 +430,7 @@ A separate section because these are *family*. Bridges within the lineage that h
 | Aspect | Notes |
 |---|---|
 | See | [family-album-as-storymaker.md](family-album-as-storymaker.md) — the StoryMaker design is already being *revived inside* the Federation (Family Album as branching graph). This is not so much a "bridge" as "the Federation absorbs the lineage." |
+| Docs | [storymaker/architectural-overview.md](storymaker/architectural-overview.md) · [bar-karma/overview.md](bar-karma/overview.md) · [urban-safari/overview.md](urban-safari/overview.md) · [storymaker/shneiderman-2011-correspondence.md](storymaker/shneiderman-2011-correspondence.md) (2011 geo + GA Tech + StoryKit) |
 
 ### HiveMind (Will Wright, 2012, never shipped) and Bar Karma's broadcast-narrative concept
 
