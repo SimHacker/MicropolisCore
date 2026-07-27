@@ -184,7 +184,7 @@ The tabbed window/spatial workspace should expose:
 - `documentation/notes/PIE-TAB-WINDOWS.md`
 - `skills/micropolis/`
 - `skills/micropolis-command-bus/`
-- Don Hopkins, SimCityNet X11/TCL/Tk multiplayer demo, InterCHI '93.
+- Don Hopkins, SimCityNet X11/TCL/Tk multiplayer demo, InterCHI '93 — [accepted proposal](../historical/1993-interchi-simcitynet-proposal.md).
 - Seymour Papert, constructionism and Logo.
 - Jean Piaget, constructivism.
 - Alan Kay, Dynabook, Smalltalk, and critique of black-box simulations.
