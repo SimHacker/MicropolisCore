@@ -213,7 +213,7 @@ The full MOOLLM skill registry: [121 skills](https://github.com/SimHacker/moollm
 |------|---------|-----------|
 | 1989 | **SimCity** (Will Wright) | City as sandbox, emergent systems as toys |
 | 1991 | **HyperLook SimCity** (Don Hopkins, Sun) | NeWS/PostScript networking, axis of eval |
-| 1993 | **SimCityNet** (Don Hopkins, DUX) | [Multiplayer X11/TCL/Tk](https://www.youtube.com/watch?v=_fVl4dGwUrA), demoed at InterCHI '93 Amsterdam |
+| 1993 | **SimCityNet** (Don Hopkins, DUX) | [Multiplayer X11/TCL/Tk](https://www.youtube.com/watch?v=_fVl4dGwUrA), demoed at InterCHI '93 Amsterdam — [accepted proposal](documentation/historical/1993-interchi-simcitynet-proposal.md) |
 | 1995 | **DreamScape** (Don Hopkins, Kaleida ScriptX) | "Nurturing environment," rooms + objects + web, WWDC demo |
 | 2000 | **The Sims** (Will Wright) | Digital dollhouse, nurturing environment for stories |
 | 2008 | **Micropolis** (Don Hopkins, OLPC) | Open source GPL-3, constructionist education |
@@ -423,6 +423,7 @@ For Soul City-style development with MOOLLM, follow **Soul City setup (Cursor + 
 
 | Resource | URL |
 |----------|-----|
+| **SimCityNet InterCHI '93 Proposal** | [documentation/historical/1993-interchi-simcitynet-proposal.md](documentation/historical/1993-interchi-simcitynet-proposal.md) ([art.net original](http://www.art.net/~hopkins/Don/simcity/simcitynet.html)) |
 | **SimCityNet Announcement (1993)** | [art.net/~hopkins/Don/simcity](http://www.art.net/~hopkins/Don/simcity/simcity-announcement.html) |
 | **Open Sourcing SimCity** | [donhopkins.medium.com](https://donhopkins.medium.com/open-sourcing-simcity-58470a27) |
 | **DreamScape WWDC 1995** | [donhopkins.medium.com](https://donhopkins.medium.com/1995-apple-world-wide-developers-conference-kaleida-labs-scriptx-demo-64271dd65570) |

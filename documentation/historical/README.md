@@ -6,6 +6,7 @@ Long-form writing that predates or sits beside the current MicropolisCore tree: 
 
 | Pattern | Use |
 |---------|-----|
+| **`1993-interchi-simcitynet-proposal.md`** | Don Hopkins's accepted INTERCHI '93 Interactive Experience proposal for SimCityNet (Amsterdam; "bridges between worlds") — from [art.net](http://www.art.net/~hopkins/Don/simcity/simcitynet.html). |
 | **`drupal-blog/`** | Posts migrated from the old Drupal site — one topic per **`*.md`** file; see **`drupal-blog/README.md`** for an indexed list. |
 | **`drupal-blog/images/`** | Figures referenced from those posts (prefer descriptive names: `olpc-pie-menu-discussion.png`). |
 
