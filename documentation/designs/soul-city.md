@@ -2,6 +2,9 @@
 
 **Status:** Active design  
 **Monorepo:** MicropolisCore  
+
+**MOOLLM (compose / inherit):** place [`skills/soul-city/`](https://github.com/SimHacker/moollm/tree/main/skills/soul-city) · souls [`skills/soul/`](https://github.com/SimHacker/moollm/tree/main/skills/soul) · [SOUL-MODEL.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-MODEL.md). This MicropolisCore doc is the **product compose** (Micropolis City engine + Sims companion rails).
+
 **Read first for the top-level framing:** [characters-as-hydrogen.md](characters-as-hydrogen.md) — the multi-resolution, multi-universal character substrate that underlies the whole Micropolis Federation (Star-Trek-style cooperative association of peer projects, not a commercial franchise). Soul City (this doc) is *one specific incarnation pathway* of that substrate — the Dream ↔ Home pathway between MOOLLM and The Sims.
 
 **Companion strategic documents (in this folder):**
