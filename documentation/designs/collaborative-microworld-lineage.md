@@ -126,7 +126,7 @@ This gives Micropolis an advantage over generic multiplayer surfaces:
 5. Branches should be explainable alternate histories, not just save files.
 6. Players should be able to bring evidence back from private experiments to shared timelines.
 7. AI tutors should be participants on common ground: able to observe, propose, explain, and demonstrate, but subject to approval.
-8. The interface should support roles: mayor, treasurer, planner, builder, reporter, teacher, researcher, god/debugger.
+8. The interface should support roles: mayor, treasurer, planner, builder, reporter, teacher, researcher, god/debugger. Characters (players + agents) **plug into** those roles via [micropolis-role-sheets.md](micropolis-role-sheets.md) — experience and album pages travel with the character; tools map to role sockets.
 9. The system should teach social reasoning as well as urban dynamics.
 10. Users should be able to grow from players into authors.
 

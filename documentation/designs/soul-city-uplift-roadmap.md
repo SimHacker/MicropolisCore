@@ -128,7 +128,7 @@ The first **player-visible content artifact** in the project. Full design lives 
 | 1C.8 | Compiler target: Save-Game Disk | `tools/adventure-compiler/targets/savegame-disk.ts` | 1 day |
 | 1C.9 | Compiler target: Foreign Photo Album (pageable book, slideshow pattern) | `tools/adventure-compiler/targets/album.ts` | 4 days |
 | 1C.10 | Compiler target: **Micropolis Rug-O-Matic Rug** (cycling baked city-snapshot SPR2 atlases on rug surface) | `tools/adventure-compiler/targets/rug.ts` | 3 days |
-| 1C.11 | Compiler target: **WigOMatic** (first character-customization vertical: head/wig SPR2 atlas from image-gen prompt, palette-quantized) | `tools/adventure-compiler/targets/wigomatic.ts` | 3 days |
+| 1C.11 | Compiler target: **WigFabrik / WigOMatic** (first character-customization vertical: ECG multitarget mesh+texture blend + image-gen targets → head/wig SPR2 atlas, palette-quantized; aka Wig-M-Porium) | `tools/adventure-compiler/targets/wigomatic.ts` (+ shared `ecg-blend` runtime) | 3 days MVP prompt-path; +1 week ECG blend UI |
 | 1C.11b | Compiler targets: HeadShop, CostumeRack, MakeupBar, AccessoryCounter (the rest of the Character Customization Studio, follow-on after WigOMatic ships) | `tools/adventure-compiler/targets/customization/` | 1 week total |
 | 1C.12 | Compiler target: Screen-Snapshot Camera (back-channel to Family Album) | `tools/adventure-compiler/targets/camera.ts` | 3 days |
 | 1C.13 | Auto-internationalizer pass on STR# output (Phase 1A LLM enrichment reused) | `tools/adventure-compiler/i18n.ts` | 2 days |

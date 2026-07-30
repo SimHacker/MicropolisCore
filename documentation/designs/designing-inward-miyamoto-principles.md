@@ -44,7 +44,7 @@ This is the inverse of "build a runtime and then ask what's fun." It is also why
 
 Fukuwarai is the New Year's blindfold game where players slap paper eyes and noses onto a blank face so everyone can laugh at the results. Miyamoto carried this into Nintendo's Mii system (Wii, 2006) and from there into Tomodachi Collection (2009), Tomodachi Life (2013), and *Living the Dream* (2026). The entire architecture is mismatched-face energy, played for hours instead of for seconds, with the blindfold off (see [tomodachi-life-and-soul-city.md](tomodachi-life-and-soul-city.md)).
 
-We already have this in Soul City as one of the [WigOMatic / HeadShop / Character Customization Studio](the-computer-as-portal.md#6-wigomatic-and-the-character-customization-studio) shops — Mii-style face composition, but with browser-native tools, LLM assistance, image-gen for the wig texture, and palette-quantize to Sims-1 head SPR2. The fukuwarai connection just makes the lineage explicit: this is a *25+ century-old Japanese party game* expressed in a 2026 IFF authoring tool. *That's* the lineage we're in. Don't be shy about it.
+We already have this in Soul City as one of the [WigFabrik / HeadShop / Character Customization Studio](the-computer-as-portal.md#6-wigfabrik--wigomatic-and-the-character-customization-studio) shops — Mii-style face composition, but with browser-native tools, Tom Ngo ECG multitarget mesh+texture blend, LLM assistance, image-gen for wig *targets*, and palette-quantize to Sims-1 head SPR2. The fukuwarai connection just makes the lineage explicit: this is a *25+ century-old Japanese party game* expressed in a 2026 IFF authoring tool. *That's* the lineage we're in. Don't be shy about it.
 
 ---
 
@@ -220,7 +220,7 @@ The Mii arc from 2006 to 2026 demonstrates the principle publicly in three produ
 
 | Decision | Application |
 |---|---|
-| **WigOMatic / Character Customization Studio** ([the-computer-as-portal.md → §6](the-computer-as-portal.md#6-wigomatic-and-the-character-customization-studio)) | Heads and wigs stay abstract; palette-quantize hard, resist image-gen drifting toward photorealism. |
+| **WigFabrik / Character Customization Studio** ([the-computer-as-portal.md → §6](the-computer-as-portal.md#6-wigfabrik--wigomatic-and-the-character-customization-studio)) | Heads and wigs stay abstract; palette-quantize hard, resist image-gen drifting toward photorealism. |
 | **Family Album scene rendering** ([family-album-as-storymaker.md](family-album-as-storymaker.md)) | Characters stylized (WebGPU semi-iso, Sims-1 album palette); environments can be detailed. Imagine-Loop image-gen prompts default to "characters stylized, environments detailed." |
 | **Mind-mirror and YAML Jazz** ([moollm-microworld-os.md](moollm-microworld-os.md)) | LLM-readable character is *deliberately abstract*: sparse traits, few-fielded mind-mirror, narrative-flavor comments. The astrological-signs anecdote (§3) is the same principle in trait data. |
 | **Imagine Loop intent presets** ([the-imagine-loop.md](the-imagine-loop.md)) | Tonal hints land in prompts; specific facial detail does not. |

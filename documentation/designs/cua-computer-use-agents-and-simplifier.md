@@ -4,7 +4,7 @@
 
 **Primary sources:** Don Hopkins on TSO bots and *Simplifier* ([HN 11730181](https://news.ycombinator.com/item?id=11730181), follow-up [22790620](https://news.ycombinator.com/item?id=22790620)); [Cua](https://github.com/trycua/cua) (MIT) — Launch HN [43773563](https://news.ycombinator.com/item?id=43773563), Cua Driver [47936312](https://news.ycombinator.com/item?id=47936312), Cua-Bench [46768906](https://news.ycombinator.com/item?id=46768906); 2003 *Simplifier* demo [YouTube @ 3:15](https://youtu.be/Imu1v3GecB8?t=195).
 
-**Companion docs:** [prefab-pixel-reverse-engineering.md](prefab-pixel-reverse-engineering.md) · [aquery-programmable-accessibility.md](aquery-programmable-accessibility.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a · [sims-content-registry.md](sims-content-registry.md)
+**Companion docs:** [prefab-pixel-reverse-engineering.md](prefab-pixel-reverse-engineering.md) · [aquery-programmable-accessibility.md](aquery-programmable-accessibility.md) · [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md) §8a · [sims-content-registry.md](sims-content-registry.md) · [micropolis-role-sheets.md](micropolis-role-sheets.md) (dialog RPC for Micropolis roles as Sims-job orchestration)
 
 ---
 

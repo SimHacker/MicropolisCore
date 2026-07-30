@@ -263,28 +263,71 @@ The Family Album content type fans out across many surfaces: a recovered 2003 al
 
 > The Adventure Compiler itself is much richer than "YAML → IFF" — it's the LLM's iterative peer, with a four-message protocol (validation errors, view emission, empathic templates for code generation, final flatten). The object types in this document are emitted by *target plugins* of the compiler's `flatten` step. The interactive authoring loop that lets a user describe a Rug-O-Matic rug or a WigOMatic wig in natural language and end up with a working IFF runs through the same validator-and-template machinery. Full architecture: [moollm-microworld-os.md → The Adventure Compiler is a Coherence-Engine partner](moollm-microworld-os.md#the-adventure-compiler-is-a-coherence-engine-partner-not-a-one-shot-compiler).
 
-### 6. WigOMatic and the Character Customization Studio
+### 6. WigFabrik / WigOMatic and the Character Customization Studio
 
-The most fun set of tools in Soul City, and unapologetically camp. The flagship is **WigOMatic**.
+The most fun set of tools in Soul City, and unapologetically camp. The flagship shop is the
+**WigFabrik** (*wig factory* — Dutch hybrid naming for the Amsterdam / Soul City street energy),
+also aka **Wig-M-Porium** / **WigOMatic** (RugOMatic sibling in the tool lineage). Same store,
+three nameplates: storefront silliness, catalog continuity, engine credit.
 
-WigOMatic is one of the *first* character-editing tools players should reach for: pick a Sim, see their current head skin, type a wig you want — *"1950s Hollywood, platinum blonde, finger waves"*, *"post-apocalyptic mohawk, three colors"*, *"judicial powdered curls"*, *"flame-orange dreadlocks with little brass bells in them"* — image-gen produces the wig texture, the renderer palette-quantizes it back to a Sims-1 head SPR2 atlas, and the result is a new head/skin IFF the player drops into their `Downloads/` directory. The next time the Sim's head loads in the EA-published Sims 1, the wig is on.
+#### ECG under the camp
 
-It is funny on purpose. The Sims has always carried its camp on its sleeve — Rug-O-Matic, the Bloaty-Head-Machine from Theme Hospital that Don has cited as spiritual ancestor for character caricature tools, the deliberately silly *Hot Date* / *Vacation* / *Superstar* expansions. WigOMatic continues that tone. Underneath the joke, it is a serious content tool: same SPR2-writer + image-gen + palette-quantization pipeline as the rug, just pointed at a different texture atlas.
+Underneath the joke sits the showcase reimplementation of **Tom Ngo's Embedded Constraint
+Graphics (ECG)** from Interval Research — patent [US5933150](https://patents.google.com/patent/US5933150)
+filed 1996, **expired ~2016**, free to rebuild. ECG puts example poses (and, here, example
+*wigs*) at the vertices of a **simplicial complex**; you drag features on the drawing and the
+system solves **barycentric blend weights** instead of hand-tuning sliders. That is exactly the
+right math for a wig factory:
+
+| Layer | What ECG interpolates | How AI helps |
+|-------|----------------------|--------------|
+| **Mesh targets** | Multiple authored head / hair-cap / silhouette meshes at simplex vertices | Optional: generate *new* target meshes (or delta targets) from prompts; weights stay ECG-solved |
+| **Texture maps** | Multitarget SPR2 / UV atlases blended with the same weights | Image-gen fills target textures + hair patterns; palette-quantize to Sims-1 |
+| **Weights** | Drag bangs / volume / part / curl → solve blend vector (Moore–Penrose of Jacobian, ECG-style) | LLM can suggest weight presets; never replaces the direct-manipulation solve |
+| **Hair patterns** | Strand / part / fringe exemplars as texture (and optional mesh) targets | Gen stylized patterns consistent with Sims masking; resist photoreal drift |
+
+Prompt-only image-gen → one-shot atlas remains a **fast path** (RugOMatic simplicity). The
+**ECG path** is the deep craft: author or generate a handful of mesh + texture targets, then
+sculpt in weight-space by dragging the wig. Tom would be thrilled to discuss it — this is the
+public, funny, shippable demo of the Interval idea brought forward (Faceball / morph-target
+faces are the sibling application). Full lineage + Syntertainment 2013 multitarget-head pitch
+(already disclosed Tom's prior art): see WillWrightShowForFood
+`characters/don-hopkins/tom-ngo-embedded-constraint-graphics-at-interval.md` and the pair show
+`repo-shows/tom-and-golan-ecg-mouther/`.
+
+#### Player loop
+
+WigFabrik is one of the *first* character-editing rooms players should reach for: pick a Sim,
+see their current head skin, either (a) type a wig — *"1950s Hollywood, platinum blonde, finger
+waves"*, *"post-apocalyptic mohawk, three colors"*, *"judicial powdered curls"*, *"flame-orange
+dreadlocks with little brass bells"* — and image-gen fills targets, or (b) drag between multitarget
+examples until the blend is right. The renderer palette-quantizes to a Sims-1 head SPR2 atlas;
+the result is a new head/skin IFF for `Downloads/`. Next load in Legacy Collection: the wig is on.
+
+It is funny on purpose. The Sims has always carried its camp on its sleeve — Rug-O-Matic, the
+Bloaty-Head-Machine from Theme Hospital that Don has cited as spiritual ancestor for character
+caricature tools, the deliberately silly *Hot Date* / *Vacation* / *Superstar* expansions.
+WigFabrik continues that tone. Underneath, it is a serious content tool **and** the ECG teaching
+demo.
 
 The same pattern fans out into a whole **Character Customization Studio**, each shop a small Adventure-Compiler target:
 
 
 | Shop                         | What it makes                                                   | Underlying mechanism                                                                     |
 | ---------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| **WigOMatic**                | Hair / wigs / hats / headwear                                   | SPR2 writer for head-skin atlases, image-gen for wig pattern, palette quantization       |
-| **HeadShop**                 | Faces / heads                                                   | Head mesh + SPR2 face texture, image-gen for facial features, age/expression presets     |
+| **WigFabrik / WigOMatic**    | Hair / wigs / hats / headwear                                   | ECG multitarget mesh+texture blend + image-gen targets; SPR2 head atlas; palette quantize |
+| **HeadShop**                 | Faces / heads                                                   | Same ECG blend on face mesh + SPR2; expression / age targets; image-gen for exemplars     |
 | **CostumeRack**              | Body skins / outfits / uniforms / cosplay                       | Body mesh + SPR2 body texture, occasion-specific generation (formal, work, weekend, era) |
 | **MakeupBar**                | Makeup / tattoos / scars / age effects                          | Composite layer on existing head/body SPR2                                               |
 | **AccessoryCounter**         | Glasses, jewelry, prosthetics, pets-as-accessories              | Decal layer + custom-object IFFs                                                         |
 | **BodyMod / FelidaeAtelier** | Ear/tail/fur mods for furry-style customization (camp included) | Same atlas pipeline, extended slot table                                                 |
 
 
-The shops live inside Soul City as MOOLLM-aware craft rooms (a `pub/wigomatic/` room with affordances, a `WIGOMATIC.yml` shop card, ambient skills attached). They draw on the same `packages/sims-io` SPR2 writer and the same `packages/mooshow` WebGPU re-renderer as the rug, the album, and the camera — but each shop owns its UI vocabulary and its prompt patterns.
+The shops live inside Soul City as MOOLLM-aware craft rooms (`pub/wigfabrik/` / `pub/wigomatic/`,
+`WIGFABRIK.yml` / `WIGOMATIC.yml` shop cards, ambient skills attached). They draw on the same
+`packages/sims-io` SPR2 writer and the same `packages/mooshow` WebGPU re-renderer as the rug, the
+album, and the camera — plus a shared **ECG blend runtime** (barycentric weights over mesh and
+texture targets) that HeadShop and Faceball reuse.
 
 #### The Imagine Loop's "style transfer" use case lands here
 
@@ -295,14 +338,29 @@ This is also a perfect content path for content recovery (the [Tornado](the-torn
 Maxis's lineage here is explicit: the original **HeadShop** (a Maxis-era face/head customization tool that lived alongside Transmogrifier in The Sims content ecosystem) was the official content tool for character customization. WigOMatic + the Character Customization Studio are the spiritual successors — browser-native, LLM-assisted, palette-correct, ethically attribution-respecting, and *much* sillier. Underneath, they all run on the **Transmoogrifier** — our modernized successor to Maxis's TMOG, the general IFF-object editor inside Soul City that every craft shop in this document composes on top of.
 
 ```yaml
-# wigomatic-platinum-finger-waves.yml — Adventure Compiler source
+# wigfabrik-platinum-finger-waves.yml — Adventure Compiler source
 object:
   name: "1950s Hollywood Platinum Finger Waves"
   type: head-skin                          # specialization of SPR2 head atlas
   applies_to: female_adult                 # Sims 1 head slot
   source_character: bella-goth             # optional; null = generic
+  shop: wigfabrik                          # aka wigomatic / wig-m-porium
+  ecg:
+    # Tom Ngo ECG reimplementation — patent US5933150 expired ~2016
+    engine: multitarget-barycentric
+    mesh_targets:                          # simplex vertices (geometry)
+      - { id: finger-waves-A, mesh: ./targets/fw-a.skn }
+      - { id: finger-waves-B, mesh: ./targets/fw-b.skn }
+      - { id: volume-up, mesh: ./targets/volume-up.skn }
+    texture_targets:                       # same weights, or linked simplex
+      - { id: platinum, map: ./targets/platinum.png, method: imagegen }
+      - { id: ash-blonde, map: ./targets/ash.png, method: imagegen }
+    hair_patterns:
+      - { id: waves, map: ./targets/wave-pattern.png, method: imagegen }
+    # weights solved by drag UI; may also ship a baked preset:
+    weights_preset: { finger-waves-A: 0.55, finger-waves-B: 0.25, volume-up: 0.20 }
   generation:
-    method: imagegen
+    method: imagegen                       # also used to *author* ECG targets
     prompt: "1950s Hollywood platinum blonde finger waves, sculpted, slight side-part, period accurate, painterly style consistent with Sims 1 head sprites at 96x96"
     palette_constraint: sims-1-head-palette
     seed: 42
@@ -313,9 +371,10 @@ object:
     generated_at: 2026-05-23T17:00:00+02:00
     generator: openai-image-gen
     intent_ref: ./user-prompt.txt
+    prior_art: "Tom Ngo ECG / US5933150 (expired) — credit in shop about"
 ```
 
-WigOMatic. Because of course we have to ship that.
+WigFabrik. Because of course we have to ship that — and invite Tom to talk about it.
 
 ### 7. The Screen-Snapshot Camera (back-channel)
 
