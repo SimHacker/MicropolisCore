@@ -186,6 +186,7 @@ This addendum deepens the intent and explains why the design choices align with 
 - Overlapping: Floating windows rise in an overlay layer with shadows/translucency to signal elevation. Avoid occluding critical HUD elements by policy.
 - Mixed-Mode: Allow quick toggling between background and overlay Stacks while preserving stack identity and tab continuity.
 - Stack Fan/Compact: Stacks can be fanned, reordered, and compacted. Tabs serve as the manipulable handles for spread/re‑stack gestures.
+- Stacks as Cross-Exclusion Groups: A stack is a radio-button group (Minsky, K-Lines memo, 1979) — one member front, raising it inhibits (occludes) its associates; pie-up on any tab is the force-to-on that re-sets the group; z-order is the group's built-in short-term memory. Full mapping: [p-pyramid-attention-overlay](../designs/p-pyramid-attention-overlay.md).
 
 #### Tabs and Tree-Style Tabs
 - Edge-Agnostic Tabs: Mount tabs on any window edge. In stacks, tab rows merge and never overlap; they scroll/condense as needed.
@@ -282,6 +283,8 @@ Tabs can be **linked to other tabs** the way ConMan / Max/MSP / Blender nodes wi
 - Facet: A fold-out attachment dimension beyond the four window edges (Swiss-army polyfaceted chrome).
 - Tab Link / Patch Cord: A typed connection between tabs (or tab sockets), ConMan / Max / Blender lineage.
 - Compact Tab Face: The on-rail representation of a Card used for pies, DnD, and off-screen presence.
+- P-Pyramid: A user's (or assistant's) hierarchical view over the workspace graph — an anchored attention mask, 0 = closed tab, 1 = front window, fractional = fish-eye scale (Minsky, AI Memo 516, 1979). See [p-pyramid-attention-overlay](../designs/p-pyramid-attention-overlay.md).
+- Cross-Exclusion Group: Minsky's radio-button substructure; here, any set where raising one member suppresses the rest (tab stacks, focused stack, active workspace, exclusive overlays).
 
 #### LLM-Driven Collaboration: Rationale and Guardrails
 - Role: Assistant as a skilled collaborator that observes, proposes, previews, and acts—subject to scope and permission—without usurping user agency.

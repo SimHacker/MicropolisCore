@@ -322,7 +322,10 @@ icon), **scale** (point-size × shrink-factor with depth; fish-eye), **nest** (c
 *to-the-right* **or** *indented-below* — the two classic outliner layouts), **navigate** (drag
 tabs to any edge, slide columns, glide edges), and **direct-manipulate** (drag-and-drop with
 consistent semantics). Build these once and every face — game UI, content tree, federation
-graph — inherits them.
+graph — inherits them. Minsky named this view in 1979: the **P-pyramid**, "an illusion of
+an agent's perspective" over a network that need not be pyramidal — and his cross-exclusion
+groups are tab stacks as radio buttons. Full mapping:
+[../p-pyramid-attention-overlay.md](../p-pyramid-attention-overlay.md).
 
 Don's **PSIBER Space Deck** (1989, NeWS PostScript) is the canonical prior art for exactly
 this substrate, 35 years early. It rendered live data structures (objects, arrays, dicts,
