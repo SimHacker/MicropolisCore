@@ -152,7 +152,7 @@ Thread tangent (Don + lioeters) — high value for Micropolis **constructionist*
 | Topic | Link |
 |-------|------|
 | **Building SimCity** (Gingold, MIT Press June 2024) | https://mitpress.mit.edu/9780262547482/building-simcity/ |
-| Gingold reverse diagrams | https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams/ |
+| Gingold reverse diagrams | Repo: [`images/diagrams/`](../../images/diagrams/README.md) · CHM mirror: https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams/ · Site: `/pages/reverse-diagrams` |
 | PhD thesis *Play Design* (2016) | https://www.proquest.com/docview/1806122688 |
 | **Doreen Nelson** — Design Based Learning, cardboard cities | HN [21049206](https://news.ycombinator.com/item?id=21049206) |
 | SimCity Teacher's Guide (Bremer/Curtin) | LGR unboxing — scan TODO |

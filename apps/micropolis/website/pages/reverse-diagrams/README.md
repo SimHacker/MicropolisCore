@@ -16,6 +16,23 @@ These static diagrams serve as the foundation for our ongoing project to create 
 
 > With Chaim's explicit permission and encouragement, we are taking these diagrams further as live, tweakable tools. Inspired by [**Bret Victor**](/pages/about/bret-victor), our aim is immediate feedback, visible state, and manipulable parameters—turning static illustrations into instruments for understanding.
 
+## Source files
+
+The diagram PNGs and combined PDF live in the repository (and are copied into the Micropolis web app static tree for deployment):
+
+| Asset | Repository path |
+|-------|-----------------|
+| Page 1 — Simulation Loop | [`images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png`](../../../../../images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png) |
+| Page 2 — Map Data Flow | [`images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png`](../../../../../images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png) |
+| Page 3 — Maps | [`images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png`](../../../../../images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png) |
+| Page 4 — Map Scan | [`images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png`](../../../../../images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png) |
+| Page 5 — Make Traffic | [`images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png`](../../../../../images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png) |
+| Page 6 — Animation Characters | [`images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png`](../../../../../images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png) |
+| All pages (PDF) | [`images/diagrams/SimCityReverseDiagrams.pdf`](../../../../../images/diagrams/SimCityReverseDiagrams.pdf) |
+
+Web static copies: `apps/micropolis/static/images/diagrams/` · `apps/micropolis/static/pdf/SimCityReverseDiagrams.pdf`  
+Index: [`images/diagrams/README.md`](../../../../../images/diagrams/README.md)
+
 ## Diagrams Index
 
 - [**Simulation Loop (Simulate)**](#simulation-loop)
@@ -29,7 +46,7 @@ These static diagrams serve as the foundation for our ongoing project to create 
 
 The main **simulation loop** is broken down into 16 steps. Each revolution advances the city time by 1. Every frame of the game, one of these 16 steps is performed.
 
-![SimCity Simulation Loop Diagram](/images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png)
+![SimCity Simulation Loop Diagram](../../../../../images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png)
 
 This diagram reveals the core heartbeat of **SimCity**. It shows how [**Will Wright**](/pages/about/will-wright) structured the simulation's progression not as a monolithic update, but as a series of discrete, sequenced steps. This clever orchestration allows complex interactions (like pollution affecting land value, or population density influencing crime) to unfold over time within the loop, contributing to the feeling of a living city.
 
@@ -39,7 +56,7 @@ Notice the different frequencies: some processes like **DoPowerScan()** or **PTL
 
 This diagram shows how data flows between different map layers and representations in the simulation.
 
-![SimCity Map Data Flow Diagram](/images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png)
+![SimCity Map Data Flow Diagram](../../../../../images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png)
 
 This diagram is crucial for understanding how different simulated systems influence each other. It visualizes the dependencies and interactions that create **SimCity's** complex **emergent behavior**. For example, you can see how **PopDensity** directly influences **Crime**, and how both **LandValue** and **Pollution** feed into the **PTLScan** process. The various **smoothing functions** (like Smooth-3) show how effects are spatially distributed across the map over time, preventing abrupt changes and creating more organic patterns.
 
@@ -51,7 +68,7 @@ Making this data flow interactive is a key goal. Imagine clicking on the **Polic
 
 **SimCity's** spatial data is modeled in multiple maps that can be conceptualized as overlaid upon one another. The main Map is 120x100 and encodes seven different data layers.
 
-![SimCity Maps Diagram](/images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png)
+![SimCity Maps Diagram](../../../../../images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png)
 
 This diagram reveals the core data structure of the simulation: a collection of overlapping **multi-resolution maps**. The main **Map[ ]** array stores tile IDs and status bits (Zone, Building, Road, Power, etc.) at full resolution (1:1). However, other critical data like **Pollution**, **Land Value**, **Crime**, **Population Density**, and **Fire Radius** are stored in lower-resolution maps (1:2, 1:4, 1:8). This was a brilliant optimization by [**Will Wright**](/pages/about/will-wright), drastically reducing memory usage and computational load while still providing sufficient detail for believable simulation and visualization.
 
@@ -63,7 +80,7 @@ Understanding these layered, multi-resolution maps is key to grasping how the si
 
 The main tile map is scanned incrementally over eight simulation frames. One 15x100 column is scanned at a time (1/8th of the map). Tile map based processes and objects tallies are updated.
 
-![SimCity Map Scan Diagram](/images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png)
+![SimCity Map Scan Diagram](../../../../../images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png)
 
 This diagram illustrates another crucial optimization: **incremental map processing**. Instead of updating the entire map every simulation step, **SimCity** scans the map column by column over 8 frames (or steps in the [**Simulation Loop**](#simulation-loop)). This distributes the computational load over time, making the simulation feasible on the hardware of the era. It processes zones/buildings based on the **ZONEBIT** information stored in the main **Map[]** layer ([Maps](#maps) diagram), triggering events like fires, floods, or traffic generation ([Make Traffic](#make-traffic)).
 
@@ -75,7 +92,7 @@ This incremental approach contributes to the game's temporal feel – changes do
 
 **Make Traffic** can be invoked when **Map Scan** evaluates Residential, Commercial, and Industrial Zones. It returns either success (1: destination found), failure (0: destination not found), or hard failure (-1: no perimeter road found).
 
-![SimCity Make Traffic Diagram](/images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png)
+![SimCity Make Traffic Diagram](../../../../../images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png)
 
 Perhaps one of the most elegant parts of **SimCity's** design, the **Make Traffic** algorithm simulates traffic flow without tracking individual vehicles. As detailed here, it uses a randomized, stack-based pathfinding search (`FindPath()`, `Drive()`) from an origin (like a residential tile) towards potential destinations (like commercial or industrial tiles). It doesn't need a complex A* algorithm; instead, it performs a limited number of steps (~30) searching for *any* suitable destination tile within range along the road/rail network.
 
@@ -85,10 +102,54 @@ The success or failure of these pathfinding attempts directly contributes (`SetT
 
 **SimCity** uses various **animation characters** to bring the city to life, from power outages to bridge animations, airport radar, park fountains and telecommunications.
 
-![SimCity Animation Characters Diagram](/images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png)
+![SimCity Animation Characters Diagram](../../../../../images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png)
 
 While not part of the core simulation logic driving growth or decline, these **animation characters** are essential for the game's aesthetic appeal and feedback mechanisms. They provide visual cues about the city's state – the **LIGHTNINGBOLT** indicates lack of power, the **HBRDG** animations show bridge functionality, the spinning **RADAR** requires airport power. These elements directly leverage the status bits stored in the main **Map[]** layer ([Maps](#maps)) but are rendered independently, adding life and clarity without significant simulation overhead.
 
 The specific characters shown (`LIGHTNINGBOLT`, `HBRDG0`...`3`, `RADAR0`...`7`, `FOUNTAIN`, `TELELAST`) correspond to tile IDs 827-851. Other animations mentioned elsewhere include the **CopterHeli** (traffic jams) and potentially the **monster** (which notably seeks out high pollution). These visual elements are crucial for communicating the simulation state quickly and intuitively.
 
-Understanding these characters shows how **SimCity** prioritizes **implication over simulation**, as [**Will Wright**](/pages/about/will-wright#reverse-over-engineering) noted. A simple blinking sprite effectively communicates a complex power grid issue. Making these interactive could involve clicking on an animation to see the underlying data trigger (e.g., clicking the lightning bolt shows the powerless tile status) or even allowing users to trigger animations directly via scripting. 
+Understanding these characters shows how **SimCity** prioritizes **implication over simulation**, as [**Will Wright**](/pages/about/will-wright#reverse-over-engineering) noted. A simple blinking sprite effectively communicates a complex power grid issue. Making these interactive could involve clicking on an animation to see the underlying data trigger (e.g., clicking the lightning bolt shows the powerless tile status) or even allowing users to trigger animations directly via scripting.
+
+---
+
+## Full-resolution diagrams
+
+Download all six pages as one file: [**SimCityReverseDiagrams.pdf**](../../../../../images/diagrams/SimCityReverseDiagrams.pdf)
+
+Each image below is the full-resolution PNG from [`images/diagrams/`](../../../../../images/diagrams/README.md). Title first, diagram, then caption.
+
+### Page 1 — Simulation Loop (Simulate)
+
+![SimCity Simulation Loop — full resolution](../../../../../images/diagrams/SimCityReverseDiagrams-Page-1-Simulate.png)
+
+The main **simulation loop** in sixteen sequenced steps—one step per game frame—advancing city time by one tick per full revolution. Shows **DoPowerScan()**, **PTLScan()**, **FireAnalysis()**, **DoDisasters()**, **RCI Valves**, **Census**, **CityEvaluation**, **GenerateMap**, and **SendMessages** at Slow/Medium/Fast cadences. This is the temporal skeleton of the living-city feel.
+
+### Page 2 — Map Data Flow
+
+![SimCity Map Data Flow — full resolution](../../../../../images/diagrams/SimCityReverseDiagrams-Page-2-Map-Data-Flow.png)
+
+How **PopDensity**, **Crime**, **LandValue**, **Pollution**, **Terrain**, **PowerMap**, and **PTLScan** influence one another— including **Smooth-3** spatial spreading, **City Center** distance effects on **ComRate**, and multi-resolution map ratios (1:1 through 1:8). The dependency graph behind **SimCity's** emergent behavior.
+
+### Page 3 — Maps
+
+![SimCity Maps — full resolution](../../../../../images/diagrams/SimCityReverseDiagrams-Page-3-Maps.png)
+
+The layered map stack: main **Map[]** at 120×100 with **ZONEBIT** tile IDs and status bits (**PWRBIT**, **CONDBIT**, …), plus lower-resolution overlays for pollution, land value, crime, population/traffic density, and fire radius. Will Wright's memory and CPU optimization in one picture.
+
+### Page 4 — Map Scan
+
+![SimCity Map Scan — full resolution](../../../../../images/diagrams/SimCityReverseDiagrams-Page-4-Map-Scan.png)
+
+Incremental column scan—one 15×100 strip per frame, eight frames for the full map—distributing work over time. Tallies power plants, roads, ports, fires, floods, stadiums, hospitals, churches, and updates **CONDBIT** conductivity as the scan line moves across the grid.
+
+### Page 5 — Make Traffic
+
+![SimCity Make Traffic — full resolution](../../../../../images/diagrams/SimCityReverseDiagrams-Page-5-Make-Traffic.png)
+
+Stack-based pathfinding (**FindPath**, **Drive**, **TryDrive**) from residential origins to commercial/industrial destinations without simulating individual cars. Success and failure feed **SetTrafMem()** and the traffic density map; density above 240 triggers **CopterHeli()**—teaching road design through implication.
+
+### Page 6 — Animation Characters
+
+![SimCity Animation Characters — full resolution](../../../../../images/diagrams/SimCityReverseDiagrams-Page-6-Animation-Characters.png)
+
+Non-simulation sprites that communicate state: **LIGHTNINGBOLT** (no power), **HBRDG** bridge cycles, **RADAR** (powered airport), **FOUNTAIN**, **TELELAST** (tile IDs 827–851). Feedback without simulation overhead—**implication over simulation** made visible. 
