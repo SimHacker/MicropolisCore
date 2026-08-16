@@ -141,7 +141,7 @@ PieCraft **inverts**: the player **authors** the map. Micropolis web app targets
 
 | Project | Relation |
 |---------|------------|
-| **Sims 1 animation → Unity** (2013) | Separate open-source ask to EA; uses same pie UX in tooling |
+| **Sims 1 animation → Unity** (2013) | Sims 1 animation library brought into Unity; uses same pie UX in tooling |
 | **Invisibility3D** (2012+) | AR pies + MotionSDK gesture |
 | **OpenLaszlo Micropolis Online** | [piecursor.lzx](../../openlaszlo/classes/piecursor.lzx) |
 | **CMU Brad Myers class** (2014, 2019 lecture) | Interview + [slides](https://docs.google.com/presentation/d/1R9s4EEAwUjI_7A8GgdLYD_U1yUs9omaVqkY9GY-2D78/edit) |
