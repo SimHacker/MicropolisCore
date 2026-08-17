@@ -29,7 +29,9 @@ Miyamoto's design process has had two named layers, articulated about a decade a
 
 **Later (2007 GDC keynote, the Wii era):** *design from the face inward.* Start with the facial expressions of the people playing the game. Then design the physical experience that could evoke that expression. Then design the computer-side experience that could deliver that physical experience.
 
-The canonical image from the 2007 keynote: a little girl sitting in her grandfather's lap, playing a Wii game. The girl is entranced and delighted. The grandfather is *equally* entranced and delighted — *watching her face*. He may not even understand the game. Watching her enjoy it is enjoyment.
+The canonical image from the 2007 keynote: a little girl sitting in her grandfather's lap, playing a game. The girl is entranced and delighted. The grandfather is *equally* entranced and delighted — *watching her face*. He may not even understand the game. Watching her enjoy it is enjoyment.
+
+**▶ If you watch nothing else, watch this: [GDC 2007 keynote, Part 3 @ 12:29](https://youtu.be/SY3a4dCBQYs?t=12m29s)** — Miyamoto plays the MyFirstTouch DS launch videos and narrates the grandfather watching his granddaughter play: *"Not only is the person who's playing the game being entertained, but the people standing around watching are getting caught up in the excitement... That's the reaction that I always want."* ([The photo](https://i.imgur.com/zSbOYbk.jpg).)
 
 > *"The Wii was so successful as a social party game, because the players themselves were more fun to watch than the game on the screen, because they make spectacles of themselves, which is much more entertaining to watch than the computer graphics. And you don't get bored waiting for your turn to play, because it's fun watching other people play."*  
 > — Don Hopkins, Hacker News, April 22 2014
