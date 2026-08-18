@@ -41,17 +41,19 @@
  *   SIM_CRASH_SEEDS=a,b  seeds to sweep (default 1,42)
  *   SIM_CRASH_LIVE_CLOCK=1  don't freeze the clock — reproduces the flakiness
  *
- * DEFAULTS ARE CHOSEN TO ACTUALLY CATCH THE BUG
+ * WHAT THIS ORIGINALLY CAUGHT (now fixed — keep as regression coverage)
  *
- * Measured against the current engine, under a frozen clock:
- *   - kobe traps at every seed tried (1, 42, 1234, 99999), from 30 turns up.
- *   - haight traps only at seed 1, and only once past ~240 turns.
- *   - deadwood — the originally reported crasher — survives all four seeds even
- *     at 240 turns, so its crash needs a starting world none of these seeds
- *     reach. It stays listed in KNOWN_CRASHERS as a reminder, not a skip.
- * So this is not one city's bug: it is a latent out-of-bounds that longer runs
- * surface in more cities. 240 turns x seeds {1, 42} covers both known repros in
- * about 12s; trim with SIM_CRASH_TURNS / SIM_CRASH_QUICK when iterating.
+ * Before the SimSprite construction fix, under a frozen clock:
+ *   - kobe trapped at every seed tried (1, 42, 1234, 99999), from 30 turns up.
+ *   - haight trapped at seed 1 past ~240 turns.
+ *   - deadwood — the originally reported crasher — survived all four seeds at
+ *     240 turns, so its reported crash needed a starting world these seeds do
+ *     not reach.
+ * The cause was Micropolis::newSprite() allocating SimSprite with malloc and
+ * then assigning to its std::string member, which had never been constructed.
+ * Defaults (240 turns x seeds {1, 42}) reproduce the two cities that used to
+ * fail, so they stay as the regression floor; trim with SIM_CRASH_TURNS /
+ * SIM_CRASH_QUICK when iterating.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -96,12 +98,10 @@ const BUILTIN_CITIES = [
 	'yokohama'
 ] as const;
 
-// Cities with a known or historically reported out-of-bounds trap. Under a
-// frozen clock these are reproducible rather than flaky, so they stay in the
-// sweep as regression coverage rather than being skipped. haight is in the list
-// too: it traps at seed 1 past ~240 turns, which is how we learned this is not
-// a kobe-specific bug.
-const KNOWN_CRASHERS = ['deadwood', 'haight', 'kobe'] as const;
+// Cities that used to trap out of bounds (kobe, haight) or were reported to
+// (deadwood). Fixed now, but labelled in the test output so a regression here
+// is immediately recognizable as the old bug returning.
+const FORMER_CRASHERS = ['deadwood', 'haight', 'kobe'] as const;
 
 // One turn is one cityTime increment = 16 ticks (simulate.cpp's 16-phase
 // phaseCycle).
@@ -166,8 +166,8 @@ async function runCity(city: string, seed: number, runTurns: number): Promise<vo
 describe(`builtin city crash sweep (${cities.length} cities x ${seeds.length} seed(s), ${turns} turns, clock ${FREEZE_CLOCK ? 'frozen' : 'live'})`, () => {
 	for (const city of cities) {
 		for (const seed of seeds) {
-			const known = (KNOWN_CRASHERS as readonly string[]).includes(city);
-			const label = `${city} survives ${turns} turns (seed ${seed})${known ? ' [known crasher]' : ''}`;
+			const known = (FORMER_CRASHERS as readonly string[]).includes(city);
+			const label = `${city} survives ${turns} turns (seed ${seed})${known ? ' [former crasher]' : ''}`;
 
 			it(label, async () => {
 				await expect(runCity(city, seed, turns)).resolves.toBeUndefined();
