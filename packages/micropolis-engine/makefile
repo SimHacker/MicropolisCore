@@ -97,6 +97,46 @@ EMLDFLAGS = \
 
 
 ########################################################################
+# Debug build settings
+#
+# `make debug` builds a separate, instrumented engine for hunting memory bugs
+# (e.g. the out-of-bounds trap in simTick() that apps/micropolis/cli/
+# simCrash.test.ts reproduces). Release and debug never share object files —
+# they compile to build/obj/release and build/obj/debug — so switching targets
+# cannot silently link a mix of differently-instrumented objects.
+#
+# Flags, and why each one:
+#   -g                  full DWARF; turns wasm-function[2874] into file:line
+#   -O0                 no inlining, so frames map to real C++ functions
+#   -s ASSERTIONS=2     enables the runtime's own sanity checks, verbosely
+#   -s SAFE_HEAP=1      traps on the *first* misaligned/out-of-bounds access
+#                       rather than wherever the corruption later surfaces —
+#                       this is the flag that localizes the bug
+#   -s STACK_OVERFLOW_CHECK=2  catches stack smashes with a real trace
+#   -s DISABLE_EXCEPTION_CATCHING=0  let asserts/throws surface as exceptions
+#
+# Deliberately absent: DEMANGLE_SUPPORT. It was removed from Emscripten (see
+# tools/settings.py's removed-settings table) and now hard-errors the link.
+# Demangled C++ names come from -g instead.
+#
+# SAFE_HEAP makes the engine roughly an order of magnitude slower. That is the
+# point of keeping it out of the default target.
+
+EMDEBUG_CXXFLAGS = \
+	-g \
+	-O0 \
+	-fno-omit-frame-pointer
+
+EMDEBUG_LDFLAGS = \
+	-g \
+	-O0 \
+	-s ASSERTIONS=2 \
+	-s SAFE_HEAP=1 \
+	-s STACK_OVERFLOW_CHECK=2 \
+	-s DISABLE_EXCEPTION_CATCHING=0
+
+
+########################################################################
 # Sources and headers
 
 
@@ -146,8 +186,28 @@ HEADERS = \
 ########################################################################
 
 
-OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = build/micropolisengine
+# BUILD selects the variant: "release" (default) or "debug". `make debug` just
+# re-invokes make with BUILD=debug, so both variants share one set of rules.
+BUILD ?= release
+
+OBJDIR = build/obj/$(BUILD)
+OBJECTS = $(patsubst src/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
+
+# Release keeps writing to build/ so `make install` and every existing
+# reference to build/micropolisengine.* behave exactly as before. Debug lands
+# in build/debug/ so an instrumented engine can never be mistaken for, or
+# installed over, the shipping artifacts.
+ifeq ($(BUILD),debug)
+OUTDIR = build/debug
+VARIANT_CXXFLAGS = $(EMDEBUG_CXXFLAGS)
+VARIANT_LDFLAGS = $(EMDEBUG_LDFLAGS)
+else
+OUTDIR = build
+VARIANT_CXXFLAGS =
+VARIANT_LDFLAGS =
+endif
+
+LIBRARY = $(OUTDIR)/micropolisengine
 OUTPUTFILES = \
     $(LIBRARY).wasm \
 	$(LIBRARY).js \
@@ -155,22 +215,39 @@ OUTPUTFILES = \
 	$(LIBRARY).data \
 	$(LIBRARY).html
 
+.PHONY: all debug install clean
+
 all: $(LIBRARY)
+
+# Build the instrumented engine into build/debug/. Never installed by
+# `make install` — see the debug settings section above for the flag rationale.
+debug:
+	$(MAKE) BUILD=debug all
 
 # Compilation rule for wasm
 $(LIBRARY): $(OBJECTS)
-	mkdir -p build
+	mkdir -p $(OUTDIR)
 	$(EMCC) \
 		$(EMLDFLAGS) \
+		$(VARIANT_LDFLAGS) \
 		-o $(LIBRARY).html \
 		$^
 
-%.o: %.cpp $(HEADERS)
+$(OBJDIR)/%.o: src/%.cpp $(HEADERS)
+	mkdir -p $(OBJDIR)
 	$(EMCC) \
 	    $(EMCXXFLAGS) \
+		$(VARIANT_CXXFLAGS) \
 		-c $< \
 		-o $@
 
+# Installs the release artifacts only; refuses to run under BUILD=debug so an
+# instrumented engine never overwrites what the app ships. The guard is at
+# parse time (not a recipe line) so it fires before `all` does any linking.
+ifeq ($(BUILD),debug)
+install:
+	$(error refusing to install a debug build over the release artifacts; run `make install` without BUILD=debug)
+else
 install: all
 	echo "MicropolisEngine: makefile: make install"
 	pwd
@@ -180,12 +257,14 @@ install: all
 	cp build/micropolisengine.data ../../apps/micropolis/src/lib
 	{ printf '%s\n' '// @ts-nocheck'; cat build/micropolisengine.js; } > ../../apps/micropolis/src/lib/micropolisengine.js
 	if [ -f build/micropolisengine.d.ts ]; then cp build/micropolisengine.d.ts ../../apps/micropolis/src/types; else echo "micropolisengine.d.ts was not generated; keeping existing TypeScript bindings"; fi
+endif
 
+# Removes both variants' objects and outputs. Also sweeps any src/*.o left by
+# an older revision of this makefile, which compiled objects next to sources.
 clean:
 	rm -rf \
-	    $(OBJECTS) \
-		$(OUTPUTFILES) \
-		build
+		build \
+		src/*.o
 
 
 ########################################################################
