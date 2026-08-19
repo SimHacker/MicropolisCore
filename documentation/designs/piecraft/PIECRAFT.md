@@ -50,6 +50,25 @@ Retro “Minecraft-like” art is a **scope choice**, not the product goal.
 - **Inventory** multiple pies for different roles
 - **Edit at runtime** — drag-and-drop items into slices ([PIE-MENU-MODEL](./PIE-MENU-MODEL.md))
 
+### Pies as typed bags; bags as molecules
+
+A pie is a **typed bag whose geometry is part of its type**: slot count is
+**valence**. A 4-slot compass pie, an 8-slot combat wheel, a 12-slot spell
+ring are different *elements* — found, bought, and crafted like any typed
+container (Glitch bags, WoW profession bags), and they can **auto-route on
+deposit**: a potion dropped on a loadout files itself into the consumables
+pie, a spell into the ring slice matching its element. Smart placement — the
+container inspects the child and picks the slice.
+
+Composition goes further: pies **bond into molecules**. A submenu is a
+covalent bond — a slice of one pie shares an electron with the center of
+another. A loadout is a molecule of pies with complementary valences (fast
+4-slot reflex pie bonded to a deep 12-slot inventory ring). Crafting recipes
+are chemistry: combine two 4-slot pies and a linker slice into an 8-slot
+compound; break a molecule in combat and it decomposes back into element
+pies, spilling loose items. Progression = access to higher valences and
+rarer bonds.
+
 ### Design pressure = gameplay
 
 **Fitts’s Law Feng Shui** — frequent commands sit in fast wedges.
@@ -122,7 +141,7 @@ PieCraft **inverts**: the player **authors** the map. Micropolis web app targets
 
 | Project | Relation |
 |---------|------------|
-| **Sims 1 animation → Unity** (2013) | Separate open-source ask to EA; uses same pie UX in tooling |
+| **Sims 1 animation → Unity** (2013) | Sims 1 animation library brought into Unity; uses same pie UX in tooling |
 | **Invisibility3D** (2012+) | AR pies + MotionSDK gesture |
 | **OpenLaszlo Micropolis Online** | [piecursor.lzx](../../openlaszlo/classes/piecursor.lzx) |
 | **CMU Brad Myers class** (2014, 2019 lecture) | Interview + [slides](https://docs.google.com/presentation/d/1R9s4EEAwUjI_7A8GgdLYD_U1yUs9omaVqkY9GY-2D78/edit) |

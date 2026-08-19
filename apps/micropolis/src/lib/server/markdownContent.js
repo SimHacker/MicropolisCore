@@ -43,7 +43,12 @@ export function getContentFilePath(slug) {
 /** @param {string} raw @returns {Promise<string>} */
 async function renderMarkdown(raw) {
 	const { content } = matter(raw); // strip YAML frontmatter
-	const file = await processor.process(content);
+	// Repo-root images/ paths render on GitHub; the site serves the same files from static/.
+	const withSitePaths = content.replace(
+		/\]\(\.\.\/\.\.\/\.\.\/\.\.\/\.\.\/images\//g,
+		'](/images/'
+	);
+	const file = await processor.process(withSitePaths);
 	return String(file);
 }
 
