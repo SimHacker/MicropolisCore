@@ -592,8 +592,6 @@ bool Micropolis::loadCity(const std::string &filename)
         std::string newCityName = cityFileName.substr(pos, last - pos);
         setCityName(newCityName);
 
-        doSimInit();
-
         didLoadCity(filename);
 
         return true;
