@@ -74,7 +74,7 @@ Soul City inherits this discipline at the substrate level:
 - The Sims content registry ([sims-content-registry.md](sims-content-registry.md)) preserves the inclusive rules of any content it round-trips; no transformation step strips orientation, gender expression, or family structure from a recovered or imagined household.
 - The [Imagine Loop](the-imagine-loop.md) operates on the same substrate; what the LLM narrates is constrained by the same procedural rules. The author cannot accidentally produce a Heterosexist Imagine output because the schema doesn't have a "Heterosexist" mode.
 
-Alexander Avila's video essay [*Did The Sims make you gay?*](https://www.youtube.com/watch?v=Xi-HWyh0Ybk) walks through how a generation of queer players found space inside The Sims's procedural rules; the comments section of that video is a primary source for the cultural reach.
+Alexander Avila's video essay [*Did The Sims make you gay?*](https://www.youtube.com/watch?v=Xi-HWyh0Ybk) walks through how a generation of queer players found space inside The Sims's procedural rules; the comments section of that video is a primary source for the cultural reach. Don analyzed **1,712+ comments** into fourteen themes in the MOOLLM sibling repo — see [Community Response: Comment Analysis](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-queer-identity-formation.md#community-response-comment-analysis). The Will Wright Show for Food episode [*Did The Sims Make You Gay?*](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/did-the-sims-make-you-gay) pairs Patrick Barrett's engine-room story with that congregation testimony.
 
 ---
 
@@ -177,6 +177,16 @@ This is not a separate political claim. It is the structural reason why Soul Cit
 | MOOLLM substrate (Mind Mirror, Bifrost, Representation Ethics) | [moollm-microworld-os.md](moollm-microworld-os.md) |
 | Tornado archive recovery (ethics + takedown discipline) | [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) |
 
+### Sibling repos — Avila essay, comment analysis, Repo Show
+
+| Resource | Where |
+|---|---|
+| Avila comment analysis (1,712+ comments, 14 themes) | [MOOLLM — Community Response: Comment Analysis](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-queer-identity-formation.md#community-response-comment-analysis) |
+| Full Avila essay write-up + theory frame | [MOOLLM — sims-queer-identity-formation.md](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-queer-identity-formation.md) |
+| Will Wright Show for Food — *Did The Sims Make You Gay?* | [WillWrightShowForFood/repo-shows/did-the-sims-make-you-gay/](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/did-the-sims-make-you-gay) |
+| Public engine-room record (Patrick + Don) | [same-sex-relationships-the-record.md](https://github.com/SimHacker/WillWrightShowForFood/blob/main/characters/patrick-j-barrett-iii/same-sex-relationships-the-record.md) |
+| Alexander Avila guest room + cross-repo index | [characters/alexander-avila/](https://github.com/SimHacker/WillWrightShowForFood/tree/main/characters/alexander-avila) |
+
 ### Primary sources — The Sims design history
 
 | Source | Where |
@@ -192,7 +202,7 @@ This is not a separate political claim. It is the structural reason why Soul Cit
 | Source | Where |
 |---|---|
 | Ian Bogost, *Persuasive Games* (MIT Press, 2007) — Procedural Rhetoric | [Wikipedia summary](https://en.wikipedia.org/wiki/Procedural_rhetoric) |
-| Alexander Avila, *Did The Sims make you gay?* (video essay) | [YouTube](https://www.youtube.com/watch?v=Xi-HWyh0Ybk) |
+| Alexander Avila, *Did The Sims make you gay?* (video essay) | [YouTube](https://www.youtube.com/watch?v=Xi-HWyh0Ybk) · [MOOLLM comment analysis](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-queer-identity-formation.md#community-response-comment-analysis) · [WWSFF show](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/did-the-sims-make-you-gay) |
 | Izzzyzzz, *Cozy Games and Misogyny* (May 2026) | [YouTube](https://www.youtube.com/@Izzzyzzz) |
 | Adam Jerrett (University of Portsmouth), *How The Sims accidentally invented the cosy game genre* (3 Feb 2025) — The Sims 25th-anniversary *Conversation* mini-series; dollhouse framing, emergent narrative, machinima, cozy-DNA checklist | [theconversation.com](https://theconversation.com/how-the-sims-accidentally-invented-the-cosy-game-genre-248702) |
 | Fortune, "How EA's $5 billion Sims empire has become a magnet for female talent in a male-dominated field" (31 Jan 2025) | [fortune.com](https://fortune.com/2025/01/31/the-sims-25-anniversary/) |
