@@ -54,5 +54,6 @@ Jeff
 
 ## See also
 
+- [SimCity box art — monster and tornado covers, back, side panels](../box-art/README.md)
 - [Micropolis README — trademark note](../../README.md#the-story)
 - [Jimmy Maher, Maxis Part 1 — SimCity box art](https://www.filfre.net/2026/07/the-life-and-times-of-maxis-part-1-simeverything/)
