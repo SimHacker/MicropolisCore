@@ -1012,6 +1012,10 @@ void Micropolis::doMonsterSprite(SimSprite *sprite)
     static const short ND2[4] = {  1,  2,  3,  0 };
     static const short nn1[4] = {  2,  5,  8, 11 };
     static const short nn2[4] = { 11,  2,  5,  8 };
+    static const int MONSTER_LIFE = 1000;
+    // Covers a monster working its way along a coastline, where it keeps
+    // stepping back into the water.
+    static const int MONSTER_SPAWN_GRACE = 500;
     short d, z, c;
 
     if (sprite->soundCount > 0) {
@@ -1116,7 +1120,7 @@ void Micropolis::doMonsterSprite(SimSprite *sprite)
                         sprite->destX = sprite->origX;
                         sprite->destY = sprite->origY;
 
-                    } else {
+                    } else if (sprite->count <= MONSTER_LIFE - MONSTER_SPAWN_GRACE) {
 
                         sprite->frame = 0;
                         return;
@@ -1212,7 +1216,9 @@ void Micropolis::doMonsterSprite(SimSprite *sprite)
     c = getChar(sprite->x + sprite->xHot, sprite->y + sprite->yHot);
 
     if (c == -1
-          || (c == RIVER && sprite->count != 0 && sprite->control == -1)) {
+          || (c == RIVER && sprite->count != 0
+              && sprite->count <= MONSTER_LIFE - MONSTER_SPAWN_GRACE
+              && sprite->control == -1)) {
         sprite->frame = 0; /* kill scary monster */
     }
 
@@ -1910,9 +1916,8 @@ void Micropolis::makeShipHere(int x, int y)
 
 /**
  * Start a new monster sprite.
- * @todo Make monster over land, because it disappears if it's made over water.
- *       Better yet make monster not disappear for a while after it's created,
- *       over land or water. Should never disappear prematurely.
+ * Spawns on a river tile; doMonsterSprite() keeps it alive for its first
+ * MONSTER_SPAWN_GRACE ticks.
  */
 void Micropolis::makeMonster()
 {
