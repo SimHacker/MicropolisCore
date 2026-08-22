@@ -13,9 +13,10 @@ reading see
 A pie menu is radial geometry laid over a living scene. The player has just pointed at a person.
 The menu must answer three questions at once: *who* am I acting on, *what* can I do, and *where*
 am I looking? The usual solution — icons in a ring — treats the character as an object among
-objects. The popup head inverts that: the character **is** the hub. Their face occupies the hole
-in the donut, turns toward the highlighted slice like a square in the Brady Bunch title grid, and
-the scene behind them dims as if someone lowered the houselights for a close-up.
+objects. The popup head inverts that: the character **is** the hub. Their **head-bone attachments**
+— face, hat, glasses, whatever is rigged there — occupy the hole in the donut, turn toward the
+highlighted slice like a square in the Brady Bunch title grid, and the scene behind them dims as
+if someone lowered the houselights for a close-up.
 
 This is not ornament. It is a **binding** between the abstract menu and the embodied Sim. Every
 other design choice in the module serves that binding: scale, shimmer, lean toward the cursor,
@@ -118,14 +119,27 @@ behavior.
 
 ---
 
-## 7. Censorship boundary
+## 7. Every mesh on the head bone — hats, glasses, and the arrow gag
 
-The head is extracted by walking dressings and bindings until the canonical head bone is found.
-Suits marked as **censor bounding meshes** — type one in the suit taxonomy — are skipped. The
-popup head must show the **real face**, not the modesty placeholder used when the body is
-mosaiced. Pie-menu head and policy overlay are **different compositing contracts**; conflating
-them would have produced a blurred or blocked face at the center of intent. The encyclopedia
-(§5) treats this as a first-class porting rule for the same reason.
+The comment says it draws *the current person's head*; the implementation is more literal than
+that. It walks **every dressing** on the skeleton, skips only **censor bounding meshes** (type
+one in the suit taxonomy), and for each remaining dressing draws **every mesh bound to the
+canonical HEAD bone**. Whatever is rigged to that bone at this moment — base head, current hat,
+glasses, horns, party favors — rides into the menu center with the same camera-facing transform,
+the same shimmer, the same slice-driven nod and shake.
+
+There is no separate "face only" pass. The popup hub is a **snapshot of head-bone attachments**,
+not a portrait crop. That is the right default for a character game: the player recognizes *their*
+Sim, accessories and all. It is also the source of occasional comedy: content rigged through the
+skull for world view (the classic **arrow-through-head** sight gag — shaft and fletching bound
+to HEAD along with everything else) appears dead center in the pie, spinning its little compass
+looks with the hat. The selection-marker arrow above the lot (`head-arrow` suit, separate code
+path) is a different asset; the gag here is **accessory accumulation** — the menu does not
+curate, it **mirrors**.
+
+Pie-menu head and censorship overlay remain **different compositing contracts** (type-one bboxes
+skipped; real textured geometry kept). The encyclopedia (§5) treats censor exclusion as a
+first-class porting rule for the same reason.
 
 ---
 
@@ -169,6 +183,7 @@ depth guessing for screen-locked 3D UI is its own tradition.
 | Turn easing on selection change | |
 | Ambient brighten on selection | |
 | Submenu shadow tracking | |
+| All HEAD-bound meshes (hats, accessories) | Face-only or accessory filter |
 | Censor-suit exclusion | |
 | Demo keyboard attitude cheat | (intended temporary) |
 

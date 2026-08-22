@@ -83,7 +83,8 @@ Apply in engine order appropriate to your math convention (validate with one gol
 ### 2.1 Which meshes
 
 - Walk **all dressings / suits** on the character; **skip** suits marked as **non-rendered overlay** types (e.g. censorship bounding meshes — behavior and compositor order in **§5**).
-- For the **head bone**, use the **bound deformed mesh** for that bone: deform in **local / bone space** for this draw only, then restore **world-space deformation** afterward so the rest of the scene is unchanged.
+- For **each** remaining dressing, find **every binding to the head bone** (`HEAD`) and draw it — not a face-only extract. **Hats, glasses, and other head-rigged accessories** come along; anything bound to `HEAD` (including sight-gag props such as arrows through the skull) appears in the menu center. There is no accessory filter beyond skipping censor bboxes.
+- For each such binding, use the **bound deformed mesh**: deform in **local / bone space** for this draw only, then restore **world-space deformation** afterward so the rest of the scene is unchanged.
 
 ### 2.2 Placement
 
