@@ -64,6 +64,15 @@
 
 ########################################################################
 # Emscripten settings
+#
+# INCOMING_MODULE_JS_API: Emscripten only honours Module.* properties named in
+# this list, and since 4.x it hard-aborts on any it does not know
+# ("Aborted(`Module.wasmBinary` was supplied but `wasmBinary` not included in
+# INCOMING_MODULE_JS_API)"). The default list omits `wasmBinary` and
+# `getPreloadedPackage`, both of which apps/micropolis/src/lib/wasm/node.ts
+# passes to load the engine from a Buffer in Node instead of over HTTP. So the
+# list below is the upstream default plus those two. If a loader starts passing
+# another Module property, add it here too.
 
 
 EMCC = em++
@@ -79,6 +88,7 @@ EMLDFLAGS = \
     -s 'ENVIRONMENT=web,worker,node' \
     -s ALLOW_MEMORY_GROWTH=1 \
     -s 'EXPORTED_RUNTIME_METHODS=["HEAPU16","wasmMemory"]' \
+    -s 'INCOMING_MODULE_JS_API=["ENVIRONMENT","arguments","canvas","dynamicLibraries","elementPointerLock","getPreloadedPackage","instantiateWasm","locateFile","monitorRunDependencies","noExitRuntime","noInitialRun","onAbort","onExit","onRuntimeInitialized","postRun","preInit","preRun","print","printErr","setStatus","statusMessage","stderr","stdin","stdout","thisProgram","wasm","wasmBinary","websocket"]' \
 	-lembind \
 	--emit-tsd=micropolisengine.d.ts \
 	--shell-file src/micropolisengine_template.html \

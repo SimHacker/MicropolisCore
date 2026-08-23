@@ -81,10 +81,18 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-/** Reset many game state variables */
+/**
+ * Reset many game state variables.
+ *
+ * Note that this deliberately does not seed the random number generator.
+ * Reseeding here would discard any seed the caller set with seedRandom(), and
+ * since every caller runs doSimInit() before returning -- whose map scans draw
+ * from the RNG and store the results in map tiles -- there would be no point at
+ * which an externally supplied seed could take effect. Callers that do want a
+ * fresh random world call randomlySeedRandom() themselves.
+ */
 void Micropolis::initWillStuff()
 {
-    randomlySeedRandom();
     initGraphMax();
     destroyAllSprites();
 
