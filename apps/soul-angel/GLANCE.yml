@@ -28,4 +28,4 @@ specs:
 show_side:   # product/community framing lives in WWSFF
   product_spec: WillWrightShowForFood/catalogs/soul-city/soul-angel.yml
   broadcast_network: WillWrightShowForFood/apps/soul-angel/SCBN.yml
-  windows_host_specs: WillWrightShowForFood/apps/micropolis-angel/
+  windows_host_specs: WillWrightShowForFood/apps/soul-angel/windows/

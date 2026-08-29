@@ -35,7 +35,7 @@ switching:
 first_bridge:
   sims1:
     what: "Family Album round-trip, save parse, character/graveyard enumeration, catalog crawl, TTS showcase"
-    specs: "WWSFF apps/micropolis-angel/ (Windows host + Sims 1 bridge specs; code migrates here)"
+    specs: "WWSFF apps/soul-angel/windows/ (Windows host + sims1 bridge specs; code migrates here)"
 
 third_party:
   intent: "Bridge SDK docs public — community writes bridges for their favorite games"

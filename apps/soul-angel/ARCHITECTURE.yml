@@ -77,7 +77,7 @@ bus:
 shells:
   windows:
     stack: "WinUI 3 + WebView2; C++/C# host"
-    spec_lineage: "WWSFF apps/micropolis-angel/ARCHITECTURE.yml (Windows host + Sims 1 bridge specs)"
+    spec_lineage: "WWSFF apps/soul-angel/windows/ARCHITECTURE.yml (Windows host + sims1 bridge specs)"
   macos:
     stack: "Native shell TBD (Swift + WKWebView or Electron); decision deferred to port"
     spec_lineage: "WWSFF apps/stream-gateway/ Mac-tier research"
