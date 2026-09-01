@@ -86,6 +86,13 @@
  * Simulator constructor.
  */
 Micropolis::Micropolis() :
+        // Must be initialized here: setCallback() does
+        // `if (callback != NULL) delete callback`, so a Micropolis allocated
+        // over previously used memory would delete a stale pointer and trap
+        // ("RuntimeError: table index is out of bounds"). init() does not set
+        // it either, so the constructor is the only place this can happen.
+        // Listed first to match its declaration order in micropolis.h.
+        callback(NULL),
         populationDensityMap(0),
         trafficDensityMap(0),
         pollutionDensityMap(0),

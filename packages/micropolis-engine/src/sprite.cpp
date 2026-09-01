@@ -111,7 +111,17 @@ SimSprite *Micropolis::newSprite(const std::string &name, int type, int x, int y
         sprite = freeSprites;
         freeSprites = sprite->next;
     } else {
-        sprite = (SimSprite *)newPtr(sizeof (SimSprite));
+        // Must be `new`, not newPtr()/malloc(): SimSprite has a std::string
+        // member, and assigning to an unconstructed std::string dereferences
+        // whatever garbage its internal pointers hold. That is a segfault in
+        // `sprite->name = name` below on any heap that is not zero-filled --
+        // reached via doSpecialZone -> doAirport -> generateCopter ->
+        // makeSprite. Sprites are pooled on freeSprites and never freed (see
+        // destroySprite) -- a pre-existing leak on every destroy()/init() that
+        // this widens slightly, since each sprite's std::string can itself
+        // heap-allocate. Fixing that means actually deleting pooled sprites
+        // in destroySprite, which is a separate change from this crash fix.
+        sprite = new SimSprite();
     }
 
     sprite->name = name;
