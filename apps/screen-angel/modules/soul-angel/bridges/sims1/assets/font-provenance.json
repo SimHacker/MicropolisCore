@@ -1,0 +1,18 @@
+{
+	"_": "Curated provenance, merged into interface.fontpack's META chunk by tools/import-fonts.ts. Measured facts (glyph counts, line heights, baselines) are computed at import time and win over anything written here; this file holds what only a person knows. It lives outside the binary so that rebuilding the pack cannot quietly lose it.",
+	"Simplifier2004": {
+		"source": "Don Hopkins' Simplifier, 2004 (SimsKit/Simplifier: res/Font.bmp with the gFontX, gFontY and gFontW tables)",
+		"what_it_is": "The Sims 1 interface font measured by hand off a screenshot. The game puts nothing in the accessibility tree, so a screen reader had no other way in: the pixels were the interface.",
+		"identified_as": "VariableSans_08, at 0.877 mean intersection-over-union against the face the game ships, once coverage below 6 of 15 is thresholded away. The next closest size is 9 at 0.462 and size 12 reaches 0.209, so the identification is not a near thing. Reproduce it with tools/identify-font.ts.",
+		"measured_widths_are_ink_not_advances": "The hand-measured widths match thresholded ink width for 81 of 94 characters and the game's advance for only 5, so this face must be used with its own widths and never with the game metrics.",
+		"why_it_is_still_here": "It is the only face in the pack that came from a screenshot rather than from the game's own files, which makes it the test that the reader works on captured pixels and not just on assets we drew ourselves.",
+		"space_advance_is_a_choice": "4 pixels. The 2004 tables measured the space cell's ink, which is 1 pixel of nothing, and an advance of 1 makes word breaks unreadable. 4 is what the Simplifier's own reader used, and the face it was identified as advances 3, so it is neither invented nor contradicted."
+	},
+	"VariableSans": {
+		"_applies_to": "Every VariableSans_NN face; merged under each.",
+		"typeface": "Comic Sans MS, as rendered by Maxis into the game's own atlases. The game asks GDI for it on Windows and reads these atlases elsewhere.",
+		"source": "UIGraphics/Fonts/VariableSans_NN.bmp (8-bit run-length atlas, pixel value is coverage 0 to 15) plus VariableSans_NN.fot (header, 256 glyph rectangles, 256-entry alpha table stepping by 17).",
+		"sizes": "7 through 20 for controls and labels, 48 for the paused banner. Sizes 13, 15, 17 and 19 are not shipped.",
+		"coverage_is_not_colour": "The atlas palette is a greyscale decoy. Colour arrives at blit time, which is why one atlas serves every panel and why a reader can fit the colour instead of being told it."
+	}
+}

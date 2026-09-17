@@ -1,12 +1,14 @@
 # FONT-RECOGNITION.yml — reading The Sims 1 interface by matching the font it draws with
 #
 # Companions: ../../../RECOGNIZER.yml (the reader stack) · ../../../OPTICAL-CHANNEL.yml (codes, of
-# which text is the widest) · src/text/ (the code) · tools/ (the compilers) · assets/ (the fonts)
+# which text is the widest) · src/text/ (the code) · tools/ (importers and exporters) ·
+# assets/interface.fontpack (every face) · assets/font-provenance.json (what only a person knows)
 
 status:
-  built: [font_compiler, coverage_matcher, line_reader, panel_finder, analysis_layer, tests, fixture_renderer]
+  built: [font_pack_format, importers, exporters, canvas_shaped_api, coverage_matcher, line_reader, panel_finder, analysis_layer, tests, fixture_renderer]
   not_built: [resolution_independent_panel_finder, tooltip_and_dialog_regions, live_polling, cjk_faces]
-  fonts_in_use: "The game's own VariableSans_08 for the panel. The 2004 hand-measured atlas is kept as provenance and as the font the tests can rely on without an installation."
+  fonts_in_use: "The game's own VariableSans_08 for the panel. The 2004 hand-measured capture rides along as the one face that came from a screen rather than from an asset, which makes it the test that the reader works on captured pixels."
+  one_file: "assets/interface.fontpack, 92,044 bytes, twelve faces. Committed; the game's own font files are not."
 
 the_claim_this_settles:
   what_the_specs_kept_saying: "That text is the widest carrier on the screen and the easiest thing on it to read. That was an assertion."
@@ -35,27 +37,42 @@ antialiasing:
   the_palette_is_a_decoy: "An 8-bit greyscale identity ramp, there because BMP wants a palette. The value is how much of the pixel the letter covers, and colour arrives at blit time — which is why one file serves a white label, a dark tooltip and any custom skin."
   and_therefore: "The reader fits the blend rather than comparing colours, so it never has to be told the theme."
 
-the_packed_form:
-  file: "packages/optical-codec/src/coverage-pack.ts, written by tools/compile-gzfont.ts as assets/fonts/VariableSans_NN.gzf beside a manifest.json."
-  layout: "Header, name, 256 fixed table entries of advance/offset/size/plane-offset, then one nibble-packed coverage plane with rows padded to a byte."
-  why_nibbles: "Coverage is four bits, so two pixels fit in a byte and half the file disappears for nothing. Row padding keeps addressing arithmetic instead of a bit cursor."
-  why_not_compressed_on_disk: "The plane is indexed, not parsed. Compressing it would force a full inflate before the first glyph could be read, to save bytes the transport already saves: brotli over HTTP, deflate in a package, both built into Node and every browser."
-  measured_over_all_eleven_sizes:  # 2246 glyphs, 167,510 ink pixels, 333,584 bounding-box pixels
-    json_of_coverage_triples: {raw: 1356749, gzip: 245792}
-    sparse_binary_triples: {raw: 502530, gzip: 190778}
-    the_games_own_bmp_and_fot: {raw: 385354, gzip: 152666, brotli: 126504}
-    dense_8_bit_and_table: {raw: 359060, gzip: 96124, brotli: 81486}
-    nibble_packed_and_table: {raw: 191346, gzip: 88881, brotli: 78753}
-  per_size_actual: "size 8 is 9,355 bytes; size 9 is 10,063; size 12 is 15,635; size 48 is 13,220. The sizes the interface uses come to about 30 KB."
-  the_trap: "Sparse x,y,level triples are the intuitive encoding and lose twice: bigger raw, and bigger compressed. Coordinates are entropy; the dense plane's zeroes are positional, and deflate eats them."
-  what_was_tried_and_rejected: "A row delta filter, which makes it worse (107,998 gzipped against 88,881): four-bit coverage is noisy edge data, not a gradient. Two-bit quantisation would roughly halve the raw size and cost the matcher precision, so it is not done."
+our_own_format:
+  why_not_somebody_elses: "This needs one thing no font format offers: the exact coverage the application blitted, with the advances the original layout used, so the same numbers can DRAW text and READ it back. TrueType hands back an outline for somebody else's hinter to rasterise, at which point the pixels are a guess and reading them is guesswork twice. A PNG atlas plus a JSON sidecar keeps the pixels and turns coverage into grey, which means telling the reader what colour the text was — the one thing it must not need to be told."
+  the_container: "packages/optical-codec/src/font-pack.ts. 'FNTP', version, chunk count, then chunks: FACE for a face, META for the provenance JSON. Each chunk names its own codec, so the format can gain chunk types without invalidating a reader."
+  the_face_payload: "coverage-pack.ts: header, name, 256 fixed table entries of advance/offset/size/plane-offset, then one nibble-packed coverage plane with rows padded to a byte. Coverage is four bits, so two pixels fit in a byte and half of it disappears for nothing; the padding keeps addressing arithmetic instead of a bit cursor."
+  the_codec: "Raw deflate, per chunk, whichever is smaller. Not brotli: raw deflate is the one codec Node and every browser both have built in — new DecompressionStream('deflate-raw') — and 11% is not worth shipping a decoder for."
+  measured:  # 12 faces, 2340 glyphs, 169,217 ink pixels
+    file_on_disk: 92044
+    faces: {packed: 196004, deflated: 90156}
+    provenance_json: {raw: 7992, deflated: 1724}
+    the_same_faces_as_json: {raw: 1368234, gzip: 242734, brotli: 156741}
+    per_face: "size 8 packs to 9,355 and deflates to 5,197. Size 12: 15,635 and 7,841. Size 48: 13,220 and 3,528. The 2004 capture: 4,658 and 1,815."
+  the_trap: "Sparse x,y,level triples are the intuitive encoding and lose twice: bigger raw, and bigger compressed. Coordinates are entropy; a dense plane's zeroes are positional, and deflate eats them."
+  what_was_tried_and_rejected: "A row delta filter, worse by a fifth: four-bit coverage is noisy edge data, not a gradient. Two-bit quantisation would roughly halve the raw size and cost the matcher precision, so it is not done."
+
+importers_and_exporters:
+  the_rule: "A binary asset with no exporter is a hostage. Everything in the pack can leave it as PNG and JSON, and come back."
+  import_fonts: "tools/import-fonts.ts --from <UIGraphics/Fonts> reads the game's .bmp atlases and .fot metrics; --from-json reads whatever the exporter wrote. Faces already in the pack are carried forward when their source is not to hand, which is the ordinary case for the 2004 capture."
+  export_fonts: "tools/export-fonts.ts writes, per face, a PNG contact sheet with every glyph's coverage as grey and the baseline drawn dim, plus a JSON of the metrics, plus the provenance. The contact sheet is for eyes: it is how you see that a glyph is one pixel low without writing an assertion about it first."
+  identify: "tools/identify-font.ts works from the pack alone, so the identification below stays reproducible after the sources were deleted."
+  provenance_lives_outside_the_binary: "assets/font-provenance.json, merged into the META chunk at import time. Measured facts are computed and win over it; that file holds what only a person knows. A rebuild cannot quietly lose it, which one did before it existed."
+  what_is_not_committed: "The game's own font files, and the 2004 BMP with its hand-measured tables. Glyph shapes are Comic Sans MS as Maxis rendered it; packing them for this application does not relicense them. Rebuild from your own installation if that matters to you."
+
+the_api_is_canvas_shaped:
+  what: "packages/optical-codec/src/font-context.ts. measureText and fillText in Canvas's own vocabulary — textBaseline, textAlign, a TextMetrics with the same field names — and readText, which is the one Canvas cannot have."
+  why_the_symmetry_is_load_bearing: "Draw and read run off the same coverage and the same advances, so a fixture drawn here is legible here by construction, and a disagreement between them is a bug in one of two functions rather than an open question about a screenshot."
+  the_deliberate_difference: "No mutable graphics state. A context is made with its settings and does not change; .with() returns another. Every failure of a mutable state is of the form 'something else changed it', and code that reads a game's interface has enough of those."
+  the_baseline: "Bitmap faces ship a line height and per-glyph offsets and leave the baseline implied, so it is measured off the capitals and digits — the row below the lowest of them. The game's size 8 and the 2004 capture agree independently: line 16, baseline 13, which is a second confirmation of the identification below."
 
 identifying_the_2004_capture:
   the_question: "Which size did the Simplifier's hand-measured atlas come from? Nobody wrote it down, and the panel's font size is exactly what the reader needs."
   the_method: "tools/identify-font.ts compares the capture against every shipped size, by advance width and by glyph shape as intersection over union."
-  the_answer: "VariableSans_08, at 0.877 mean IoU once coverage below 6/15 is thresholded away. No other size is close: size 7 reaches 0.545 and size 12 is 0.163."
+  the_answer: "VariableSans_08, at 0.877 mean IoU once coverage below 6/15 is thresholded away. Nothing else is close: the next size up reaches 0.462 and size 12 is 0.209."
+  the_second_witness: "Both faces put the baseline 13 rows into a 16-row line box, measured off their capitals with no knowledge of each other."
   what_that_also_revealed: "The 2004 widths are tight ink widths, not advances — they match the thresholded ink width for 81 of 94 characters and the game's advance for 5. And the capture lost its faintest coverage, which is what a screenshot thresholded by hand does."
   where_it_disagrees: "K \\ ] ^ ` { } and n, measured in 2004 and not matching now. Small punctuation, most likely mis-measured off a magnified screenshot, and worth a look if any of them ever misreads."
+  the_space_that_had_to_be_chosen: "The 2004 tables measured the space cell's ink, which is one pixel of nothing. An advance of 1 makes word breaks unrecoverable, so that face carries 4 — what the Simplifier's own reader used, against the 3 the game advances. A space is a gap and nothing else, so a face whose space is no wider than its letter spacing has word breaks nobody can read back; the tests say so rather than pretending otherwise."
 
 the_reader_is_a_whole_line_search:
   what_it_does: "Every column of the strip is accounted for exactly once. A letter costs the squared miss between its coverage and the pixels; a column with no letter on it costs whatever ink sits there unexplained; the cheapest path across the strip wins. Viterbi over pen positions, with each glyph's advance as the step."
@@ -74,18 +91,19 @@ the_honest_failure:
   why_this_matters_more_than_accuracy: "Everything above this layer — a job, an Angel, a narrated recording — would act on invented text without knowing. A refusal is recoverable; a confident misread is not."
 
 the_layers:
-  assets_simplifier_font_bmp: "The 2004 atlas, unmodified, with its hand-measured tables in tools/simplifier-metrics.ts. Aliased pixels in the colours they were captured in, matched by colour."
-  assets_fonts: "The game's own sizes, packed. Produced by tools/compile-gzfont.ts from an installation; absent from a fresh checkout, which the tests skip on rather than fail."
-  optical_codec_bitmap_font: "The colour matcher, for the captured atlas and for aliased fonts generally."
+  assets_interface_fontpack: "Twelve faces in our own format. The one committed asset; the sources are not in the repository."
+  optical_codec_font_pack: "The container, and the Node ends of the codec in node/pack.ts."
   optical_codec_coverage_font: "The coverage matcher: prepare, read a line, read a block, and draw — drawing being how the tests produce pixels to read."
-  src_text_font: "Which font for which job, loaded once, plus the alphabet the reader is offered."
+  optical_codec_font_context: "Draw, measure and read through one object, in Canvas's vocabulary."
+  src_text_font: "Which face for which job, loaded once, plus the alphabet the reader is offered."
   src_text_panel: "The Sims-specific geometry. Corner colours at fixed columns, one upward scan for the top edge because only the top edge moves, then the description block at its measured offset."
   src_text_analysis: "What the driver offers upward: one frame, one answer, or a reason. Pull, not push — the caller is the one that knows whether anything is happening (RECOGNIZER.yml, when_to_look)."
   the_bridge: "On attach it reports both halves: how empty the accessibility tree is, and what it read off the pixels anyway. The pairing IS the architecture argument, made by the machine on every attach instead of in a document."
 
 how_it_is_tested_without_the_game:
   the_trick: "The masks came out of the game and are blended the way the game blends them, so drawing a string produces the pixels the game produces. Render, read back, and any disagreement is a bug in one of our own halves rather than a question about a screenshot."
-  the_synthetic_font: "packages/optical-codec/test builds its own awkward five-pixel font — one letter a strict subset of another, one a single stroke that fits inside them all — so the matcher's claims can be tested by anyone, with no installation and no licence question."
+  the_synthetic_font: "packages/optical-codec/test builds its own awkward five-pixel font — one letter a strict subset of another, one a single stroke that fits inside them all, one with a descender — so the matcher's claims, the container's round trip and the metrics can all be tested by anyone, with no installation and no licence question."
+  what_was_retired: "The colour matcher, the hand-measured tables in source, the JSON font, the BMP and the eleven separate .gzf files. One format, one matcher, one file. The captured face is now coverage like everything else, its screenshot colours divided back out into the coverage they always were."
   the_fixture: "tools/render-panel-fixture.ts draws the panel we claim to read and reads it back, and writes fixtures/panel.png so a person can see what the machine is matching."
   what_it_cannot_cover: "Whether the corner colours still identify the panel in the Legacy re-release, and whether the description really is drawn at the offsets measured in 2004. Both need one real frame."
 

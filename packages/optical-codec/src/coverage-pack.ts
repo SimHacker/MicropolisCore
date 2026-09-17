@@ -71,7 +71,8 @@ export function packCoverageFont(font: CoverageFont): Uint8Array {
 	view.setUint16(4, font.size, true);
 	view.setUint16(6, font.height, true);
 	out[8] = font.levels;
-	out[9] = 0;
+	// Zero means the source did not say, and the reader measures it off the capitals instead.
+	out[9] = Math.max(0, Math.min(255, font.baseline ?? 0));
 	view.setUint16(10, font.spaceWidth, true);
 	view.setUint16(12, name.length, true);
 	out.set(name, HEADER_BYTES);
@@ -117,6 +118,7 @@ export function unpackCoverageFont(bytes: Uint8Array): CoverageFont {
 	const size = view.getUint16(4, true);
 	const height = view.getUint16(6, true);
 	const levels = bytes[8];
+	const baseline = bytes[9];
 	const spaceWidth = view.getUint16(10, true);
 	const nameLength = view.getUint16(12, true);
 	const name = new TextDecoder().decode(bytes.subarray(HEADER_BYTES, HEADER_BYTES + nameLength));
@@ -151,5 +153,5 @@ export function unpackCoverageFont(bytes: Uint8Array): CoverageFont {
 		glyphs.push({ char: String.fromCharCode(code), code, width: advance, cov });
 	}
 
-	return { name, size, height, levels, spaceWidth, glyphs };
+	return baseline === 0 ? { name, size, height, levels, spaceWidth, glyphs } : { name, size, height, levels, spaceWidth, baseline, glyphs };
 }

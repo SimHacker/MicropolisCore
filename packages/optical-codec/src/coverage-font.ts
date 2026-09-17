@@ -1,11 +1,11 @@
 /**
  * Reading anti-aliased text off a screen, given the coverage masks the application drew it with.
  *
- * The sibling module, bitmap-font, matches ink against remembered COLOURS: it works when the
- * glyphs are aliased, or when somebody has captured them from the exact screen they will be read
- * from. The Sims does neither. Its interface font is a family of coverage masks — sixteen levels of
- * alpha per pixel, colour supplied at blit time — so a glyph looks different in every panel it
- * appears in, and only a fifth of its pixels are ever fully opaque.
+ * The obvious way to do this is to remember what colour each glyph's pixels were and compare, which
+ * works for aliased glyphs captured from the exact screen they will be read from. The Sims offers
+ * neither. Its interface font is a family of coverage masks — sixteen levels of alpha per pixel,
+ * colour supplied at blit time — so a glyph looks different in every panel it appears in, and only a
+ * fifth of its pixels are ever fully opaque. Remembered colours are worth nothing here.
  *
  * So this matcher does not compare colours at all. It exploits what blending guarantees: wherever a
  * glyph was drawn, the observed brightness is an affine function of that glyph's coverage. Fit that
@@ -43,26 +43,48 @@ export interface CoverageFont {
 	levels: number;
 	/** Advance for a space, which has no ink to match and must come from the metrics. */
 	spaceWidth: number;
+	/**
+	 * Rows from the top of the line box down to the alphabetic baseline, where the source said so.
+	 * Bitmap faces usually leave it implied, in which case deriveBaseline measures it off the
+	 * capitals — which is what a person does with a magnifier, and gets the same answer.
+	 */
+	baseline?: number;
 	glyphs: CoverageGlyph[];
 }
 
+/**
+ * Read a font from whatever shape it arrives in.
+ *
+ * Both spellings of the two fields that have a human name and a code name are accepted: lineHeight
+ * for height, advance for a glyph's width. The exporter writes the human ones because a person is
+ * going to read that file, and refusing to import what we just exported would be a fine way to make
+ * the round trip a lie.
+ */
 export function loadCoverageFont(source: unknown): CoverageFont {
-	const f = source as Partial<CoverageFont>;
+	const f = source as Partial<CoverageFont> & { lineHeight?: number; glyphs?: (CoverageGlyph & { advance?: number })[] };
 	if (!f || !Array.isArray(f.glyphs) || f.glyphs.length === 0) throw new Error('not a coverage font: no glyphs');
-	if (typeof f.height !== 'number' || f.height <= 0) throw new Error('not a coverage font: no height');
+	const height = typeof f.height === 'number' ? f.height : f.lineHeight;
+	if (typeof height !== 'number' || height <= 0) throw new Error('not a coverage font: no height or lineHeight');
+
+	const glyphs: CoverageGlyph[] = [];
 	for (const g of f.glyphs) {
-		if (typeof g.width !== 'number' || !Array.isArray(g.cov) || g.cov.length % 3 !== 0) {
+		const width = typeof g.width === 'number' ? g.width : g.advance;
+		if (typeof width !== 'number' || !Array.isArray(g.cov) || g.cov.length % 3 !== 0) {
 			throw new Error(`glyph ${JSON.stringify(g.char)} is malformed`);
 		}
+		glyphs.push({ char: g.char, code: g.code, width, cov: g.cov });
 	}
-	return {
+
+	const font: CoverageFont = {
 		name: f.name ?? 'unnamed',
 		size: f.size ?? 0,
-		height: f.height,
+		height,
 		levels: f.levels ?? 15,
-		spaceWidth: f.spaceWidth ?? Math.round(f.height / 4),
-		glyphs: f.glyphs
+		spaceWidth: f.spaceWidth ?? glyphs.find((g) => g.code === 32)?.width ?? Math.round(height / 4),
+		glyphs
 	};
+	if (typeof f.baseline === 'number') font.baseline = f.baseline;
+	return font;
 }
 
 /** A glyph with its coverage expanded over its bounding box: the shape the matcher walks. */

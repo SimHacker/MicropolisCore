@@ -15,10 +15,11 @@
     "@micropolis/sims-io": "workspace:*"
   },
   "scripts": {
-    "font": "tsx tools/compile-font.ts",
-    "gzfont": "tsx tools/compile-gzfont.ts",
-    "test": "vitest run",
-    "fixture": "tsx tools/render-panel-fixture.ts"
+    "import-fonts": "tsx tools/import-fonts.ts",
+    "export-fonts": "tsx tools/export-fonts.ts",
+    "identify": "tsx tools/identify-font.ts",
+    "fixture": "tsx tools/render-panel-fixture.ts",
+    "test": "vitest run"
   },
   "devDependencies": {
     "tsx": "^4.19.2",

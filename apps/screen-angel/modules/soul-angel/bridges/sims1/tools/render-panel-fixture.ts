@@ -12,13 +12,13 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createRaster, drawCoverageText, fillRect, setPixel, toPNG } from '@micropolis/optical-codec';
+import { createRaster, fillRect, setPixel, toPNG } from '@micropolis/optical-codec';
 import { deflateSync } from 'node:zlib';
 
-import { PANEL_FONT_SIZE, sims1GameFont, sims1PanelFont } from '../src/text/font';
+import { sims1PanelFont } from '../src/text/font';
 import { readPanelText } from '../src/text/panel';
 
-const font = sims1GameFont(PANEL_FONT_SIZE);
+const font = sims1PanelFont();
 const frame = createRaster(800, 600, [18, 22, 34]);
 
 // A floor to sit the panel on, so the fixture looks like a frame rather than a swatch.
@@ -43,13 +43,13 @@ const lines = [
 	'Room 3, sound every hour.',
 	'The Sims never look at it.'
 ];
-lines.forEach((line, i) => drawCoverageText(frame, font, line, 419, topY + 31 + i * font.height, [222, 228, 255]));
+lines.forEach((line, i) => font.fillText(frame, line, 419, topY + 31 + i * font.lineHeight, [222, 228, 255]));
 
 const out = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures');
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, 'panel.png'), toPNG(frame, deflateSync));
 
-const read = readPanelText(frame, sims1PanelFont());
+const read = readPanelText(frame, font);
 console.log(`panel: ${JSON.stringify(read?.region)}`);
 console.log(`pixels explained: ${((read?.confidence ?? 0) * 100).toFixed(1)}%`);
 console.log(`read back:\n${read?.description}`);

@@ -12,7 +12,7 @@
  * coordinates, which is a real piece of work and is not this piece of work.
  */
 
-import { readCoverageBlock, type PreparedFont, type Raster } from '@micropolis/optical-codec';
+import type { FontContext, Raster } from '@micropolis/optical-codec';
 
 /**
  * Corner colours of the panel frame, and the columns they sit in.
@@ -80,13 +80,11 @@ export function findPanel(frame: Raster): PanelRegion | null {
 }
 
 /** Find the panel and read its description. Null when there is no panel to read. */
-export function readPanelText(frame: Raster, font: PreparedFont): PanelText | null {
+export function readPanelText(frame: Raster, font: FontContext): PanelText | null {
 	const region = findPanel(frame);
 	if (region === null) return null;
 
-	const block = readCoverageBlock(frame, font, {
-		x: DESCRIPTION.x,
-		y: region.y + DESCRIPTION.yFromTop,
+	const block = font.readTextBlock(frame, DESCRIPTION.x, region.y + DESCRIPTION.yFromTop, {
 		maxX: PANEL.rightX,
 		maxY: PANEL.bottomY
 	});

@@ -90,3 +90,5 @@ temp/
 packages/optical-codec/fixtures/
 
 apps/screen-angel/modules/soul-angel/bridges/sims1/fixtures/
+# Font contact sheets and metrics dumps: regenerate with export-fonts, the pack is the asset.
+apps/screen-angel/modules/soul-angel/bridges/sims1/exports/
