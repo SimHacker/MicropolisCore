@@ -170,10 +170,51 @@ export interface EggCode {
 }
 
 /** How many digits each field is drawn with, in the order they are drawn. */
-export const FIELD_DIGITS = { kind: 1, version: 1, id: 2, value: 2, check: 1 } as const;
+export const FIELD_DIGITS = { kind: 1, version: 1, id: 2, value: 2 } as const;
 
-/** Total bands on a full stack, whatever the alphabet. */
-export const CODE_LENGTH = FIELD_DIGITS.kind + FIELD_DIGITS.version + FIELD_DIGITS.id + FIELD_DIGITS.value + FIELD_DIGITS.check;
+/**
+ * THE STACK IS GROUPS, AND EVERY GROUP ENDS WITH ITS OWN CHECK
+ *
+ * A zoom that can only resolve two bands has to be able to VERIFY those two bands. With one check
+ * digit at the end of the stack, every partial read is unverifiable, and progressive disclosure
+ * degrades into guessing: a far read says 'probably an errand egg' and nothing can tell it otherwise.
+ *
+ * So the check travels with each group, over everything read so far. Three legal stopping points, each
+ * a complete answer at its own resolution:
+ *
+ *   far    kind, check                    2 bands. What it is, verified.
+ *   mid    version, id, check             6 bands. Which egg, and which grammar.
+ *   near   value, check                   9 bands. The whole code.
+ *
+ * VERSION IS DELIBERATELY NOT IN THE FAR GROUP. It was, when the far group was two unchecked bands,
+ * and a checked kind is worth more than an unchecked grammar number: a reader that misreads the kind
+ * acts on the wrong egg, whereas a reader that has not read the version yet simply zooms in. The cost
+ * is honest and it is two extra bands on a full stack.
+ */
+export interface CodeGroup {
+	zoom: 'far' | 'mid' | 'near';
+	/** Fields this group carries, in drawing order. */
+	fields: readonly (keyof typeof FIELD_DIGITS)[];
+	/** Payload digits it adds, before its check band. */
+	digits: number;
+}
+
+export const GROUPS: readonly CodeGroup[] = [
+	{ zoom: 'far', fields: ['kind'], digits: FIELD_DIGITS.kind },
+	{ zoom: 'mid', fields: ['version', 'id'], digits: FIELD_DIGITS.version + FIELD_DIGITS.id },
+	{ zoom: 'near', fields: ['value'], digits: FIELD_DIGITS.value }
+];
+
+/** Total bands on a full stack, whatever the alphabet: every group's digits plus every group's check. */
+export const CODE_LENGTH = GROUPS.reduce((n, g) => n + g.digits + 1, 0);
+
+/**
+ * The band counts a read may legally stop at — 2, 6, 9 — since those are where a check band sits.
+ *
+ * A stack read to any other length is a partial group, which is refused rather than trusted. Six bands
+ * of a nine-band stack is an answer; five bands of it is half an answer with no way to tell.
+ */
+export const GROUP_LENGTHS: readonly number[] = GROUPS.map((_, i) => GROUPS.slice(0, i + 1).reduce((n, g) => n + g.digits + 1, 0));
 
 /** The largest id and value this alphabet can carry, since two digits mean different things in each. */
 export function fieldLimits(alphabet: BandAlphabet = ALPHABET): { id: number; value: number } {
@@ -189,37 +230,81 @@ export function encodeDigits(code: EggCode, alphabet: BandAlphabet = ALPHABET): 
 	requireRange('version', code.version, 0, base - 1);
 	requireRange('id', code.id, 0, limits.id);
 	requireRange('value', code.value, 0, limits.value);
-	const payload = [
-		code.kind,
-		code.version,
-		Math.floor(code.id / base),
-		code.id % base,
-		Math.floor(code.value / base),
-		code.value % base
-	];
-	return [...payload, checkDigit(payload, base)];
+	// Payload digits in drawing order, with each group's check band appended as the group closes. The
+	// check covers everything above it, so a group's check verifies the whole prefix rather than its own
+	// few bands — a far read that passes cannot have a wrong kind, and a mid read that passes cannot
+	// have a wrong kind either.
+	const fields: Record<keyof typeof FIELD_DIGITS, number[]> = {
+		kind: [code.kind],
+		version: [code.version],
+		id: [Math.floor(code.id / base), code.id % base],
+		value: [Math.floor(code.value / base), code.value % base]
+	};
+
+	const digits: number[] = [];
+	const payload: number[] = [];
+	for (const group of GROUPS) {
+		for (const field of group.fields) {
+			digits.push(...fields[field]);
+			payload.push(...fields[field]);
+		}
+		digits.push(checkDigit(payload, base));
+	}
+	return digits;
+}
+
+/** What a read yielded: as much of the code as its groups carried, and how many of them there were. */
+export interface PartialCode {
+	kind: number;
+	version: number | null;
+	id: number | null;
+	value: number | null;
+	/** How many groups verified. 1 is a far read, 3 is the whole code. */
+	groups: number;
 }
 
 export function decodeDigits(digits: readonly number[], alphabet: BandAlphabet = ALPHABET): EggCode | null {
+	const read = decodePrefix(digits, alphabet);
+	if (read === null || read.groups !== GROUPS.length) return null;
+	return { kind: read.kind, version: read.version!, id: read.id!, value: read.value! };
+}
+
+/**
+ * Decode as many groups as are there, verifying each one.
+ *
+ * Returns null for a length that is not a group boundary, for a digit outside the alphabet, or for a
+ * check that fails — including a check that fails in group one of three, because a stack whose first
+ * group is wrong is not a stack whose later groups are worth reading.
+ */
+export function decodePrefix(digits: readonly number[], alphabet: BandAlphabet = ALPHABET): PartialCode | null {
 	const base = alphabet.colours.length;
-	if (digits.length !== CODE_LENGTH) return null;
+	const groups = GROUP_LENGTHS.indexOf(digits.length) + 1;
+	if (groups === 0) return null;
 	if (digits.some((d) => !Number.isInteger(d) || d < 0 || d >= base)) return null;
-	const payload = digits.slice(0, CODE_LENGTH - 1);
-	if (checkDigit(payload, base) !== digits[CODE_LENGTH - 1]) return null;
+
+	const payload: number[] = [];
+	let at = 0;
+	for (let g = 0; g < groups; g++) {
+		payload.push(...digits.slice(at, at + GROUPS[g].digits));
+		at += GROUPS[g].digits;
+		if (checkDigit(payload, base) !== digits[at]) return null;
+		at += 1;
+	}
+
 	return {
 		kind: payload[0],
-		version: payload[1],
-		id: payload[2] * base + payload[3],
-		value: payload[4] * base + payload[5]
+		version: groups >= 2 ? payload[1] : null,
+		id: groups >= 2 ? payload[2] * base + payload[3] : null,
+		value: groups >= 3 ? payload[4] * base + payload[5] : null,
+		groups
 	};
 }
 
 /**
- * Check digit over the payload, weighted by position so a transposition fails too.
+ * Check digit over every payload digit read so far, weighted by position so a transposition fails too.
  *
- * The spec asks for one check per disclosure group rather than one at the end, so that every legal
- * partial read is checkable. This is the single-group case; grouping arrives with the telescoping
- * eggs that need it.
+ * Weighted from one and summed modulo the base. Cheap, and it catches the two errors this channel
+ * actually makes: one band read as its neighbour, and two bands swapped by a misplaced grid.
  */
 export function checkDigit(payload: readonly number[], base = ALPHABET.colours.length): number {
 	let sum = 0;
@@ -229,18 +314,10 @@ export function checkDigit(payload: readonly number[], base = ALPHABET.colours.l
 	return sum % base;
 }
 
-/** How many bands a given zoom can resolve, as a big-endian prefix of the full stack. */
+/** How many bands a given zoom draws: a whole number of groups, never a partial one. */
 export function prefixLength(zoom: 'far' | 'mid' | 'near' | 'full'): number {
-	switch (zoom) {
-		case 'far':
-			return 2; // kind and version: enough to say what it is
-		case 'mid':
-			return 4; // plus the id
-		case 'near':
-			return 6; // plus the value
-		case 'full':
-			return CODE_LENGTH; // plus the check digit
-	}
+	if (zoom === 'full') return CODE_LENGTH;
+	return GROUP_LENGTHS[GROUPS.findIndex((g) => g.zoom === zoom)];
 }
 
 export function digitsToColours(digits: readonly number[], alphabet: BandAlphabet = ALPHABET): RGB[] {

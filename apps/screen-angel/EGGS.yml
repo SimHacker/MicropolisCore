@@ -178,6 +178,12 @@ the_blip_editor:
       the_rule: "Most significant first, top down. Kind, then version, then identity, then magnitude, then the fine parameters."
       why_it_is_the_whole_trick: "A truncated read is a valid PREFIX, not a corrupt code. What the far zoom shows is exactly what the near zoom shows first, so nothing has to be re-read when the camera moves in and nothing is wrong when it does not. Same property as an address prefix or an interlaced image: you always have a correct coarse answer and the refinement is additive."
       the_check_travels_with_each_group: "Every group that can legally be the last visible one ends with its own check band. Otherwise a single trailing check digit would make every partial read unverifiable, which is the failure mode that turns progressive disclosure into guessing."
+      the_three_groups_as_built:
+        far: "Kind, then a check band over it. Two bands: what this egg is, verified."
+        mid: "Version and id, then a check over everything above. Six bands: which egg, and which grammar to read it with."
+        near: "Value, then a check over the whole stack. Nine bands: the complete code."
+        version_is_not_in_the_far_group: "It was, when the far group was two unchecked bands. A verified KIND is worth more than an unverified grammar number, because a reader that misreads the kind acts on the wrong egg, while a reader that has not read the version yet simply zooms in. The cost is two extra bands on a full stack, paid once (packages/optical-codec/src/egg-code.ts, GROUPS)."
+        a_stack_that_stops_mid_group: "Authored art never draws one, and a resample certainly produces one. The reader drops back to the last check band and reports what that vouches for; the bands hanging below it are returned in the digits and believed by nobody."
     authored_not_merely_downsampled:
       what: "The far-zoom art draws FEWER bands, taller. It is not the near-zoom art scaled down until the stripes alias into mud."
       why: "The game already ships a separate sprite per zoom (DGRP), so choosing what a zoom level says costs nothing extra and is decided by the author instead of by resampling. Legibility at the smallest zoom becomes a drawing decision, which is the kind of problem that gets solved."

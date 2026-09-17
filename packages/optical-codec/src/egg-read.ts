@@ -40,7 +40,17 @@
  * person looking at a bad read wants to see what the machine saw.
  */
 
-import { ALPHABET, CODE_LENGTH, decodeDigits, nearestDigit, separation, type BandAlphabet, type EggCode } from './egg-code';
+import {
+	ALPHABET,
+	CODE_LENGTH,
+	GROUPS,
+	GROUP_LENGTHS,
+	decodePrefix,
+	nearestDigit,
+	separation,
+	type BandAlphabet,
+	type PartialCode
+} from './egg-code';
 import { createRaster, getPixel, setPixel, type RGB, type Raster } from './raster';
 
 export interface EggReadOptions {
@@ -61,14 +71,20 @@ export interface EggReading {
 	bandHeight: number;
 	/** What was read, top to bottom, most significant first. */
 	digits: number[];
-	/** The decoded code, or null: a partial stack has no check digit, and a failed check is not a code. */
-	code: EggCode | null;
+	/**
+	 * What the stack said, or null if nothing verified.
+	 *
+	 * A short stack is not a failure: two bands that pass their check ARE an answer, with version, id
+	 * and value reported as null and groups as 1. The zoom decides how much is there; the check decides
+	 * whether to believe it (egg-code.ts, GROUPS).
+	 */
+	code: PartialCode | null;
 	/** The worst band's margin, in palette-distance units. Compare against palette separation. */
 	margin: number;
 	/** margin over half the palette's closest pair: 1 means the worst band was still unambiguous. */
 	confidence: number;
 	/** Why there is no code, when there is none. */
-	refused?: 'partial' | 'check failed' | 'margin';
+	refused?: 'partial group' | 'check failed' | 'margin';
 }
 
 /** A candidate found in one column, measured between cap centres. */
@@ -370,9 +386,16 @@ function readStack(frame: Raster, group: Column[], alphabet: BandAlphabet, minMa
 	const confidence = worst / (separation(alphabet) / 2);
 
 	if (worst < minMargin) return { box, bandHeight: band, digits, code: null, margin: worst, confidence, refused: 'margin' };
-	if (digits.length < CODE_LENGTH) return { box, bandHeight: band, digits, code: null, margin: worst, confidence, refused: 'partial' };
 
-	const code = decodeDigits(digits, alphabet);
+	// A stack read past a check band but short of the next one is a partial group. Drop back to the last
+	// group boundary rather than refusing the whole read: the bands below the last check are real, they
+	// are just not vouched for, and what is vouched for is worth returning.
+	const whole = GROUP_LENGTHS.filter((n) => n <= digits.length).pop();
+	if (whole === undefined) {
+		return { box, bandHeight: band, digits, code: null, margin: worst, confidence, refused: 'partial group' };
+	}
+
+	const code = decodePrefix(digits.slice(0, whole), alphabet);
 	return code === null
 		? { box, bandHeight: band, digits, code: null, margin: worst, confidence, refused: 'check failed' }
 		: { box, bandHeight: band, digits, code, margin: worst, confidence };

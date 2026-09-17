@@ -25,6 +25,8 @@ import {
 	QUATERNARY,
 	separation,
 	ALPHABETS,
+	decodePrefix,
+	GROUP_LENGTHS,
 	prefixLength
 } from '../src/egg-code';
 import { readEggs } from '../src/egg-read';
@@ -56,7 +58,9 @@ describe('the code', () => {
 
 	it('rejects a transposition, which an unweighted sum would miss', () => {
 		const digits = encodeDigits(CODE);
-		[digits[0], digits[1]] = [digits[1], digits[0]];
+		// Two payload bands inside one group, swapped: version and the high digit of the id.
+		[digits[2], digits[3]] = [digits[3], digits[2]];
+		expect(digits[2]).not.toBe(digits[3]);
 		expect(decodeDigits(digits)).toBeNull();
 	});
 
@@ -67,10 +71,33 @@ describe('the code', () => {
 		expect(decodeDigits(digits, QUATERNARY)).toBeNull();
 	});
 
-	it('degrades by truncation: kind and version are the two furthest-legible bands', () => {
+	it('degrades in verified groups: a two-band read is checked, not merely shorter', () => {
 		const full = encodeDigits(CODE);
-		expect(full.slice(0, prefixLength('far'))).toEqual([CODE.kind, CODE.version]);
+		expect(prefixLength('far')).toBe(2);
+		expect(prefixLength('mid')).toBe(6);
 		expect(prefixLength('full')).toBe(CODE_LENGTH);
+		expect(GROUP_LENGTHS).toEqual([2, 6, CODE_LENGTH]);
+
+		// Far: the kind, and a check band that vouches for it. Nothing else is claimed.
+		expect(decodePrefix(full.slice(0, 2))).toEqual({ kind: CODE.kind, version: null, id: null, value: null, groups: 1 });
+		// Mid: which egg, and which grammar to read it with.
+		expect(decodePrefix(full.slice(0, 6))).toEqual({ kind: CODE.kind, version: CODE.version, id: CODE.id, value: null, groups: 2 });
+		expect(decodePrefix(full)).toEqual({ ...CODE, groups: 3 });
+	});
+
+	it('catches a wrong kind at the far zoom, which one trailing check digit could not', () => {
+		// The reason the groups exist. A far read either verifies or it is refused; it never reports a
+		// kind nobody checked, because acting on the wrong kind of egg is the expensive mistake.
+		const far = encodeDigits(CODE).slice(0, 2);
+		far[0] = (far[0] + 1) % ALPHABET.colours.length;
+		expect(decodePrefix(far)).toBeNull();
+	});
+
+	it('refuses a length that is not a group boundary', () => {
+		const full = encodeDigits(CODE);
+		for (const length of [1, 3, 4, 5, 7, 8]) {
+			expect(decodePrefix(full.slice(0, length))).toBeNull();
+		}
 	});
 
 	it('carries a smaller id in a smaller alphabet, and says so instead of overflowing', () => {
@@ -131,9 +158,13 @@ describe('the drawn egg', () => {
 	it('draws the digits the zoom can carry, not all of them', () => {
 		const frame = createRaster(80, 120, [90, 100, 90]);
 		const far = drawEgg(frame, CODE, { x: 40, y: 100 }, { zoom: 'far' });
-		expect(far.digits).toEqual([CODE.kind, CODE.version]);
-		const full = drawEgg(createRaster(80, 160), CODE, { x: 40, y: 140 }, { zoom: 'full' });
+		expect(far.digits.length).toBe(2);
+		expect(far.digits[0]).toBe(CODE.kind);
+		const full = drawEgg(createRaster(80, 200), CODE, { x: 40, y: 180 }, { zoom: 'full' });
+		// The prefix property: what the far zoom draws is exactly what the near zoom draws first, so
+		// moving the camera in adds bands and never revises one.
 		expect(full.digits.slice(0, 2)).toEqual(far.digits);
+		expect(full.digits.slice(0, 6)).toEqual(drawEgg(createRaster(80, 200), CODE, { x: 40, y: 180 }, { zoom: 'mid' }).digits);
 	});
 
 	it('leaves a base behind when it levitates', () => {
@@ -162,7 +193,7 @@ describe('reading an egg back', () => {
 
 		const [reading, ...rest] = readEggs(frame);
 		expect(rest).toEqual([]);
-		expect(reading.code).toEqual(CODE);
+		expect(reading.code).toEqual({ ...CODE, groups: 3 });
 		expect(reading.bandHeight).toBe(6);
 		expect(reading.digits).toEqual(encodeDigits(CODE));
 		expect(reading.confidence).toBeGreaterThan(1);
@@ -184,14 +215,26 @@ describe('reading an egg back', () => {
 		expect(readEggs(room())).toEqual([]);
 	});
 
-	it('reads a coarse-zoom egg as a prefix, and refuses to call it a code', () => {
+	it('reads a coarse-zoom egg as a verified answer, with the fields it did not carry left null', () => {
 		const frame = room();
 		drawEgg(frame, CODE, { x: 100, y: 140 }, { zoom: 'mid', bandHeight: 6, radius: 10 });
 
 		const [reading] = readEggs(frame);
+		expect(reading.digits).toEqual(encodeDigits(CODE).slice(0, 6));
+		expect(reading.code).toEqual({ kind: CODE.kind, version: CODE.version, id: CODE.id, value: null, groups: 2 });
+		expect(reading.refused).toBeUndefined();
+	});
+
+	it('drops back to the last check band when a stack stops mid-group', () => {
+		// Four bands drawn: past the far group's check, short of the mid group's. The first group is
+		// vouched for and returned; the two bands hanging below it are visible in digits and believed by
+		// nobody.
+		const frame = room();
+		drawEgg(frame, CODE, { x: 100, y: 140 }, { bands: 4, bandHeight: 6, radius: 10 });
+
+		const [reading] = readEggs(frame);
 		expect(reading.digits).toEqual(encodeDigits(CODE).slice(0, 4));
-		expect(reading.code).toBeNull();
-		expect(reading.refused).toBe('partial');
+		expect(reading.code).toEqual({ kind: CODE.kind, version: null, id: null, value: null, groups: 1 });
 	});
 
 	it('reads several eggs in one frame, each with its own code', () => {
@@ -200,7 +243,7 @@ describe('reading an egg back', () => {
 		codes.forEach((code, i) => drawEgg(frame, code, { x: 60 + i * 90, y: 150 }, { bandHeight: 5, radius: 9 }));
 
 		const readings = readEggs(frame).sort((a, b) => a.box.x - b.box.x);
-		expect(readings.map((r) => r.code)).toEqual(codes);
+		expect(readings.map((r) => r.code)).toEqual(codes.map((code) => ({ ...code, groups: 3 })));
 	});
 
 	it('corrects a night-lit egg off its own caps', () => {
@@ -209,15 +252,15 @@ describe('reading an egg back', () => {
 		// A blue evening, dimmed: the drawn colours are nothing like the palette any more.
 		const evening = tint(frame, [0.62, 0.7, 1.05]);
 
-		expect(readEggs(evening)[0]?.code).toEqual(CODE);
+		expect(readEggs(evening)[0]?.code).toEqual({ ...CODE, groups: 3 });
 	});
 
 	it('survives noise and soft focus at a workable size', () => {
 		const frame = room();
 		drawEgg(frame, CODE, { x: 100, y: 148 }, { bandHeight: 8, radius: 12, lit: 'dark' });
 
-		expect(readEggs(noise(frame, 10))[0]?.code).toEqual(CODE);
-		expect(readEggs(blur(frame, 1))[0]?.code).toEqual(CODE);
+		expect(readEggs(noise(frame, 10))[0]?.code).toEqual({ ...CODE, groups: 3 });
+		expect(readEggs(blur(frame, 1))[0]?.code).toEqual({ ...CODE, groups: 3 });
 	});
 
 	it('refuses rather than inventing when the egg is too small to slice', () => {

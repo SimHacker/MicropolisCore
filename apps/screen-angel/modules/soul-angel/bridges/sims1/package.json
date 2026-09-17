@@ -20,7 +20,8 @@
     "export-fonts": "tsx tools/export-fonts.ts",
     "identify": "tsx tools/identify-font.ts",
     "fixture": "tsx tools/render-panel-fixture.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "verify": "tsx tools/verify-frame.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",

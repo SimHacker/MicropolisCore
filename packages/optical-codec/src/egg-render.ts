@@ -26,8 +26,15 @@ export interface EggStyle {
 	bandHeight: number;
 	/** Half-width of the widest part of the body. */
 	radius: number;
-	/** How much of the stack this zoom resolves. */
+	/** How much of the stack this zoom resolves — a whole number of groups (egg-code.ts, GROUPS). */
 	zoom: 'far' | 'mid' | 'near' | 'full';
+	/**
+	 * Draw exactly this many bands, whatever the zoom says.
+	 *
+	 * For drawing a stack that stops mid-group, which authored art never does and a resample can
+	 * certainly produce. The reader has to cope with it, so there has to be a way to draw one.
+	 */
+	bands?: number;
 	/** Which colours the bands come from. */
 	alphabet: BandAlphabet;
 	/** Cosmetic. Drawn for the player, invisible to the reader. */
@@ -76,7 +83,7 @@ export interface DrawnEgg {
  */
 export function drawEgg(target: Raster, code: EggCode, place: EggPlacement, style: Partial<EggStyle> = {}): DrawnEgg {
 	const s: EggStyle = { ...DEFAULT_STYLE, ...style };
-	const digits = encodeDigits(code, s.alphabet).slice(0, prefixLength(s.zoom));
+	const digits = encodeDigits(code, s.alphabet).slice(0, s.bands ?? prefixLength(s.zoom));
 	const colours = digitsToColours(digits, s.alphabet);
 
 	const band = Math.max(1, Math.round(s.bandHeight));

@@ -139,7 +139,8 @@ the_egg_reader:
   how_it_finds_one: "Column by column: the brightest and darkest runs in a column are candidate caps, and a candidate survives only if the distance between their centres divides evenly by a band height that also explains the colour changes between them. Then adjacent columns that agree are grouped, and a group narrower than a band is tall is thrown away."
   the_caps_do_three_jobs: "They delimit the stack, they set the scale — a cap is exactly one band tall, so the metric comes out of the picture rather than out of a config file — and they are the white and black reference for an affine colour correction. A sunset shifts the bands and the caps by the same amount, and correcting by the caps removes it before a single digit is decided."
   it_refuses_rather_than_guesses: "Every band reports the distance to the runner-up colour. The smallest of those is the reading's confidence, and a reading below the floor is returned as refused WITH its digits, so a caller can see what was nearly there. A failed check digit is refused the same way."
-  the_measured_floor: "SIX PIXELS A BAND reads twelve colours through every degradation in the suite. Five reads twelve through all but a window at a third scale. Below four, only a clean or evenly-dimmed grab reads at all."
+  a_short_read_is_an_answer_not_a_failure: "The stack is three groups and each one ends with a check band over everything above it — 2 bands, 6, 9. So a two-band read at the far zoom VERIFIES, and reports the kind with version, id and value as null. This is what one trailing check digit could not do: every partial read was unverifiable, so progressive disclosure came down to trusting whatever the coarse read said (EGGS.yml, the_three_groups_as_built)."
+  the_measured_floor: "SIX PIXELS A BAND reads twelve colours through every degradation in the suite, for the full nine-band stack. Five reads twelve through all but a window at a third scale and a noisy blurred phone grab, where it drops to eight colours. Below four, only a clean or evenly-dimmed grab reads at all."
   the_grid:
     clean_screen_grab: "2px and up, twelve colours."
     evening_light: "2px and up. A global dim costs nothing, because the caps dim with the bands and the correction is affine."
@@ -147,8 +148,8 @@ the_egg_reader:
     window_at_33_percent: "6px and up."
     soft_focus: "5px and up."
     phone_noise_and_warm_cast: "2px and up, once the frame is median-filtered across the width."
-    phone_noisy_and_soft: "5px and up."
-    phone_tilted: "4px and up."
+    phone_noisy_and_soft: "5px for eight colours, 6px for twelve."
+    phone_tilted: "5px and up."
   two_findings_worth_keeping:
     noise_invents_boundaries: "Finding the band count from colour changes works and then stops working the moment there is grain, because every row becomes a change. A band is one colour all the way across, so a median of five neighbours across the width removes it and cannot move a horizontal boundary. Without that filter every noisy cell in the sweep read nothing at all."
     a_band_can_be_mistaken_for_a_cap: "The reader looks for the caps as the extremes of a column's range and claims the top and bottom 15% of it, so a dark band inside that claim becomes a black cap and the whole egg vanishes — not misread, not refused, invisible. Seven of sixteen codes were being lost this way. The fix is a bound on the palette, not on the reader: bands live between luma 72 and 188 (src/egg-code.ts)."
