@@ -54,7 +54,7 @@ Roadmap / aspiration:
 - Browser-side content editing, preview approval, and catalog upload workflow.
 - GitHub branches/issues/PRs as multiplayer civic object store.
 - Semantic image pyramid for Micropolis city packages and cross-world Sims content.
-- SimObliterator/VitaMoo integration, CHARACTER/OBJECT/city packages, and unified Sims + Micropolis world.
+- sims-io / VitaMoo integration, CHARACTER/OBJECT/city packages, and unified Sims + Micropolis world.
 - Time-travel replay, computed runtime layers, experiment branches, and classroom workflows.
 
 ## MOOLLM Perspective
@@ -68,7 +68,7 @@ From the MOOLLM skill index, Micropolis composes with:
 - `data-flow`, `mooco`, `runtime`, `context`: future orchestration and adapter hosting.
 - `visualizer`, `image-mining`, `storytelling-tools`: images, albums, previews, and catalogs become semantic resources.
 
-SimObliterator adds the strongest pattern for binary game content: raw bytes stay sacred, resources explode into deterministic trees, decoded fields become YAML, semantic authoring happens above that, and narrative/character layers sit at the top. Micropolis save files, render descriptions, and content catalogs should follow the same multi-resolution model.
+The layered pattern for binary game content — proved in the retired Python suite, now implemented in [`packages/vitamoo/`](../../packages/vitamoo/) — is the strongest one available: raw bytes stay sacred, resources explode into deterministic trees, decoded fields become YAML, semantic authoring happens above that, and narrative/character layers sit at the top. Micropolis save files, render descriptions, and content catalogs should follow the same multi-resolution model.
 
 Those trees should live naturally in GitHub as the MMORPG object store. A whole city can have a branch like `city_234234234234`; a multiverse package can contain nested object trees like `micropolis_43345345345/cities/2342342423423`. Proposals, experiments, and evidence can be branches too: `issue_3423234`, `proposal_...`, `experiment_...`. Git history preserves what changed; GitHub issues host the civic discussion.
 
@@ -85,7 +85,7 @@ Use this skill for static engine and file work. Delegate live or specialized beh
 - `constructionism`: educational framing
 - `skill-snitch`: safety and direct-mutation audit
 - `mooco`: future orchestration/catalog/adapters
-- `sim-obliterator`: Sims save/object/person bridge and uplift/download
+- `soul-city`: souls, minds, organelles, the two-gate crossing protocol, souvenirs and albums
 - `character`, `incarnation`, `mind-mirror`, `needs`: Sims/MOOLLM people model
 - `object`, `room`, `advertisement`, `action-queue`: object/action composition
 
@@ -103,7 +103,7 @@ The same render description should also run in headless Chromium/Playwright/Pupp
 
 ## Layering Rule
 
-Use SimObliterator's semantic image pyramid pattern for game content:
+Use the semantic image pyramid pattern for game content:
 
 ```text
 raw bytes

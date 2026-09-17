@@ -49,7 +49,7 @@ status:
     - "Browser-side content editing, preview approval, and catalog upload"
     - "GitHub branches/issues/PRs as multiplayer civic object store"
     - "Semantic image pyramid for Micropolis packages"
-    - "SimObliterator/VitaMoo bridge into unified Sims + Micropolis world"
+    - "sims-io / VitaMoo bridge into unified Sims + Micropolis world"
     - "Time travel replay, computed layers, experiment branches"
 
 files:
@@ -96,9 +96,9 @@ files:
     - ../../documentation/designs/github-as-mmorpg-multiverse.md
     - ../../documentation/designs/moollm-micropolis-integration.md
     - ../../documentation/designs/renderer-plugin-roadmap.md
-    - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/README.md
-    - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/IFF-LAYERS.md
-    - /Users/a2deh/GroundUp/Leela/git/moollm/designs/sim-obliterator/BRIDGE.md
+    - moollm skills/soul-city/SOUL-BRIDGES.md   # crossing protocol: two gates, conservation
+    - moollm skills/soul-city/SOUVENIRS.md      # souvenir objects, album, Dublin Core floor
+    - ../../packages/sims-io/                   # PersonData <-> soul file, field level
     - ../../documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md
     - ../../documentation/vitamoo/DOCUMENTATION.md
 
@@ -223,7 +223,7 @@ workflows:
       - "Compile downward only through typed writers and validation."
   sims_micropolis_world_bridge:
     steps:
-      - "Use SimObliterator/VitaMoo contracts for Sims save, character, object, and animation data."
+      - "Use sims-io / VitaMoo contracts for Sims save, character, object, and animation data."
       - "Use Micropolis CLI/WASM contracts for city maps, simulation, commands, and overlays."
       - "Represent cross-world content as browser-editable source assets plus render descriptions."
       - "Use CHARACTER.yml / OBJECT.yml / city package YAML as MOOLLM-facing semantic layers."
@@ -252,7 +252,7 @@ delegation:
   room: "Directory-as-place activation and content locality"
   data-flow: "Rooms as nodes, exits as edges, objects as messages"
   mooco: "Future service/adapters/catalog orchestration"
-  sim-obliterator: "Sims save/IFF/person/object bridge and uplift/download protocols"
+  soul-city: "Souls, minds, organelles; the two-gate crossing protocol; souvenirs and albums"
   visualizer: "Context-to-image workflows where prompt/image generation is appropriate"
   image-mining: "Extract semantic resources from images and albums"
   postel: "Accept messy input, emit conservative YAML/JSON/CSV"

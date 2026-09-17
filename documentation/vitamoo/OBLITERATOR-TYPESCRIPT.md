@@ -4,7 +4,7 @@ This document surveys the **Python side** of **SimObliterator Suite** (a separat
 
 It is **not** a mandate for a line-by-line Python port. TypeScript modules should match **on-disk contracts** and **user-visible capabilities**, **maximize reuse of vitamoo** (parsers, types, naming), and stay **small, testable, and environment-agnostic**.
 
-**MOOLLM** (separate repo) already captures the **product intent** in human-editable form: the **[sim-obliterator designs](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator)** and **[sim-obliterator skill](https://github.com/SimHacker/moollm/tree/main/skills/sim-obliterator)** describe INSPECT / UPLIFT / DOWNLOAD, the **PersonData ↔ CHARACTER.yml** bridge ([BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)), and the **IFF Semantic Image Pyramid** ([IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)). Today that skill **shells out to Python** in a sister **SimObliterator_Suite** checkout. This document defines the **pure TypeScript platform** that implements the **same contracts** (binary layouts, field indices, roster discovery) so **browser / Node / static hosting** need **no Python** for core I/O, VitaMoo loading, or future YAML/MOOLLM export.
+**MOOLLM** (separate repo) captures the **product intent** in human-editable form, in the **[soul-city skill](https://github.com/SimHacker/moollm/tree/main/skills/soul-city)**: the [crossing protocol](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md) (two gates, conservation, fork-and-sync), the [souvenir and album model](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUVENIRS.md), and the [vocabulary](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/GLOSSARY.md) this document should use. The earlier `sim-obliterator` designs and skill are **retired** — they shelled out to Python and used superseded terms; their [forwarding table](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/README.md) maps each old document to its current home. This document defines the **pure TypeScript platform** that implements the **same on-disk contracts** (binary layouts, field indices, roster discovery) so **browser / Node / static hosting** need **no Python** for core I/O, VitaMoo loading, or YAML export.
 
 ---
 
@@ -45,9 +45,13 @@ The save-data TS stack should **not** invent parallel names for those shapes. Th
 - **Pure parse functions** return **plain objects** or **readonly** views; avoid hidden globals (same as core vitamoo parsers).
 - **Errors:** throw **`Error`** with stable codes or `cause` where useful, similar to **`content-loader`** JSON / fetch errors.
 
-### 1.3 MOOLLM sim-obliterator: same idea, TypeScript runtime
+### 1.3 What the retired Python specs pinned down, and where each contract lands in TypeScript
 
-| MOOLLM artifact | What it specifies | Pure TS platform |
+Historical mapping, kept because the field indices and phase structure are still the contract.
+The retired documents are not current design; the current protocol and vocabulary live in
+[soul-city](https://github.com/SimHacker/moollm/tree/main/skills/soul-city).
+
+| Retired MOOLLM artifact | What it specified | Pure TS platform |
 |-----------------|-------------------|------------------|
 | **[BATTLE-PLAN.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BATTLE-PLAN.md)** | Sister-repo pattern, phased **SETUP / INSPECT / UPLIFT / DOWNLOAD**, later TRANSLATE / BHAV / ALBUM | **SETUP** → optional CLI or `pnpm` script that only installs **Node** deps (no venv). **INSPECT** → TS API + JSON/YAML output from **L3** neighborhood state. **UPLIFT** → map save records to a **portable object**; optional **CHARACTER.yml** emitter for `skills/character`. **DOWNLOAD** → Phase D binary writers + same field math as Python. |
 | **[BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)** | **PersonData.h** indices (88 shorts), **FAMI** / **NBRS**, scales 0–1000 ↔ 0–10, career and relationship mapping | TS **single source of truth** as typed constants + tests; must **match** BRIDGE tables (already corrected vs TSO indices per that doc). |

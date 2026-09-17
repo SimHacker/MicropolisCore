@@ -380,9 +380,10 @@ Currently `files-inventory.ts` holds state **in-process memory** — a server re
 **Federation peer-game bridges:** [documentation/designs/federation-peer-games.md](designs/federation-peer-games.md) — catalogue of "in the spirit of Soul City" + "wildly popular and great technical fit" bridge candidates (CK3, RimWorld, Stardew, Dwarf Fortress, VTTs, plus the anti-target list)
 **Design discipline (incl. Twitch-friendly):** [documentation/designs/designing-inward-miyamoto-principles.md](designs/designing-inward-miyamoto-principles.md) — Miyamoto principles + Twitch-friendly streaming features + Wright-vs-EA designer-vs-platform separation
 **Build plan:** [documentation/designs/soul-city-uplift-roadmap.md](designs/soul-city-uplift-roadmap.md) — phases 0–5 (incl. 1C / 1D / 1E / 1F), definitions of done, risk register
-**Vision/story (external):** [MOOLLM: THE-UPLIFT.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/THE-UPLIFT.md)  
-**Field mappings (external):** [MOOLLM: BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md)  
-**IFF layer stack (external):** [MOOLLM: IFF-LAYERS.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/IFF-LAYERS.md)
+**Model and vocabulary (external):** [MOOLLM: skills/soul-city/](https://github.com/SimHacker/moollm/tree/main/skills/soul-city) — souls, minds, organelles, souvenirs, and the words for all of it  
+**Crossing protocol (external):** [MOOLLM: SOUL-BRIDGES.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md) — two gates, conservation, fork-and-sync  
+**Field mappings:** [`packages/sims-io/`](../packages/sims-io/) — `PersonData` and neighborhood records, in TypeScript  
+**Layer stack:** [documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md](vitamoo/OBLITERATOR-TYPESCRIPT.md) §1 — L0–L4
 
 Bringing Micropolis (the GPL city simulator descended from SimCity) and The Sims under one umbrella in MicropolisCore. Python parsing is replaced by TypeScript in `packages/sims-io`. The Python codebase (SimObliterator Suite) remains a reference implementation; this monorepo is the browser-native rewrite. The full phased plan lives in [soul-city-uplift-roadmap.md](designs/soul-city-uplift-roadmap.md); the headlines below are the immediately-actionable items.
 
