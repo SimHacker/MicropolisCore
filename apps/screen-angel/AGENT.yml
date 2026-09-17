@@ -1,0 +1,178 @@
+# AGENT.yml — the loop that makes the rest of it work: look at the screen, read the tree,
+# understand what the user wants, act with the tools that were granted.
+#
+# Every other file in this directory specifies a mechanism. This one specifies the thing
+# that decides which mechanism to use, and it is the reason the mechanisms are worth having.
+
+meta:
+  id: agent
+  status: specified
+  built: [skill, protocol_surface, mcp_server]
+  not_built: [intent_model, action_planning, verification_loop, history]
+  see_also: [PROTOCOL.yml, CAPABILITIES.yml, APP-CONTROL.yml, ACCESSIBLIFY.yml, SCREEN-ANGEL.yml]
+
+premise: |
+  A model that can see the screen, read the accessibility tree, and hold the user's request
+  at the same time can do what a fixed procedure cannot: work out which of the granted tools
+  gets from here to what was asked for, in an application nobody wrote an adapter for.
+
+  This is the load-bearing claim of the whole project. Every hard part that stalled in 2013
+  — recognizing what a widget is for, deciding which application satisfies a request, writing
+  the per-app adapter — was a recognition problem, and the selector engine was never the
+  blocker (SCREEN-ANGEL.yml, llms). The mechanisms in the other files are the hands. This is
+  what makes them worth granting.
+
+# WHAT IT SEES
+
+inputs:
+  pixels: "Screen, window, or symbolic region, at the smallest size that answers the question (PROTOCOL.yml). Sees what the user sees, including everything no API exposes."
+  tree: "The accessibility tree where one exists, merged with whatever was deduced from pixels, each node carrying its provenance (ACCESSIBLIFY.yml). Roles and names, not guesses, when the app cooperates."
+  focus: "Which application, which window, which element has keyboard focus. Cheap, and it usually answers 'which thing did they mean' on its own."
+  app_state: "Running processes, window bounds, whether time is ours to stop, what the per-app config declares."
+  bridge_state: "Whatever a module exposes about its own domain — for the Sims bridge, what a Sim is and what is in the save file. Ground truth instead of inference, where it exists."
+  history: "What the user has done recently, and what they accepted or corrected last time. See history below, which is the part with a trap in it."
+
+why_both_pixels_and_tree: |
+  The tree says what things ARE and is unreadable about what they look like. The pixels say
+  what is actually on screen and are silent about meaning. Neither alone is enough: a game
+  has pixels and no tree, a background window has a tree and no visible pixels, and the
+  interesting cases — is that dialog modal, did that button just become enabled, is the game
+  actually paused — need both.
+
+  The tree also narrows the pixels. Ask for the region a selector matched rather than the
+  whole screen, and the recognition problem gets smaller and cheaper at the same time.
+
+# WHAT IT INFERS
+
+intent:
+  explicit: "What the user asked for, in words. The easy case, and still not trivial, because 'clip that' needs the screen to resolve 'that'."
+  implicit: "What the request implies but does not say — which window, which subject, which of four saves, what the sensible default is given what they have been doing."
+  from_history: "Patterns across sessions. Someone who has exported nine clips at 1080 with the same caption style wants the tenth that way too."
+
+the_clippy_gate:
+  the_problem: |
+    Acting on what the user implicitly wants, inferred from past actions, is a precise
+    description of what Clippy did. That is not a reason to avoid inference — it is a reason
+    to be exact about what inference is allowed to DO, because this project already committed
+    to a position on it. Ben Shneiderman is in the 2013 email thread. The layer has to satisfy
+    the man who prosecuted the case against interface agents.
+  the_rule: "Implicit intent may PREPARE and RANK. It may not ACT. Explicit intent acts."
+  what_that_looks_like:
+    prepare: "Have the clip cut, the caption drafted, the export target selected — so that when the user asks, the answer is already computed and arrives instantly."
+    rank: "Put the most likely interpretation first in the pie menu, the most likely save at the top of the list, the most likely subject pre-highlighted."
+    never: "Perform a destructive or visible action because a pattern suggested it. No unrequested edit, no unrequested post, no arrival on a heuristic."
+  why_this_is_not_timidity: |
+    Preparation is where almost all the value is. The reason Clippy failed was not that it
+    inferred badly — it was that it inferred and then INTERRUPTED, seizing an interaction the
+    user had not offered. Inference that makes the requested thing instant is invisible and
+    welcome. Inference that starts talking is the failure.
+  inherited_from: "SCREEN-ANGEL.yml, i_beam — occupy the position rather than infer it, add no new surface, never arrive on a heuristic, show the work."
+  and_there_is_an_architecture_for_it: "advertisements, below. The rule is enforceable as a mechanism rather than a policy, which is much better than a rule."
+
+# ADVERTISEMENTS
+#
+# The Sims already solved this, and it is the same problem.
+
+advertisements:
+  the_borrowed_architecture: |
+    In The Sims, objects advertise scored actions and a Sim picks among them. The object does
+    not act on the Sim and the Sim does not search the world — advertisement meets appetite,
+    and the behavior falls out of the scoring.
+
+    The agent works the same way. It does not act on inference; it ADVERTISES, with a score.
+    Something with authority selects. That is the Clippy gate expressed as a mechanism: the
+    advertisement IS the ranking, made visible and selectable, and an unselected
+    advertisement has done nothing.
+  what_an_advertisement_is:
+    fields: "A verb, a target, a human-readable label, a score, the capabilities it would exercise, and whether it is destructive."
+    dynamic: "Published and withdrawn as the screen changes. What is advertised over a paused game with a Sim selected is not what is advertised over a save dialog."
+    scored: "Score is the agent's own estimate of relevance given the screen, the request, and the history. It orders the offer; it never authorizes it."
+  who_may_select:
+    the_user: "Always."
+    an_authorized_agent: "An autonomous selector may accept advertisements within the capabilities it was granted, which is how unattended operation happens without any new trust mechanism — selection authority is just another capability (CAPABILITIES.yml)."
+  how_it_surfaces:
+    pie_menu: "The canonical case. Scored advertisements are exactly what a pie menu wants — a small ranked set, radially placed, muscle-memorable."
+    in_scene: "Things that appear where the subject is and can be clicked, which for a game is often better than any menu."
+    deliberately_game_dependent: "What the offer LOOKS like is per-bridge and should be. The advertisement is data; presentation is the bridge's business, and a Sims overlay and a spreadsheet overlay should not look alike."
+  why_scoring_beats_filtering: "A filter throws away the possibility. A score keeps it, ranked low, where the user can still find it — which matters because the agent's ranking is frequently wrong and the recovery has to be cheap."
+
+action_queue:
+  what: "Selected advertisements enter a visible, ordered, cancelable queue rather than executing immediately."
+  also_the_sims: "The same interaction as queueing actions on a Sim: you click several things, they line up, you can see them and cancel any of them. A model people already have."
+  why_it_matters_more_here: "Our verbs touch save files and inject input. A queue means there is a moment between deciding and doing, and a cancel that works — which is the difference between an agent you can supervise and one you have to trust."
+  properties:
+    visible: "Every pending action, in order, with what it will touch."
+    cancelable: "Individually, and all at once. Cancel is never a request that might be declined."
+    reorderable: "Because a user who queues five things will want the fourth first."
+    atomic_where_it_must_be: "Some sequences cannot be half-done — the save-file choreography in APP-CONTROL.yml is one transaction, and the queue shows it as one item."
+
+programming_by_demonstration:
+  the_observation: "A completed queue is a recorded program. The user selected these actions, on these targets, in this order, and it worked."
+  so: "Offer to keep it. Named, re-runnable, editable, and shareable — with selectors rather than coordinates, so it survives a window move and a resolution change."
+  generalization: "The interesting step is turning one run into a procedure: which targets were incidental and which were essential. The agent can propose the generalization and the user can correct it, which is a far easier problem than inferring a procedure from scratch."
+  prior_art: "Already cited in SCREEN-ANGEL.yml, prior_art_cited — Richard Potter's 'Triggers: Guiding Automation with Pixels' in Cypher's 'Watch What I Do: Programming by Demonstration'. The pixel-driven approach is the one that applies to apps with no tree."
+  and_then: |
+    A saved procedure can itself be advertised. At that point the user's own demonstrated
+    workflows appear in the pie menu beside the built-in verbs, which is the point where the
+    system starts being the user's rather than ours.
+
+# WHAT IT CAN DO
+
+bounded_by_grants:
+  rule: "The model's power is exactly the set of granted capabilities, enforced at the host API boundary — not described to it in a prompt."
+  why_this_matters_more_than_anything_else_here: |
+    An instruction not to kill Sims is advisory: it is text, it competes with every other
+    text in the context, and nothing checks it. A host with no kill_sim grant is
+    deterministic: the call does not exist and the model cannot reach past it.
+
+    This is the whole reason CAPABILITIES.yml has an app-enforced layer. The interesting
+    security boundary is not what the model was told, it is what the module host will execute.
+  consequence: "A misbehaving, confused, or prompt-injected model is bounded by the same gate as a hostile one, which is the only version of this that is worth shipping."
+  degradation: "With fewer OS grants, fewer tools exist and the model is told so. It plans within what it has rather than attempting what it cannot do and reporting a failure (CAPABILITIES.yml, degradation)."
+
+prompt_injection:
+  the_exposure: "The screen is untrusted input. A window can contain text that reads like an instruction, and reading the screen is the entire job."
+  position: "Screen content is DATA, never instruction. Text found in a window describes the window; it does not ask for anything."
+  what_actually_holds_the_line: "The grant boundary, not the model's judgment. Destructive capabilities default off, per app, revocable, audited — so the worst case of a successful injection is bounded by what the user already granted for that application."
+
+# THE LOOP
+
+loop:
+  steps:
+    - "OBSERVE — focus, tree, and the smallest useful grab"
+    - "PLAN — name the target by selector where one exists, by region where it does not"
+    - "ACT — one verb, through the granted tool"
+    - "VERIFY — grab again and check a predicate: selector, region_stable, frame_matches, region_moving (APP-CONTROL.yml, confirmation)"
+    - "CORRECT or REPORT — iterate if the predicate failed and the target is still reachable; otherwise say what happened"
+  what_makes_it_different_from_a_macro: |
+    A macro replays inputs and assumes the world complied. This checks. Verification is the
+    difference between automation that works on the developer's machine and automation that
+    works on a machine with a different resolution, a slower disk, and a dialog nobody
+    anticipated.
+  the_worked_example: "View state recovery in APP-CONTROL.yml — read the camera out of a reference frame, inject camera controls, compare, correct. Hard, game-specific, and checkable, which is what makes it tractable at all."
+  budget: "Loops are bounded and say so when they stop. Four failed attempts with no new evidence is a report, not a fifth attempt."
+
+show_the_work:
+  what: "Name the selector that matched and the action taken, in a form the user can read after the fact."
+  two_reasons:
+    learning: "The user learns the layer by watching it, which is how a power user eventually writes their own config."
+    audit: "An action nobody can reconstruct is an action nobody can trust. Grants are audited (CAPABILITIES.yml) and this is what makes the audit legible."
+
+history:
+  what: "A record of requests, actions, verifications and corrections — per application, keyed by app and version."
+  used_for: "Ranking and preparation, per the Clippy gate. Never as a reason to act."
+  feeds: "ACCESSIBLIFY.yml, user_taught — a correction the user made once is a labelled example, and the same keying by app plus version already exists there."
+  local: "Stays on the machine by default. A history of everything the user did in every application is the most sensitive artifact this project produces, and it is not a telemetry stream."
+
+# WHY THIS MAKES PER-APP WORK CHEAP
+
+bridges_become_data:
+  before: "Every application needs code: someone reverse engineers the UI, writes an adapter, and maintains it against updates."
+  after: "Most applications need a description. Which keystroke pauses, what the paused state looks like, where the save files live, what the app calls the things in it — and the model composes the verbs."
+  the_2013_shape: "This is the aQuery plugin architecture with the missing piece supplied (APP-CONTROL.yml, lineage). Per-app knowledge was always meant to live in extensions; what was missing was anything that could act on a description instead of an implementation."
+  where_code_is_still_required: "Save file formats, domain semantics, anything binary. No amount of recognition reads a proprietary file format — that is what the second tier is for, and the Sims bridge is it."
+
+not:
+  not_a_chatbot: "The interface is the screen and the user's own widgets. Conversation is one input among several, and usually not the fastest one."
+  not_autonomous: "It does not run unasked. Preparation happens in the background; action happens on request."
+  not_a_recognizer_for_its_own_sake: "Understanding the screen is not the deliverable. Doing the thing the user asked for is."

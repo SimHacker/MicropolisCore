@@ -6,8 +6,9 @@ meta:
   id: soul-angel-architecture
   status: spec
   platforms:
-    windows: primary          # WinUI 3 + WebView2; ships first
-    macos: after_windows_v1   # same web layer, new shell — ScreenCaptureKit + VideoToolbox
+    windows: primary          # where the games are — Sims 1 Legacy is Windows-only
+    macos: same_binary        # Electron host + Mac capture addon; no second app
+    linux: same_binary        # Proton-hosted games capture like any other window
 
 # ── THE SPLIT ─────────────────────────────────────────────────────────────────
 split:
@@ -20,7 +21,7 @@ split:
     - "Album engine — cards, provenance, narration UI, publish pipeline (SOUL-ALBUM.yml)"
     - "Twitch/YouTube web APIs — EventSub, Helix chat, OAuth flows"
     - "Soul City federation sync — publish albums, pull community content"
-    - "Event bus clients — SSE/WebSocket consumers and producers (stream-gateway lineage)"
+    - "Angel Event Bus clients — consumers and producers of soul.* events (../../ANGEL-EVENT-BUS.yml)"
     - "Web Audio — narration record/playback, level meters; Web Speech where adequate"
   shell_owns:
     - "Window/screen capture — GPU texture per frame (browsers cannot capture other apps usefully)"
@@ -41,18 +42,18 @@ overlay:
     A transparent, always-on-top window covering the game, hosting the web overlay UI.
     The page renders on transparent background; the shell toggles click-through so the game
     receives input except over active overlay widgets.
-  windows:
-    window: "Layered transparent top-level window (WS_EX_LAYERED; WS_EX_NOACTIVATE + per-region hit testing)"
-    webview: "WebView2 with transparent background composition (DirectComposition path)"
-    hit_testing: "Web layer reports interactive regions -> shell updates click-through mask"
-    fullscreen_games: "Borderless-windowed preferred; exclusive fullscreen falls back to second-monitor/detached panel"
+  host: "Electron BrowserWindow — transparent, frameless, alwaysOnTop, setIgnoreMouseEvents for click-through"
+  hit_testing: "Web layer reports interactive regions -> host updates the click-through mask per region"
+  fullscreen_games: "Borderless-windowed preferred; exclusive fullscreen falls back to second-monitor/detached panel"
   drawing: "Overlay graphics are plain web rendering — DOM, canvas, WebGPU. No native drawing code."
+  platform_notes:
+    windows: "Layered click-through is native to Electron; legacy 32-bit fullscreen games are the fragile case"
+    macos: "Screen Recording and Accessibility permissions must be granted before the overlay is useful"
+    linux: "Wayland needs the portal for both capture and always-on-top; X11 is the easy path"
 
 # ── CAPTURE / COMPOSITE / BROADCAST ──────────────────────────────────────────
 pipeline:
-  capture:
-    windows: "Windows.Graphics.Capture per-window D3D11 texture; BitBlt/PrintWindow fallback for stubborn legacy windows"
-    macos_later: "ScreenCaptureKit"
+  capture: "Per-window GPU texture via the capture addon — see shell.addon_families.capture for backends"
   composite:
     what: "Game texture + overlay texture composed on GPU each frame — one output, game + overlay together"
     modes:
@@ -66,21 +67,45 @@ pipeline:
     file: "Local recordings, machinima exports"
     replay: "DVR clips injectable into the live stream — instant-replay segments"
 
-# ── EVENT BUS (stream-gateway subsumed) ──────────────────────────────────────
+# ── EVENT BUS (moved up) ─────────────────────────────────────────────────────
 bus:
-  what: "SSE/WebSocket event bus between shell, overlay, bridges, and external producers"
-  lineage: "WWSFF apps/stream-gateway — brain bus, cursor-tap, overlay-viewer, bubble-wrangler specs"
-  events: [game_focus, capture_state, dvr_marks, bridge_data, chat_in, chat_out, album_publish]
-  external: "Other local tools can publish to the bus — SoulAngel is the desktop gateway to Soul City"
+  moved_up: "The Angel Event Bus is an app-level spec — ../../ANGEL-EVENT-BUS.yml. Nothing about a notification fabric between a shell, an overlay, modules and outside tools is soul-specific, so it moved for the same reason the ring buffer did."
+  what_stays_here: "Which events mean something in a game about people, published under the soul.* domain."
+  events_owned_here: [soul.bridge.data, soul.character.event, soul.album.published, soul.character.enumerated]
+  soul_angel_is_the_gateway: "Other local tools publish to the bus; SoulAngel is what makes the desktop a door into Soul City."
+  lineage_note: "The WWSFF stream-gateway specs (brain bus, cursor-tap, overlay-viewer, bubble-wrangler) are credited in the app-level file."
 
 # ── SHELL IMPLEMENTATIONS ────────────────────────────────────────────────────
-shells:
-  windows:
-    stack: "WinUI 3 + WebView2; C++/C# host"
-    spec_lineage: "WWSFF apps/soul-angel/windows/ARCHITECTURE.yml (Windows host + sims1 bridge specs)"
-  macos:
-    stack: "Native shell TBD (Swift + WKWebView or Electron); decision deferred to port"
-    spec_lineage: "WWSFF apps/stream-gateway/ Mac-tier research"
+shell:
+  decision: one_electron_host_with_native_addons
+  precedent: |
+    Kando (Simon Schneegans) is the working proof: one cross-platform Electron app whose
+    hard parts live in small native addons behind a single JavaScript interface, with a
+    per-platform backend chosen at runtime. SoulAngel wants the same shape for the same
+    reason — the interesting code is TypeScript, and only two capability families actually
+    need native code.
+  addon_families:
+    capture:
+      what: "Window/screen capture, GPU texture per frame, hardware encode"
+      backends:
+        windows: "Windows.Graphics.Capture + Media Foundation / NVENC; BitBlt/PrintWindow fallback for stubborn legacy windows"
+        macos: "ScreenCaptureKit + VideoToolbox"
+        linux: "PipeWire portal + VA-API"
+    accessibility:
+      what: "OS accessibility tree reads, native TTS/STT, operator-gated input injection"
+      backends:
+        windows: "UI Automation"
+        macos: "AX API"
+        linux: "AT-SPI"
+      caveat: |
+        Games are the worst case for accessibility APIs — most render their UI and expose
+        no tree at all. Treat a11y as a bonus channel where it happens to work (launchers,
+        Win32 dialogs, browsers, the overlay's own UI) and treat OCR over captured frames
+        as the general path for reading text off a game.
+  prior_prototype:
+    what: "WinUI 3 + WebView2 host in C# — the first Windows shell, built before the cross-platform decision"
+    status: "Superseded as the shipping shell; its capture and FileBridge work ports into the Windows capture addon"
+    spec_lineage: "WWSFF apps/soul-angel/windows/ (Windows host + sims1 bridge specs)"
 
 security:
   filesystem: "No ambient FS access from web layer — every path is an explicit, revocable FileBridge grant"
@@ -91,4 +116,6 @@ see_also:
   - SOUL-ALBUM.yml
   - DVR.yml
   - SOUL-BRIDGE-SDK.yml
+  - GAME-BRIDGES.yml
+  - SOUL-EMIGRATION.yml
   - LICENSE.md

@@ -1,0 +1,30 @@
+<!--
+  Application icon: a halo over a screen.
+
+  Heavenly white, per the theme. The screen is the bright thing, the halo is the only warm
+  colour, the background stays out of the way. No gloss, no bevel, no wings. Wings read as
+  feathers at 1024 and as lint at 32.
+
+  FILLS ONLY. No gradients, no strokes, no url(#...) references.
+
+  ImageMagick's built-in SVG renderer silently drops strokes and fills gradient references
+  with black. Both failures produce a picture rather than an error, so they are only
+  visible by looking. The halo is therefore an even-odd annulus path rather than a stroked
+  ellipse, and the screen border is a larger filled rectangle behind a smaller one.
+
+  ASCII only: some SVG parsers reject comments containing non-ASCII bytes.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect x="72" y="72" width="880" height="880" rx="200" fill="#d7e3f6"/>
+
+  <path fill="#e8a72c" fill-rule="evenodd"
+        d="M 258,290 a 254,104 0 1,0 508,0 a 254,104 0 1,0 -508,0 Z
+           M 314,290 a 198,48  0 1,0 396,0 a 198,48  0 1,0 -396,0 Z"/>
+
+  <rect x="160" y="418" width="704" height="440" rx="64" fill="#7e97bd"/>
+  <rect x="176" y="434" width="672" height="408" rx="52" fill="#ffffff"/>
+
+  <rect x="248" y="528" width="376" height="36" rx="18" fill="#a8bcda"/>
+  <rect x="248" y="612" width="528" height="36" rx="18" fill="#c4d3e9"/>
+  <rect x="248" y="696" width="298" height="36" rx="18" fill="#c4d3e9"/>
+</svg>

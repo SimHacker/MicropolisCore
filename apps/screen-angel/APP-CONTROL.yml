@@ -1,0 +1,293 @@
+# APP-CONTROL.yml — driving an application's lifecycle: pause, save, quit, edit, relaunch,
+# and put it back where it was.
+#
+# Screen Angel reads screens (PROTOCOL.yml) and records them (RECORDER.yml). This is the
+# third thing: operating the application, so the user does not have to perform a procedure
+# in order to get what they asked for.
+
+meta:
+  id: app-control
+  status: spec
+  built: []
+  blocked_on: [injection_consent]
+  not_blocked: "The attribute-write path. See attribute_writes_are_not_injection — it covers the window manager and most non-game apps without the input gate."
+
+# WHY
+
+why_it_exists: |
+  The Sims 1 bridge cannot modify a save file while the game holds it. The honest sequence is
+  pause, save, quit, edit, relaunch, load, and get back to the same moment — and asking a
+  user to perform that by hand, correctly, every time they want to change something, is a big
+  ask for what they experience as one edit.
+
+  So we do it for them. Once that exists it is not Sims-specific and it is not even
+  game-specific: pause, save, quit, restart are things almost every application does, and
+  most of them can be driven with a keystroke and a confirmation. Screen Angel becomes an
+  app manager as well as a DVR, and the per-app cost drops from "write a plugin" to "fill in
+  a short config".
+
+two_tiers:
+  configured: "A per-app config naming the inputs and the confirmations. No code. Covers pause, save, quit, launch, and most of restore."
+  bridged: "A full module when the app needs real understanding — reading a save file format, knowing what a Sim is. modules/soul-angel/bridges/sims1 is this tier."
+  the_point: "Most apps never need the second tier, and the first tier is a text file."
+
+# THE GATE
+#
+# This is the part that is not yet allowed to exist.
+
+injection_consent:
+  status: |
+    PROTOCOL.yml lists input injection under absent_on_purpose: the native addons can type
+    and click, the verbs do not exist because the consent machinery does not exist, and
+    adding the capability before the consent would ship it by accident.
+
+    Every verb in this file is injection. So this design moves that consent machinery from
+    "later" onto the critical path — it is the first thing to build here, not the last.
+  grant_model:
+    specified_in: "CAPABILITIES.yml, which splits what the OS enforces on us from what we enforce on modules and clients. The OS grant is coarser than the promise we make; this is the promise."
+    scope: "Per application, not global. A grant to drive The Sims is not a grant to drive a password manager."
+    verbs: "A grant names what it permits: keystrokes, clicks, lifecycle. Reading is a separate grant and already exists."
+    revocable: "Visible in the UI, revocable without restarting anything, and shown while in effect."
+    audit: "Every injected event is logged with the caller that asked for it. 'Something typed into my game' must be answerable."
+    listener_decides: |
+      Injection is never offered to a remote listener, decided by the listener the request
+      arrived on rather than anything the client says about itself. Same rule PROTOCOL.yml
+      uses for handing out file paths, for the same reason.
+  os_layer: "macOS needs the Accessibility grant we already require; Windows needs the sending process at an integrity level the target accepts. The OS gate is necessary and not sufficient — it is per-machine, and ours is per-app."
+
+attribute_writes_are_not_injection:
+  the_distinction: |
+    Synthesizing input means manufacturing a keystroke or a click that the window server
+    delivers to whatever happens to be listening. Writing an accessibility attribute means
+    asking a specific element, by identity, to change — through the same API we already read
+    it with, under the grant we already hold.
+
+    macOS: AXPosition, AXSize, AXValue and AXFocused are settable, and AXPress is an action.
+    Windows: InvokePattern.Invoke, ValuePattern.SetValue, WindowPattern, TransformPattern.
+  why_it_changes_the_plan: |
+    Most of this file does not need the input gate. Pausing an app that exposes a pause
+    control is AXPress on that control. Focusing a window, moving it, resizing it — which is
+    the entire window manager — is two attribute writes. Filling a field is one.
+
+    So the sequencing is not "wait for the consent machinery, then build everything". It is:
+    build the attribute-write path now, and let the input gate block only the cases that
+    genuinely need fake keystrokes.
+  what_still_needs_real_input: |
+    Anything with no usable tree, which is most games — including The Sims, whose pause is a
+    keystroke into a window that exposes nothing. So the gate still stands between us and the
+    motivating use case. It just no longer stands in front of the app manager and the window
+    manager.
+  still_a_capability: |
+    An attribute write acts on somebody's application and can lose their work as surely as a
+    keystroke can. It is logged, it is revocable, and it is named in the grant. Two
+    capabilities, read and write, rather than one capability called "not reading".
+
+# VERBS
+
+verbs:
+  launch: "Start the app, wait for a window that means it is ready."
+  pause: "Send the app's pause input. Confirm."
+  resume: "The inverse. Confirm."
+  speed: "Where the app has one — The Sims has speed controls, and game time is a thing we can drive."
+  save: "Send the save input. Confirm by watching the file, not the UI."
+  quit: "Graceful quit first. Confirm the process is gone before touching anything it owned."
+  restart: "quit then launch, with state captured in between."
+  restore: "Point, click and type the app back to where it was. See choreography."
+
+# CONFIRMATION
+#
+# The difference between this working and this being a pile of sleeps.
+
+confirmation:
+  principle: |
+    Every step states how it knows it worked. A step with no confirmation is a race, and the
+    races in this sequence lose people's saved games.
+  predicates:
+    selector: '{selector: "text[value=Paused]"} — the tree says so. Cheapest and most exact.'
+    region_stable: "{region, forMs} — successive grabs of a region hash identical. For a paused game this is the honest signal, because a running game's pixels move and a paused one's do not."
+    window_appeared: "A window matching a title or role exists. How launch knows it is ready."
+    process_gone: "The pid is no longer there. How quit knows it is safe to edit the save."
+    file_settled: "The save file's size and mtime stop changing for N ms. How save knows it finished — the UI dismissing a dialog means the dialog is gone, not that the bytes are on disk."
+    region_moving: |
+      The inverse of region_stable: successive grabs differ for N ms. How we know play has
+      actually RESUMED rather than that a window exists — a loading screen is a window, a
+      paused game is a window, and a game sitting on a save-selection dialog is a window.
+      Moving pixels in the play area are the honest signal that the simulation is running.
+    frame_matches: "{reference, except} — a grab matches a stored reference outside an excluded region. How the seamless cut is verified before anything is spliced."
+  timeouts: "Every predicate has one. A timeout is a reported failure, never a shrug and a continue."
+
+# CHOREOGRAPHY
+#
+# The save-file edit, which is the sequence that justifies the whole file.
+
+edit_save_file:
+  the_goal: |
+    Pause the game, save it, stop the app, read the save files, generate content, place the
+    content into the game, restart, navigate the loading screens back to the same save, and
+    start recording again the instant play resumes — so that the finished video contains a
+    seamless cut where the generated content simply appears where it was placed, with no
+    glitch and no visible detour through a loading screen.
+
+    Every requirement in this file exists to make that one cut clean.
+  capture_state_first:
+    which_save: "Save, lot, family — whatever identifies the thing to load back."
+    game_state: "Pause state and speed, so the game is handed back exactly as held."
+    view_state: |
+      Camera scroll position, zoom level, rotation, selected subject, which panels are open.
+      This is the part that is easy to forget and the part that ruins the cut: loading the
+      right save with the wrong camera produces a jump, and a jump is exactly the glitch the
+      whole sequence is meant to avoid.
+
+      "Restore the save" sounds complete, which is why it gets skipped. It is not complete.
+      The save is the world; the view is where you were standing in it.
+    window_state: "Bounds, and full-screen or not. A resolution change between the two halves of the cut is a glitch too."
+
+view_state_is_the_bridge_s_job:
+  why_it_cannot_be_generic: |
+    A save file records the world, not the camera, and a game with no accessibility tree
+    exposes neither. So view state usually exists nowhere except in the pixels — which means
+    recovering it is inference from an image, and every game encodes its camera differently.
+    Nothing generic can do this.
+  the_loop: |
+    Read the view state out of the reference frame, reproduce it by injecting the game's own
+    camera controls, grab again, compare to the reference, and correct. Reverse engineer from
+    the image, act, verify against the image, iterate — the same closed loop as every other
+    verb here, with frame_matches as the predicate and the pre-pause reference frame as the
+    target.
+
+    This is where the recognizer matters, and it is the worked example for AGENT.yml: a model
+    that can look at two screenshots and say "too far left, zoomed one step out" closes a loop
+    that no fixed procedure closes.
+  hard_but_bounded: "Genuinely hard, and genuinely game-specific — but bounded, because the answer is checkable. The reference frame is right there, so the bridge always knows whether it succeeded."
+  best_effort_is_a_real_answer:
+    tiers:
+      exact: "Frame matches. The cut is seamless."
+      close: "Same subject, same zoom, camera off by a small pan. A viewer sees a small jump, not a teleport."
+      approximate: "Right lot, right subject, wrong framing. Usable for a working session, not for a published seamless cut."
+      failed: "Could not recover the view. Hand it back paused, at whatever view it landed on, and say so."
+    rule: "Report which tier was reached rather than claiming success. The user decides whether a close match is good enough for what they are making, and for a working edit it almost always is."
+  helping_without_being_perfect: |
+    Even the failed tier beats the status quo, because the alternative was the user performing
+    the whole pause-save-quit-edit-relaunch procedure by hand AND then finding their camera
+    again. Getting them back to the right lot with the wrong angle is most of the work.
+
+time_that_cannot_be_stopped:
+  what: "Multiplayer, or anything else with a clock that is not ours: the world keeps running while we are stopped, so there is nothing to restore to."
+  why: "Pausing a multiplayer game pauses the user interface, not the simulation. Quitting to edit a save file is not even coherent when the save lives on a server."
+  consequence: "The seamless cut is not available. Not a bug and not something to work around — the precondition it needs does not exist."
+  what_still_works:
+    - "The DVR, entirely. Ring, scrub, select, clip, export — none of it needs the game stopped."
+    - "Pause-the-recording rather than pause-the-game, so the output has no dead air even though the world kept moving."
+    - "Overlay, annotations, analytics, accessibility, window management. Everything that only reads."
+    - "Content generation that does not require exclusive file access — anything the game itself exposes while running."
+  rule: "Detect it and say so up front. A per-app config declares whether time is ours to stop; the sequence that needs it is simply not offered when it is not, rather than attempted and failed halfway with a save file half-written."
+
+# LINEAGE
+#
+# This file is the oldest idea in the project, finally specified.
+
+lineage:
+  claim: "Per-app tricks, hacks and affordances were the point of aQuery from the beginning — not a later accretion onto a general mechanism."
+  primary_source: "sources/2013-email-thread.md, the thread where aQuery was named"
+  verbatim: |
+    "This brings us to aQuery plug-ins! It should be possible to write special purpose (or
+    general purpose) aQuery extensions for manipulating particular applications, or just
+    window frames or common controls in general."
+
+    "...aQuery extensions with simple high level APIs to all that low level accessibility
+    stuff, and aQuery UI + jQuery UI widgets and user interfaces that made it easy to do
+    particular useful tasks with common apps and user interface cliches!"
+
+    "aQuery would allow us to fix and script and extend and customize existing apps that have
+    shitty user interfaces, from outside, without modifying the apps!"
+  so: |
+    The two_tiers split above IS the aQuery plugin architecture: a selector engine and a small
+    set of verbs that know nothing about any app, plus per-app extensions carrying the specific
+    knowledge. "User interface cliches" is the 2013 name for the configured tier — the generic
+    patterns that recur across apps and can be filled in rather than programmed.
+  what_is_new: "Only the recognizer. See SCREEN-ANGEL.yml, llms: the selector engine and the event model were never the blockers, understanding was."
+  the_sims_case: "Soul Angel and the Sims 1 bridge are the first full second-tier extension — a plugin that knows what a Sim is, which is exactly the special-purpose case the 2013 proposal named and never got to build."
+  steps:
+    - "grab a reference frame of the play area — this is what the far side of the cut has to match"
+    - "pause — confirm: selector or region_stable"
+    - "stop recording, drop a pause cue"
+    - "save — confirm: file_settled"
+    - "quit — confirm: process_gone"
+    - "BACK UP the save file"
+    - "read, generate, place the content, write"
+    - "launch — confirm: window_appeared"
+    - "navigate the loading screens and load the captured save — confirm: the lot is up"
+    - "restore view state, then pause state and speed"
+    - "compare against the reference frame outside the injected region — see seamless_cut"
+    - "resume recording at the first frame where play has actually resumed — confirm: region_moving"
+    - "hand control back, drop a resume cue so export can drop the whole seam"
+  backup_is_not_optional: |
+    The save file is copied before it is touched, every time, with no preference to turn it
+    off. Everything else in this sequence can be retried; a corrupted save is somebody's
+    hundred hours. If the backup fails, the edit does not happen.
+  failure_policy: |
+    A step that cannot be confirmed stops the sequence and reports, leaving the app in a
+    known state — and "known" means we say which state, not that we hope. Never proceed
+    blind through a save-and-quit, because the failure mode is not a bad clip, it is a lost
+    game.
+  recording: "Recording stops at the pause and resumes when control is handed back. The pause cue lets export drop the whole seam, so an edited save does not show up as a two-minute hole in the middle of a clip."
+
+seamless_cut:
+  the_property: |
+    The cut is seamless exactly when the last frame before the pause and the first frame
+    after play resumes differ ONLY by the intended change. That is a testable statement, not
+    an aspiration, and it is the acceptance criterion for the whole feature.
+  why_it_is_checkable_here: |
+    We already grab regions and already hash them. Take the reference frame before pausing,
+    take one after restoring, and compare everything outside the region the content was
+    placed into. Same camera, same zoom, same resolution, same time of day, same weather,
+    same UI panels: match. Anything else: report it, because we know the cut will glitch
+    before the user ever watches it.
+  when_it_does_not_match:
+    options:
+      - "Nudge the view and re-compare — a scroll or zoom is recoverable and usually the cause."
+      - "Tell the user the seam will be visible, and let them decide. A known glitch beats a surprise one."
+      - "Fall back to a deliberate transition. If it cannot be invisible, make it intentional."
+    never: "Silently splice two mismatched frames. That produces the one artifact the feature was built to prevent."
+  what_is_excluded_from_the_output: "The paused tail, the quit, every loading screen, the save-selection UI, and the restore. The viewer sees play, then play with the new thing in it."
+  time_of_day_and_weather: |
+    A game whose world keeps a clock will not necessarily reload at the same moment of it.
+    Where the save holds the clock, this is fine; where the game re-derives it, the seam may
+    be lit differently. This is a per-game fact the bridge knows and the generic layer cannot.
+  audio: "Off by default, which is fortunate — a splice that is invisible is rarely inaudible. When audio is on, the seam gets a short crossfade rather than a claim of seamlessness."
+
+# CONFIG
+
+config:
+  where: "Per app, keyed by bundle id on macOS and executable name on Windows."
+  shape: |
+    apps:
+      com.electronicarts.thesims:
+        launch: {bundle: com.electronicarts.thesims}
+        pause:  {keys: "p", confirm: {region_stable: {region: center, forMs: 400}}}
+        resume: {keys: "p", confirm: {region_moving: {region: center, forMs: 400}}}
+        speed:  {slow: "1", normal: "2", fast: "3"}
+        save:   {keys: "Cmd+S", confirm: {file_settled: {glob: "UserData/Neighborhood.iff", forMs: 800}}}
+        quit:   {keys: "Cmd+Q", confirm: {process_gone: {timeoutMs: 15000}}}
+        saves:  {root: "UserData", backup: true}
+        time:   {ours_to_stop: true}
+        view:   {restore: bridge}
+  time_key: "time.ours_to_stop declares whether pausing stops the world. False for anything multiplayer or server-authoritative, and the sequences that need a stopped world are then not offered rather than attempted (see time_that_cannot_be_stopped)."
+  view_key: "view.restore is none, config, or bridge. none accepts the jump, config replays a fixed sequence of camera inputs, bridge means the module recovers and verifies view state against a reference frame."
+  postel: "Accept a partial config. An app with only a pause binding gets pause, and everything else reports that it is not configured rather than guessing at a keystroke."
+  discovery: "Configs ship with the app and are user-editable. A bridge may supply one for the game it knows."
+
+# WHAT THIS IS NOT
+
+not:
+  a_macro_recorder: "No recording and replaying of arbitrary user input. The verbs are a fixed, named, auditable set, because that is what makes the consent grant meaningful."
+  a_bot: "Nothing plays the game. Every verb here is lifecycle — start it, hold it, save it, stop it, put it back."
+
+see_also:
+  - PROTOCOL.yml
+  - RECORDER.yml
+  - STUDIO.yml
+  - AGENT.yml
+  - CAPABILITIES.yml
+  - sources/2013-email-thread.md
+  - modules/soul-angel/GAME-BRIDGES.yml

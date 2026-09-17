@@ -1,0 +1,177 @@
+# STUDIO.yml — pause, scrub back, choose a moment, make something of it, send it somewhere.
+#
+# The recorder is always running (RECORDER.yml ring). This is the part the user touches:
+# one place to grab what just happened on screen, personalize it, and share it, without
+# leaving the game or learning an editor.
+
+meta:
+  id: studio
+  status: spec
+  built: []
+  depends_on: [RECORDER.yml, APP-CONTROL.yml, PROTOCOL.yml]
+
+# THE SHAPE OF IT
+
+premise: |
+  A person is playing a game, full screen or in a window. Something happens that they want.
+  Every existing answer to this asks them to have been recording already, or to alt-tab into
+  an editor, or to accept whatever thirty seconds the platform decided to keep.
+
+  Because the ring is always on, the answer here is: pause, scrub back to it, draw a box
+  around it, title it, send it. The chunking underneath is invisible — it is how we break
+  the stream up for storage and upload, and no part of the UI ever mentions a chunk.
+
+one_stop_shop: |
+  Grab content from a game right off the screen, memeify it, and export to YouTube, disk,
+  social, or the library. The value is that these are usually four tools and this is one,
+  positioned where the content happens instead of downstream of it.
+
+# PAUSE
+
+pause:
+  surfaces:
+    button: "Screen Angel can surface a pause button on the overlay. Click-through elsewhere, per overlay-window.ts."
+    hotkey: "A global hotkey with no visible surface, for full-screen play where any visible chrome is a distraction."
+  what_it_does_in_order:
+    - "Send the game's own pause input, via the bridge. See APP-CONTROL.yml — this is injection and it is gated."
+    - "Wait for confirmation that the game actually paused, rather than assuming the keystroke landed."
+    - "Stop recording, and drop a pause cue on the timeline."
+    - "Dim to a vignette, so the paused state is legible as ours rather than as a hung game."
+  why_confirm: |
+    A pause keystroke that went to the wrong window, or to a game that was mid-loading-screen
+    and ignored it, leaves us showing a frozen UI over a game that is still running. The
+    confirmation is a selector query or a region-stability check, which we can do because we
+    already read the tree and already grab regions.
+  vignette:
+    what: "Darkened edges plus a still frame. Enough to say 'this is held' without hiding the held thing."
+    why_not_a_modal: "The thing the user wants to look at is the game. Anything that covers it is working against the reason they paused."
+
+trim_pauses:
+  what: "Export can drop the intervals between a pause cue and its resume."
+  why: |
+    A recording of someone deliberating over a clip is not the clip. Optional, because for
+    a tutorial the deliberation is sometimes exactly the content.
+  consequence: "Output has no visible pauses, and its duration is shorter than its wall-clock span. Both facts go in the sidecar."
+
+# CUES
+
+cues:
+  what: "Timestamped annotations on the ring's timeline: {kind, at, until?}."
+  kinds:
+    pause: "Emitted by the pause flow. Paired with resume."
+    bridge: "A game bridge marking something it noticed — a death, a level change, a Sim's mood crossing a threshold."
+    user: "A manual marker, for 'that, right there' while still playing."
+  why_they_matter: "They are what makes the timeline navigable. Scrubbing an hour of uniform gameplay by dragging is a worse UI than jumping between the eleven things that happened."
+  naming_collision: |
+    NOT the same as PROTOCOL.yml marks, which are numbered labels drawn on a still grab so a
+    model and a human can agree what "3" means. Marks are spatial and belong to one image;
+    cues are temporal and belong to the timeline. Keeping the words apart keeps the two
+    features from being explained in terms of each other.
+
+# SCRUB
+
+timeline:
+  extent: "Exactly what the ring holds — a minute, an hour, or everything, per RECORDER.yml retention."
+  controls: "Drag to scrub, frame-step near the moment, jump between cues, keyboard shortcuts for all three."
+  thumbnails: "From keyframes, which is why forced keyframes at chunk boundaries pay off twice."
+  honesty: "The scrubbable range is shown, not implied. A user who set retention to one minute should see a one-minute timeline rather than discovering the limit by dragging into nothing."
+
+# SELECTION
+#
+# Orthogonal axes that combine. Any time selection with any space selection.
+
+selection:
+  time:
+    segment: "In and out points. The default."
+    single_frame: "One frame instead of a span. Produces an image rather than a video."
+    why_both: "The same gesture should get you a still or a clip, because the user does not know which one they want until they see the moment."
+  space:
+    full: "Everything the capture target covered."
+    box: "A bounding box drawn on the frame."
+    anchored_box:
+      what: "A box pinned to a subject, so it follows the subject through the clip instead of holding still while the subject leaves."
+      two_tiers:
+        element:
+          how: "anchor: {element: path} — the box tracks the element's bounds frame by frame."
+          cost: "Free and exact. No computer vision at all."
+          why_we_get_this_cheaply: "We already read the accessibility tree. For anything with a tree — an app, a menu, a UI-heavy game — subject tracking is a lookup, not an inference."
+          limit: "Only works for subjects the tree knows about."
+        optical:
+          how: "anchor: {box, tracker} — pick a subject in a frame, track it optically through the segment."
+          for: "Game-world subjects. A Sim walking across a lot is pixels in a canvas and the tree has never heard of it."
+          status: not_built
+          prior_art: "After Effects and Blender both do this well and both make it a project. The bar here is direct manipulation: drag a box onto a Sim, scrub, see the box follow, nudge it where it slipped, done."
+          honest_cost: "This is the one genuinely hard piece in this file. Everything else is plumbing and layout."
+
+# COMPOSE
+
+compose:
+  fields: [title, caption, tags, metadata, attachments]
+  attachments: "Whatever the bridge offers — a save file, a Sim's stats, a lot's description. See bridge_customization."
+  text_placement:
+    separate: "Video or image plus text as its own field. What a blog or the library wants."
+    captions: "WebVTT or SRT beside the video. Searchable, translatable, and not burned into the pixels."
+    overlay: "Text burned in, meme-generator style, top and bottom. What survives being reposted, which is the entire reason people want it."
+  why_all_three: "The same moment goes to a library that wants structured text, a video platform that wants captions, and a feed that strips everything but the image."
+
+# EDITING
+#
+# After the fact, on a recording already in the library. Not a competitor to an NLE — the
+# five operations people actually want on a game clip before posting it.
+
+editing:
+  simple:
+    cut: "Trim the ends, drop a middle. Cuts land on keyframes or force a re-encode of one chunk, not the whole clip."
+    crop: "A static box. The same box the selection UI already draws."
+    zoom: "A static scale-and-position — crop with the output size held, which is how a zoom reads on a fixed-size video."
+    overlays_and_captions: "Text, burned in or as a caption track. Same fields as compose above, applied later."
+    why_these_five: "They are what stands between a raw grab and something worth posting. Anything beyond them is a project, and a project belongs in an editor the user already owns."
+  advanced:
+    continuous_zoom:
+      what: "Keyframed zoom and pan over time — a slow push in, a whip to the corner, an ease back out."
+      ui: "Set a start and an end box, scrub to check, adjust. The interpolation is the feature; the two boxes are the interface."
+    automated_follow:
+      what: "The zoom box follows a subject through the clip via motion tracking, so the camera stays on the thing that matters."
+      relation_to_selection: "Same anchor machinery as selection.space.anchored_box, applied to the output framing instead of the crop. Element-anchored is free; optical is the hard tier."
+      prior_art: "After Effects and Blender both do it, both as a project. The bar is direct manipulation — drag a box onto a Sim, scrub, watch it follow, nudge where it slipped."
+  tiering:
+    free: "Everything under simple. A person who wants to grab a moment and post it never hits a paywall."
+    paid: "Continuous zoom and automated follow. They are the expensive engineering and they are what a person making content regularly will pay for."
+    see: DISTRIBUTION.yml
+
+# EXPORT AND SHARE
+
+export:
+  artifacts: [video, image, "video + text", "video + captions", "image + overlay text"]
+  targets:
+    disk: "Always available, no credentials, no account. The floor."
+    library: "The Screen Angel library. Also the floor — everything exported is kept locally unless the user says otherwise."
+    os_share_sheet:
+      macos: NSSharingServicePicker
+      windows: "Windows.ApplicationModel.DataTransfer share UI"
+      why_first: |
+        It reaches Messages, Mail, AirDrop, and every installed social app with zero OAuth
+        registrations, zero tokens, and zero review processes. It is most of the value of
+        "post this" for none of the cost, and it is the thing to build before any API.
+    apis:
+      as_modules: "YouTube, blog endpoints, social platforms — each one a module, like the S3 sink."
+      why_modules: "Every one of them is an app registration, a review, a token refresh, and a terms-of-service surface. None of that belongs inside the app, and a user who never posts to YouTube should not carry its dependency."
+      credentials: "Same rule as RECORDER.yml: a profile NAMES a credential, never contains one."
+
+# WHAT BRIDGES GET TO CHANGE
+
+bridge_customization:
+  what: "A game bridge extends what can be annotated and attached, and what the cue kinds mean."
+  examples:
+    sims1: "Attach the Sim, the lot, the save file, the family. Cue on a Sim's needs crossing a line."
+    generic: "No bridge? Window title, app name, timestamp. Still works — a soulless app counts."
+  boundary: "Bridges add fields and cues. They do not add export targets or touch the encoder."
+
+see_also:
+  - RECORDER.yml
+  - APP-CONTROL.yml
+  - ANALYTICS.yml
+  - MEDIA-STREAMS.yml
+  - AR-SDKS.yml
+  - PROTOCOL.yml
+  - modules/soul-angel/SOUL-ALBUM.yml

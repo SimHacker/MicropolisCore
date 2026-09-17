@@ -36,9 +36,12 @@ packages/micropolis-engine/   C++ simulation core (makefile + Emscripten → WAS
     simulate.cpp           Simulation loop
     zone.cpp, traffic.cpp, power.cpp, budget.cpp, ...
 
-apps/soul-angel/           SoulAngel — universal game companion (spec stage; source-available,
-                           see apps/soul-angel/LICENSE.md): DVR, Soul Album, machinima/stream
-                           studio, per-game Soul Bridges. Web-first app in a thin native shell.
+apps/screen-angel/         Screen Angel — selectors, events and recognition over any app's
+                           interface, in a transparent click-through Electron overlay
+                           (source-available, see apps/screen-angel/LICENSE.md).
+  modules/soul-angel/      SoulAngel — its first module: DVR, Soul Album, machinima/stream
+                           studio, per-game Soul Bridges.
+    bridges/sims1/         The Sims 1 bridge and Transmogrifier tools.
 
 apps/micropolis/           SvelteKit application
   src/lib/

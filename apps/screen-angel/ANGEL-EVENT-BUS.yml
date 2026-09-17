@@ -1,0 +1,117 @@
+# ANGEL-EVENT-BUS.yml — the Angel Event Bus: how anything in or around Screen Angel tells
+# everything else that something happened.
+#
+# It moved up. The bus was specified inside the Soul Angel module (modules/soul-angel/ARCHITECTURE.yml, bus) and
+# nothing about a notification fabric between a shell, an overlay, modules and outside tools is
+# soul-specific — same argument the ring buffer and the studio moved on. What stays down there is
+# which events mean something in a game about people.
+
+meta:
+  id: angel-event-bus
+  status: partly_specified
+  built: [wire_format, transport]              # PROTOCOL.yml already carries events on the socket
+  not_built: [name_registry, subscription_model, replay_from_log, publish_capability, drop_accounting]
+  see_also: [PROTOCOL.yml, RECORDER.yml, STUDIO.yml, MODULES.yml, ANALYTICS.yml, ACCESSIBLIFY.yml, CAPABILITIES.yml, MEDIA-STREAMS.yml, OPTICAL-CHANNEL.yml, modules/soul-angel/ARCHITECTURE.yml]
+
+the_name:
+  canonical: "The Angel Event Bus. One name, in every file, in the code, in the docs."
+  retired_names:
+    soulangel_event_bus: "Wrong layer. The bus is the app's, not the module's."
+    brain_bus: "The WWSFF stream-gateway name it descends from. Keep it in lineage prose, never as an identifier."
+    stream_gateway_bus: "The subsumed project, not the thing."
+  why_this_matters_more_than_it_sounds: "Three names for one channel is how two implementations get built. The naming rule is the deduplication."
+
+# WHAT IT IS, AND THE TWO THINGS IT IS DELIBERATELY NOT
+#
+# Two existing positions in this directory constrain the bus, and they are both right.
+
+what_it_is: "A named, timestamped, namespaced notification channel between the shell, the overlay, in-process modules and bridges, external local producers, and out-of-process clients. Fan-out of facts. Nothing computes because of it."
+
+not_the_core_abstraction:
+  the_existing_position: "MEDIA-STREAMS.yml, the_recommendation, what_to_avoid: a push-based event bus as the CORE abstraction forecloses retiming, multiple readers and cheap caching. Push is fine AT THE EDGES, where events arrive from outside."
+  therefore: "The media graph stays pull-based with time as a coordinate. The bus is the edge, not the middle. A cue arriving on the bus does not push frames anywhere; it marks a time that some session may later ask about."
+  the_test: "If removing the bus would break the ability to render a frame or scrub a timeline, something has been built in the wrong place."
+
+not_a_parallel_pipeline_for_semantics:
+  the_existing_position: "ANALYTICS.yml, once_it_is_a_node: semantic statements about the world become nodes in the merged tree, so every consumer already knows what to do with them, 'which is the whole reason to put it there rather than inventing a parallel event bus.'"
+  therefore: "A statement that has a subject, a place and a duration is a NODE (ACCESSIBLIFY.yml, world_nodes). The bus announces that the tree changed; it does not become a second, weaker representation of the same fact."
+  the_dividing_line:
+    on_the_bus: "Something happened, at a time, from a source — transitions, arrivals, completions."
+    in_the_tree: "Something IS the case, with a subject and an extent — a person on the ground, a widget at a position, a Sim who is now enemies with her roommate."
+
+not_also:
+  not_a_new_transport: "PROTOCOL.yml already owns the wire: newline-delimited JSON on a user-owned socket or named pipe, with events framed as {event, payload} arriving unbidden. The bus is semantics on that wire, not a second one."
+  not_a_durable_queue: "No persistence guarantees, no redelivery, no dead letters. Anything that must not be lost is a file or a save, not a message."
+  not_remote_by_default: "Local socket, filesystem permissions, same posture as everything else here. Remote is the PROTOCOL.yml WebSocket-plus-token shape when it exists."
+
+# THE PROPERTY THAT MAKES IT WORTH HAVING
+#
+# Otherwise this would just be callbacks with extra steps.
+
+one_clock_with_the_ring:
+  the_rule: "Every event is stamped on the same clock as the recorder's ring buffer (RECORDER.yml)."
+  what_that_buys:
+    every_event_is_a_seek_target: "An event is a place in the recording. Something happened means there is footage of it, and the timeline can show the mark and jump to it."
+    diagnosis_after_the_fact: "A misbehaving automation can be reviewed against the video of what was on screen when it decided, because both are indexed by the same number."
+    the_bus_becomes_scrubbable: "The event log over the retention window is a stream, and reading it is a session on that stream — the same interface as asking for pixels (MEDIA-STREAMS.yml, analytics_as_a_stream)."
+  consequence_for_replay: "Late subscribers do not need a durable queue. They ask the log for the window they missed, which is a read, not a redelivery."
+
+participants:
+  shell: "Native host — focus changes, capture state, lifecycle, device changes."
+  overlay: "The web layer, both a subscriber and a producer of user-driven events."
+  modules_and_bridges: "In-process TypeScript. Direct subscription, no serialization (MODULES.yml, why_in_process)."
+  external_local_tools: "Other programs on the machine may publish. This is how Screen Angel is the desktop gateway to Soul City rather than a closed app."
+  out_of_process_clients: "CLI, MCP, agents — over the socket, capability checked at the boundary."
+  sinks: "Stream output, publish pipelines, analytics. Subject to the redaction gate before anything leaves the machine."
+
+naming:
+  grammar: "<domain>.<subject>.<past-tense-verb> — angel.focus.changed, angel.capture.started, angel.timeline.cue.added."
+  domains:
+    angel: "Reserved for the app layer."
+    soul: "Owned by the Soul Angel module — soul.bridge.data, soul.album.published, soul.character.enumerated."
+    module_prefixed: "Any other module publishes under its own id. No unprefixed names from third parties, ever."
+  past_tense_is_not_a_style_preference: "A name in the past tense cannot be mistaken for a command. 'capture.start' invites something to obey it; 'capture.started' can only be a report. The grammar makes the bus's read-only nature legible in every log line."
+
+event_shape:
+  id: "Unique per event."
+  name: "The namespaced name."
+  time: "Ring clock, so it is also a position in the recording."
+  source: "Who published it — shell, overlay, module id, external producer id."
+  subject: "Optional: a selector, a tree node reference, an egg id, a character id."
+  payload: "Typed per name, versioned with the name rather than globally."
+  advisory: "Whether anything is expected to look at it, which is how chatty diagnostic events stay out of everyone else's way."
+
+taxonomy_starting_point:
+  app_level:
+    - "angel.focus.changed — which window and app has focus"
+    - "angel.capture.started · angel.capture.stopped · angel.capture.degraded"
+    - "angel.timeline.cue.added — a mark, from anyone (STUDIO.yml, cues)"
+    - "angel.selection.promoted — a moment became an artifact"
+    - "angel.tree.changed — the merged accessibility tree moved (ACCESSIBLIFY.yml)"
+    - "angel.grant.changed — a capability was granted or revoked (CAPABILITIES.yml)"
+  optical_channel:
+    - "angel.optical.code.seen — a QR or band code decoded, with its token (OPTICAL-CHANNEL.yml)"
+    - "angel.optical.egg.seen — an egg recognized, with kind and state"
+    - "angel.call.outstanding · angel.call.resolved · angel.call.expired — the cross-program call lifecycle"
+  module_level_examples:
+    - "soul.bridge.data — a bridge read something out of a save"
+    - "soul.character.event — a credited event from a correspondent or an in-game character (modules/soul-angel/UNIVERSAL-JOBS.yml)"
+    - "soul.album.published"
+  chat: "chat.in · chat.out — Twitch, YouTube, and anything else that talks."
+
+delivery:
+  in_process: "Synchronous fan-out in publish order per source. A slow in-process subscriber is a bug in that subscriber, not a queueing problem."
+  out_of_process: "Best effort. Ordering is preserved per source; nothing is promised across sources."
+  no_backpressure_onto_capture: "A subscriber that cannot keep up gets events dropped and a count of what it missed. Recording never stalls because something is listening slowly (moollm skills/robust-first)."
+  drop_accounting_is_visible: "Dropped counts are reported, not silent. A consumer that silently missed half its events produces conclusions nobody can trust."
+
+security:
+  publish_is_a_capability: "Publishing, and publishing under a given domain, are grants like any other. An external tool cannot impersonate the shell."
+  payloads_from_outside_are_data: "The same rule the screen gets (AGENT.yml, prompt_injection): a payload from an external producer describes something, it does not ask for anything. Nothing acts on a bus event without going through advertisements and grants."
+  redaction_before_any_sink: "Nothing leaves the machine unredacted, enforced at the app level because it has to cover every sink (modules/soul-angel/DVR.yml, privacy)."
+  the_log_is_sensitive: "A timestamped record of every focus change on someone's desktop is surveillance data. Local, retention-bounded, and never a telemetry stream."
+
+lineage:
+  from: "WWSFF apps/stream-gateway — the brain bus, cursor-tap, overlay-viewer and bubble-wrangler specs, subsumed into this app."
+  what_was_kept: "SSE and WebSocket consumers, external producers, overlay as both subscriber and publisher, broadcast sinks."
+  what_changed: "It is no longer a gateway project with its own transport. It is a naming and routing layer over the control protocol this app already speaks."

@@ -1,0 +1,20 @@
+{
+  "name": "@screen-angel/soul-angel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Screen Angel's first module — the one that carries souls out of games. DVR, Soul Album, machinima studio, per-game Soul Bridges.",
+  "license": "SEE LICENSE IN ../../LICENSE.md",
+  "author": "Don Hopkins",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@screen-angel/soul-bridge-sims1": "workspace:*"
+  },
+  "screenAngelModule": {
+    "id": "soul-angel",
+    "specs": "GLANCE.yml"
+  }
+}

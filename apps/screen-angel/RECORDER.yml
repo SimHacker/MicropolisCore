@@ -1,0 +1,372 @@
+# RECORDER.yml — chunked capture, and where the chunks go.
+#
+# Status: specified. Profiles and key layouts are built and typechecked
+# (src/common/profiles.ts); the encoder and the sinks are not.
+
+meta:
+  id: recorder
+  status: specified
+  built: [profiles, key_layouts, video_manifest, credential_references]
+  not_built: [encoder, sinks, recorder_methods, ring, frames_mode]
+
+# WHERE IT LIVES
+
+placement:
+  decision: app_level
+  why: |
+    The recorder belongs to Screen Angel, not to Soul Angel. The goal is to stream ANY
+    video or ANY game into a video analytics system — for demos, for live operation, and
+    for development — and none of that is game-specific. A soulless application counts.
+    Microsoft Word counts.
+
+    Soul Angel's DVR is then a consumer of this, not a parallel implementation: the ring
+    buffer, the time scrub, and the album cards in modules/soul-angel/DVR.yml all sit on
+    top of the same chunk stream.
+  consequence: "One encoder, many sinks. A game bridge that wants frames asks the recorder; it does not open a capture session of its own."
+
+# CHUNKS
+
+chunking:
+  default: 60
+  why_a_minute: |
+    Long enough that the file count stays cheap and each file carries enough motion to be
+    worth a pipeline run; short enough that a session becomes analyzable within a minute
+    of it ending. Leela's pipeline imposes no clip duration at all — the constraint is
+    ours to pick, and this is the batch-friendly point.
+  shorter_modes:
+    10: "Conversation latency. Ten seconds is the point where a person asking 'what just happened' gets an answer about the thing they meant."
+    1: "Closer to live. One upload per second, and a per-chunk encoder flush that shows up in the bitrate."
+  configurable: "profile.chunk.durationSec, or --duration on the command line. Nothing in the design assumes sixty."
+  where_the_edges_are_decided: "policy, below. How chunks start, end, and what happens to fragments at either end is five knobs rather than one rule."
+  empty_chunks: |
+    A chunk window that caught no frames — game minimized, capture stalled, display
+    asleep — is not written. A zero-frame video file is a file that every downstream
+    consumer has to special-case. One frame is fine and gets written.
+  forced_keyframes: |
+    Ask the encoder for an IDR at each boundary rather than cutting at the first keyframe
+    after it. Both VideoToolbox and Media Foundation take the request. Without it, actual
+    chunk durations wobble by up to one keyframe interval and alignment quietly stops
+    being alignment.
+  overlap: |
+    profile.chunk.overlapSec repeats the tail of each chunk at the head of the next.
+    Motion that straddles a boundary is otherwise split across two files and can be
+    missed by both. Off by default because it multiplies bytes.
+  keyframe_constraint: |
+    Chunks can only be cut on a keyframe without re-encoding, so keyframeInterval must
+    divide the chunk. This is validated rather than silently corrected: one-second chunks
+    at a thirty-frame interval is a configuration that cannot work, and it should say so
+    at startup rather than produce unplayable files for an hour.
+
+# CHUNK POLICY
+#
+# Every behavior is reachable from these five knobs, because nobody knows yet which one is
+# right and the way to find out is to run them in real situations and compare. The defaults
+# are a starting guess, not a conclusion.
+
+policy:
+  one_rule: |
+    A fragment shorter than minDurationSec merges with its adjacent chunk — forward at the
+    head, backward at the tail. Symmetric. Everything below is how to switch parts of that
+    off, and what it costs when the adjacent chunk is already gone.
+
+  alignment:
+    clock:
+      what: "Cuts land on wall-clock boundaries. A minute chunk starts at :00, whatever the frame rate — the cut is a clock event, not a frame count."
+      default: true
+      why: "Files from parallel sources line up without anyone correlating timestamps afterwards, which is the whole reason to prefer a clock to a stopwatch."
+      cost: "Recording starts when the user says so, which is almost never on a boundary. So this is the setting that creates fragments in the first place."
+    start:
+      what: "Cuts every chunkSec from the moment recording began. No boundaries, no head fragment at all."
+      when: "A single source that nobody needs to correlate with anything. Simplest behavior, and the only one where the head problem does not exist."
+      cost: "Two Screen Angels recording the same session produce files that do not line up."
+
+  min_duration:
+    default: 10
+    what: "The shortest chunk worth writing on its own. Below it, a chunk is a fragment and the head and tail policies apply."
+    zero: "minDurationSec: 0 means there is no such thing as a fragment. Hard boundaries, always, slivers and all — including one-frame files at both ends. Legal and sometimes what you want."
+    note: "The pipeline imposes nothing here. A one-frame mp4 is a valid clip; this threshold is entirely about what is pleasant to store, upload and look at."
+
+  head:
+    extend:
+      what: "The opening fragment runs on through the next boundary. Start at :59 and get one 61-second file, then :00 alignment forever after."
+      default: true
+      cost: "The first file is over-long, and its duration does not match the others. A consumer that assumes uniform durations will notice."
+    cut:
+      what: "Emit the fragment as its own file and align immediately."
+      when: "Uniform durations matter more than file count, or minDurationSec is 0 anyway."
+
+  tail:
+    merge:
+      what: "The closing fragment is appended to the previous chunk, which is the backward mirror of head.extend."
+      requires: "lingerSec long enough that the previous chunk is still amendable. See linger."
+      why_it_is_cheap: |
+        Because a keyframe is forced at every boundary, the fragment begins with an IDR and
+        appending it is a remux rather than a re-encode. The forced-keyframe decision pays
+        for itself twice: it keeps alignment honest and it makes backward merge free.
+    cut:
+      what: "Write the fragment as its own file. A stop at :01 produces a one-second file."
+      default: true
+      why_the_default: "It needs no linger, so nothing is delayed and nothing is held. The cost is a short file that some situations will not care about."
+    drop:
+      what: "Discard the fragment."
+      warning: |
+        The tail is the NEWEST footage, and in the DVR case it is usually the footage the
+        user just asked to keep. Never a default, refused outright when a selection covers
+        it, and only reasonable for unattended long-haul recording where a partial trailing
+        second is noise.
+
+  linger:
+    what: "How long a chunk stays amendable after its boundary before it is sealed and handed to the sinks."
+    default: 0
+    enables: "tail.merge. With lingerSec 0 there is nothing to merge into, so tail.merge degrades to tail.cut and says so."
+    cost: |
+      It defers the SINK handoff, not just the file close — so every chunk arrives downstream
+      up to lingerSec later. For a pipeline running a minute behind, ten seconds is free. For
+      real-time analytics it is the entire latency budget, which is why the default is zero
+      and why the frames mode does not have this problem at all.
+    suggested: "lingerSec equal to minDurationSec is the setting that makes the symmetric rule actually symmetric."
+
+  presets:
+    hard-minute: "alignment clock, minDuration 0. Every file exactly a minute except the two ends, which are whatever they are."
+    grandfather-head: "alignment clock, minDuration 10, head extend, tail cut, linger 0. No head sliver, a possible tail sliver, no added latency."
+    symmetric: "alignment clock, minDuration 10, head extend, tail merge, linger 10. No slivers at either end, ten seconds of added latency."
+    from-start: "alignment start, minDuration 10, tail merge, linger 10. No fragments by construction, nothing correlated with anything."
+    default: grandfather-head
+    why_named: "So an experiment can be described in one word and a result can be attributed to a setting."
+
+  recorded_in_the_sidecar: |
+    The policy that produced a chunk is written beside it. Comparing behaviors across real
+    sessions is impossible if the artifact does not say which setting made it — and 'see
+    which works best' is the stated reason all of this is configurable.
+
+# THE RING
+#
+# Recording is not a mode the user turns on. It is the default state, and what the user
+# turns on is the part where they get to keep something.
+
+ring:
+  what: "Chunks land in a disk-backed ring and roll off by age. Always on, from app start."
+  retention:
+    default: 60m
+    values: "A duration, or 'infinite' to keep everything, or as little as one chunk."
+    why_a_knob: |
+      An hour of gameplay at game-recorder settings is real disk. The person who wants to
+      scrub back three hours and the person who wants the last sixty seconds are the same
+      product with one number changed.
+  eviction: "By age, then by total bytes, oldest first. Same policy as the image cache in PROTOCOL.yml."
+  promote: |
+    A selection promotes every chunk it covers out of the ring and into the library, before
+    the ring can roll over it. Without this the scrub timeline is a promise the disk breaks.
+  retention_is_not_a_sink: |
+    How far back you can scrub and where chunks get uploaded are separate questions.
+    The DVR case usually wants retention high and no sink but disk — uploading an hour of
+    someone's game to S3 because they might want a clip of it is the wrong default.
+
+# OUTPUT MODES
+#
+# The chunker is a policy over a frame source, not a thing welded to an encoder.
+
+output_modes:
+  video:
+    what: "The default. Frames through the encoder, one file per chunk."
+    for: "Everything a human will watch, and batch analytics."
+  frames:
+    what: "No encoder. Each frame leaves as PNG or JPEG through the same sink interface."
+    for: |
+      Real-time analytics against a local server, where a minute of latency is the whole
+      problem. One frame per POST beats a one-second mp4 because there is no encoder flush,
+      no container, and nothing to demux on the far side.
+    format: "Defaults to auto. Game frames are photographic, so auto picks JPEG; see PROTOCOL.yml formats."
+    rate: "Independent of capture fps. profile.frames.everyNth or profile.frames.hz — analytics wants motion over seconds, not smoothness."
+    keys: "{prefix}/{camera}/{timestamp}-{seq}.{ext}. Same sortable property as chunks."
+    not_a_second_capture_path: |
+      Same capture session, same ring, same sinks. A bridge that wants frames does not open
+      its own capture; that was the point of putting the recorder at app level.
+
+# CAPTURE AND ENCODE
+
+capture_paths:
+  windows:
+    capture: "Windows.Graphics.Capture — per-window D3D11 texture"
+    fallback: "BitBlt / PrintWindow for stubborn legacy windows"
+    encode: "Media Foundation + NVENC; FFmpeg fallback"
+  macos:
+    capture: "ScreenCaptureKit"
+    encode: "VideoToolbox; FFmpeg fallback"
+  scope: "Whole display, one window, or a region. Per-window is what makes 'stream this game' different from 'stream this desktop'."
+
+video_defaults:
+  container: mp4
+  codec: h264
+  fps: 30
+  maxDimension: 1920
+  crf: 23
+  hardware: true
+  audio: false
+  note_on_frame_rate: |
+    Thirty is our default for a game. Leela's own RTSP camera streamer defaults to 5fps
+    at 1280x720 with libx265, which is a useful calibration: for analytics, motion over
+    seconds matters more than smoothness, and the leela profile therefore drops to 10fps
+    and 1280px rather than shipping a game recorder's settings at a pipeline.
+
+# SINKS
+
+sinks:
+  interface: |
+    A sink takes completed chunks and is responsible for getting them somewhere. It does
+    not encode, does not decide durations, and does not know what a game is.
+    Modules register sinks through the host API, which is why an S3 uploader can be a
+    module rather than a branch inside the recorder.
+  built_in:
+    disk: "Write to a local directory. Always available, no configuration, no credentials."
+  as_modules:
+    s3: "Any S3-compatible server. See s3 below."
+    leela: "The same S3 sink pointed at an edgebox, plus the metadata sidecar."
+  failure_policy: |
+    A sink that fails does not stop the recorder. Chunks queue on disk and retry, and the
+    recorder reports the backlog. Dropping the recording because an upload failed would
+    lose the thing that cannot be recovered in order to protect the thing that can.
+
+# LIVE OUTPUT
+#
+# A sink takes finished files. This takes the stream while it is still happening. Different
+# shape, same capture session — and it lives here at app level rather than in Soul Angel,
+# because streaming an application is not a game-specific act.
+
+live_output:
+  obs:
+    how: "OBS WebSocket v5 — scene switching, start and stop the stream, and the overlay served as a browser source."
+    why_first: |
+      OBS is what people already have open. Driving it beats replacing it: the user keeps
+      their scenes, their audio routing, and their existing stream key, and we contribute the
+      two things they do not have, which are the overlay and cue-driven scene changes.
+    overlay_as_browser_source: "The overlay is already a web view. A streamer gets the same angel their local screen has, composited by OBS rather than by us."
+  direct:
+    rtmp: "FFmpeg out, for when OBS is not running."
+    whip: "WebRTC ingest. Experimental, and only interesting for low latency."
+  screencasting_tools:
+    what: "Anything that wants a camera rather than a file — screencast recorders, meeting apps, capture cards."
+    path: "A virtual camera output, so Screen Angel appears as a source to any app that can pick one."
+    status: not_built
+    honest_cost: "A virtual camera is a system extension on macOS and a filter driver on Windows. Both are signed, installed, OS-version-sensitive components. It is the most expensive item in this file and should wait until somebody needs it."
+  cues_drive_scenes: |
+    A cue from a bridge can switch an OBS scene — a death, a level change, a Sim's needs
+    crossing a line. This is the instant-replay mechanism: promote the segment behind the cue
+    out of the ring and play it into the live stream while play continues.
+  twitch: "EventSub in, Helix chat out. A live performance gateway rather than a recording feature."
+  lineage: "Subsumes the stream-gateway specs from WillWrightShowForFood apps/stream-gateway/, and the streaming block that was sketched in modules/soul-angel/DVR.yml."
+
+# S3
+
+s3:
+  why_it_is_the_way_in: |
+    Leela's pipeline has several ingest paths — a GCS bucket watched by a cloud function
+    that remuxes MKV to MP4, a Pub/Sub trigger, an edgebox conductor on Postgres NOTIFY.
+    The shallowest is an S3 PUT to an edgebox: no service-account key, no GCS, no
+    pipeline-run payload to construct by hand.
+  config:
+    endpoint: "Host of an S3-compatible server. Omit for real AWS."
+    port: "For self-hosted servers on non-standard ports."
+    tls: "On by default. Off requires an endpoint — refusing plaintext to AWS is not a configuration anyone wants by accident."
+    region: ~
+    bucket: required
+    prefix: "Key prefix. 'import' for the edgebox path."
+    forcePathStyle: "Defaults to true whenever an endpoint is set, because that is what nearly every self-hosted server wants and getting it wrong yields a DNS error rather than a useful message."
+    s3_url: "s3://bucket/prefix accepted as shorthand, because that is the form people already have in a clipboard."
+  credentials:
+    rule: "A profile NAMES a credential. It never contains one."
+    why: |
+      Profiles are meant to be committed and shared — that is the entire point of naming
+      them. A literal key in a profile file is a committed key.
+    forms:
+      "env:NAME": "Reads NAME_ACCESS_KEY_ID and NAME_SECRET_ACCESS_KEY, optionally NAME_SESSION_TOKEN."
+      "aws:PROFILE": "Defers to the AWS credential chain, which already knows about instance roles and SSO."
+      anonymous: "Send none."
+    rejected: "Anything else fails at resolution with a message saying keys do not belong in a profile file."
+
+# KEY LAYOUTS
+#
+# The consumer decides this, and there is more than one consumer. Wrong layout means
+# uploads that succeed and are never processed.
+
+key_layouts:
+  sortable:
+    shape: "{prefix}/{YYYY-MM-DD}/{camera}/{timestamp}-{seq}.{ext}"
+    for: "A bucket nobody else has opinions about."
+    property: "Lexicographic order equals time order, so no consumer has to parse names to reassemble a session."
+  leela-edgebox:
+    shape: "import/cameras/{camera}/{timestamp}.mp4"
+    for: "Leela edgebox import. The default for the leela profile."
+    caution: "Do NOT pre-sort into date directories here. The conductor watches this prefix and builds its own time tree from what lands."
+  leela-cloud:
+    shape: "videos/cameras/{camera}/{YYYY-MM-DD}/{HH}/{timestamp}.mp4"
+    for: "Writing straight into canonical storage."
+    caution: "Bypasses the upload-and-remux function, which also means nothing publishes the pipeline-run message on our behalf. Only useful if we publish it ourselves."
+  timestamps:
+    form: "ISO-8601 UTC with underscores in the time: 2026-09-10T18_23_52.564834Z"
+    why_underscores: |
+      Leela's canonical form uses colons and its filename parser accepts underscores. We
+      emit underscores because a colon is not a legal character in a Windows filename and
+      chunks are written to local disk before they are uploaded. Picking the form that
+      survives both places costs nothing.
+  provenance: "These shapes are read from Leela's ingest code, not its documentation. Its pipeline README describes an upload path the deployed cloud function does not implement; the code is authoritative."
+
+# SIDECAR
+
+sidecar:
+  file: "<basename>-metadata.json, beside the chunk"
+  schema_fields: [width, height, frameRate, totalFrameCount, duration, startTime]
+  optional: [codec, size, "meta.source", "meta.filePath", "meta.sourceFile"]
+  ours: "meta.chunkPolicy — the preset name and the resolved knobs, plus whether this chunk was extended, merged into, or cut short. Without it, comparing policies across sessions is guesswork."
+  startTime: "ISO-8601 UTC. Required by the canonical manifest schema."
+  note: |
+    Leela's own uploader still writes an older shape with start: "0" and no startTime, and
+    its pipeline rebuilds the manifest from ffprobe during the prepare phase either way.
+    We emit the canonical form because it is the one the schema documents and the one the
+    convergence is heading towards.
+
+# THE CAMERA NOUN
+
+camera:
+  decision: "A Screen Angel session presents itself as a camera."
+  why: |
+    Leela's pipeline is organized around cameras, and a screen IS a camera: a thing
+    pointed at activity, producing timestamped clips. Adopting the existing noun means no
+    mapping layer, no translation table, and nothing to explain to the pipeline.
+  consequence: "The camera must exist in Leela's Postgres, with a camera_group whose models list is non-empty, or clips land and nothing runs on them."
+  default: "'screen'. Set profile.camera to something meaningful before pointing it at a real deployment."
+
+# METHODS
+
+protocol:
+  recorder.start: "{profile?, camera?, target?} -> {session, profile}"
+  recorder.stop: "-> {chunks, bytes}"
+  recorder.status: "-> {recording, session, profile, chunksWritten, backlog}"
+  recorder.ring: "-> {from, to, chunks, cues} — what is scrubbable at this instant"
+  recorder.promote: "{from, to} -> keys lifted out of the ring so they stop aging"
+  chunk_event: "{key, startedAt, durationSec, byteLength, sha256, sink} per completed file"
+  cue_event: "{kind, at, until?} — pause, resume, and whatever a bridge chooses to mark. See STUDIO.yml cues."
+  not_the_payload: |
+    Video does not travel over the control socket. A one-minute chunk is tens of
+    megabytes and a socket built for selectors has no business moving it. The protocol
+    carries the key of what landed; a client that wants bytes wants the S3 URL anyway.
+
+# WHAT THIS IS FOR
+
+uses:
+  demos: "Point it at a game and the analytics system has live input in a minute, with no camera and no rig."
+  live_operation: "The real path. Same mechanism, shorter chunks."
+  development: "A repeatable clip of exactly the interaction being debugged, in the pipeline's own format."
+  programming_by_demonstration: |
+    The recorded stream and the accessibility tree describe the same moment from two
+    directions — pixels and structure. A demonstration captured with both is a
+    demonstration that can be generalized, which is the thing the 1990s work could not
+    do because it only ever had one of the two.
+
+see_also:
+  - PROTOCOL.yml
+  - STUDIO.yml
+  - APP-CONTROL.yml
+  - ANALYTICS.yml
+  - src/common/profiles.ts
+  - modules/soul-angel/DVR.yml

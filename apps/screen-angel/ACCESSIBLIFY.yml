@@ -1,0 +1,463 @@
+# ACCESSIBLIFY.yml — deducing what an application failed to expose, and how far outward
+# that can be pushed.
+#
+# SCREEN-ANGEL.yml already states the premise: accessibility APIs and pixel scraping have
+# DIFFERENT limitations, so a real system uses both. This is the other half of that claim —
+# what to do once the pixels have told you something the tree did not.
+
+meta:
+  id: accessiblify
+  status: spec
+  built: []
+  lineage: "Morgan Dixon and James Fogarty's Prefab is the prior art for identifying widgets from pixels and enhancing interfaces that expose nothing. See sources/prefab-bibliography.md, and Dixon is in the 2013 thread in sources/2013-email-thread.md."
+
+# THE QUESTION
+
+question: |
+  Can an external application deduce missing accessibility information and ADD it from
+  outside, so that OTHER accessibility clients see it, or so the app becomes more accessible
+  from within itself?
+
+answer_in_one_line: "For web content, yes and properly. For native apps, no — but we can publish our own surface in register over them, as HTML with ARIA in the overlay, and that turns out to be most of what was wanted."
+
+# THE THREE CASES
+
+native_apps:
+  can_we_read_and_deduce: "Yes. OCR, layout analysis and widget recognition all work from outside, and that is most of the value."
+  can_we_write_into_another_app_tree:
+    macos:
+      answer: no
+      why: |
+        AXUIElement is a client API for inspecting another process. The provider side is the
+        app's own NSAccessibility implementation. There is no call that creates an element in
+        another process's tree, and no registry where an outside process offers itself as a
+        provider for somebody else's window. Settable attributes on EXISTING elements are a
+        different thing and do work — see APP-CONTROL.yml.
+      confidence: "High, roughly 90%. Verify against the current SDK before any plan depends on it."
+    windows:
+      answer: "Only for ourselves, or by injection we should not ship."
+      client_side_proxies: |
+        UIA does have a proxy mechanism for windows that expose no provider, and it is how
+        plain Win32 controls get a tree at all. But a client-side proxy is loaded by the
+        CLIENT process, so it improves what WE see and does nothing for NVDA.
+      in_process_injection: |
+        A DLL injected into the target CAN publish a real provider that every client sees.
+        That is the only true cross-client answer on Windows, and it is not one to ship: anti
+        cheat kills it in games, protected processes refuse it, and it is indistinguishable
+        from malware to anyone auditing us.
+      confidence: "Medium on the proxy details. Worth an afternoon with the UIA provider docs before committing."
+  what_we_can_do_instead:
+    our_own_accessible_surface: |
+      Our overlay is OUR process, so we can publish a proper, well-labelled accessibility
+      tree for it. That makes a SHADOW surface that VoiceOver or Narrator can read even when
+      the app itself exposes nothing.
+
+      And it is not beside the app — it is ON it, in register. The overlay is transparent and
+      covers the screen, so an accessible element can be positioned exactly over the pixels
+      it describes. The app stays inaccessible, which is still worth saying plainly; but the
+      surface the user's screen reader reads is aligned with what is actually on screen,
+      which is a different and much better thing than a description in a separate window.
+
+      See in_register below. This is the single highest-leverage thing in this file.
+    our_own_clients: "The CLI, the MCP server, agents, and the speech layer all read the merged tree, so deduced information is fully useful inside Screen Angel without any of the above."
+    and_it_is_published: "Not only to screen readers. See publishing — the same surface goes out over every transport the protocol already has, and the platform AT APIs are one consumer of it rather than the point of it."
+
+# THE OVERLAY IS THE IMPLEMENTATION
+#
+# The cheapest correct answer in the whole project: we are already running a browser, and a
+# browser is already a first-class accessibility provider on every platform.
+
+in_register:
+  the_move: |
+    Position transparent HTML over the recognized content. Real text, real ARIA roles and
+    labels, laid out so each element's bounds match the pixels it stands for. Then let the
+    browser publish it and let the operating system read it.
+  no_native_provider_code: |
+    This is the part worth dwelling on. Writing an accessibility provider natively means AX
+    protocols on macOS and UIA provider interfaces on Windows — two implementations, two sets
+    of platform quirks, and the hardest code in the project.
+
+    The overlay is a browser window. Chromium already maps the DOM and ARIA onto both
+    platforms' accessibility APIs, correctly, and has for years. So the entire provider
+    implementation is: emit HTML with ARIA attributes. One codebase, cross-platform, and the
+    platform work is already done by someone else.
+  invisible_and_readable: "Transparent text on a transparent background is still text to the accessibility tree. Nothing about being unseen makes it unreadable — the tree is built from the DOM and computed layout, not from rendered color."
+  highlighting: |
+    A screen reader draws its cursor around the focused element's frame. Our element's frame
+    comes from its position in the overlay, and the overlay is aligned to the screen — so the
+    highlight lands on the game's own text, and a sighted helper watching sees the screen
+    reader pointing at the right thing. About 85% confident, and cheap to verify.
+  os_does_the_speech:
+    why: "Someone who already uses VoiceOver has their voice, their rate, their key bindings and their habits. A second program speaking in a different voice is worse than useless to them."
+    ours_is_opt_in: "We can synthesize speech and there are cases that need it (see reachability). It is never the default for anyone who has a screen reader running."
+
+reachability:
+  the_problem: |
+    The overlay is created with focusable: false and click-through, which is correct for an
+    overlay and wrong for a screen reader. Both VoiceOver and Narrator navigate the tree of
+    the application the user is currently in — and that application is the game.
+
+    So an accessible tree in a non-focusable window belonging to a different process is not
+    something the user can simply read. This has to be designed for rather than assumed.
+    Roughly 65% confident on the exact platform behavior here; it is the first thing to test.
+  two_modes:
+    announce:
+      what: "An event is spoken without focus moving anywhere. ARIA live regions in the overlay document, which Chromium maps to the platform announcement mechanism."
+      good_for: "Things that happen while playing: a Sim is hungry, a dialog appeared, a timer expired."
+      caveat: "Whether a background application's announcements are spoken depends on the platform and the screen reader's settings. Test it, and fall back to our own speech when it is not."
+    explore:
+      what: "The user asks to read the screen. The overlay becomes focusable and takes focus, the user navigates it with their screen reader as ordinary web content, and focus returns when they are done."
+      good_for: "Catalog panels, dialogs, menus, anything with structure worth walking through."
+      why_this_is_natural_here: |
+        The pause machinery already exists (STUDIO.yml). Pause the game, explore the screen,
+        resume — which is exactly how a screen reader user would want to play a game that was
+        never designed for them, and it needs no new interaction model.
+  consequence: "Exploration is a MODE, not an always-on state. The overlay stays click-through and unfocusable while playing, because that is what makes it an overlay."
+
+classic_games:
+  what: "A bridge, a crutch, a polyfill — a way to play games that were never accessible, using the accessibility tools the user already has."
+  why_it_works_at_all: "Old games are visually simple, their text is bitmap-crisp, their layouts are fixed, and their panels do not move. Everything that makes them hard to modernize makes them easy to read."
+  lineage:
+    what: "Simplifier — Don's Sims Online bot, which scraped two accounts on one screen, read text and images off them, catalogued objects, and drove both with keys and clicks. Its showcase read object titles and descriptions aloud."
+    where: "WillWrightShowForFood/apps/stream-gateway/simplifier.yml, and the product line in catalogs/soul-city/sims1-soul-bridge.md"
+    what_is_different_now: "Simplifier spoke the text itself. This publishes it instead, and lets the user's own screen reader speak it — so it serves someone who already has a voice they know rather than adding another one."
+  always_free: "DISTRIBUTION.yml, always_free. Accessibility is not an unlockable feature."
+
+describing_images:
+  what: "A vision-language model writes the description for a picture that has no text in it, and the description is published as the element's accessible label."
+  the_perfect_case: |
+    The Sims catalog popup: a rendered picture of the object, a title, a price, a few standard
+    properties, and a paragraph of description. OCR gets everything except the picture. A VLM
+    describes the picture. Published together, the whole panel becomes readable, and that is
+    the exact content Simplifier read aloud twenty years ago.
+  cache_by_content_hash:
+    why: "Catalog art is a static asset. Describing it once per unique image is the difference between an occasional model call and a model call every frame."
+    key: "app, version, image hash. Same asset, same description, forever."
+    consequence: "Descriptions become a SHAREABLE artifact — one person's descriptions of the base game catalog serve everyone, which is the same sharing model Soul City already has for catalogs and favorites."
+  honesty: "A generated description is marked as generated. Provenance is not decoration here: a user deciding whether to trust 'a blue sofa with wooden legs' needs to know whether a person wrote it or a model guessed it."
+
+narration:
+  what: "Speaking what is happening, in the third person, as it happens. 'Don is hungry.' 'Don kissed Mortimer Goth.'"
+  the_grammar_is_already_there: |
+    Third-person narration is the icon grammar rendered as a sentence. subject-action-object
+    IS 'Don kissed Mortimer' — same triplet, different surface form (MEDIA-STREAMS.yml,
+    the_grammar_maps_onto_modern_vision_tasks).
+
+    So narration is not a new capability. It is a text template over scene model nodes, and
+    it is the cheapest renderer in the set.
+  the_sims_case:
+    why_it_is_the_perfect_target: "The characters already speak an invented language with no semantic content, and the game already knows exactly what they are doing. The information a narrator needs exists and the dialogue channel carries none of it."
+    what_it_becomes: "An interpreter for a language that does not mean anything — the game's state, spoken as commentary on characters who cannot be understood directly."
+  the_important_realization:
+    the_two_features_are_one: |
+      A blind player needs the game state spoken in the third person as it changes. That is
+      the accessibility feature.
+
+      A player who wants an ironic voice announcing what is about to go wrong needs the game
+      state spoken in the third person as it changes. That is the comedy feature.
+
+      Same pipeline, same events, same sentences. What differs is the VOICE and the
+      THRESHOLD — which is configuration, not architecture.
+    consequence: "Building the entertaining version builds the accessible version, and it will get far more testing than an accessibility feature would on its own. That is a good reason to build the entertaining one first."
+  voices:
+    neutral: "Terse, complete, immediate. Everything that changes, in the user's own screen reader voice, because that is what someone relying on it needs (see os_does_the_speech)."
+    narrator: "Selective, dry, and delivered like documentary voice-over about people who cannot hear it. Wildly different threshold: most events are not worth a line, and the restraint is the whole joke."
+  ironic_prediction:
+    what: "Commenting on what is about to happen rather than what just did. 'Don had no idea the stove had been left on.'"
+    what_it_requires: "A prediction, which means the event layer has to be able to say what usually follows what. Strictly harder than narration and worth keeping separate — a narrator that predicts wrongly is funnier than one that predicts nothing, but only if it is never the accessibility voice."
+    the_rule: "Prediction is never spoken in the neutral voice. Someone depending on narration to know what is happening must not be told things that have not happened."
+  where_the_persona_lives: "Here is the mechanism. A specific narrator's voice, diction and timing belong to the module that knows the game — modules/soul-angel/, not this file."
+
+peanut_gallery:
+  what: "Simulated characters drawn on the overlay, watching the screen and talking about it. Two of them, in a corner, in silhouette or not — the Mystery Science Theater arrangement."
+  why_it_fits_this_architecture_exactly: |
+    MST3K's silhouettes sit outside the content and comment on something they cannot control
+    or alter. That is not an analogy for Screen Angel, it is a description of it: a
+    transparent overlay, over an application that does not know we are here, saying what it
+    sees. The aesthetic form and the technical form are the same form.
+  the_lineage_is_already_ours:
+    bounce_commentary_bots: |
+      Interval Research, David Levitt and Don: live TV plus a synchronized CLOSED-CAPTION
+      FEED driving simulated character puppets — Jesse Jackson, Rush Limbaugh, and a house
+      fly — arguing about the show, MST3K-style.
+    simfaux: "2006, Don's OpenLaszlo Fox News parody: pie menus driving live simulated talking heads over video, with mixing, picture-in-picture and overlays. Simulated commentators over real media, ten years later."
+    where_documented: "WillWrightShowForFood/apps/performance-space/faceball-construction-set.yml — bounce_commentary_bots and simfaux, with the David Levitt and Rebounce cross-references."
+    so: "This is the third pass at one idea, and the first two are documented with their techniques intact. Read them before designing anything."
+  the_detail_that_matters_most:
+    then: "Bounce drove the bots from the closed-caption feed, because in 1997 that was the only machine-readable semantic stream a television show emitted."
+    now: "The scene model is that stream, and for a game it is strictly better than captions — it carries who is doing what to whom, not merely what was said."
+    and_for_the_sims_specifically: |
+      Simlish has no semantic content, so there are no captions to borrow. The commentary
+      CANNOT come from the dialogue and must come from the state — which is the one case
+      where the modern version is not merely better-equipped but the only version that works
+      at all.
+  who_the_commentators_are: "Drawn from the game's own cast, which the bridge knows and the save file enumerates. Mortimer Goth and your own Sim is a better pairing than any invented host, because the audience already has opinions about both."
+
+  dialogue_licenses_prediction:
+    the_tension_it_resolves: |
+      narration.ironic_prediction is restricted above: prediction never speaks in the neutral
+      voice, because someone relying on narration to know what is happening must not be told
+      things that have not happened.
+
+      Two characters speculating at each other is a different speech act. 'I bet he burns
+      dinner' is transparently an opinion held by a character, attributed and deniable, and a
+      listener parses it as a guess without being told to.
+    the_rule: "Attribution carries the uncertainty. A narrator asserting the future is lying; a character predicting it is characterizing. So prediction is available in the gallery and unavailable in the neutral voice, and that is a property of the FORM rather than a warning label."
+    and_being_wrong_becomes_an_asset: "A narrator who mispredicts has malfunctioned. A character who mispredicts has been contradicted by events, which is the oldest joke there is, and the other character gets to notice."
+  disagreement: "Two commentators can hold different readings of the same event. That is worth building deliberately, because it is funny and because it is honest about confidence — a scene model with two plausible interpretations can voice both instead of picking one."
+
+  retroactive_narration:
+    the_one_line: "Dramatic irony is a deferred write to an earlier timestamp. The narrator is not precognitive, it is retroactive, and the joke IS the edit."
+    the_k_line: "RMS's copyleft parrot: rewind to just before you said 'Linux', insert 'GNU/', jump back to real time. Ninja-editing the past."
+    the_worked_example:
+      at_t1: "A character says 'This condom doesn't have a hole in it!'"
+      at_t2: "A baby is born."
+      then: "The narrator, knowing t2, appends a line stamped t1 plus epsilon: 'It did.' On replay it lands as precognition. It was authored as hindsight."
+
+    why_this_is_free_here:
+      the_mechanism: |
+        Annotations are addressed in absolute content time and appended in wall-clock arrival
+        order, and composition happens by CONTENT time. Writing an annotation stamped in the
+        past is therefore an ordinary append, not a rewrite of anything.
+      the_payoff_of_the_pull_decision: |
+        In a push graph the narration was emitted at t1 and is gone; making it different
+        requires re-rendering from t1 forward. In a pull graph nothing was ever emitted — a
+        render is a query, so a new answer exists the moment a new annotation does.
+
+        This is the first concrete capability the pull-based decision buys that a push design
+        cannot do at all, rather than can do awkwardly. See MEDIA-STREAMS.yml.
+      already_specified: "ANALYTICS.yml already says annotations arrive late and out of order, for the mundane reason that analysis is slower than capture. Retroactive narration is that same property used on purpose."
+
+    the_prediction_resolution_loop:
+      shape: "A commentator predicts at t1. The world confirms or refutes at t2. A resolver watches for the outcome and writes back near t1."
+      refutation_is_the_better_case: "A prediction that came true is a narrator being right. A prediction contradicted by events is the oldest joke there is, and the retroactive layer is what lets the setup be planted after the punchline is known."
+      relation_to_the_gallery: "peanut_gallery licenses prediction by attribution — a character guessing is transparently guessing. This licenses it a second way: the narrator is not guessing at all, it is editing. Two independent mechanisms, usable together."
+
+    the_long_horizon:
+      what_it_enables: "Keep a whole game lifetime and significance can be assigned BACKWARD. The first time two Sims met becomes the first time you met your future wife, retroactively, once there is a wife."
+      foreshadowing_is_a_query: "Find the earliest occurrence of a thing that later became significant, then annotate it. That is a database question over the annotation history, not a narrative faculty, and it is the mechanically interesting part of this whole idea."
+      what_it_costs: "Retention. This is the strongest argument for keeping far more history than playback needs — see RECORDER.yml. A lifetime of annotations is small; a lifetime of frames is not, so the annotation stream is what to keep long and the footage is what to keep short."
+
+    layers_do_more_than_speak:
+      what: "A retroactive layer can place objects, add highlights, alter the edit, or open an interaction — anything a renderer can do, applied at a past time."
+      see: "ANALYTICS.yml renderers and feeding_back_into_the_tree. Nothing new is needed; the layer is just addressed backward."
+      the_kin: "The Faceball Construction Set and the e-bike safari maps are the same move in other media — a later pass adding interpretation and objects to material that was already captured."
+
+    the_integrity_constraint:
+      the_rule: "A retroactive layer is marked as retroactive, carrying both the time it describes and the time it was authored."
+      why_it_is_not_optional:
+        ground_truth: "This directory's recordings are also training data and demo material. An unmarked retroactive annotation is a fabricated observation, and it would silently contaminate exactly the dataset the synthetic pipeline exists to keep clean."
+        accessibility: "The live neutral voice is never retroactively edited. Someone relied on it to know what was happening, and a record that quietly disagrees with what they were told is worse than no record."
+      so: "Two timestamps on every annotation, and provenance says which layer wrote it. The joke survives the constraint intact, because a viewer watching a replay does not read the metadata."
+
+  accessibility_is_not_an_afterthought_here:
+    the_check: "Everything the gallery says is derived from the same events the neutral voice would report, so a player using it for information gets the information — wrapped in banter, which is a preference some people will have and others will not."
+    the_configuration: "Voice, verbosity, whether prediction is allowed, whether speculation is marked as such. One switch away from the neutral narrator, because it is one pipeline."
+    the_warning: "Do not let the gallery become the ONLY way state is spoken. The neutral voice stays available and complete, because someone who needs it should never have to listen to a bit to find out their Sim is on fire."
+
+# PUBLISHING THE SURFACE
+#
+# The shadow surface is worth more than the screen-reader case that motivated it, because
+# once a merged, labelled tree exists, everything that can read a tree wants it.
+
+publishing:
+  the_standard_vocabulary: |
+    Accessibility APIs split into PROVIDERS, which publish a tree, and CLIENTS, which read
+    one. UI Automation names them exactly that; AX and AT-SPI have the same split.
+
+    Screen Angel is both, in opposite directions: a CLIENT of the target application, reading
+    whatever it exposes, and a PROVIDER to everything else, republishing the merged result.
+    That sentence is the architecture, and it uses the words the platforms already use.
+  not_a_proxy_provider: |
+    Distinct from a Windows UIA client-side proxy provider, which loads into the CLIENT's
+    process and therefore only helps whoever registered it (see native_apps above). We
+    publish from OUR process, which is why every consumer sees it and why it is a parallel
+    surface rather than a repair.
+  one_schema:
+    what: "The element and tree shapes PROTOCOL.yml already defines, with the provenance and confidence fields the merged tree adds. One representation."
+    why: "Five transports times five schemas is twenty-five things to keep consistent and nobody does. The transports differ in framing and latency, never in content."
+  consumers:
+    platform_at: "VoiceOver and Narrator, through our process's real accessibility tree. The overlay and console are ours, so this is ordinary provider work rather than anything clever."
+    cli: "A person at a terminal. Human-readable by default, --json when it is being piped."
+    mcp: "An LLM, as tools. Read-only by default (built)."
+    skill: "An agent following the protocol at four resolutions (skills/screen-angel/)."
+    socket: "The local control protocol. Everything else above is a wrapper over this."
+    http: |
+      A remote or non-local client. Not built, and it does not inherit the socket's security
+      model: a Unix socket is governed by filesystem permissions, an HTTP listener is
+      governed by whatever we write. Bind to loopback, require a token, refuse to offer the
+      file image transport (PROTOCOL.yml already forbids that on a remote listener).
+    s3: |
+      Tree SNAPSHOTS as artifacts, written beside video chunks and addressed in the same
+      absolute time (ANALYTICS.yml, addressing). Asynchronous by nature — nobody queries a
+      bucket interactively — so this is for corpora and offline analysis, not interaction.
+  the_snapshot_payoff: |
+    A tree snapshot paired with the frame at the same instant is a labelled screenshot: this
+    rectangle is a button named Save, that one is a text field. Generated as a side effect of
+    ordinary recording, in volume, with no human labelling.
+
+    That is precisely a training and evaluation corpus for the widget recognition in
+    deduction below — the Prefab problem, with free labels. The apps that DO expose good
+    trees are the ones that can teach us to read the apps that do not.
+  recursion:
+    what: "Screen Angel's own interface is accessible, and reachable through Screen Angel."
+    from_2013: |
+      "Of course the aQuery/jQuery UIs should be accessible themselves... so it should be
+      able to dovetail recursively to control itself of course. It would be a terrible design
+      flaw if it couldn't!"
+    source: sources/2013-email-thread.md
+    consequence: "The overlay and console are built as accessible web content, so this is a constraint on our own UI rather than a feature to add later. A layer that makes other apps legible and is itself opaque fails its own premise."
+
+web_content:
+  why_it_is_the_important_case: |
+    A browser is the app Screen Angel will deal with most, it is the most complex, and it is
+    the one case where we can genuinely improve accessibility for every other client rather
+    than only for ourselves. Web views embedded in native apps make it commoner still.
+  why_it_works_here: |
+    The provider is the DOM, and ARIA is the supported, standardized way to say what an
+    element is. Add the attributes to the page and the browser republishes its own
+    accessibility tree — which means VoiceOver, Narrator, NVDA and every other client see the
+    correction. We are not patching the accessibility layer; we are fixing the input to it,
+    which is the one place the platforms actually invite.
+  mechanisms:
+    cdp:
+      what: "Chrome DevTools Protocol. Accessibility.getFullAXTree for a far better tree than the platform surface, DOM queries for structure, Runtime.evaluate to set ARIA attributes."
+      constraint: "Requires the browser launched with a remote debugging port, or an existing one to attach to. You cannot attach to an arbitrary already-running Chrome that was not started for it."
+      consequence: "Launching the browser ourselves is the reliable path, which APP-CONTROL.yml already does."
+    extension:
+      what: "A browser extension that applies the same annotations from inside the page."
+      when: "For browsers the user starts themselves, which is most of them."
+      cost: "A second distribution channel with its own review, and per-browser packaging."
+    platform_tree:
+      what: "Read the browser through AX or UIA like any other app."
+      caveat: "Chromium populates its accessibility tree lazily and expands what it exposes when it detects a client. So what we see depends on what we have already asked for, and an empty tree is not proof of an inaccessible page."
+  what_we_add:
+    - "Roles and labels for div soup that was never marked up"
+    - "Landmarks and heading structure where the document has none"
+    - "Alt text from OCR and image description for images that lack it"
+    - "Reading order where the visual order and the DOM order disagree"
+    - "Form labels associated with their fields"
+  honesty: "Injected ARIA is ours, not the author's. Annotations are tagged with their provenance so a page we improved is never mistaken for a page that was built right."
+
+embedded_web_views:
+  electron: "Often launchable with a debugging port, which makes it the browser case."
+  wkwebview_and_cef: "No external script path without the host application cooperating. These fall back to the native case: read, deduce, publish our own surface."
+  detection: "Knowing a region is a web view at all is the first problem. The role and the process tell you sometimes; the pixels tell you the rest."
+
+# THE DEDUCTION
+
+deduction:
+  ocr:
+    what: "Text from pixels."
+    availability: "On-device and free on both platforms — Vision on macOS, Windows.Media.Ocr on Windows. No model to ship, no service to call."
+    use: "Labels for unlabelled controls, text content for canvases, and the cheap answer to 'what does this say'."
+    but_try_this_first:
+      glyph_template_matching: |
+        For a game with a fixed bitmap font, statistical OCR is the wrong tool. The whole
+        font, at the few sizes it is drawn in, can be matched DETERMINISTICALLY — one glyph
+        template per character per size, with a small tolerance for antialiasing. The result
+        is exact rather than probable, it needs no model, and it is fast enough to run on
+        every frame.
+
+        Simplifier did this, to read The Sims' entire catalog. Comic Sans at a handful of
+        sizes was a solved problem with simple code, and it stayed solved because a shipped
+        game's font never changes.
+      why_it_matters_beyond_retro_games: "Any application that draws its own text — game UIs, terminal emulators, older toolkits, anything on a canvas — has a fixed glyph set. Where the glyphs are fixed, exact matching beats recognition, and the accuracy difference is not small."
+      order_of_preference: "Native tree, then glyph matching where the font is known, then platform OCR, then a model. Each step down is slower, less certain, or both."
+    known_places_known_patterns: |
+      Do not segment the screen looking for text. Look at the places the fields are. A
+      catalog panel has its title, price and description in fixed positions relative to the
+      panel, so reading it is a handful of small grabs at known offsets rather than a
+      full-frame recognition problem.
+
+      This is what PROTOCOL.yml's symbolic capture regions are for, and it is the single
+      biggest constant-factor win available.
+    expected_content_as_a_constraint:
+      what: "Tell the reader what kind of text to expect, and it can validate and correct rather than merely guess."
+      why_it_works: "A grammar rules out most misreadings. If a field is a price, a letter is an error. If a line is octal, an 8 is an error."
+      the_general_form: "Per-field expectations in the config: a number, a currency amount, one of an enumerated set, a known object name, a line of a specific assembly syntax."
+      the_hard_case_that_proves_it: |
+        Restoring scanned PDP-7 listings, where each line is octal machine code followed by
+        the corresponding assembly and comments. Three different grammars in one line, each
+        strict — which makes the expectation enormously more informative than the pixels
+        alone. A model given that structure and asked to fill it in is doing constrained
+        transcription rather than open-ended reading.
+      cross_reference: "The pdp7-unix restoration work is the non-game case, and it exercises exactly the same mechanism as reading a game catalog."
+  enumerating_a_catalog:
+    what: "Drive an application through its entire content — every object, wallpaper, floor tile, column, staircase, window, door — capturing each item's image, title, price, properties and description."
+    already_done_once: "Simplifier did this for The Sims and wrote it all out as XML. The approach was screen-position plus pattern, and it was not hard; the volume was the only demanding part."
+    now: "YAML rather than XML, and the loop is the agent loop — advance, grab, extract, validate against the expected shape, record, repeat (AGENT.yml, loop)."
+    what_the_model_is_actually_for: "The picture, and only the picture. Titles, prices and properties are deterministic extraction. Reaching for a vision model where template matching is exact is slower, costlier and less accurate at the same time."
+    output_is_a_shareable_artifact: "See describing_images.cache_by_content_hash. A completed catalog pass is data that serves everyone who has the same game version."
+  widget_recognition:
+    what: "Identify controls from their appearance — a button, a checkbox, a scrollbar, a row in a list."
+    approach: "Prefab's prototype matching is the documented approach and it worked on real interfaces. Start there rather than at a model."
+    why_it_generalizes: "A widget looks the same everywhere it appears in one app, so recognizing it once recognizes it everywhere, including in the parts of the app nobody has visited yet."
+  structure:
+    what: "Grouping, containment and reading order from layout — proximity, alignment, repetition."
+    why: "A role without a parent is trivia. The structure is what makes a deduced tree navigable rather than a bag of labels."
+  the_tree_narrows_the_pixels: "Where a partial tree exists, use it to decide which pixels are worth looking at. This is the claim already in SCREEN-ANGEL.yml and it is what keeps the vision work affordable."
+
+# THE MERGED TREE
+#
+# The design consequence. Deduced information has to be first class, and it has to be
+# distinguishable from ground truth.
+
+merged_tree:
+  what: "Queries run against the native tree with an annotation layer merged over it. Selectors do not change."
+  provenance:
+    required: "Every element and every attribute carries where it came from."
+    values: [native, ocr, vision, vlm, analytics, aria_injected, user_taught, bridge]
+    why: |
+      A caller acting on a deduced role is taking a different risk from one acting on a role
+      the app declared, and only the caller can weigh that. Hiding the difference would make
+      the tree more convenient and less honest. It also makes the cache invalidatable: native
+      facts expire when the window changes, deduced ones when the pixels do.
+  confidence: "Deduced attributes carry a confidence. A guess presented as a fact is worse than no guess."
+  user_taught:
+    what: "The user names a thing once — 'that's the pause button' — and the annotation persists."
+    why_it_is_the_practical_answer: "Recognition that generalizes from one example is the difference between a demo and a tool. Prefab-style matching is what makes one lesson cover every occurrence."
+    keyed_by: "App identity plus version, because a redesign invalidates a lesson and silently applying a stale one is worse than asking again."
+  writable_back: "Where the target is web content, an annotation can be pushed into the DOM as ARIA — the only case where our deduction escapes our own process."
+
+  world_nodes:
+    what: |
+      Nodes that are not user interface at all: a person, a pose, a carried object, an event
+      that just happened. They come from video analysis rather than from any widget tree
+      (ANALYTICS.yml), and they belong in the same structure because they have the same
+      shape — something at a location, with a kind, a name, a state, and a time.
+    why_the_same_tree: |
+      Because every consumer of the tree then gets them free. The screen reader announces
+      them, the overlay highlights them, the agent can target them, a pie menu can open on
+      them, the timeline can take a cue from them. One structure, every existing consumer,
+      no new plumbing for each new kind of knowledge.
+    so_it_is_not_only_an_accessibility_tree: |
+      Once world nodes are in it, the thing is a SCENE MODEL that is published through an
+      accessibility surface. The accessibility tree is the wire format — chosen because
+      screen readers, agents and our own clients can all already read it — not the limit of
+      what is in it.
+    time: |
+      UI nodes are effectively instantaneous: a button is there or it is not. World nodes have
+      history — this is the same person as a second ago, this pose is a fall rather than a
+      crouch. So nodes carry an identity and a timestamp, which is what the analytics side
+      already supplies as track IDs and absolute time.
+    provenance_keeps_it_honest: "analytics and vision provenance values exist so nobody confuses 'the app said there is a button here' with 'a model believes there is a person here'."
+
+# WHAT THIS IS FOR
+
+uses:
+  our_own_features: "Selectors, speech driving, the studio's element anchoring, and app control all work on apps that expose nothing."
+  a_real_accessibility_tool: "The shadow surface is genuinely useful to someone using a screen reader against an app that ignored them, and the web path genuinely fixes pages for everyone."
+  games: "Games expose nothing, and this is the entire reason the pixel path exists. The Sims has no tree; it has a recognizable interface."
+
+open_questions:
+  - "Does a published shadow surface confuse a screen reader that is also reading the real app? Two trees describing one screen is a UX problem before it is a technical one. Partly answered by making exploration a mode rather than an always-on state (reachability), and fully answered only by testing with someone who uses a screen reader daily."
+  - "Whether a non-focusable background window's announcements are spoken, per platform and per screen reader. This gates the announce mode and is the first thing to measure."
+  - "A full BROWSER.yml is warranted: tabs as targets, multiple windows, per-tab sessions, and the embedded-web-view detection problem are each bigger than a section."
+
+see_also:
+  - SCREEN-ANGEL.yml
+  - PROTOCOL.yml
+  - APP-CONTROL.yml
+  - CAPABILITIES.yml
+  - sources/prefab-bibliography.md

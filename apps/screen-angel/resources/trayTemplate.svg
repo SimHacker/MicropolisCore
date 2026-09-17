@@ -1,0 +1,28 @@
+<!--
+  Menu bar mark: a halo over a screen. Two shapes, because a menu bar icon is 16 points
+  tall and anything with a third idea in it turns to mush at that size.
+
+  Outline weight rather than solid, for two reasons: a filled black block is heavy next to
+  Apple's own menu bar items, and an outlined screen matches the white screen in icon.svg.
+
+  This is a macOS TEMPLATE image. Only the alpha channel is used, so it must be pure black
+  on transparent and must carry no colour of its own; the system recolors it for light and
+  dark menu bars and inverts it when the item is selected.
+
+  FILLS ONLY, no strokes. ImageMagick's built-in SVG renderer drops strokes silently, so
+  both the halo and the screen border are even-odd paths: an outer shape and an inner one
+  punched out of it.
+
+  ASCII only: some SVG parsers reject comments containing non-ASCII bytes.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <path fill="#000000" fill-rule="evenodd"
+        d="M 7.4,5.6 a 8.6,3.4 0 1,0 17.2,0 a 8.6,3.4 0 1,0 -17.2,0 Z
+           M 9.8,5.6 a 6.2,1.5 0 1,0 12.4,0 a 6.2,1.5 0 1,0 -12.4,0 Z"/>
+
+  <path fill="#000000" fill-rule="evenodd"
+        d="M 6.6,11.6 H 25.4 A 3.4,3.4 0 0 1 28.8,15.0 V 24.6 A 3.4,3.4 0 0 1 25.4,28.0
+           H 6.6 A 3.4,3.4 0 0 1 3.2,24.6 V 15.0 A 3.4,3.4 0 0 1 6.6,11.6 Z
+           M 7.2,13.8 H 24.8 A 1.8,1.8 0 0 1 26.6,15.6 V 24.0 A 1.8,1.8 0 0 1 24.8,25.8
+           H 7.2 A 1.8,1.8 0 0 1 5.4,24.0 V 15.6 A 1.8,1.8 0 0 1 7.2,13.8 Z"/>
+</svg>

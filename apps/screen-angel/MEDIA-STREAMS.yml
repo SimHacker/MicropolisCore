@@ -1,0 +1,358 @@
+# MEDIA-STREAMS.yml — the 1990s work this is a second attempt at, and what to take from it.
+#
+# Media Streams built a composable visual language for describing what happens in video.
+# MediaGraph built a dataflow language for doing something with the description. Vision
+# models now supply the annotations that had to be made by hand. The part that was never
+# solved, and is still the hard part, is the SCHEMA — and that part already exists.
+
+meta:
+  id: media-streams
+  status: lineage_and_intent
+  built: []
+  not_built: [icon_schema, dataflow_graph, signal_bindings, semantic_retiming]
+  see_also: [ANALYTICS.yml, STUDIO.yml, AR-SDKS.yml, ACCESSIBLIFY.yml]
+
+# DISAMBIGUATION FIRST
+#
+# There is MediaFlow and Mediagraph in this project's own history and they are unrelated.
+
+two_similar_names:
+  mediaflow:
+    what: "A visual dataflow programming language for multimedia, at Interval Research Corporation, mid-to-late 1990s. This file."
+    whose: "Marc Davis — a reimplementation and extension of his MIT Media Lab thesis work."
+    stack: "Macintosh Common Lisp driving the QuickTime API on PowerPC Macs."
+    implementation_detail: "MCL compiled Lisp to 68k, and the 68k ran under emulation on PowerPC — and was still fast enough for interactive video effect previewing, which says something about the headroom those machines had."
+    design_notes: "Don's own design comments survive: https://donhopkins.com/home/interval/mediaflow-design.html"
+  mediagraph:
+    what: "A zoomable, editable graph and map of media as navigable space, at Will Wright's Stupid Fun Club. A different project, later, with a confusingly similar name."
+    where: "Marconistraat25/companies/Monumental/fit/lineage.md"
+  rule: "MediaFlow is Interval. MediaGraph is Stupid Fun Club. They are easy to swap and worth checking every time."
+
+# WHAT CAME BEFORE IT
+
+media_streams:
+  what: "A system for annotating, retrieving, repurposing and automatically assembling digital video, using an iconic visual language of hierarchically structured, composable, searchable primitives."
+  who:
+    conceived_by: "Marc Davis"
+    developed_by: "Marc Davis, Brian Williams, and Golan Levin"
+    where_and_when: "MIT Media Lab (Learning and Common Sense / Machine Understanding, under Prof. Kenneth Haase), then Interval Research Corporation. 1991 through 1997."
+    golan_levin_specifically: "Principal designer of the iconic visual language and its lexicographer. His own description. The icon language is his work and it is the part with lasting value."
+    note_on_the_name: "Marc Davis, not Mark — and not the Disney animator of the same name, who is a different person entirely."
+  scale: "Over 2,500 iconic primitives in the 1993 prototype; more than 6,000 icons later."
+  stack: "Macintosh Common Lisp, FRAMER for persistent knowledge representation, and its own Lisp interface to QuickTime. A Quadra 950 with three colour displays."
+  sources:
+    - "Marc Davis, 'Media Streams: An Iconic Visual Language for Video Annotation' — https://www.w3.org/People/howcome/p/telektronikk-4-93/Davis_M.html"
+    - "Marc Davis, 'Media Streams: Representing Video for Retrieval and Repurposing', PhD thesis, MIT, 1995 — https://marcdavis.me/wp-content/uploads/Publications/1995_PHDThesisMIT_MediaStreamsRepVideoRetrievalRepurposing.pdf"
+    - "Golan Levin's own account and icon documentation — https://www.flong.com/archive/projects/icons/index.html"
+
+  three_constructs_worth_stealing_outright:
+    directors_workshop: "A cascading hierarchy for navigating thousands of primitives, with increasing specificity at each level. How a vocabulary that large stays usable."
+    icon_palettes: |
+      Descriptors accumulate into palettes grouped by the scenes they co-occur in — a
+      'treaty signing' palette holds the dignitaries, the treaty, the journalists, the act of
+      writing, the stateroom. Its stated purpose is to REUSE DESCRIPTIVE EFFORT, which is the
+      same principle as caching a generated description by content hash.
+    media_time_lines: "Drag a descriptor onto a timeline and it applies from that point to the next scene break. The direct ancestor of cues, and a better interaction than most modern annotation tools have."
+
+  glommable_compounds: |
+    Icons compose into sentences, and a completed compound is added back to the palette and
+    becomes usable as a primitive itself. 'Arnold, an adult male, wears a jacket' is built by
+    dropping three icons and is thereafter one icon.
+
+    A vocabulary that grows by composition, where the user's own compounds become first-class
+    terms. That is the mechanism that makes 6,000 primitives generative rather than merely
+    numerous.
+
+# THE PART THAT IS STILL THE HARD PART
+
+why_the_schema_is_the_value:
+  the_claim: "Vision models can now produce the annotations that Media Streams needed a person and a mouse to produce. That solves the labour and leaves the representation problem entirely untouched."
+  the_1993_argument_still_holds: |
+    Media Streams' stated reason for using a composable visual language rather than text
+    includes this, verbatim:
+
+      "an accurate and readable time-indexed representation of simultaneous, sequential,
+       overlapping and contained actions (natural languages are not very good at this task)"
+
+    Free-text description from a vision-language model is exactly the thing that sentence
+    rules out. Two models, or one model twice, describe the same second of video differently,
+    and nothing downstream can compare, search, or aggregate the results. A controlled,
+    composable vocabulary is what makes annotations converge.
+  the_other_half: |
+    Media Streams also names the ability to articulate "the boundaries between consensual and
+    idiosyncratic annotations" — an icon is the consensual token, and free text hangs off it
+    as the idiosyncratic part.
+
+    That is precisely the provenance-and-confidence split in the merged tree. The icon is the
+    schema-bound claim; the model's prose is the elaboration. Both, separated, is the design.
+  hardest_thing_in_it: "Icons for abstract concepts. Anyone can draw a chair. A readable, composable, non-arbitrary glyph for a RELATIONSHIP or a CINEMATIC OPERATION is genuinely hard, and Levin's set did it across many dialects at once. That work does not need redoing, it needs reading."
+
+the_grammar_maps_onto_modern_vision_tasks:
+  observation: "Media Streams' icon sentence forms and the task taxonomy of current computer vision are the same schema, arrived at independently thirty years apart."
+  correspondence:
+    - {icon_form: "subject-action", cv_task: "action recognition, temporal action localization"}
+    - {icon_form: "subject-action-object", cv_task: "human-object interaction detection — the <human, verb, object> triplet, identical"}
+    - {icon_form: "subject-action-direction", cv_task: "action with motion vector; trajectory-conditioned action"}
+    - {icon_form: "subject-relative position-object", cv_task: "spatial relation detection, scene graph generation"}
+    - {icon_form: "subject-screen position", cv_task: "detection — a box is a screen position"}
+    - {icon_form: "camera-movement-object", cv_task: "camera motion estimation plus tracking. 'the camera-is tracking-Steve' is a tracked subject with an ego-motion label"}
+  why_this_matters_practically: |
+    It means the icon language is not a historical curiosity to admire. It is a ready-made,
+    human-readable, composable schema for the exact outputs the models already produce —
+    including the dialects the models do NOT produce, which is where it has more to teach
+    than to learn.
+  the_dialects_vision_does_not_have: "Cinematic operations and effects, camera motion as intent rather than measurement, character relationships, dialogue. A detector can tell you the camera zoomed. It cannot tell you the zoom was a reveal."
+
+# WHAT MEDIAFLOW ADDED
+
+mediaflow_the_language:
+  what: "A visual dataflow programming language for multimedia — annotations and signals in, media operations out."
+  stated_goal: "Professional-looking video made by hobbyists and kids with camcorders. Marc Davis called the vision garage theatre."
+  operations: "Process, edit, filter, cut, time warp, overlay, recombine."
+  auto_rumbler:
+    what: "Audio amplitude drove a camera shake effect. Record your dad stomping around and his footsteps jiggle the camera like Godzilla; the louder the roar, the more the shake."
+    when: "1997 or thereabouts."
+    what_it_was_technically: |
+      A REUSABLE COMPONENT you dropped into a media processing dataflow graph. Written in
+      Lisp, calling QuickTime and other APIs to measure the audio amplitude and transform the
+      video. Not a hardcoded effect — a node, with inputs and outputs, composable with
+      everything else in the graph.
+    why_that_detail_matters: "The effect is the demo; the component model is the design. Anything that can be a node in a graph can be recombined by someone who did not write it, which is the difference between a feature and a medium."
+    the_general_form: "A continuous signal bound to an effect parameter, with a curve between them. Audio envelope to camera displacement is one binding out of an obvious family, and it is the whole reason the effect felt alive rather than applied."
+    why_it_is_the_right_first_thing_to_build: "It needs no semantics at all. Amplitude is free, the effect is a transform on the overlay, and it is immediately, physically funny — so it proves the binding machinery before any annotation exists."
+  one_joke_per_second:
+    what: "Play a sitcom back at one joke per second."
+    what_it_actually_is: |
+      Retiming driven by annotation rather than by time. The playhead does not advance at a
+      rate, it advances to the NEXT EVENT OF A KIND. Every other frame is dropped, and what
+      is left is the thing you said you cared about.
+    why_it_belongs_here: |
+      The timeline already carries cues from pause, bridges, users, and now analytics
+      (ANALYTICS.yml, cues_from_events). 'Advance to the next cue of kind X' is a small
+      feature over machinery that exists, and it generalizes: one goal per second, one fall
+      per second, one welding arc per second, one kiss per second.
+    the_name_for_it: "Semantic retiming. Distinct from speed change, which is uniform, and from a highlight reel, which is a fixed output rather than a way of playing."
+
+# THE STREAMING MODEL
+#
+# What made the graph powerful rather than merely tidy, and the part most worth copying
+# exactly rather than reinventing.
+
+streams_and_sessions:
+  the_original_vocabulary:
+    source: "Don's own MediaFlow design comments — https://donhopkins.com/home/interval/mediaflow-design.html"
+    verbatim: |
+      "A stream manages the flow of data between functional elements. A session is an
+       iterator over a stream, through which you access it."
+    listed_capabilities: [scrolling_buffers, streaming_enormous_files, network_buffering, circular_buffers, audio_and_video_capture_buffers, key_framing, lazy_functions, caching, session_collapsing_optimizations]
+    naming: "A session is what would now be called a cursor or a reader. Stream plus MANY sessions is the model — not one stream with one position."
+
+  why_pull_based_laziness_is_the_whole_thing:
+    the_mechanism: "A session asks for data at a position. Nothing is computed until something asks. Demand flows from the consumer backwards."
+    what_it_buys:
+      time_warping_is_free: |
+        The payoff, and not obvious until you see it. If a session asks for the frame at time
+        t, retiming is composing a function on t before passing the request upstream. Slow
+        motion, reverse, ease in and out, freeze, and variable-rate playback all become the
+        same operation: transform the time you ask for.
+
+        In a push-based graph, where producers drive consumers, every one of those is a
+        special case with its own buffering problem. This is the single strongest reason to
+        copy the model rather than improvise one.
+      huge_and_endless_sources: "A stream longer than memory, or with no end, is ordinary. Nobody materializes it."
+      many_independent_readers: "Two sessions at different positions on one stream is the normal case rather than a complication — which is exactly what scrubbing backwards through a still-recording ring buffer requires."
+      caching_where_it_pays: "A pull graph knows what was asked for, so memoizing one node is a local decision instead of a pipeline redesign."
+    session_collapsing: "Named in the original notes. Fusing an operator chain so intermediate results are never materialized — what is now called operator or stream fusion. The 1990s design already asked for it."
+
+  the_same_conclusion_elsewhere:
+    functional_reactive_animation:
+      what: "Elliott and Hudak, 'Functional Reactive Animation' (ICFP 1997) — behaviors as functions of continuous time, sampled on demand, with time transformation first class."
+      why_it_matters: "Independently, the same year, the same answer: make time an explicit parameter and retiming becomes composition. FRP is the formal statement of what sessions were doing operationally."
+      confidence: "~90% on paper and year."
+    after_effects: "Time remapping as a layer property, over a render graph evaluated per requested frame. Commercial proof that pull-with-explicit-time is what professionals need."
+    blender: "Node graphs for compositing, materials and geometry, evaluated for a requested frame, with the sequencer above them."
+    node_compositors: "Nuke and its relatives: pull evaluation, region-of-interest propagation, caching at node boundaries. The industrial form of session collapsing."
+    scriptx:
+      what: "Kaleida Labs' multimedia language, and its pipe protocol — '#(1, 2, 3) | print' — composition as first-class syntax over collections and streams."
+      already_cited: "Don's MediaFlow notes take ScriptX's pipes and its language-level closures with cell storage as lessons."
+    push_based_filter_graphs: "GStreamer and friends are mostly push with negotiation, which is why retiming in them is famously awkward. A counterexample worth knowing rather than a model to follow."
+
+  the_recommendation:
+    shape: "Build the media graph pull-based, with absolute time as the parameter every node is asked for. A node is a function from a requested time window to frames, annotations, or signals, and any node may be asked for any time still in the retention window."
+    what_it_makes_cheap:
+      semantic_retiming: "One joke per second becomes a time function driven by cues, composed like any other retiming. Without a pull model it is a re-render; with one it is a different question asked of the same graph."
+      the_ring_already_is_this: |
+        The ring buffer IS the 'circular buffer' and 'audio and video capture buffer' from
+        that 1990s capability list, and the scrub timeline is a session on it. Not an
+        analogy — the same design, rebuilt on a browser instead of Macintosh Common Lisp.
+      analytics_as_a_stream: "An annotation stream is a stream. A session on it asks what happened in a window, which is the same interface as asking for pixels — so effects driven by events need no special case."
+      effects_over_captured_frames: "A node that reads the captured frame and returns a displaced one is the auto-rumbler, unchanged in shape from the Lisp version."
+    what_to_avoid: "A push-based event bus as the CORE abstraction. It is easier to start and it forecloses retiming, multiple readers, and cheap caching — the three things this model exists to provide. Push is fine at the edges, where events arrive from outside."
+    gabriel_on_why_it_works:
+      quote: "\"Data and control abstractions are generally best when they are codesigned, and this is rarely done any more.\""
+      source: "Richard P. Gabriel, Patterns of Software, p. 27 — quoted in Don's original MediaFlow notes"
+      application: "The stream is the data abstraction and the session is the control abstraction, designed together. That is why time warping falls out instead of being bolted on."
+
+  the_evaluation_model:
+    where_this_comes_from: "Don, from NeWS, ScriptX, Bounce and Body Electric. The recommendation above says pull; this section says what pull actually looks like when you build it, and it is more specific than 'lazy'."
+
+    time_is_a_coordinate_not_a_parameter:
+      the_claim: |
+        ScriptX had a CLOCK HIERARCHY that could parallel the view transformation hierarchy.
+        Offsetting then scaling time was like transforming images — like adding t to the x
+        and y parameters of rendering.
+      why_it_is_the_key_idea: |
+        Treating time as a parameter makes retiming a special operation applied to a special
+        argument. Treating time as a COORDINATE makes retiming the same machinery as
+        translate and scale, and a clock becomes to time what a transform matrix is to space.
+      what_follows_immediately:
+        nesting: "Clocks compose like transforms, so a node can have its own local time the way it has its own local space, and a subtree can run at half speed the way a subtree can be drawn at half size."
+        inversion: "Reverse playback is a negative time scale. It needs no separate implementation, because negative scale is already a thing transforms do."
+        the_composition_rule_is_shared: "The inverse of a composition is the composition of the inverses in reverse order — in space and in time, the same rule, so one implementation covers both."
+      confidence: "The ScriptX clock hierarchy is Don's firsthand recollection; ~60% independent. The consequences hold regardless of whether ScriptX is the first place it appeared."
+
+    the_general_form_is_korz_dimensions:
+      the_connection: "Don's. Time-as-a-coordinate is one instance of a move David Ungar already made in general."
+      korz:
+        what: "Korz — Ungar, Ossher and Kimelman. Behavior and state live in slots qualified by a CONTEXT, which is a mapping from named dimensions to values, and lookup dispatches symmetrically across all of them. No privileged receiver, no special argument."
+        lineage: "Self (Ungar and Smith, 1987) → Us, which added subjectivity and perspectives → Korz, which made the dimensions first-class and symmetric."
+        confidence: "~85% on the authors and the design; ~80% on Onward!/OOPSLA 2014."
+      why_it_is_the_same_argument: |
+        The complaint about 'pull-based with time as the parameter' is that it privileges one
+        argument. Korz's whole thesis is that privileging one argument — the receiver — was
+        the original mistake, and that dispatch should be a function of the whole coordinate.
+
+        Space and time in one transform stack is that thesis applied to rendering. Korz is
+        the version that does not stop at three dimensions.
+      what_stops_being_special_once_you_accept_it:
+        viewer: "Who is being rendered for. The peanut gallery's per-character reading of a scene is a perspective dimension, not a separate subsystem."
+        voice: "Neutral narrator, character commentary, documentary. A dimension, which is why ACCESSIBLIFY could call it configuration rather than architecture."
+        language_and_mode: "Locale, verbosity, whether prediction is permitted. Dimensions."
+        detail: "Level of detail in space, and in time, by the same mechanism."
+
+      the_payoff_that_justifies_the_detour:
+        two_time_dimensions: |
+          ACCESSIBLIFY's retroactive narrator requires every annotation to carry the time it
+          DESCRIBES and the time it was AUTHORED. Under Korz that is not a rule bolted onto
+          annotations — it is simply two time dimensions instead of one, and 'what did the
+          narrator know at 3pm about what happened at noon' becomes an ordinary lookup.
+        it_has_a_name: "Bitemporal modelling: valid time, when a fact held in the world, and transaction time, when the system recorded it. Snodgrass and the temporal database literature; ~92%. An as-of query is exactly replay under a past belief state."
+        so: "The integrity constraint and the comedy mechanism are one feature. Marking a retroactive layer honestly and staging a precognitive joke are the same query against the same two dimensions, which is the sign the model is right."
+
+      the_honest_caveat:
+        ambiguity: "Symmetric multiple dispatch has to answer what happens when two slots match equally well along different dimensions. CLOS needs a linearization for this and it is the known hard part; symmetric dimensions do not remove the precedence problem, they relocate it into a resolution rule you now have to specify."
+        cost: "Dimensional lookup is more expensive than a fixed argument position, and the answer is caching — which is the same answer Ungar's own line of work gave for dynamic dispatch, in polymorphic inline caches (Hölzle, Chambers and Ungar, ECOOP 1991; ~90%)."
+        the_pleasing_part: "Memoizing the pull graph on node-plus-coordinate IS a polymorphic inline cache on the dispatch coordinate. The same optimization, from the same lineage, arrived at from the rendering side."
+      see: "WillWrightShowForFood/characters/david-ungar/ and repo-shows/david-ungar/"
+
+    backward_mapping_is_what_pull_means:
+      news: |
+        The NeWS renderer looped over the clipped output region, and clipped, scaled, rotated
+        and transformed all at once — dithering 24-bit to 8-bit only for the parts actually
+        needed. A push pipeline dithers the whole image first and then clips a tiny piece out
+        of the result.
+      the_generalization: "Iterate over the OUTPUT, invert the transform to find what to read, and do the expensive step only where an output actually depends on it. That is inverse texture mapping, that is demand-driven rasterization, and it is the same argument as lazy evaluation."
+      extending_it_to_time: |
+        Spatial clipping says: do not compute pixels nobody is looking at. Temporal clipping
+        says: do not compute frames nobody is asking for. The second is the identical
+        argument applied to the other coordinate, and it is the whole content of 'pull-based'.
+      the_industrial_form:
+        what: "Node compositors propagate a region of interest UPSTREAM from the output, and a region of definition downstream, in a request pass that runs before any pixel is touched. Temporal nodes extend the same request to a frame range."
+        where: "Nuke, and the OpenFX API it helped standardize."
+        why_cite_it: "It is NeWS clipping generalized to a graph, already specified and shipped, and it is the concrete design to copy rather than reinvent."
+        confidence: "~85% on the RoI/RoD request-pass details."
+
+    the_off_diagonal_terms_are_where_it_pays:
+      the_observation: |
+        If time is genuinely another coordinate, the transform can MIX it with the spatial
+        ones, and the mixed cases are not curiosities — they are the effects that are
+        awkward in every other architecture.
+      cases:
+        slit_scan: "A shear in the y-t plane: each output row sampled at a different input time. One off-diagonal term."
+        rolling_shutter: "The same shear, as a physical artifact rather than an effect — so simulating it and correcting it are one sign apart."
+        motion_blur: "Integration along t for each output pixel, which is the temporal version of a spatial filter kernel."
+      so: "A separable design — spatial transform here, time transform there — makes each of these a special case. A joint one makes them entries in a matrix. Worth building joint even if the first release only ever uses the diagonal."
+      the_thread_it_closes: "Golan Levin catalogued slit-scan video artworks and research; ~85%. The same person, the same archive, an independent reason to talk to him. See WillWrightShowForFood/characters/golan-levin/."
+
+    the_main_loop_is_the_output:
+      shape: "Loop over output pixels and output audio samples. Everything upstream is pulled to satisfy that loop, at the position and time the loop asks for."
+      the_shader_correspondence:
+        pull: "A fragment shader samples textures and interpolated geometry on demand, per output pixel."
+        push: "The layer beneath it pushes resources and parameters into the GPU as blocks before the draw."
+        the_lesson: "Real systems are pull for SAMPLES and push for RESOURCES, and that is not a compromise — it is the correct split. Push what is bulk, constant and known ahead; pull what is fine-grained and demand-dependent."
+
+    evaluation_rates:
+      the_point: "A pull graph is only efficient if each node runs at the right rate, and the rates differ by orders of magnitude."
+      the_order_for_one_output_frame:
+        - "Run the joke counter. Once. A scalar."
+        - "Compute the time warping map from it. Once, or once per region."
+        - "Sample the source frames at the mapped times."
+        - "Clip and transform the pixels. Millions of times."
+      already_named_three_times:
+        gpu: "Uniform, varying, per-fragment."
+        audio_dsp: "Control rate and audio rate — kr and ar in CSound and its descendants."
+        dataflow_theory: "Synchronous dataflow, where each node declares how many tokens it consumes and produces, making a static schedule computable. Lee and Messerschmitt, 1987; ~90%."
+      therefore: "Make rate an explicit property of a node rather than an emergent accident. It decides what gets hoisted out of the inner loop, and that decision is most of the performance."
+
+    the_graph_is_still_needed:
+      what_pull_gives_free: "Demand-driven recursion produces the evaluation order without a topological sort, and memoizing on node plus requested time turns shared subgraphs into shared work."
+
+      why_those_systems_really_sorted:
+        the_fact: "Body Electric and Bounce topologically sorted the wire connections in order to GENERATE 68K CODE for each module. Don, firsthand."
+        why_it_matters: |
+          Scheduling is the weak reason to topologically sort a dataflow graph. Compilation is
+          the strong one: a topological order linearizes the graph into a basic block, and a
+          basic block can be emitted as straight-line machine code with no graph left to walk
+          at runtime. The interpretive overhead does not get reduced, it gets deleted.
+        which_is_orthogonal_to_push_versus_pull: "Static order enables codegen regardless of which direction demand flows. What push buys is that the order is knowable in advance without asking anything."
+        the_stack_it_ran_on:
+          what: "Dataflow graph to topological order to 68k, on a PowerPC, under Connectix Speed Doubler — whose 68k emulator used dynamic recompilation. Three levels of translation, and Don's report is that it still ran fast."
+          confidence: "~85% that Speed Doubler's emulator was a dynamic recompiler rather than an interpreter."
+          the_irony: "The bottom layer of that stack was a JIT. The performance argument for compiling the graph was being made twice, at two levels, by two vendors who never spoke."
+        see: "Body Electric came from VPL — see WillWrightShowForFood/characters/chuck-blanchard/ — and reached Interval through David Levitt. ~85% on the VPL authorship."
+
+      so_pull_gives_up_something_real:
+        the_tension: "A demand-driven graph decides what to evaluate while it is evaluating, so there is no static order to compile. Pull is more expressive and less compilable, and pretending otherwise would be the mistake here."
+        the_resolution: |
+          The demand pattern is stable across output frames — the same graph, asked the same
+          shape of question, sixty times a second. So record the demand trace once, compile
+          THAT into straight-line code, and guard the assumptions it was specialized under.
+          When a guard fails, fall back to interpreting and re-specialize.
+        it_is_not_a_new_idea: "Trace compilation, shader specialization, and every modern tensor compiler's capture-then-compile-with-guards. Also, precisely, the Self playbook: run dynamically, observe, specialize, guard, deoptimize when the guard fails — Hölzle and Ungar again, from a third direction in as many sections."
+        the_1996_notes_already_named_the_goal: "Session collapsing — fusing an operator chain so intermediates are never materialized — is what a compiled demand trace produces. The target was specified thirty years ago; only the technique for reaching it from a dynamic graph is new."
+        build_order: "Interpret the graph first. It will be fast enough for a long time, and the trace is only worth capturing once there is a real workload to capture."
+
+      what_it_does_not_give:
+      what_it_does_not_give:
+        prefetch: "Recursion discovers what it needs at the moment it needs it, which is too late for a disk read or a network hop. This is the real cost of naive pull and the reason the request pass exists — walk the graph first to learn what will be asked for, then fetch ahead."
+        invalidation: "When an upstream parameter changes, something has to know which cached results died. That needs the edges."
+        parallelism: "Independent subtrees can be evaluated concurrently, but only if something can see that they are independent."
+      the_resolution: "Pull SEMANTICS with an explicit, inspectable graph. The graph is not the scheduler; it is what makes scheduling, prefetching and invalidation possible under pull."
+
+    the_honest_caveat_about_audio:
+      what_breaks: "Retiming video by resampling is correct. Retiming audio by resampling changes pitch, because pitch is a rate."
+      the_options: "Accept the pitch shift, which for comedy timing and fast-forward is frequently the desired result; or retime with a phase vocoder or WSOLA, which preserves pitch and is a genuinely different and more expensive operation."
+      the_design_consequence: "Audio needs a retiming STRATEGY on the node, not just a time function. It is the one place where time-as-a-coordinate does not fully carry over, and it is better to say so in the interface than to discover it in a demo."
+
+  the_cautionary_half:
+    from_bounce: |
+      David Levitt's Bounce, also at Interval, is the warning, and Don's notes on it are
+      specific: pure functional dataflow is unwieldy for complex state, you cannot pass
+      everything on wires without the graph becoming tangled, and stateful operators inside
+      loops need somewhere safe to keep state.
+    consequence: "Do not make the graph the only way to express things. It is a composition layer over TypeScript, not a replacement for it — which is also the answer to MediaFlow's own unresolved question about whether it was a language at all."
+
+# DOING IT IN THE OPEN THIS TIME
+
+this_time:
+  what_changed:
+    annotation: "Generated by models instead of by hand, which is what made the original economically impossible outside a research lab."
+    substrate: "A browser instead of Macintosh Common Lisp. The overlay is already a renderer, already scriptable, already cross-platform."
+    dataflow_precedent: "Node-based media graphs are now ordinary — shader graphs, patch editors, geometry nodes, compositors. The idea no longer needs defending, which was half the work in 1997."
+  what_did_not_change: "The schema problem, and the icon design problem. Those are as hard as they were, and the existing answer is better than a new one would be."
+  in_the_open: "Published, in a public repository, rather than in the basement of a research corporation that dissolved with most of its work unreleased. The lineage sections in this directory exist so the second attempt can cite the first instead of rediscovering it."
+  credit: "Marc Davis for the conception, Golan Levin for the visual language, Brian Williams for the implementation. Named every time this is described, because the interesting part is theirs."
+
+not:
+  not_a_reimplementation: "Nobody needs Media Streams rebuilt. The schema and the three interaction constructs are what transfer; the Lisp, the Quadra and the 6,000 hand-drawn icons are history."
+  not_blocked_on_icons: "The grammar is usable as data long before anyone draws a glyph for it. Text labels in the icon schema's shape are already better than free prose, because they compose and compare."

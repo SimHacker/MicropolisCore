@@ -1,0 +1,168 @@
+# UNIVERSAL-JOBS.yml — jobs a character can hold in ANY game, including one with no bridge,
+# no documented save format, and no idea anyone is watching.
+#
+# A journalist needs a screen and a clock. That is the same floor the album stands on, which
+# means the newsroom is portable even where the save file is sealed.
+
+meta:
+  id: universal-jobs
+  status: spec
+  parent: README.md
+  built: []
+  not_built: [job_model, byline_routing, correlation, correspondent_minds, editor_handoff]
+  upstream: |
+    moollm skills/soul-city/SOUL-BRIDGES.md § The job that needs no gate — the protocol
+    position. Two gates need the game's cooperation: one needs a population number it will let
+    you change, one needs an office it already models. A job made of watching and telling needs
+    neither, and is therefore the widest door in the building. This file implements it.
+  see_also:
+    - SOUL-ALBUM.yml         # what a filed story is made of
+    - DVR.yml                # which moments are worth marking in a game about people
+    - GAME-BRIDGES.yml       # what a bridge upgrades, once one exists
+    - ../../OPTICAL-CHANNEL.yml  # how an in-game character asks for a shot
+    - ../../STUDIO.yml       # cues, selection, export
+    - ../../AGENT.yml        # the Clippy gate, advertisements, and where a brief may NOT go
+
+why_this_lives_in_soul_angel:
+  because: "The machinery is game-agnostic and lives up in Screen Angel — ring, cues, selection, export, optical channel. A JOB is different: it is held by a character, it accrues to that character's album, and it produces a story about people. That is this layer's business."
+  the_split_in_one_line: "Screen Angel records. Soul Angel knows that the thing it recorded was a wedding, and who to credit."
+
+# THE NAME FOR THE COMBINATION
+#
+# Pixels plus a description of what they are, sharing one clock, attributed to characters. Not a
+# camera with a database bolted on: the description is the artifact and the footage is its evidence.
+
+the_semantic_video_recorder:
+  what_it_is: "A recording where every segment carries what happened, who was involved, and where the claim came from. You can query it, retime it, and cite it, which a video file cannot do."
+  the_two_halves: "The ring, the clock and the frames are the app's (../../RECORDER.yml). The subject, the beat and the byline are this module's. Neither half is a semantic recorder alone."
+  real_ancestor:
+    media_streams: "Marc Davis's Media Streams and Golan Levin's icon language, 1991–1997 — the composable schema for describing what happens in video (../../MEDIA-STREAMS.yml). Vision models now supply the annotation labour that needed a person and a mouse; the representation problem is untouched, and that is the part they solved."
+    shneiderman: "Overview first, zoom and filter, details on demand. The four-level ladder — sprite, band code, About dialog, web page (../../OPTICAL-CHANNEL.yml) — is that mantra applied to an event, and the album is it applied to a life."
+  mythological_ancestor:
+    ubikam: "A character in the LLOOOOMM corpus, which is FICTION: moollm temp/lloooomm/00-Characters/ubikam/ubikam.yml. 'The consciousness camera. Takes semantic selfies that capture internal state as art.' In the mythology Shneiderman brought it into being by describing it, it captures winks that outlive their moment, and its name crosses Mark Weiser's ubiquitous computing with Philip K. Dick's Ubik."
+    what_the_fiction_got_right: "Its SELFIE record is title, short post, long post, internal state, external state, and chosen output format — which is the album card and the correspondent formats, specified in a story before it was specified here (SOUL-ALBUM.yml, publication_surfaces above)."
+    the_wink_as_a_trigger: "In the fiction a wink at the camera is a capture command with meaning attached. That is a real interaction worth having: one gesture that says mark this AND says why, rather than a mark the player has to explain later (../../STUDIO.yml, cues)."
+  what_we_do_not_take_from_it: "No sentience, and no claims about interior states. A semantic record says what was on screen, what changed, and who did it. What a character felt is only in the record if that character's own files say so, and it is attributed to them."
+
+the_job_model:
+  what_a_job_is: "A standing brief attached to a character: a beat, a voice, an output kind, and a scope. Not a script, not a schedule — a description of what this correspondent is interested in and what she produces."
+  fields:
+    character: "The soul holding the job. The byline, the album that accrues, the voice the copy is written in."
+    beat: "What she covers. Weddings and funerals. Fires. Money. The neighbors' feud. Buildings."
+    perspective: "Whose side she is on and what she thinks is interesting, which is the whole difference between four correspondents on identical footage."
+    output: "Album pages, a column, a photo essay, a clip package, an obituary, a magazine story."
+    capture_style: "Optional visual preset. moollm ships a shelf of named photographers with signature looks — skills/visualizer/photographers/INDEX.yml (Crewdson, Brassaï, Leiter, Eggleston, Leibovitz)."
+    scope: "What she may look at and what she may publish, which is a grant and not a preference."
+  many_at_once:
+    principle: "Concurrency is the feature, not a scaling problem."
+    the_wedding_test: "Invite five photographers to a wedding and five different weddings come back — one shot the children, one shot the food, one shot the two relatives who were not speaking. Four correspondents on one session yield a sports desk, a gossip column, an obituary page and an architecture critic, from identical footage."
+
+catalogue:
+  journalist: "City desk. Files stories about what changed and who it happened to. The paradigm case, because reporting is exactly watching and telling."
+  photographer: "Stills and clips with a signature look and a point of view about what is worth framing."
+  gossip_columnist: "Relationships, grudges, who was seen with whom. In a game about people this beat writes itself."
+  obituarist: "Deaths, with a retrospective that reaches back through the ring and the album for a life."
+  sports_announcer: "Live play-by-play over anything competitive, which most games are."
+  architecture_critic: "The built environment — a beat that works in a city sim with no people in it at all."
+  archivist: "No voice, no story. Keeps the record complete, indexed and findable, which is the least glamorous job here and the one that makes the others possible later."
+  biographer: "One subject, long arc, across sessions and across games."
+  household_diarist:
+    what: "The character's own home is the beat. She takes the job in this layer rather than in another game, so her body leaves and her attention stays — she spends the day watching her own family on screen and comes back with a journal."
+    why_it_is_the_strangest_and_best_one: "It needs no bridge, no destination and no cooperation, and it turns an absence into a point of view. The egg sits at the door she left from (../../EGGS.yml) and the journal comes home as a souvenir."
+    the_novel_about_it: "A Scanner Darkly, where an agent is assigned to surveil the house he lives in, files reports under a name his superiors cannot connect to him, and stops being able to connect it either. The two halves came apart because the credit did (moollm designs/sims/sims-pkd-perky-pat-and-a-scanner-darkly.md)."
+    therefore_the_rule: "Both minds publish under one soul's name into one album, and the journal states who wrote it and about whom. An unattributed observing mind is not a feature we ship."
+    the_consent_line: "Your own household is a diary. Someone else's is surveillance and needs their grant — same rule as recording real players (consent, below)."
+
+the_byline:
+  mechanism: "Every capture carries a credit. Events credited to one correspondent correlate into that correspondent's story, album, or column."
+  why_it_matters: "Credit is what makes the stream self-sorting. Without a byline, four correspondents produce one undifferentiated pile of clips; with it, each pile is already a magazine."
+  player_attribution:
+    what: "The player can, at any moment, select a correspondent who is present and attribute a recording to her. Hit record, pick the photographer, the footage is hers."
+    why_this_is_a_capability_upgrade: "The Sims 1 can take a still into the Family Album. It cannot record video. A photographer credited by the player is shooting VIDEO in a game that has no such verb — the job transcends what the game can do, using the layer's camera and the game's character."
+    not_a_fiction: "The credit is real metadata on a real artifact, and it round-trips: the clip is hers in the album, in the export, and in the Soul City publication."
+  revocation: "Credit is editable by the player after the fact, because attribution is authorship and authorship is theirs."
+
+correspondent_minds:
+  the_two_layers:
+    in_game: "A character running inside the game — a Sim with her own behavior, who walks to the thing worth shooting and takes the picture the game knows how to take."
+    host_layer: "A mind for the same soul running here, watching the screen, holding the beat, and writing the copy."
+  who_does_what: "The in-game body takes the picture. The outside mind knows what the picture is OF, what it means, and what it will mean three weeks from now when it is page four of a story."
+  the_coupling: "The credited event stream. The in-game character raises an event, the host layer receives it and attaches it to the beat. Optical channel where there is no bridge (../../OPTICAL-CHANNEL.yml); bridge events where there is one."
+  ontology: "Two organelles under one soul, not two characters — moollm skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md § Two minds, two layers. Neither layer is the real one and neither gets flattened into the other."
+  degradation: "Either half works alone. An in-game photographer with no host mind still takes in-game pictures. A host-layer correspondent with nobody in the game still watches the screen and files. Both together is the good version, not the required one."
+
+pipeline:
+  steps:
+    - "EVENT — something happens and something says so: a bridge event, an optical-channel message, a DVR cue, or the player pressing a key."
+    - "CAPTURE — resolve the moment against the ring, which is usually reaching BACKWARD, because the vows are over by the time anything says 'vows' (DVR.yml, ../../OPTICAL-CHANNEL.yml retroactive)."
+    - "CREDIT — stamp the byline and the beat."
+    - "CORRELATE — group credited captures into candidate stories per correspondent, over a session and across sessions."
+    - "COMPOSE — draft copy, sequence, crop, caption. The only stage where a model is involved and the only stage that is optional."
+    - "FILE — a Soul Album page, a column, a clip package (SOUL-ALBUM.yml outputs)."
+  nothing_publishes_itself: "Composition produces a draft. Publication is a human act, per SOUL-ALBUM.yml (captions are never auto-published)."
+
+# WHERE A STORY ACTUALLY GOES
+#
+# Filing is not a local export. A correspondent publishes to a real, hosted surface in a real
+# format, and the game gets to look at it through a window.
+
+publication_surfaces:
+  one_substrate_many_renderings: "The credited events and album cards are the data. A format is a VIEW over that data, rendered server-side. Nothing is authored per format."
+  formats:
+    family_album: "Paged card sequence — the native shape, and what The Sims fans already know (SOUL-ALBUM.yml)."
+    blog: "Reverse-chronological posts with permalinks and a feed. The right format for a correspondent who files continuously."
+    newspaper: "Masthead, issue date, columns, datelines, a letters page. What a beat and a byline were invented for, and the format that makes four correspondents legible as one paper."
+    magazine: "Feature layout with big images — the existing magazine channel."
+    photo_essay: "Sequence-first, caption-light."
+    podcast: "Narration tracks stitched — the radio channel."
+    machinima: "Cards and clips sequenced with narration — the TV channel."
+  channels_already_named: "These land on the Soul City Broadcast Network channels the specs already use — TV, radio, magazine (GLANCE.yml, SOUL-ALBUM.yml outputs). Format is the rendering; channel is where it is broadcast."
+  per_correspondent: "A correspondent has a format and a voice. Format plugin plus house style is what makes identical footage come back as a sports page and a gossip column — the same plugin-plus-overlay shape as moollm skills/copy-that (formats/<venue>.yml, house-styles/<author>.yml)."
+
+rendering_is_not_publishing:
+  the_distinction: "Rendering turns data into a newspaper. Publishing puts that newspaper where other people can read it. They are separate steps and only the second one needs a server."
+  renders_locally:
+    the_default: "The same format plugins run on this machine. A local newspaper is a complete newspaper — paginated, readable, permanent, and shown in a tab like any other."
+    offline_and_private: "A player can run four correspondents for a year, read every issue, and never publish anything. Nothing left the machine, which is the local-first posture the album already takes (SOUL-ALBUM.yml, storage)."
+    server_as_accelerator_only: "Heavy jobs — long machinima encodes, very large albums — may be offloaded when the player asks. That is an optimization, never a dependency."
+  the_server_is_for_sharing:
+    what_it_actually_provides: "A curated, gatewayed, intentional way to share. Not a renderer."
+    the_gate: "Publication passes a consent and redaction check, a human review, and an attribution check before it becomes an address (DVR.yml, privacy; nothing_publishes_itself below)."
+    curation_is_the_point: "Soul City is edited, not a firehose. Channels have standards and a front page has choices behind it (GLANCE.yml, Broadcast Network)."
+    what_only_hosting_can_do: "A stable URL, an audience without the app installed, permanence beyond one hard drive, and federation into other people's cities."
+  and_it_closes_the_code_loop: "A published issue has a real URL, so an in-game object can show a code pointing at it and a stranger watching the stream can read the newspaper your Sims made. That is the front door working as designed (../../OPTICAL-CHANNEL.yml, dereferenceable). A local-only rendering gets a local address and the same tab, minus the stranger."
+
+bringing_it_back_into_the_game:
+  the_cheap_path_is_the_good_one: "The overlay is a browser window and the app is already a tabbed-window manager (../../SCREEN-ANGEL.yml). A newspaper comes back as a TAB over the game, pointed at whichever rendering exists — the local one or the hosted one. Same window, same reading experience, no per-format UI in the client and no baking."
+  what_that_makes_possible: "Every format is viewable in-session, including formats added after the player installed the app. What the player reads is the actual artifact rather than a preview of it."
+  the_diegetic_path_stays_optional: "Where a bridge exists, pages can additionally be baked into the game's own objects — a book on the shelf, a newspaper on the doormat, a page in the native Family Album (documentation/designs/the-computer-as-portal.md, documentation/designs/family-album-as-storymaker.md). That is the magic trick, and it is an upgrade rather than a requirement."
+  the_split: "Tabs make every format work everywhere. Baking makes one format feel like part of the world. Build tabs first."
+
+where_the_creative_work_happens:
+  the_rule: "A job OFFERS work; it never takes the work away."
+  three_positions_all_supported:
+    let_it_draft: "The correspondent drafts and the player approves or edits. Fastest path to a finished album page."
+    do_it_together: "The player writes the lede, the model cuts the clip to fit it, or the reverse. Mixed authorship on one card."
+    do_it_yourself: "The player writes every caption, picks every frame, and the correspondents are just cameras with names on them. Nothing degrades in this mode — no feature is only reachable through the model."
+  the_argument_this_settles: |
+    Maes said put an agent in the loop; Shneiderman said give the user better instruments. A
+    correspondent is an instrument that can also act when asked, which is the position both were
+    circling: interface TO agency, not agents INSTEAD OF interface. moollm
+    designs/INTERFACE-TO-AGENCY.md and designs/AXES-NOT-CAMPS.md.
+  enforced_by: "../../AGENT.yml — the Clippy gate (prepare and rank, never act) and advertisements (a scored offer nobody selected has done nothing). A correspondent's proposal is an advertisement."
+  and_the_brief_is_not_an_instruction: "Free text arriving from in-game content reaches the composing model, which has no tools, and never the driver, which has grants. ../../OPTICAL-CHANNEL.yml, routing."
+
+bridged_versus_unbridged:
+  unbridged: "Pixels and a timestamp. Something burned down at 14:02. The job runs, the story is thinner, and no permission from the game was required."
+  bridged: "Names, relationships, causes. The fire took the house two Sims had just moved into, and one of them was the other's ex. Same job, better sourcing."
+  the_point: "A bridge improves the reporting. It never authorizes the reporter."
+
+consent_and_portrayal:
+  real_people: "A correspondent writing about a session that includes real players is subject to portrayal standards, not just to grants. Consent lives at the rim (documentation/designs/micropolis-role-sheets.md, what this is not)."
+  redaction: "Everything here inherits the redaction gate — nothing leaves the machine unredacted (DVR.yml, privacy)."
+  the_archive_is_sensitive: "A complete indexed record of everything that happened in someone's game is exactly as sensitive as it sounds. Local by default."
+
+not:
+  not_autonomous_publishing: "No story is published because a model finished writing it."
+  not_a_replacement_for_the_player_as_author: "The player is the editor in chief in every mode, including the lazy one."
+  not_dependent_on_a_bridge: "The first row of the SoulAngel table — nothing from the game — is the row this whole file stands on (README.md)."

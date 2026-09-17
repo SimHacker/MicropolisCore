@@ -1,0 +1,150 @@
+# OUT-OF-GAME-JOBS.yml — a Sim goes to work, and work is a different game.
+#
+# The Sims has always had a hole where the workday goes: the carpool arrives, the Sim vanishes
+# for six hours, and comes back with a promotion nobody witnessed. This file puts a playable
+# game in that hole and brings the result back.
+
+meta:
+  id: out-of-game-jobs
+  status: spec
+  parent: README.md
+  built: []
+  not_built: [egg_object, outcome_mapping, destination_registry, emulator_host, resolution_ui]
+  see_also:
+    - ../../OPTICAL-CHANNEL.yml   # the call out (QR) and the call back (egg menu)
+    - UNIVERSAL-JOBS.yml          # the other kind of job: watching and telling, in place
+    - GAME-BRIDGES.yml            # which games can receive a character properly
+    - SOUL-EMIGRATION.yml         # leaving for good, which this deliberately is not
+    - SOUL-ALBUM.yml              # what the trip brings home
+  upstream: |
+    moollm skills/soul-city/SOUL-BRIDGES.md § The errand — the protocol shape: a round trip
+    where the ORIGIN suspends the traveler instead of running a second copy, which is what makes
+    it conflict-free. Identity rule and the reason suspension beats forking are stated there.
+
+three_answers_to_the_rabbit_hole:
+  vanilla: "The Sim disappears and a number changes. Nothing happened, narratively."
+  narrated: "An LLM writes what happened at the office and it lands in the album as a page. Already designed: documentation/designs/the-imagine-loop.md § I."
+  played: "You go to work. The workday is an actual game, and what you did there comes back as changes to the character. This file."
+  they_compose: "A household can have one Sim narrated and another played. The narrated version is the fallback whenever nobody wants to play the shift."
+
+the_loop:
+  steps:
+    - "GO TO WORK — the career object's own routine pops a dialog with a QR code: verb, job id, character id, nonce (../../OPTICAL-CHANNEL.yml)."
+    - "CONSENT — ask, or auto if the player pre-authorized this job. Yes sends her; no is an ordinary in-game workday."
+    - "SUSPEND — the character leaves the lot and is replaced by an EGG: a visible, clickable object standing for a call in progress."
+    - "PROJECT — the destination game opens with whatever of her transfers into it, which for most destinations is a name, a look, and a difficulty."
+    - "PLAY — the player plays the shift. Any genre. It does not have to be a life sim and it is more interesting when it is not."
+    - "READ THE OUTCOME — score, level reached, whether she died, achievements, time survived."
+    - "RESOLVE — the Angel finds the egg, opens its menu, and selects the outcome the destination produced."
+    - "RETURN — the character is back on the lot with the effects applied, and the trip is an album page."
+  who_may_click_what: "Every step the layer performs, the player can perform manually, using the same widget. The egg menu is a normal in-game menu and resolving it by hand is a supported path, not a fallback nobody tested. The mode ladder — manual, confirm each, timeout with a named default, auto, yolo — is switchable while an errand is outstanding: ../../OPTICAL-CHANNEL.yml, either_hand_can_drive."
+
+the_egg:
+  the_grammar_lives_up_one_level: "Object model, the menu-as-return-type, HATCH and empty-hatch cancellation, the resume point, emergency recall, and the generalization to any pending task: ../../EGGS.yml. What follows is only what an errand adds."
+  what: "The character, iconified: an object in the world that means 'she is out, and this is where she comes back.'"
+  why_an_object_and_not_an_absence: |
+    An absence cannot be clicked. The egg gives the player a place to look, a way to cancel, a
+    way to bring her home early, and a way to resolve the trip by hand if the layer is not
+    running. It is also the only honest UI for a pending cross-program call: something is
+    outstanding, here it is, here is what can happen to it.
+  it_is_also_the_code:
+    what: "Eggs are drawn big, saturated, and distinct — easter eggs, color-coded by kind, badged and animated by state. The look is the machine-readable part (../../OPTICAL-CHANNEL.yml, sprite_codes)."
+    what_the_layer_reads: "Which eggs exist, what kind each one is, and which ones have news. Then it clicks only the active ones. No scanning, no dialogs, no decode."
+    what_the_player_reads: "Exactly the same thing, in the same glance. A pulsing gold egg on the kitchen counter means somebody's shift came back with something."
+    why_this_beats_a_status_panel: "The state lives in the world instead of in our overlay, which means it survives us not running, and it is legible in a screenshot or a stream."
+  the_menu_is_the_return_type: |
+    The author enumerates the outcomes in advance and the pie menu is that list — 'bad day at
+    work / usual day / good day / fired'. Four items is a four-valued return type. The layer does
+    not compose a result, it selects one of the results the content author already wrote, which
+    is why this works on a game nobody can patch.
+  when_one_click_is_not_enough: "The pie item can open a dialog tree: magnitude, which skill, which relationship, keep or sell the trophy. Some branches the layer walks automatically because the outcome determines them; others stop and ask the player. Both are ordinary Sims content (../../OPTICAL-CHANNEL.yml, how_a_reply_is_delivered)."
+  states: [outstanding, active, resolving, resolved, cancelled, expired]
+  expiry: "A shift that never resolves has to end somewhere. Default to 'usual day at work' and say so — an egg that sits forever is a lost character, which is the one outcome that is not allowed."
+
+destinations:
+  the_good_case_is_a_browser_emulator:
+    why: "When we host the runtime, telemetry is free. A wasm emulator's RAM, save states, and score counters are readable without OCR, without QR codes, and without asking anyone's permission — the exact inverse of the origin game, where we have only the glass."
+    stack_already_chosen: "The retro strategy is settled in documentation/designs/federation-peer-games.md: disk images the user owns, Apple ][ preferred, wasm emulators, TS disk-image and filesystem libraries."
+    and_it_is_thematically_correct: "moollm skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md calls an emulated runtime an organelle still running its own ancient metabolism. A 1983 game as the office where a Sim works a shift is that idea with a punchline."
+  genre_does_not_matter:
+    principle: "The destination needs an outcome, not a fiction that matches. A shift at the office can be a dungeon crawl, a shmup, a typing tutor, or a puzzle game."
+    why_that_is_fine: "The mapping layer supplies the fiction. What the player did is score; what it MEANS is authored — and a bad run reading as 'bad day at work' is exactly as coherent as The Sims' own chance cards."
+    the_honest_version: "Where the destination does fit the job, use it. A restaurant game for a culinary career is better than a shmup, and nobody has to pretend otherwise."
+  tiers:
+    hosted_emulator: "Best. Full outcome fidelity, resumable, no permissions."
+    native_game_with_a_bridge: "Real state in and out. The career is a genuine second life rather than a scored errand."
+    native_game_with_nothing: "Outcome comes from the layer watching the screen, or from the player saying how it went. Still works."
+
+outcome_mapping:
+  the_contract: "The destination produces a small, typed outcome. The job definition maps that outcome onto changes to the character. Neither side knows the other's internals."
+  outcome_fields: [result_bucket, score, duration, died, achievements, artifacts]
+  what_may_change:
+    semantic: "Skills, career level, money, mood, relationships — anything the origin game's own career mechanics already touch. Nothing here reaches past what a promotion could have done."
+    cosmetic: "A uniform, a trophy on the shelf, a bandage, a promotion outfit. Cheap, visible, and the part players actually enjoy."
+    souvenir: "An album page, a screenshot from the other game, a memento object. The clean case, because a souvenir needs nothing from the destination but a picture (moollm skills/soul-city/SOUVENIRS.md)."
+  start_simple: "Version one is four buckets and a couple of stat nudges. Score-to-stat curves, achievement unlocks, and cross-game reputation come after the loop demonstrably closes."
+  conservation_still_applies: "A trip cannot mint what the origin game would not have allowed. An impossible fortune earned in a shmup is a cheat with extra steps, and the layer is not a cheat engine (moollm skills/soul-city/SOUL-BRIDGES.md, conservation)."
+
+# THE FIRST ERRAND WORTH BUILDING
+#
+# Most errands need an invented mapping between the destination's scores and the character's
+# stats. This one does not, because the destination is the app our own personality schema was
+# named after and copied from.
+
+worked_example_visit_the_shrink:
+  the_errand: "Your Sim has an appointment. She goes to see the shrink, and the shrink is Timothy Leary's Mind Mirror (Electronic Arts, 1986) running as a real Apple ][ binary in a browser emulator."
+  why_this_destination:
+    the_schema_is_already_its_child: "A MOOLLM soul carries a mind_mirror block — four thought planes (bio energy, emotional, mental, social), eight traits each. That is Leary's model, and the block is named after the program. Going there is a round trip to the reference implementation."
+    so_the_hard_part_is_absent: "Every other bridge argues about what a foreign score means. Here the outbound mapping is close to an identity: the character's own personality block is the format the destination reads."
+    and_it_is_the_right_fiction: "A 1986 self-assessment program that walks you through rating your own mind is what a therapy session looks like as software. The pretext writes itself."
+    both_ends_share_a_publisher: "EA published Mind Mirror in 1986 and The Sims in 2000. The patient and the shrink are label-mates, fourteen years apart."
+  the_loop:
+    - "GO — the therapy object pops the request; consent; the Sim leaves and an egg takes her place."
+    - "PROJECT — write her mind_mirror block into a disk image and boot it, or drive the app's own entry screens."
+    - "PLAY — the player sits in the 1986 program and edits, explores, and plays with the mind. This is the part that is actually fun and it is the reason to do it at all."
+    - "SAVE — the app writes to its floppy, exactly as it did forty years ago."
+    - "READ BACK — parse the disk image and import into the character's mind_mirror organelle. Same retro stack as the other Apple ][ targets (documentation/designs/federation-peer-games.md)."
+    - "DIFFUSE — project the changed mind_mirror onto the Sims organelle, which is where the interesting choice lives."
+    - "RETURN — she comes home from the appointment measurably different, with the session in the album."
+  and_it_tests_our_own_schema: |
+    moollm designs/mind-mirror-survey-2026-02-07.md surveyed 62 CHARACTER.yml files and found the
+    mind_mirror block inconsistent across nearly all of them — planes renamed, traits substituted,
+    scales disagreeing. A round trip through the original program is a conformance test with teeth:
+    a block that cannot be written to the floppy and read back unchanged has drifted. The 1986
+    binary is the reference implementation of the schema we named after it.
+
+diffusion_of_the_result:
+  the_shape: "Thirty-two trait values on four planes have to become five Sims axes worth twenty-five points. That is a lossy projection, and there is more than one honest way to compute it."
+  three_ways:
+    linear:
+      what: "A weight matrix, authored once. mind_mirror.social.social and .group_oriented push outgoing; mental.imaginative and .artistic push playful."
+      properties: "Local, offline, instant, free, deterministic, auditable, reversible enough to explain. Same answer on every machine forever."
+      use_when: "Always, as the default and the fallback. Anything that has to be reproducible or work on a plane belongs here."
+    learned:
+      what: "A small model fit to examples of the mapping — including examples the player corrected by hand."
+      properties: "Captures interactions a matrix flattens, still local, still deterministic once trained, but no longer explainable line by line."
+      use_when: "Once there is a corpus of corrections worth learning from. Not before."
+    imagined:
+      what: "A language model reads the whole profile and the character's history and proposes the changes with its reasons, in prose."
+      properties: "Sees what neither of the others can — that this specific profile on this specific character means she came back from therapy quieter and more deliberate — and costs a call, varies between runs, and cannot be audited arithmetically."
+      use_when: "When the player wants judgment rather than arithmetic, and asked for it."
+  the_rule: "The player chooses, and the choice is visible. A diffusion is a proposal with its method named — linear, learned, or imagined — and applying it is a selection, not a side effect (../../AGENT.yml, advertisements)."
+  never_silently_remote: "The default is local and deterministic. A model call is something the player asked for, not something a stat change quietly required."
+  upstream: "moollm skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md § Diffusion, constraints, and the exchange rate — diffusion, permeability, and why an exchange rate has to be honest."
+
+authoring_and_compile:
+  one_declaration_per_job: "A job is authored once — the career object, its pie menu, its dialog tree, the outcome list, the strings, the egg's colors and badges, the sounds, the destination binding, the outcome-to-effect mapping."
+  both_halves_are_generated: "That declaration compiles into the game side (BHAV behavior, pie menu interactions, localized STR#, sprites, QR bitmaps, audio, non-colliding GUIDs) and into the Angel side (the tree shape it walks, the sprite atlas it recognizes, the verb registry, the web page each code resolves to). Specified in ../../OPTICAL-CHANNEL.yml, compiled_from_one_source."
+  why_it_matters_here_specifically: "An out-of-game job is a distributed transaction across two programs and a web page. Hand-maintaining that in three places guarantees the version where the egg's menu changed and the layer clicks the wrong outcome — which would silently corrupt a character. One source, one compile, one grammar version stamped in the content."
+  pipeline_already_exists: "The Adventure Compiler emits and validates this class of content today, including localization and GUID collision checks: documentation/designs/the-computer-as-portal.md, documentation/designs/sims-content-registry.md."
+
+what_it_is_really_for:
+  the_hole_was_always_the_interesting_part: "Six unwitnessed hours a day, every day, in the best-selling PC game ever made. The Sims never showed you the office because showing it would have meant building it. It can be borrowed instead."
+  the_1996_request_again: "Wright asked for data that moves between games and for a hobby model where the things you collect relate to each other. A career that is played in another game and read back into this one is that request, in the smallest shippable form."
+  and_it_runs_both_directions: "Nothing about this is Sims-specific. Any game that can pop a dialog can send a character out to work in any game we can host, which is the general shape once the plumbing exists."
+
+not:
+  not_emigration: "She is coming back. Leaving for good is SOUL-EMIGRATION.yml, and it has different ethics and a different ritual."
+  not_a_second_copy: "The origin suspends her rather than running a parallel instance, so there is no divergence and nothing to merge. That is the whole reason the errand shape exists."
+  not_a_cheat_engine: "Outcomes are bounded by what the origin's own mechanics could produce."
+  not_mandatory: "Every job keeps its narrated and vanilla paths. A player who never wants to leave the lot loses nothing."

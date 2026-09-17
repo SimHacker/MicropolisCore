@@ -1,0 +1,378 @@
+# Screen Angel — selectors, events and recognition over any application's interface
+# The general layer. Soul Angel is its first application; The Sims 1 is Soul Angel's.
+# Harvested 2026-09-10 from 18 Hacker News comments (2015-2025) and the rescued
+# donhopkins.com wiki page. Deduped: each idea stated once, with where it first appeared.
+# Sources: sources/ — which keep the original name throughout, because they are evidence.
+
+what_it_is:
+  name: "Screen Angel"
+  former_name:
+    was: "aQuery"
+    from: "2013 (email to Peter Korn) through 2026"
+    renamed: "2026-09-10, by Don"
+    why: |
+      The borrowed morpheme dated the project. Don: "jquery only made sense about 1,000,000 years
+      ago." The name required explaining a library most working programmers have never used before
+      you could explain the idea, and the idea does not depend on it — jQuery was always the
+      metaphor and the recruiting story, never a dependency.
+    the_ladder: |
+      Scraper, reader, angel. A screen SCRAPER takes. A screen READER reads to you. A screen ANGEL
+      acts for you. And the third word describes the implementation literally rather than
+      figuratively: invisible, above you, intervening — which is a transparent, always-topmost,
+      click-through overlay.
+    provenance_rule: |
+      Everything under sources/ says aQuery, unaltered. Those files are primary evidence — Don's
+      own 2013 email text, the Slate issue, the Hacker News record. The design renames; the
+      evidence keeps its provenance. When citing history, say aQuery and date it.
+  definition: |
+    A high level scriptable accessibility tool that is to native user interface components
+    what jQuery is to the DOM — for selecting and querying components, matching visual
+    patterns, handling events, abstracting platform dependencies and high level service
+    interfaces, building and scripting higher level widgets and applications.
+  source: "Don Hopkins, HN 15327767, 2017-09-25 — the tightest definition he wrote"
+  the_payoff: |
+    Fix and script and extend and customize existing apps that have shitty user interfaces,
+    from outside, without modifying the apps.
+  first_named: "2013, in email to Peter Korn, as aQuery. First public post 2015-07-30 (HN 9977226)."
+  never_built: "No code exists for the layer itself. Eleven years of prose and one working prototype of the shell it would live in."
+  scope_rule: |
+    Don's own test for what the name has to cover: it "can help you with soulless apps like
+    Microsoft Word as well as soulful games like The Sims." Games have souls; a word processor
+    does not. So *soul* cannot name this layer and *screen* can — which is exactly why Soul Angel
+    is an application of it rather than the whole of it.
+
+surface:
+  what_it_will_function_as:
+    - integrated DVR — always-on ring buffer, scrub, clip
+    - user interface overlay
+    - task manager
+    - game manager — lifecycle, game time, run/pause/speed
+    - save file reader, writer, editor
+    - user-created-content generation platform
+    - screen snapshotting and recording
+    - accessibility tool
+    - speech driven, and speech synthesizing
+    - screen reading
+    - pie menus, in the manner of kando
+    - "a tabbed-window, pie-menu, HyperCard and HyperLook inspired user-customizable window manager"
+    - "enough of a shell to take over what the Finder and the Windows desktop are used for"
+  why_this_is_one_program_and_not_twelve: |
+    Not ambition. Every item on that list needs the same four primitives, and each primitive is
+    expensive enough that nobody builds it for one feature:
+
+      read    the screen, as a tree AND as pixels        PROTOCOL.yml
+      act     on it, with consent                        APP-CONTROL.yml
+      draw    over it, topmost and click-through         src/main/overlay/
+      remember it, continuously                          RECORDER.yml
+
+    Any single feature justifies none of that machinery. All of them together justify all of
+    it, and that is the whole argument for the app existing.
+
+    Read it the other way and the couplings are obvious. A pie menu that cannot read the tree
+    is a launcher. A DVR that cannot act cannot pause the game it is recording. A window
+    manager that cannot draw over applications is not a window manager. A save editor that
+    cannot drive an app lifecycle is a hex editor with a warning label. A screen reader and a
+    DVR want the identical capture path. The speech layer is the same selector language spoken
+    aloud — "click save" is query.select plus one action.
+  cross_platform:
+    goal: "The same thing on every platform, as far as the platform allows. kando's standard, and the reason it is cited."
+    what_is_genuinely_the_same: "Selectors, roles, the overlay, the recorder, the protocol, the skill, the CLI. Everything above the backend."
+    where_platforms_diverge: |
+      Window management is where parity gets expensive: Spaces and native full-screen on macOS
+      versus virtual desktops on Windows, and the two have different ideas about what a window
+      even belongs to. State the divergence in the backend rather than pretending it away — a
+      feature that silently does something different on the other platform is worse than one
+      that says it is unavailable.
+    no_linux: "Windows and macOS only, per the standing decision. Not a technical claim."
+  finder_replacement:
+    what_it_means: "Launching, finding, arranging, and switching — the things people actually use a desktop shell for, with pie menus and a customizable layout instead of a fixed one."
+    what_it_does_not_mean: "Not a file system reimplementation, not a replacement for either OS's window server, and not something that has to be installed as the shell."
+    lineage: "HyperCard and HyperLook for user-editable interface, NeWS and Open Look for pie menus and tabbed windows, kando for the cross-platform pie menu done recently and well."
+  staging:
+    rule: "Each item ships useful on its own or it waits. The list is a decade; the ladder has to hold weight at every rung."
+    order: |
+      Built: read, overlay, selectors, protocol, CLI, MCP, skill.
+      Next: recorder and ring, then studio, then the injection consent gate.
+      After the gate: app control, then game management, then save editing.
+      Last: window manager and shell, because they are the only items that need all four
+      primitives finished and the only ones a user cannot opt out of once adopted.
+
+the_problem:
+  low_level: |
+    Platform accessibility APIs are as low level as the raw DOM. macOS AX, Windows UI
+    Automation and AT-SPI all give you a tree of objects with properties and no convenient
+    way to search it, no pattern language, no event delegation, no way to attach your own
+    state to a node.
+  fragile: |
+    Blair MacIntyre's objection, and it is the right one: interfaces built by drilling down
+    to specific objects break the moment the app updates. The answer is not to drill down.
+    Bind to patterns, not to paths.
+  incomplete: |
+    Many apps expose no accessibility tree worth reading, and most games expose none at all.
+    Accessibility APIs and pixel scraping have DIFFERENT limitations, so a real system uses
+    both — the cheap native API narrows down which region of pixels is worth looking at.
+
+design:
+
+  selector_engine:
+    what: "jQuery-style or XPath-style selectors over the accessibility tree, platform independent"
+    native: |
+      Implement the heavy lifting in the native language so traversal and matching are fast,
+      the way jQuery uses the browser's built-in querySelectorAll and only falls back to
+      Sizzle when it must.
+    source: "HN 9977226 (2015), sharpened in HN 15327997 (2017)"
+
+  event_model:
+    what: "Bind handlers to patterns for objects that do not exist yet"
+    how: |
+      jQuery's delegated-event model: handle events near the root and match on the way down,
+      so one binding covers everything that will ever match, including UI created later. The
+      pattern engine sends events back to JavaScript asynchronously.
+    also: "Register patterns and get called when matching interface items are created and destroyed"
+    source: "HN 9977226 (2015), full async design in HN 15327997 (2017)"
+
+  hybrid_recognition:
+    what: "Accessibility API and pixel pattern matching, married, not chosen between"
+    why: "Their failure modes do not overlap. Use the accessibility tree where it exists and is honest; scrape pixels where it is absent or lying."
+    optimization: "Use the cheap native query to narrow to a region, then scrape only that region"
+    bind_to_both: "Handlers attach to pixel patterns AND accessibility path patterns"
+    source: "The hybrid thesis is new in HN 11520967 (2016-04-18); the optimization in HN 15327997"
+
+  plugins:
+    what: "Per-application and per-widget-cliche extensions, the way jQuery has plugins and jQuery UI"
+    example: |
+      Remote-control buttons, time shuttles, speed and volume controls for VLC — a program with
+      wonderful features and one of the worst user interfaces in the world.
+    source: "Wiki page, 2013"
+
+  cross_app_widget_abstraction:
+    what: "One high level widget that knows how to drive every app in a category"
+    example: "A VideoPlayer widget that drives YouTube, Vimeo, VLC, QuickTime and Windows Media Player behind one interface"
+    why: "This is what makes UIs survive app updates — swap the layer under the widget, keep the widget"
+    source: "HN 11521683 (2016), restated in HN 15327997"
+
+  recursion_into_browsers:
+    what: "Its own UIs are HTML, so the Screen Angel can drive the Screen Angel"
+    why: "Browsers are the most important target. It would be a design flaw if the tool could not make shitty web pages more accessible, including its own."
+    source: "Wiki page, 2013"
+
+  beyond_html:
+    what: "Independent of jQuery and independent of HTML"
+    why: |
+      Blair MacIntyre's contribution: the same selector-and-event layer serves AR, speech
+      recognition and synthesis, video tracking, and web services — not just 2D HTML overlays.
+      jQuery is the metaphor and the recruiting story, not the dependency.
+    source: "Wiki page, 2013"
+
+implementation:
+
+  shell:
+    pattern: "A transparent, always-topmost, click-through web view covering all screens, with the platform APIs exposed to its JavaScript"
+    provenance: |
+      This is exactly what the 2013 Slate prototype did, and exactly what Kando does now, and
+      exactly what Soul Angel's Electron host does. The shell question is settled; it was
+      settled by working code three times.
+
+  native_bridge:
+    what: "Expose native objects and methods to JavaScript through a runtime bridge"
+    precedent: "PhoneGap/Cordova and NativeScript did this for mobile; jscocoa did it for Objective-C"
+    source: "HN 15327997 (2017)"
+
+  remote_option:
+    what: "A scriptable double-buffered VNC server, or the client side of one"
+    tradeoff: "Server side is efficient and has native accessibility access; client side is flexible and is not"
+    source: "HN 11521683 (2016)"
+
+  speech:
+    what: "Expose speech recognition and synthesis as first-class, not as an afterthought"
+    model: "dragonfly — the Dragon NaturallySpeaking community's Python layer, which has a command-module repository of per-application plugins. That repository structure is the thing to copy."
+    source: "HN 18797818 (2018)"
+
+prototype_2013:
+  what: |
+    Slate, a macOS window manager, made a HIDDEN WebView purely to borrow its JavaScript
+    interpreter. Don made the WebView un-hidden: topmost, transparent, covering all screens,
+    with mouse clicks passing through anywhere nothing was drawn. Then he drew pie menus in
+    JavaScript on top of every application.
+  outcome: "It actually worked."
+  what_happened_next: |
+      He opened issue 322 on the Slate repo on 26 June 2013 to describe it. Slate's last commit
+      had been February 2013 — the project was already dead. He got no feedback, abandoned Slate,
+      and never started his own JavaScript window manager. The selector layer on top was never
+      written.
+  earliest_dated_artifact: |
+    That issue is the earliest dated evidence of the whole design, two years before the first
+    Hacker News post. It already asks for the transparent click-through window AND for
+    accessibility plus speech recognition exposed to JavaScript, with dragonfly named as the
+    model — so the 2018 "speech dimension" was there from the start and just went unrepeated
+    for five years.
+  sources:
+    - sources/2013-06-26-slate-issue-322.md   # from the live GitHub API, not an archive
+    - "Recounted with dates in HN 18797587 (2018-12-31)"
+
+lineage:
+  scriptable_window_managers:
+    - "uwm under X10, cracked open and rewritten with its main loop in Mitch Bradley's Forth, so pie menu tracking and experiment sequencing could be scripted (CHI '88 pie menu study with Jack Callahan and Ben Shneiderman)"
+    - "NeWS — the window manager was just part of the toolkit, running in the server, subclassable. PostScript for drawing, data and programming: AJAX before AJAX."
+    - "HyperLook (Arthur van Hoff, nee HyperNeWS, nee GoodNeWS) — HyperCard rendered in PostScript with networking and editable structured graphics, whose own property sheets were built out of its own stacks"
+    - "The unbuilt one: hire van Hoff away from the Turing Institute and make a window manager out of HyperLook where users plug multiple apps into stacks and script them together"
+  the_pattern: |
+    uwm scripted in Forth, NeWS scripted in PostScript, a window manager scripted in
+    JavaScript. Same shape, three decades apart. The Screen Angel is the third one, and the
+    reason it has to work from outside is that nobody will ever again ship a window system you
+    can download code into.
+
+  prefab:
+    who: "Morgan Dixon and James Fogarty, University of Washington"
+    what: "Reverse-engineers a widget tree from raw pixels alone, many times per second, then overlays, replaces, translates and annotates any interface without the application's cooperation"
+    reached_don_via: "James Landay, replying to the 2013 email thread Ben Shneiderman had forwarded"
+    what_don_proposed: |
+      Write selectors that use Prefab's pattern recognition, bind those to JavaScript event
+      handlers, and build high level widgets on top in JavaScript.
+    what_prefab_lacks: |
+      "Prefab isn't built around a scripting language like dragonfly, NeWS or AJAX."
+      That is the whole gap this layer was meant to fill. (HN 22829690, 2020)
+    citations: sources/prefab-bibliography.md
+
+  kando:
+    who: "Simon Schneegans"
+    what: "Cross-platform Electron pie menu app; the hard parts live in small native addons behind one JavaScript interface, with a per-platform backend chosen at runtime"
+    don_note: |
+      Don's account: he told Simon about the 2013 hidden-WebView prototype, and believes it fed
+      into the Electron decision after Wayland's limitations blocked a native Linux design.
+      Recorded as his recollection; not independently established here. What IS in the public
+      record is HN 36166380 (2023), where he calls Kando and Fly-Pie "a big step in the right
+      direction."
+    why_it_matters_here: "Kando is the existence proof for Soul Angel's shell. See ../ARCHITECTURE.yml"
+
+  llms:
+    what: "The missing recognizer"
+    argument: |
+      Prefab was pre-LLM pattern recognition, which is much more relevant WITH LLMs. Every hard
+      part that stalled in 2013 — recognizing what a widget is for, deciding which of five apps
+      satisfies a request, writing the per-app adapter — is now tractable. The selector engine
+      and the event model were never the blockers. Understanding was.
+    source: "HN 48116547 (2026-05-13)"
+
+  i_beam:
+    who: "MOOLLM — moollm/skills/cursor-mirror/ (docs/I-BEAM.md, docs/I-BEAM-CONSTITUTION.md, characters/I-BEAM-CHARACTER.yml); archetype at moollm/skills/no-ai-overlord/archetypes/i-beam.yml"
+    constitution: |
+      docs/I-BEAM-CONSTITUTION.md is the sourced version of the anti-Clippy argument: ten
+      articles out of Shneiderman's constraints, Maes's calibration, Selker's COACH result,
+      Nass and what Microsoft did to his research, Lanier's question, Wright's advertisements
+      and Papert's turtle, each with the rule it produces. Advisory before assistive, and
+      "make the user model available to the user," are the two that bind the Clippy gate in
+      AGENT.yml.
+    what: |
+      The blinking text cursor, embodied — the anti-Clippy, and the patron saint, familiar and
+      user focus of cursor-mirror. Not a person: its own canon says "small god of thresholds,"
+      "is_actually: user interface," "relationship: operation, not friendship."
+      Platform-agnostic by construction: on Cursor it speaks through cursor-mirror, on Claude
+      Code through claude-mirror. The orchestrator changes; i-beam remains.
+    the_doctrine_worth_inheriting: |
+      The anti-Clippy argument is already worked out there in detail, and it is not about tone.
+      It is about WHERE THE AGENT STANDS. Clippy sat beside the document and inferred your intent
+      from outside, so it had to guess, so it interrupted at the wrong time — a watcher adjacent
+      to the work has no way to know when the right time is. I-beam never guesses because it
+      occupies your position instead of inferring it. In its own summary: "Clippy was an
+      assistant pretending to be an object; I-Beam is an object that turned out to be able to
+      help."
+    what_the_screen_angel_inherits:
+      - "Add no new surface. Act through the application's own widgets, not next to them."
+      - "Occupy the position rather than infer it — bind to the widget the user is actually using."
+      - "Never arrive on a heuristic. Click-through and invisible until summoned."
+      - "Show the work: name the selector that matched and the action taken, so the user learns the layer by watching it."
+      - "Stay past the face. No mascot, no eyes, no mood. McCloud's masking effect punishes detail: Clippy was rendered at the wrong altitude of abstraction, detailed enough to be unmistakably somebody else."
+    the_shneiderman_line: |
+      This is not a loose analogy — it closes a circle in this project's own sources. Clippy
+      became the standing exhibit for Ben Shneiderman's side of the 1997 agents debate: proof
+      that interface agents patronize, interrupt, and seize control the user never offered. And
+      Shneiderman is IN the 2013 email thread in sources/2013-email-thread.md — he read the
+      original proposal and forwarded it to colleagues. So the layer has to satisfy the man who
+      prosecuted the case. It does, by the same move i-beam makes: direct manipulation and agency
+      stop competing when the agent IS the affordance you were already using.
+    the_free_pun: |
+      Both are bent metal that holds things together. A paperclip holds a stack of paper; an
+      I-beam holds up a building. Same job description, comically different load rating.
+    the_pair: "I-beam is the anti-Clippy for the agent. The Screen Angel is the anti-Clippy for the desktop."
+
+prior_art_cited:
+  - "Richard Potter, 'Triggers: Guiding Automation with Pixels to Achieve Data Access' in Cypher, Watch What I Do: Programming by Demonstration"
+  - "Potter, Shneiderman and Bederson, 'Pixel Data Access for End-User Programming and Graphical Macros'"
+  - "Scott Kim, Viewpoint (dissertation) — scottkim.com/viewpoint/"
+  - "Berkeley Systems OutSpoken — screen reader, Mac 1989, Windows 1994"
+  - "Hopgood et al., Methodology of Window Management (Alvey Workshop 1985 / Springer 1986)"
+  - "Brad Myers — Garnet, PERIDOT, C32; Dan Ingalls — Lively"
+  - "dragonfly — Python speech command modules for Dragon NaturallySpeaking"
+  - "Dasher (David MacKay) — information-theoretic zooming text entry; the accessibility payoff Don keeps naming"
+
+todos:
+  # What was proposed and never built. This is the actual backlog.
+  - "The selector engine itself, native, on any one platform"
+  - "Async pattern events into JavaScript, including create/destroy notification"
+  - "The Prefab integration: pixel patterns usable as selectors"
+  - "A widget library where one abstract widget drives many concrete apps"
+  - "Drag a control out of a live application and drop it into your own stack or pie menu"
+  - "A slider dragged into a pie menu slice rotates to that direction; distance from center drives the value"
+  - "Dasher integrated deeply enough to drive arbitrary applications, for people with limited motion"
+  - "Sonify a graph for a screen reader — pitch proportional to value"
+
+relation_to_soul_angel:
+  decided: "2026-09-10 — Screen Angel names the layer. Soul Angel names the game application built on it."
+
+  the_ladder:
+    # Each rung is the beachhead of the rung below it. Don's term.
+    screen_angel:
+      is: "The layer. Selectors, event bindings and hybrid recognition over any application's interface."
+      scope: "Any app on any platform, soulful or soulless. Microsoft Word counts."
+    soul_angel:
+      is: "Screen Angel's first application — the one that carries souls out of games."
+      why_first: |
+        Games are the hardest target: no accessibility tree at all, so the pixel path carries the
+        whole load. If the layer works here it works anywhere, which is the definition of a good
+        beachhead — not the easiest landing, the one that proves the rest.
+    sims1:
+      is: "Soul Angel's first application."
+      why_first: |
+        A twenty-six-year-old game with a live community, a known file format, an owner who has
+        stopped maintaining it, and characters people still care about. Everything Soul Angel
+        claims has to be true here before it is claimed anywhere else.
+
+  beachhead: |
+    The word for the relationship between rungs. A beachhead is not the destination and not a
+    demo — it is a real position taken and held, from which the general case becomes reachable.
+    The Sims 1 is Soul Angel's beachhead; Soul Angel is Screen Angel's.
+
+  shared: |
+    The Electron host with capture and accessibility addons IS the Screen Angel shell. The family
+    album for a game that has never heard of us IS the pixel-recognition path. The per-game
+    Soul Bridge IS the per-application plugin.
+  where: "../ARCHITECTURE.yml, ../GAME-BRIDGES.yml"
+
+  one_angel_rule: |
+    The August 2026 naming rule said one Angel in the family — the sims1 module is a Bridge, not
+    a second Angel. That rule stands. It was about not multiplying angels at the SAME layer.
+    Screen Angel sits one layer below Soul Angel, so the family has exactly two angels at two
+    layers and no siblings at either. Bridges are still bridges.
+
+sources:
+  slate_issue: sources/2013-06-26-slate-issue-322.md   # earliest dated artifact
+  wiki: sources/2013-email-thread.md          # the rescued donhopkins.com page, in full
+  hacker_news: sources/hacker-news-progression.md
+  quotes: sources/key-quotes.md               # 34 verbatim quotes, extracted not retyped
+  prefab: sources/prefab-bibliography.md
+  pie_menus: sources/2013-jquery-pie-menus.md
+  private_working_files: |
+    DonHopkins/projects/aquery-harvest/ — the full 11,667-comment chronological dump, the
+    gaps-and-uncertainties list, every donhopkins.com URL he has ever cited on Hacker News, and
+    a Wayback inventory of 9,507 archived paths on donhopkins.com grouped by subject (3,893
+    Drupal nodes, 1,858 Sims including the complete TheSimsDesignDocuments chapter set, 717 pie
+    menu, 309 NeWS and HyperLook, 201 SimCity and Micropolis, 164 cellular automata). Kept out
+    of the public repo because it is a research index, not a document — but it is the map for
+    any future rescue.
+  provenance: |
+    The wiki page at donhopkins.com/mediawiki/index.php/AQuery is 404 — the Drupal and
+    MediaWiki installs are gone. The static /home/ tree on that domain is still live. The page
+    text here is recovered from the Wayback Machine capture of 2018-08-26, cross-checked
+    against the 2017-01-03 capture: the aQuery text is identical between them, only the Prefab
+    links differ.

@@ -25,12 +25,12 @@ interface:
     file_bridge: "Scoped read/write — user consents per game, per directory"
     sqlite: "Local catalog/album cache"
     capture: "DVR + still hooks with game window binding"
-    bus: "Publish/subscribe on the SoulAngel event bus"
+    bus: "Publish/subscribe on the Angel Event Bus, under the soul.* domain (../../ANGEL-EVENT-BUS.yml)"
     inject: "Optional, operator-gated — only bridges that need UI automation"
 
 switching:
   what: "Overlay detects the focused game window and hot-swaps the active bridge UI"
-  no_bridge: "Universal tier UI only — DVR, album, streaming still fully functional"
+  no_bridge: "The no-bridge-needed UI only — DVR, album, and streaming still fully functional"
 
 first_bridge:
   sims1:

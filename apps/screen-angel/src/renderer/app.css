@@ -1,0 +1,90 @@
+/**
+ * Light by default, dark if the system says so. Light angels and dark angels, one
+ * token set, no theme switcher and no stored preference to get out of sync.
+ *
+ * `color-scheme: light dark` is the whole mechanism: it declares both are supported and
+ * puts light first, so an unconfigured machine gets white. Every token below is a
+ * light-dark() pair, which means adding a colour means writing both halves at the
+ * moment you are thinking about it, rather than discovering the dark one later.
+ *
+ * The look is overcast, not ornamental. Bright ground, brighter panels floating on it,
+ * separation by soft shadow rather than hard line, nothing pretending to be a physical
+ * object. Nothing gilded, nothing carved, no cherubs.
+ */
+
+:root {
+	color-scheme: light dark;
+
+	/* Not paper-white. A faint cool cast reads as daylight; pure #fff reads as a
+	   fluorescent panel and makes text look like it is floating. */
+	--ground: light-dark(#f6f8fb, #12121a);
+	--panel: light-dark(#ffffff, #1b1b26);
+	--edge: light-dark(#e4e9f1, #2e2e3e);
+	--ink: light-dark(#1d2430, #e8e8f0);
+	--ink-dim: light-dark(#65708a, #9a9ab0);
+
+	/* The halo is drawn over other applications' pixels, so it cannot be a pastel. It
+	   is the one saturated colour in the palette and it earns that by being the only
+	   thing on screen making a claim. */
+	--halo: light-dark(#1f8fd4, #7ad9ff);
+
+	--good: light-dark(#1f8a4c, #8ee87a);
+	--warn: light-dark(#a35a00, #ffb454);
+	--bad: light-dark(#c1362f, #ff6b6b);
+
+	/* One shadow, used everywhere something floats. Wide and faint: a cloud edge, not a
+	   drop shadow with a light source. */
+	--lift: light-dark(0 1px 2px rgb(19 32 56 / 6%), 0 1px 2px rgb(0 0 0 / 30%)),
+		light-dark(0 8px 24px -12px rgb(19 32 56 / 18%), 0 8px 24px -12px rgb(0 0 0 / 50%));
+
+	/* Glass for the overlay badge, which sits on top of unknown content. */
+	--glass: light-dark(rgb(255 255 255 / 82%), rgb(11 11 18 / 78%));
+
+	font-family:
+		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: var(--ink);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	height: 100%;
+}
+
+/* The overlay window is transparent, so the page must be too. A background colour
+   anywhere on this path turns the click-through layer into a grey sheet over the
+   user's screen. */
+body:has(.overlay) {
+	background: transparent;
+}
+
+/* The cloud, in two lines: two very wide, very faint radial washes over the flat
+   ground. It never resolves into a shape, which is the point — it should read as depth
+   of air and be impossible to notice on purpose. */
+body:has(.console) {
+	background:
+		radial-gradient(
+			110% 70% at 12% -10%,
+			light-dark(rgb(255 255 255 / 95%), rgb(122 217 255 / 6%)),
+			transparent 60%
+		),
+		radial-gradient(
+			90% 60% at 100% 0%,
+			light-dark(rgb(207 228 248 / 55%), rgb(122 217 255 / 4%)),
+			transparent 55%
+		),
+		var(--ground);
+	background-attachment: fixed;
+}
+
+code,
+kbd,
+.mono {
+	font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+	font-size: 0.92em;
+}

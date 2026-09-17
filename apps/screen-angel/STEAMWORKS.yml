@@ -1,0 +1,252 @@
+# STEAMWORKS.yml — getting onto Steam, in the order the steps have to happen, which is
+# not the order Valve's own documentation implies.
+#
+# The documentation reads as one funnel: sign up, pay, verify, download, build. Two of
+# those five gate the other three, and neither of the two is the payment. Development can
+# start today, for nothing.
+
+meta:
+  what: "Steamworks setup: the free development track, the paid release track, and where the secrets live."
+  verified: 2026-09-11
+  built:
+    - "src/main/steam/steam.ts — the adapter interface, three implementations behind it"
+    - "src/main/steam/bridge-adapter.ts — steam-bridge, the default. WORKING against 480."
+    - "src/main/steam/ffi-adapter.ts — steamworks-ffi-node, SCREEN_ANGEL_STEAM_LIB=ffi"
+    - "tools/steam-setup.sh — checks the preconditions and diffs binding against library"
+    - ".gitignore — the SDK, the appid hint, steamcmd's session"
+  not_built:
+    - "Anything requiring a real App ID: store page, depots, builds, branches"
+    - "Overlay coexistence — see the_overlay_collision"
+
+two_tracks:
+  why_this_matters: |
+    Everyone reads the onboarding page and concludes that $100 and a 30-day wait stand
+    between them and a first line of working code. They do not. The fee buys an App ID to
+    SHIP under. Development against Valve's example app needs neither.
+
+    Getting this order wrong costs a month in the worst way: pay the fee on day one, and
+    the 30-day clock runs while you are still deciding what the product is. Start the
+    clock when you know the release date, and it elapses while you build.
+
+  development_track:
+    cost: "$0"
+    time: "minutes"
+    what_you_get: "The whole client API against App ID 480, in your own process"
+    steps:
+      - "Sign in to Steam and leave the client running"
+      - "Own Spacewar. It is free: steam://install/480"
+      - "Run tools/steam-setup.sh until it is happy"
+    no_sdk_needed: |
+      steam-bridge carries Valve's runtime library itself, so the SDK download is not part
+      of this path at all. It is needed only for SCREEN_ANGEL_STEAM_LIB=ffi, and then it
+      must be version 1.64 — see sdk_version_pinning.
+    if_you_want_the_sdk_anyway: |
+      Worth having for the headers, the tools, and the SpaceWar example, and it is the
+      legitimate source of redistributables for shipping:
+        1. Sign in at partner.steamgames.com/documentation/sdk_access_agreement
+        2. Accept the Steamworks SDK Access Agreement — NOT partner onboarding, no money
+        3. tools/steam-setup.sh --install ~/Downloads/steamworks_sdk_164.zip
+    the_agreement_grants: |
+      Verbatim from section 1.1: a licence to "reproduce and distribute the part of the
+      SDK provided inside the folder named redistributable_bin along with the Licensee
+      Software in object code form." That is what makes shipping the dylib legal, and it
+      is also why steamworks-ffi-node cannot bundle it for us — the grant runs to whoever
+      accepted the agreement, not to an npm package.
+    what_480_cannot_do: |
+      Anything keyed to a product: achievements, leaderboards, Workshop, Cloud quotas,
+      DLC, and the store page. Those need your own App ID and its Steamworks
+      configuration. Init, the user, friends, the overlay, and input all work.
+    the_480_trap: |
+      restartAppIfNecessary(480) relaunches SPACEWAR instead of you, so it looks like
+      your app silently died and started someone else's game. The adapter asks only when
+      packaged AND the app id is not 480 — see ffi-adapter.ts.
+
+  release_track:
+    cost: "$100 per app, non-refundable, recouped once the app clears $1,000 adjusted gross revenue"
+    gates:
+      thirty_days: "No release earlier than 30 days after the fee is paid. Cannot be shortened."
+      coming_soon: "A public 'coming soon' page has to be live for at least two weeks before release."
+      reviews: "Store page 2-5 business days; each build up to 5 business days."
+    paperwork:
+      identity: "Legal ID, matching the bank account holder name exactly"
+      tax: "W-9 for US, W-8BEN (individual) or W-8BEN-E (company) otherwise. Verification can take days."
+      bank: "Routing number, account number, bank address"
+    the_note_worth_keeping: |
+      The Steam Direct fee is charged to the individual Steam ACCOUNT that was signed in,
+      so the invoice arrives with a person's name on it and Valve will not reissue it to a
+      company. If it should be a business expense, expense it.
+    free_afterwards: "Demos, playtests, and DLC attached to a released app cost nothing extra."
+
+secrets:
+  the_rule: "A file in this repository may NAME a credential. It may never contain one."
+  in_1password: |
+    Chosen mechanism is the 1Password CLI, so scripts reference secrets by op:// path and
+    resolve them at the moment of use. Nothing is copied into a shell profile, nothing
+    lands in shell history, and revoking a credential is one action in one place.
+
+    Vault name comes from SCREEN_ANGEL_OP_VAULT, defaulting to "Screen Angel".
+
+  inventory:
+    steam_account:
+      what: "The Steam account that accepted the SDK agreement and will own the partner relationship"
+      secret: yes
+      where: "op://$VAULT/Steam Account — password plus TOTP"
+      note: "Use a real 2FA-protected account. This eventually controls a storefront."
+
+    publisher_web_api_key:
+      what: "Server-side key for the Steamworks Web API"
+      secret: yes
+      severity: "highest — it acts on every app under the publisher, not just one"
+      where: "op://$VAULT/Steam Publisher Web API Key/credential"
+      use: 'export STEAM_WEB_API_KEY="$(op read "op://$VAULT/Steam Publisher Web API Key/credential")"'
+      note: "Not needed for anything in the development track. Do not create one until something needs it."
+
+    builder_account:
+      what: "A separate Steam account with upload permission only, for steamcmd"
+      secret: yes
+      where: "op://$VAULT/Steam Builder Account — password plus TOTP"
+      why_separate: |
+        An upload credential ends up in a CI secret store, on a build machine, and in a
+        script or two. Your personal account should not be the thing with that blast
+        radius, and Valve's permission model exists precisely so it does not have to be.
+
+    steamcmd_session:
+      what: "config.vdf and the ssfn files, written by steamcmd after a successful login"
+      secret: yes
+      where: "on disk only, gitignored — these are a login without a password"
+      note: "Not stored in 1Password. They are machine-bound artifacts, reproducible by logging in again."
+
+    app_id:
+      what: "The numeric App ID, once one exists"
+      secret: no
+      but: |
+        An unannounced App ID announces that there is an unannounced product, and it is
+        resolvable to a name by anyone. Keep it out of public commits until the store page
+        is public — then it is on the store page and secrecy is moot.
+      where: "SCREEN_ANGEL_STEAM_APPID in the environment, not in the repository"
+
+  creating_the_items: |
+    Run these once, when you have the values. They read from stdin so nothing appears in
+    shell history or in a process listing:
+
+      VAULT="${SCREEN_ANGEL_OP_VAULT:-Screen Angel}"
+      op vault create "$VAULT"                       # if it does not exist
+      op item create --category=login --vault="$VAULT" --title="Steam Account" \
+        --url=https://store.steampowered.com/login/ username=YOURNAME
+      op item create --category="API Credential" --vault="$VAULT" \
+        --title="Steam Publisher Web API Key"
+
+    And to use one, at the moment of use rather than in a profile:
+
+      export STEAM_WEB_API_KEY="$(op read "op://$VAULT/Steam Publisher Web API Key/credential")"
+
+what_the_app_reports:
+  where: "angel.info, field steam"
+  fields: "available, reason, appId, steamId, personaName, launchedBySteam"
+  degraded_honestly: |
+    Every failure path sets available:false and a reason naming the fix — no SDK on disk
+    and where it looked, client not running, account does not own the app id. Steam
+    absent is not an error state to be recovered from; it is the state everyone who buys
+    the app somewhere other than Steam runs in, permanently.
+  forcing_it: "SCREEN_ANGEL_NO_STEAM=1 selects the unwired adapter, so the degraded path can be exercised deliberately."
+
+the_overlay_collision:
+  status: not_investigated
+  what: |
+    The Steam overlay injects itself into the app's rendering to draw on top of it. We
+    are a transparent, always-on-top, click-through window whose entire job is drawing on
+    top of things. Two systems with the same ambition and no knowledge of each other.
+  what_could_go_wrong:
+    - "Shift-Tab reaching us instead of Steam, or Steam swallowing it before the game sees it"
+    - "The overlay drawing under our layer, so its own UI is unreachable"
+    - "Our click-through window eating clicks the overlay expected"
+  why_it_is_not_urgent: |
+    Nothing here blocks the first milestone, and guessing at it produces speculation
+    rather than knowledge. It needs one session with the overlay actually running.
+
+sdk_version_pinning:
+  the_rule: "The SDK on disk has to match the SDK the binding was built against. Not 'be newer'. Match."
+  current: "steamworks-ffi-node 0.11.2 is built against SDK 1.64. Use 1.64."
+  get_the_right_one: |
+    Valve serves versioned SDKs at a predictable path, so an older one is one URL away:
+      https://partner.steamgames.com/downloads/steamworks_sdk_164.zip
+    The latest link on the download page gave 1.65, which does not work — see below.
+
+  what_1_65_broke: |
+    Five symbols out of the 379 the library names. Three interface accessors were bumped
+    and two functions were deleted:
+
+      SteamAPI_SteamUtils_v010                        -> SDK has v011      (blocks init)
+      SteamAPI_SteamInput_v006                        -> SDK has v007
+      SteamAPI_SteamNetworkingSockets_SteamAPI_v012   -> SDK has v013
+      SteamAPI_ISteamUserStats_RequestCurrentStats    -> removed
+      SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck  -> removed
+
+  why_not_just_patch_the_one: |
+    Patching v010 to v011 does make init succeed, and it was tempting, because only that
+    one is reached at startup. The other four are resolved lazily — the moment the feature
+    is first used. RequestCurrentStats is what the achievement manager calls. So the
+    version that boots cleanly is also the version where achievements are already broken
+    and nothing says so until whoever wires up achievements assumes they broke it.
+
+  how_it_presents: |
+    init() returns false. That is all. It is the identical symptom to the Steam client not
+    running, to not owning the app id, and to the client running as another user — and the
+    library's own error text ("Cannot find function 'SteamAPI_SteamUtils_v010' in shared
+    library") only appears on stdout, so it is invisible to anyone reading a status field.
+
+    Which is why tools/steam-setup.sh now diffs the symbols the library names against the
+    symbols the dylib exports, and prints the version the SDK has beside the one being
+    asked for. A second, instead of an evening.
+
+library_choice:
+  chosen: steam-bridge
+  verified_working: "2026-09-11 — available:true, appId 480, persona name and steamId64 both returned"
+  because: |
+    It ships the prebuilt native addon and Valve's matching runtime library as a PAIR.
+    Every SteamAPI_* symbol its addon imports exists in the dylib beside it — measured,
+    not assumed: 1028 of 1028. That makes the skew described in sdk_version_pinning
+    structurally impossible rather than merely documented, and that skew is the one thing
+    here that has actually cost a working evening.
+
+    Second reason: it is the more Electron-literate of the two by a wide margin. Steam
+    Input piped to the renderer over MessagePort, named overlay profiles, an overlay-cadence
+    module, electron-builder integration, and macOS signing helpers. Someone has fought the
+    Steam-overlay-inside-Electron fight, which is the fight we have coming.
+
+    Consequence worth stating plainly: no SDK download is needed to develop. The
+    development track is shorter than it looks.
+
+  what_it_is_not: |
+    It is NOT more up to date than steamworks-ffi-node in SDK terms. Its bundled dylib
+    exports SteamAPI_SteamUtils_v010 and SteamAPI_SteamInput_v006 — the same SDK 1.64
+    generation. Neither library supports 1.65. The advantage is self-consistency, not
+    currency.
+
+  costs:
+    young: "First release 2026-07-16. 31 releases in seven weeks is churn, one maintainer, no dependents."
+    platforms: "Prebuilds for darwin-arm64, linux-x64-gnu, win32-x64-msvc only — no Intel Mac, no Linux arm64."
+    redistribution: |
+      It ships Valve binaries inside the npm package, including libsdkencryptedappticket,
+      which lives in public/steam/lib/ rather than redistributable_bin — so §1.1(b) of the
+      SDK Access Agreement does not cover redistributing it. That is upstream's exposure
+      until we ship their package, at which point it is ours. Nothing here uses encrypted
+      app tickets. Before shipping, replace the bundled libraries with the ones from the
+      SDK we downloaded under our own acceptance of the agreement, where the grant applies.
+    asar: |
+      A packaged Electron app cannot dlopen a .node from inside the asar archive. The addon
+      and the Valve libraries have to be asarUnpack'd. It presents as a module resolution
+      error at the first Steam call, far from the packaging decision that caused it, so
+      bridge-adapter.ts detects that shape and says so.
+
+  kept_as_a_second_implementation:
+    steamworks-ffi-node: |
+      SCREEN_ANGEL_STEAM_LIB=ffi selects it; needs SDK 1.64 in steamworks_sdk/. Koffi FFI,
+      so no native module to compile — which is why it was chosen first, and it remains the
+      better answer for a platform steam-bridge has no prebuild for. Two independent
+      implementations of the same six-method interface is also how a bug gets attributed to
+      a library rather than to Steam.
+  rejected:
+    steamworks.js: "Last release August 2024, two years stale. The one everyone links to. Overlay support Windows-only."
+    greenworks: "One release, November 2016."
+  behind_a_seam: "steam.ts is the interface. Swapping libraries is one file, by construction — and was."

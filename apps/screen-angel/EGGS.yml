@@ -1,0 +1,139 @@
+# EGGS.yml — the egg: an asynchronous task reified as an object in the game world, with a menu tree
+# for its return value and one item that commits.
+#
+# App level, not Soul Angel, for the same reason the ring and the bus are: a pending thing with a
+# result is not soul-specific. A character out on an errand is the most interesting egg, not the
+# definition of one.
+
+meta:
+  id: eggs
+  status: design
+  built: []
+  not_built: [egg_object, menu_tree_compile, selection_accumulator, hatch_semantics, resume_point, recall]
+  see_also: [OPTICAL-CHANNEL.yml, ANGEL-EVENT-BUS.yml, RECORDER.yml, modules/soul-angel/OUT-OF-GAME-JOBS.yml, modules/soul-angel/UNIVERSAL-JOBS.yml]
+  upstream: "moollm skills/soul-city/GLOSSARY.md (Egg, Errand) and skills/soul-city/SOUL-BRIDGES.md (The errand)"
+
+what_an_egg_is:
+  one_line: "A promise with a location, a sprite, and a menu."
+  the_three_jobs_it_does_at_once:
+    call_in_progress: "Something is outstanding. The egg's presence is that fact, continuously, without a modal anything."
+    return_mailbox: "The result comes back by selecting from the egg's own pie menu."
+    resume_point: "It remembers where and how to put things back when it opens."
+  why_an_object_and_not_a_notification: "A notification is a moment; an egg is a place. You can walk past it, ignore it for a week, point at it, ask it what it is, and act on it — none of which a toast can do. And an absence cannot be clicked."
+  the_pun_is_useful: "Easter egg: a hidden surprise, and a literal egg that contains something and opens once. Both meanings are accurate, so the name teaches the mechanic."
+
+# TWO CHANNELS INTO A CLOSED GAME
+#
+# The egg channel exists because the other channel requires stopping the game.
+
+two_channels:
+  save_file:
+    what: "Read and write the save directly — the gates in moollm skills/soul-city/SOUL-BRIDGES.md."
+    bandwidth: "High. Anything the format holds: every character, every relationship, the whole world."
+    granularity: "Global and structural."
+    cost: "The game must be stopped. Save, quit, edit, relaunch, reload — and everything unsaved since the last write is gone."
+    when: "Between sessions. Bulk moves, migrations, repairs, populating a world, anything touching many records at once."
+    risk: "Total. A malformed write costs the neighbourhood, which is why bridges are non-destructive and keep the original."
+  egg:
+    what: "Pie menus, dialog trees, codes on screen, text prompts and typed parameters — this file and OPTICAL-CHANNEL.yml."
+    bandwidth: "Low. A selection path through a declared tree, plus whatever text a field accepts."
+    granularity: "One character, one outcome, one parameter at a time."
+    cost: "None. It happens during play, in the running game, at the spot where it matters."
+    when: "While playing. Errands, jobs, results coming home, anything a player should witness rather than discover afterwards."
+    risk: "Bounded by construction. Nothing outside the menu tree can be applied, so the worst case is a wrong item selected from a legal list."
+  the_relationship: "Not a fallback ladder — different tools. The save channel moves populations between sessions; the egg channel changes one life during one. The egg channel is the reason routine cross-game play does not require a save-quit-edit-relaunch cycle, and the save channel is the reason the egg channel never has to grow a general-purpose write API."
+  the_shared_discipline: "Both are non-destructive and both report what they did. A hatch writes a line into the album the same way a bridge writes a provenance record."
+
+# THE MENU TREE IS THE TYPE
+#
+# The single most important property. Whatever can come back is exactly what is in the tree, and the
+# tree was compiled from the same source that authored the job.
+
+the_menu_is_the_return_type:
+  flat_outcomes: "Top-level items are the coarse results — the four or five things that can happen at all."
+  nested_by_parameter: "Submenus refine a result into its parameters: which skill, how much, whose relationship, which souvenir came back. A nested tree is a structured value, not a longer enum."
+  multiple_selections: "Selecting is accumulation, not commitment. Pick a result, pick a magnitude, pick a memory to attach, come back tomorrow and pick another — the egg holds the partial value and shows what has been filled in so far."
+  therefore_the_bound: "A job cannot do anything to a character that is not reachable in its own menu tree. The tree is a declared, inspectable, finite space of consequences, which is what makes 'the consequences can be anything' safe to say."
+  and_it_is_readable: "The player can open the tree and see the full space of what this job could possibly do to their character before agreeing to it. Not a permission dialog listing capabilities — the actual outcome list."
+
+hatch:
+  the_item: "Every egg's menu ends with HATCH. It is the commit."
+  semantics: "Hatch applies whatever has been selected, removes the egg, and restores what the egg was holding."
+  hatch_with_nothing_selected:
+    what_it_does: "Returns the character unchanged. No consequences, no effects, nothing recorded but the trip itself."
+    what_it_is: "Cancellation, expressed as the empty return value. There is no separate cancel button, no error path, no failure state to design — the default return is 'nothing happened,' which is always a legal answer."
+    why_that_is_the_right_default: "The one outcome that must never occur is a character who never comes back. Making 'come back with nothing' the zero-effort action means the safe result is also the easiest one to produce, by a player or by a timeout."
+  emergency_recall: "Hatching early is a supported action, not an abort. A fire, a party, a social worker at the door — click the egg, hatch, and the character is back this second. The remote side's answer, if it ever arrives, lands on a call nobody is waiting for and is discarded."
+  timeout: "An unresolved egg hatches on its own at expiry, with the job's declared default — usually 'a normal day at work.' Nobody is left in the placeholder (modules/soul-angel/OUT-OF-GAME-JOBS.yml, expiry)."
+
+the_resume_point:
+  what_it_stores: "Where the character was standing, what they were doing, and what they were about to do. The egg is left in that exact spot."
+  the_car_door_case: "A Sim walking to the carpool vanishes at the car door and the egg sits at the car door. Hatch and she is standing there again, mid-errand, as though she had turned around. Continuity is spatial, not just statistical."
+  why_it_belongs_to_the_egg: "A continuation stored anywhere else is a save-game problem. Stored in a visible object at the place it applies, it is legible to the player and repairable by hand."
+  what_if_the_place_is_gone: "House sold, room deleted, lot rebuilt — fall back to the nearest valid spot and say so in the hatch report. Degrade, never drop (moollm skills/robust-first)."
+
+# GENERALIZING PAST CHARACTERS
+#
+# Eggs are worth building because they are not about errands.
+
+any_pending_thing_can_be_an_egg:
+  examples:
+    - "A character working a job in another program — the case that motivated the mechanic."
+    - "A generation request: a portrait, a story, a piece of music, being made somewhere else."
+    - "A long render or export, with the finished artifact as the return value."
+    - "A download, a mod install, a content-pack fetch."
+    - "Another player's move, a pending trade, a gift in transit across a federation."
+    - "A question asked of a person, waiting on a human answer."
+  occupied_versus_empty: "An occupied egg holds a suspended character and must eventually hatch. An empty egg holds only a pending value and may be discarded. Same object, same grammar, different obligation."
+  what_this_buys: "One authored object, one interaction grammar, and one visual language cover every asynchronous thing the system can do. Players learn eggs once."
+  it_is_a_mechanic_not_plumbing: "Reified async tasks are visible, movable, inspectable and playable. Nothing in a normal life sim lets you hold a pending operation in your hand and decide when it resolves."
+
+# WHAT IT LOOKS LIKE
+#
+# The art is the protocol, so the art has constraints. All of them are satisfied with DGRP, SPR2 and
+# PALT as they were designed to be used — no engine changes, no overlay tricks, no new resource type.
+
+visual_design:
+  rotationally_invariant:
+    the_rule: "The egg is a solid of revolution about the vertical axis, so it presents the same silhouette from every camera rotation."
+    what_it_buys_the_art: "One sprite set per zoom instead of one per zoom per rotation. Three drawings, not twelve, and the same three are correct forever."
+    what_it_buys_the_recognizer: "Template matching against a single known target per zoom. No rotation hypothesis, no pose estimation, no per-angle training — the hardest part of recognizing an in-world object is deleted by drawing it symmetrically."
+  bands_are_the_value:
+    the_form: "Horizontal color-coded bands stacked up the body, read like a resistor: position is the digit, color is the value."
+    why_horizontal: "Bands perpendicular to the axis of revolution stay bands from every rotation. A vertical stripe or a badge on one side would not."
+    encoding: "Defined in OPTICAL-CHANNEL.yml, band_codes. This section is only about how the pixels are built."
+  the_caps_are_the_fiducial:
+    what: "Distinctive high-contrast caps at top and bottom — black against white, adjacent, so the boundary is unambiguous at any zoom."
+    what_they_do: "Three things a color code cannot do for itself: mark where the band stack starts and ends, give a scale reference, and provide a black and a white sample for calibration."
+    why_calibration_matters: "Games tint everything — night, fire, aurora, colored lighting, weather. A known black and a known white in the same object let the reader normalize the bands before decoding them, instead of guessing whether that band is orange or brown under a sunset."
+    symmetric_on_purpose: "Both caps carry the same pattern, so the object is unchanged top-to-bottom in appearance terms and there is no 'wrong way round' to detect or author."
+  built_from_draw_groups:
+    the_mechanism: "One egg object whose DGRP entries compose a body sprite plus per-band sprites. Selecting which band sprites to draw, and with which palette, produces any code from a small fixed set of parts."
+    the_payoff: "Combinatorial appearance without combinatorial art. A hundred distinct eggs are a hundred DGRP selections over the same dozen sprites, not a hundred drawings."
+    palettes: "Band color comes from PALT selection where the game allows it, which moves color out of the pixels and into data — the same reason the original content pipeline did it that way."
+    state_changes: "Kind, state and 'has news' are ordinary object graphic-state changes. The game already switches an object's appearance when its state changes; an egg is just an object that does it meaningfully."
+  legible_to_both_readers: "A player learns 'gold cap band means news' in one session, and the reader decodes the same stripes numerically. One artifact, two audiences, which is the property the whole optical channel rests on (OPTICAL-CHANNEL.yml, the_player_reads_it_too)."
+  authored_once: "Shape, bands, caps, palettes, states and the DGRP table are emitted by the same compile that emits the menu tree and the verb registry (compiled_from_one_source)."
+
+the_grammar:
+  lay: "An object spawns an egg with a kind, a payload, a menu tree, and a resume point."
+  incubate: "It sits there. Its sprite and bands carry kind and state continuously (OPTICAL-CHANNEL.yml, sprite_codes, band_codes)."
+  ask: "The About item, always north on the pie menu, returns the full payload as text, as a code, and as a link. Unknown eggs are introspectable (OPTICAL-CHANNEL.yml, the_about_item)."
+  pick: "Selections accumulate down the tree, in any number of sittings."
+  hatch: "Commit, restore, remove."
+  expire: "Hatch the declared default and report it."
+  events: "Every one of these publishes on the bus under angel.call.* and angel.optical.egg.*, on the ring's clock, so an egg's whole life is a seekable sequence (ANGEL-EVENT-BUS.yml)."
+
+either_hand_drives_it:
+  the_invariant: "The layer clicks the egg's pie items; a person clicks the same pie items. There is no resolution path that only automation can take, and none only a human can take (OPTICAL-CHANNEL.yml, either_hand_can_drive)."
+  consent_modes: "Manual, confirm each, timeout with a named default, auto, yolo — switchable while an egg is outstanding."
+  what_the_player_keeps: "Hatching early, hatching empty, and refusing a selection the layer proposed. Agency over the resolution, always."
+
+compiled_from_one_source:
+  why: "The egg's menu tree, its strings, its sprites and bands, the outcome-to-effect mapping, and the destination binding are one declaration compiled into both the game's resources and the layer's tables (OPTICAL-CHANNEL.yml, compiled_from_one_source)."
+  the_failure_it_prevents: "A menu that changed on one side and a layer that clicks the wrong item silently corrupts a character. One source, one grammar version, stamped in the content."
+
+not:
+  not_a_progress_bar: "It does not promise a completion time and it does not pretend to know one."
+  not_a_message_queue: "One egg, one call, in the world, at a place. Volume is not the point."
+  not_a_way_to_apply_undeclared_effects: "If it is not in the tree, it cannot happen. A job that wants a new consequence recompiles and says so."

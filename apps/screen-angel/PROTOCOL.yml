@@ -1,0 +1,593 @@
+# PROTOCOL.yml — the local control protocol, and how bytes move through it.
+#
+# Two implementations have to agree on this file: src/common/protocol.ts (the server,
+# in Electron main) and cli/screen_angel/protocol.py (the client). They are written out
+# separately in two languages on purpose — the alternative is generating one from the
+# other, which would mean needing a build step to run a shell command.
+
+meta:
+  id: protocol
+  version: 1
+  status: partly_built
+  built:
+    [
+      transport,
+      framing,
+      methods.reading,
+      methods.overlay,
+      methods.capture,
+      methods.developer,
+      images.lifetime,
+      transports.file,
+      transports.base64
+    ]
+  specified: [transports.frame, transports.url, transports.resource, capture.marks, video]
+
+# TRANSPORT
+
+transport:
+  local:
+    unix: "$XDG_RUNTIME_DIR/screen-angel-$UID.sock, overridable with $SCREEN_ANGEL_SOCKET"
+    windows: '\\.\pipe\screen-angel-$USERNAME'
+    why_not_a_port: |
+      A localhost port is reachable by every process on the machine, including a
+      browser tab. A socket in the user's runtime directory is governed by filesystem
+      permissions. For a service whose entire job is reading the user's screen, that
+      difference is the whole security model.
+  remote:
+    status: not_built
+    shape: "WebSocket over TLS with a bearer token, same message grammar"
+    why_it_matters_now: |
+      Remote clients cannot use file paths. Designing image transport as though every
+      client shares a filesystem would bake in an assumption that has to be torn out
+      the first time an agent runs anywhere but this machine. Hence transports, plural.
+
+framing:
+  requests: "One JSON object per line, newline-delimited, UTF-8."
+  replies: "{id, ok:true, result} or {id, ok:false, error:{message, code}}"
+  events: "{event, payload} — arrives unbidden, may land mid-request; clients queue and drain."
+  max_line: "256 KiB. No legitimate request approaches it; the largest thing anyone sends is a selector."
+  debuggability: "The whole text side is readable with nc. That is a feature and binary frames are designed not to break it."
+
+# IMAGES
+#
+# The question this section answers: inline, counted, delimited, compressed, or out of
+# band? All of them, chosen per connection — but never by default.
+
+images:
+  first_rule: |
+    A capture never returns pixels. It returns a descriptor. The client asks for bytes
+    in a second request, in the encoding it can actually use.
+
+    This is not ceremony. The common question an agent has — "did a dialog appear",
+    "is the Save button enabled" — is answered by the accessibility tree in a few
+    hundred bytes. An interface that answered it with a 4K screenshot would be the
+    single most expensive mistake in the protocol, and it would be paid on every call
+    by every caller, including the ones that only wanted a boolean.
+
+  descriptor:
+    shape:
+      id: "Opaque handle, valid until evicted from the cache."
+      width: "Pixels, actual captured size after any downscale."
+      height: pixels
+      format: "png | jpeg | raw-bgra"
+      byteLength: "Exact, so a client can decide before it asks."
+      sha256: "Content address. See caching below."
+      scaleFactor: "So a caller can reason about Retina without guessing."
+      capturedAt: "ISO 8601, because a stale frame is worse than no frame."
+      transports: "Which of the four below THIS connection may use. Offered, not requested."
+    example: |
+      {"id": 7, "ok": true, "result": {
+        "id": "cap_01J8Z...", "width": 1512, "height": 982, "format": "png",
+        "byteLength": 842113, "sha256": "9f2b...", "scaleFactor": 2,
+        "capturedAt": "2026-09-10T16:48:02.117Z",
+        "transports": ["file", "frame", "base64"]
+      }}
+
+  transports:
+    file:
+      how: "Descriptor carries a path. The client opens it."
+      cost: "Zero copy, zero encoding. The cheapest by a wide margin."
+      when: "Local clients. The default when offered."
+      why_it_wins_locally: |
+        Not just speed. A path composes: the client can hand it to ffmpeg, an image
+        viewer, or another tool without ever holding the bytes. Base64 through a
+        socket can only be held.
+      lifetime: "See images.lifetime. Either we own the file and reap it, or the caller named the directory and owns it. The descriptor says which."
+      offered_when: "The listener is a Unix socket or named pipe. Never on a remote listener."
+
+    frame:
+      how: |
+        A counted binary frame on the same connection. The client sends
+        {"method":"image.fetch","params":{"id":"cap_...","transport":"frame"}} and reads:
+
+          {"binary":{"requestId":7,"id":"cap_...","length":842113,"format":"png","sha256":"9f2b..."}}\n
+          <exactly 842113 raw bytes, no delimiter, no escaping>
+
+        Read the header line, then read exactly length bytes. Nothing is scanned for a
+        terminator, so no byte value is special and nothing needs escaping.
+      cost: "Raw size. No base64 tax, no re-encode."
+      when: "Remote clients, and local clients that would rather not touch a disk."
+      why_counted_not_delimited: |
+        Delimiting binary means either escaping every occurrence of the delimiter or
+        hoping it never appears. Counting means reading a number and then reading that
+        many bytes. This is what RESP bulk strings, HTTP chunked encoding, and Docker's
+        stream multiplexing all do, and it is the reason the text side stays greppable:
+        a reader that does not ask for binary never sees any.
+      ordering: "A binary frame follows its own header immediately. Nothing interleaves."
+
+    base64:
+      how: "image.fetch with transport 'base64' returns {data} in the JSON reply."
+      cost: "One third larger on the wire, plus an encode and a decode."
+      when: |
+        Clients that cannot handle a binary frame: a browser over a JSON bridge, and
+        MCP, whose image content type is defined as base64 and leaves no choice.
+      chunking: |
+        Above 1 MiB the reply is split into sequenced parts, {seq, total, data}, so a
+        single line never exceeds the frame limit and a large fetch does not have to be
+        buffered whole on either side.
+      explicit_only: "Never offered as the preferred transport. A caller has to name it."
+
+    url:
+      how: "Descriptor carries an https URL with a single-use token, short expiry."
+      when: "Remote clients, large payloads, and anything a browser should render directly."
+      status: not_built
+      note: "Waits on the remote listener; specifying it now is what keeps 'file' from being assumed."
+
+    resource:
+      how: "The descriptor carries an MCP resource URI, screen-angel://capture/cap_..., and the tool result includes a resource link. The client reads the bytes through resources/read if and when it wants them."
+      when: "MCP clients that advertise resource support."
+      why_it_matters: |
+        It is the only transport that lets a tool answer with a POINTER. Every other
+        option available over MCP puts the whole image in the tool result, which means a
+        4 MB screenshot is spent whether or not anything looks at it, and spent again on
+        every subsequent turn that carries the transcript.
+      not_the_same_as_url: "url is an https endpoint anyone holding the token can fetch. This is client-mediated: the host decides whether to read it, and nothing outside the MCP session can."
+      status: not_built
+
+  negotiation:
+    who_decides: |
+      The server, from the listener the connection arrived on — not from anything the
+      client claims about itself. A client asserting it is local would be a client
+      asking for a file path to somebody else's screenshot.
+    client_hint: |
+      A client may declare preferences at connect time:
+        {"method":"angel.hello","params":{"accept":["frame","file"],"maxInlineBytes":1048576}}
+      The server intersects that with what the listener permits and reports the result
+      in every descriptor's transports array. Postel: an absent hello means "file if
+      you can, base64 if you must".
+
+  lifetime:
+    the_rule: "WHOEVER NAMES THE LOCATION OWNS THE LIFETIME. If we choose the path, we reap it. If the caller chose it, we never touch it again."
+    why_one_rule: "Ownership of a temporary file is the kind of thing that gets decided per call site and then contradicts itself. One sentence that answers both 'who deletes this' and 'can I keep it' is worth more than a policy per transport."
+
+    ours_by_default:
+      where: "A cache directory under the app's userData, in a per-run subdirectory."
+      reaped:
+        on_a_timer: "By age, by total bytes, and by count. Oldest first."
+        at_exit: "The run's own subdirectory goes, unless files in it were pinned."
+        at_startup: |
+          Any run subdirectory whose process is no longer alive is removed. This is the
+          only thing that cleans up after a crash, and without it the cache grows forever
+          in exactly the situation where nobody is watching.
+        and_when_the_pid_lies: |
+          Process ids are recycled. On a machine with long uptime, a dead run's number can
+          be handed to something unrelated, and from then on every startup sees a live
+          process and spares the directory — permanently, in the one case where nothing
+          else will ever collect it. So age is a second test: a run directory nothing has
+          written to in a day goes, whatever the pid says.
+      pinned_have_their_own_cap: |
+        Pinning exempts a file from the reaper, so without a separate ceiling on pinned
+        bytes a long agent session accumulates every screenshot it ever took. The exemption
+        is from the timer, not from arithmetic.
+      never_reaped_while: "A fetch for that image is in flight. Deleting a file out from under a reader to satisfy a size cap trades a disk problem for a race."
+
+    caller_owned:
+      how: "capture.grab takes an optional dir. Given one, the file is written there and the descriptor reports owner 'caller'."
+      what_changes: "We do not reap it, do not count it against any cap, and do not delete it at exit. The caller asked for the bytes somewhere specific, which is a statement that they intend to manage them."
+      what_we_still_refuse:
+        - "A directory that does not exist. Creating one on a caller's behalf guesses at intent and at permissions."
+        - "A path that is not a directory, or is not writable."
+        - "Any dir at all from a remote caller. A filesystem path from a client that is not on this machine is either meaningless or an attack, and the file transport is already local-only for the same reason."
+
+    telling_them_apart:
+      in_the_descriptor: "Every descriptor carries owner, one of ours or caller, and for ours an expiresAt."
+      why_it_is_required: |
+        A path handed over without a stated lifetime is a trap: the caller cannot tell a
+        stable file from one about to be reaped, so they either copy everything defensively
+        or lose data intermittently. Saying when it dies costs one field.
+
+    changing_your_mind:
+      image_pin: "Exempt an app-owned file from reaping until released. For a caller that decides after looking. BUILT."
+      image_promote: "Copy an app-owned file into a caller-owned directory and hand back the new path. The same verb as promoting a segment out of the ring buffer, deliberately — see RECORDER.yml. NOT BUILT: grab with a dir covers the case where you know in advance."
+      image_release: "Done with it, reap now rather than at the cap. Politeness, not a requirement. BUILT."
+    saying_why_it_is_gone: |
+      A reaped id is remembered after its bytes are not, so the error can say "reaped at
+      14:02, grab again" instead of "no such id". The two are the same condition to the
+      server and completely different advice to the caller: one means the handle went
+      stale, the other means it was never right.
+
+    the_transports_that_have_no_files:
+      which: "frame and base64 produce no file, so none of the above applies to them."
+      the_consequence_worth_knowing: "A caller that never wants to think about lifetimes should ask for frame. That is a real answer to 'who garbage collects this', and it is 'nobody, there is nothing to collect'."
+
+  as_mcp_resources:
+    the_decision: "Yes, but as a PROJECTION of the surface that already exists, never as a second surface. One id space, one lifetime model, one implementation."
+    why_not_a_second_surface: |
+      MCP resources are attractive to over-build: they are easy to add and they look like
+      a place to put everything. The failure mode is two parallel naming schemes that
+      drift, and a capability that only some clients can reach. The rule that prevents it
+      is that nothing is reachable ONLY by resource.
+
+    what_maps_well:
+      captures: "screen-angel://capture/{id} — the id the grab already returned, not a new one."
+      recordings: "screen-angel://recording/{id} — the best fit of all. Immutable once written, addressable, and large enough that deferring the bytes is the whole point."
+      windows: "screen-angel://windows — small, stable enough to be worth attaching, and a reasonable list_changed subscriber."
+      profiles: "screen-angel://profile/{name} — small, stable, user-editable."
+
+    what_maps_badly:
+      the_live_tree: |
+        A resource is a thing you can attach and re-read. An accessibility tree is
+        different on every read and is thousands of nodes wide, so a resource URI for it
+        promises stability the thing does not have. It stays a tool, where the caller is
+        forced to notice they are asking a question at a moment in time.
+      anything_subscribable_on_screen_state: "Subscribing to the screen would fire continuously and deliver nothing a poll would not. No subscriptions on live state."
+
+    the_read_write_alignment:
+      what: "Resources are read-only by definition, which is the same line read_vs_act already draws in this file."
+      so: "The resource surface is the READING half, exactly. Nothing that acts is ever a resource, and that falls out of the protocol rather than needing a rule."
+
+    the_lifetime_interaction:
+      the_problem: |
+        A resource link is a promise that the bytes can be fetched later. The reaper in
+        images.lifetime is a promise that they will not be there later. Both cannot hold.
+        Worse, a link outlives the turn: it sits in a transcript and can be read hours on.
+      the_decision: "HANDING OUT A RESOURCE LINK PINS THE IMAGE. Deferred fetch is the entire reason the transport exists, so reaping before the fetch would make the link a lie."
+      the_consequence: "Pinned captures need their own cap, or a long agent session accumulates every screenshot it ever took. Cap by total bytes and evict oldest-pinned-first, reporting it, rather than letting the cache grow without limit."
+      when_it_does_expire: "An expired read returns an error that says the capture was reaped and when, not a bare not-found. The difference decides whether the caller re-grabs or gives up."
+
+    negotiation: "The same mechanism as everything else here: offer resource links when the client advertises resource support, fall back to inline image content when it does not. Client support is genuinely uneven, and a server whose images are unreachable from a tools-only client is a broken server."
+
+  formats:
+    selectable: "Yes — format on any grab. It defaults to auto, because callers will not think about this and the wrong choice is expensive in both directions."
+
+    what_we_can_emit: |
+      PNG and JPEG, because Electron's nativeImage does both with no dependency (toPNG,
+      toJPEG). WebP would be the better modern answer — lossless WebP runs 20-30% under
+      PNG, and lossy WebP beats JPEG at equal size with optional 4:4:4 chroma — but
+      reaching it means a canvas round trip through a renderer or a native image library.
+      Not worth a native dependency yet. Revisit if image bytes ever become the dominant
+      cost.
+
+    png:
+      for: "Widgets, dialogs, menus, text — anything with flat regions and sharp edges."
+      why: |
+        Not merely lossless: usually SMALLER than JPEG for UI, because flat regions and
+        repeated edges are what PNG's filters were built for. And JPEG is actively bad
+        here — ringing around glyph edges, plus chroma subsampling that smears coloured
+        text. At the 1024px sizes a vision model sees, glyphs are already only 8-10px
+        tall, which is exactly where those artifacts stop being cosmetic.
+      ballpark: "A 1024px window crop lands around 80-250 KB."
+      known_limitation: |
+        Electron emits 24-bit PNG. A small UI crop often has under 256 distinct colours
+        and would palettize to a third the size with no loss at all. Not worth a
+        dependency; worth knowing.
+
+    jpeg:
+      for: "Whole screens, game frames, video, photographs — anything with gradients or dither."
+      why: |
+        PNG on photographic content is a catastrophe: a 1920x1080 game frame runs several
+        megabytes as PNG against roughly 90-180 KB as JPEG at quality 82, for a difference
+        no recognizer can see. This is the case where insisting on lossless costs an order
+        of magnitude for nothing.
+      quality: 82
+      floor: "Do not go below 70. Past that, artifacts on any UI element in frame cost more legibility than the bytes are worth."
+      subsampling: "Electron does not expose it, so assume 4:2:0. One more reason text-bearing captures go to PNG."
+
+    raw-bgra:
+      for: "A consumer on this machine about to re-encode anyway — feeding a video encoder, or diffing frames to detect change."
+      why_it_exists: "Zero encode latency. That is the whole argument."
+      never: "Over a socket. 1920x1080 raw is 8.3 MB, and if you are willing to compress it you have described PNG."
+      offered_only_with: "the file transport"
+
+    no_second_compression_layer: |
+      Never gzip a PNG or a JPEG: it spends CPU to save one or two percent of something
+      already entropy-coded. Raw BGRA would compress well, but a compressed raster format
+      is what PNG already is. The format IS the compression.
+
+  auto:
+    the_rule: |
+      PNG when the target is an element or a window. JPEG when the target is a screen,
+      when the captured region exceeds about 1.5 megapixels, or when a game bridge is
+      attached to the focused window.
+    why_by_target_and_not_by_content: |
+      Measuring content is more accurate — sampling a few thousand pixels and counting
+      distinct colours separates UI from photographic almost perfectly, for about a
+      millisecond. It is also unpredictable: the same call returns different formats on
+      different days, and a caller cannot reason about what it will get.
+
+      Predictability wins in a protocol. The target-type rule fits in one sentence, and a
+      caller who disagrees names a format. Add the colour-count heuristic only if the
+      simple rule is observed choosing wrong.
+    audited_not_magic: "The descriptor carries formatReason, so an unexpected format explains itself rather than requiring a reading of this file."
+
+  sizing:
+    downscale_before_encode: |
+      Always, and in that order. Encoding at native resolution and then downscaling pays
+      for both, and the expensive half is the one thrown away.
+    filter: "Lanczos or equivalent. Nearest-neighbour on UI text at half scale is unreadable, which defeats the purpose of capturing it."
+    default: |
+      1024px longest edge. A 4K screenshot is more expensive AND worse for recognition:
+      more tokens, more latency, no more legible. The MCP server passes 1024 unless told
+      otherwise and says so in its tool description.
+    never_recompress_to_fit: |
+      If a payload is too large, downscale and report it in the descriptor. Do not quietly
+      walk JPEG quality down to hit a byte target — that turns a size problem into a
+      legibility problem, silently, in the one direction the caller cannot detect.
+
+  advice:
+    if_you_read_one_thing: |
+      Leave format alone. Ask for the smallest region that answers your question, at the
+      default size, and let auto pick. The two decisions that matter are which region and
+      how big; format follows from them.
+
+  caching:
+    content_addressed: |
+      Every descriptor carries a sha256. A client that has seen that hash already has
+      the bytes and can skip the fetch entirely. This matters more than it sounds: a
+      screen that has not changed produces an identical capture, and an agent polling
+      to see whether a dialog appeared will hit the same hash repeatedly.
+    hash_the_encoded_bytes: |
+      Not the pixels. Hashing pixels is the tempting choice and it builds a cache that
+      serves a PNG to a caller who asked for JPEG, because the two share a hash.
+    server_side: "Captures live in a bounded cache keyed by id. Evicted by age and total bytes; a fetch of an evicted id fails with code 'expired' rather than returning a stale frame."
+
+# CAPTURE
+#
+# One method, capture.grab. Every argument has a default, and the defaults mean
+# "the whole thing, at a size a model can read".
+
+capture:
+  the_point: |
+    A model that has already been handed the tree as JSON knows the name, role, and
+    path of everything on screen. So a capture takes a handle it already holds — an
+    element path, a window pid, a selector — never a rectangle it would have to
+    compute. Asking a caller for pixel coordinates it must first query the size to
+    derive is asking it to do arithmetic that the server can do without being asked.
+
+    Corollary, and the reason every field below is optional: naming a target is enough
+    to get all of it. There is no size to look up first.
+
+  targets:
+    element: '{element: [0, 3, 12]} — a path straight out of a query result'
+    selector: '{selector: "button[name=Save]"} — grabs each match; see multiple below'
+    window: '{window: 1234} or {window: "focused"}'
+    screen: '{screen: "focused"} or {screen: 0} for a specific display'
+    rect: '{rect: {x, y, width, height}} — the escape hatch, in screen coordinates'
+    resolution_order: "element, selector, window, screen, rect. Exactly one may be given."
+    what_the_budget_does_here: |
+      Resolving a selector or an element path means walking the tree, and a walk that
+      runs out of budget reports the same empty result as one that genuinely found
+      nothing. So resolution walks deeper than a plain query does, and a miss under
+      truncation says so in the error. The caller is waiting on a screenshot either way;
+      a few hundred milliseconds of walking is the cheap side of that trade.
+
+  coordinate_spaces:
+    why_this_is_written_down: |
+      Three spaces meet in this feature, they are all measured in something called a
+      pixel or a point, and two of them were wrong in the first implementation. Verified
+      against real pixels on 2026-09-11 by querying a widget, drawing on it, and looking.
+    accessibility: "Points, top-left origin, global across all displays. What AX and UIA report."
+    screencapturekit: "Points relative to the DISPLAY's origin; output pixels are points times the display scale. Verified exact at scale 2: a 1443x926 point window produced 2886x1852 pixels, and a widget at global (328,69) landed on the pixel predicted by (global minus window origin) times scale."
+    overlay_page:
+      what: "CSS pixels from the top-left of the OVERLAY WINDOW, which is not the top-left of the desktop."
+      the_bug_this_caused: |
+        macOS will not place an ordinary window under the menu bar; it slides it down
+        instead. We asked for the union of all displays at 0,0 and got 0,38. Highlights
+        were therefore drawn 38 points low — visible, plausible, and pointing at the
+        wrong widget. A multi-monitor desktop breaks it the other way: a display to the
+        left of the main one makes the union origin negative, so every box lands too far
+        right.
+      the_fix: "Main converts screen points to page coordinates once, using the window's ACTUAL bounds, and the page stays ignorant of screens."
+      the_lesson: "An overlay that draws in the wrong place still draws. Nothing errors, so only pixels can tell you."
+
+  region:
+    what: "A named part of the target. Saves the caller from doing fractions of a size it has to fetch first."
+    default: all
+    values:
+      all: "The whole target. What you get by saying nothing."
+      halves: [top, bottom, left, right]
+      thirds: [top-third, middle-third, bottom-third, left-third, center-third, right-third]
+      ninths: [top-left, top-center, top-right, center-left, center, center-right, bottom-left, bottom-center, bottom-right]
+      edges: "title-bar (top 40 logical px), status-bar (bottom 40) — where those bars actually live, per platform"
+    why_symbolic: |
+      "top-right of the window" survives the user resizing the window. A rectangle
+      computed from a size read a moment ago does not. Symbolic regions are resolved
+      at capture time against the target's current bounds, so they cannot go stale
+      between the query and the grab.
+
+  size:
+    what: "How big the returned image is. Not what part of the screen it covers — that is region."
+    default: fit
+    values:
+      fit: "Longest edge 1024. The default because it is what a model should get."
+      full: "Native pixels, no downscale. For a human looking at detail."
+      "<number>": "Longest edge in pixels."
+    why_1024_by_default: |
+      A 4K screenshot is more expensive AND worse for recognition than a 1024px one:
+      more tokens, more latency, no more legible. Downscaling belongs at the source
+      because that is the only place it can be done before the bytes are paid for.
+      A caller that genuinely needs detail asks for a region, not a bigger image.
+
+  pad:
+    what: "Extra context around the target, before region is applied."
+    default: snug
+    values:
+      tight: "0 — exactly the bounds. Clips focus rings and shadows."
+      snug: "8 logical px. The default; enough to see that a control has an edge."
+      loose: "48 logical px. Enough to see what a control sits next to."
+      "<number>": logical pixels
+    why_it_has_a_default_at_all: |
+      A control captured at exactly its bounds is often unrecognizable — a checkbox
+      becomes a grey square with no label, and the label is the only thing that says
+      what it does. Padding is not decoration; it is usually the difference between a
+      legible crop and a useless one.
+
+  marks:
+    what: "Draw numbered markers on the overlay before grabbing, so the image and the JSON share labels."
+    shape: '{marks: "button"} or {marks: ["button[name=Save]", "textfield"]}'
+    returns: "descriptor plus marks: [{n, path, role, name, bounds}] — the legend"
+    why: |
+      This is the one place where having an overlay pays off twice. The model gets a
+      picture with 1, 2, 3 drawn on the actual widgets and a JSON legend saying what
+      each number is, so "click 3" is unambiguous without any coordinate ever crossing
+      the wire. Grounding a description in a shared label beats grounding it in pixels.
+    honesty: "The marks are ours, drawn on our overlay. They are not part of the application and vanish when cleared."
+
+  multiple:
+    when: "A selector target that matches more than one element."
+    default: "One descriptor per match, in tree order, each with its element path attached."
+    limit: "16 by default. A selector matching 400 rows should be narrowed, not rendered."
+    contact_sheet: '{layout: "sheet"} composites the matches into one image with the legend, for when the question is "which of these" rather than "what is this".'
+
+  batching:
+    why: |
+      Every accessibility attribute read is a synchronous round trip to another
+      process, and so is every window capture. Six separate grabs cost six times the
+      latency for no reason when the caller knew all six targets up front.
+    shape: '{"method": "capture.batch", "params": {"grabs": [{...}, {...}]}}'
+    returns: "Descriptors in request order. A failed grab yields an error object in its slot rather than failing the batch — one unreadable control should not lose the other five."
+
+  examples:
+    whole_window: '{"method":"capture.grab","params":{"target":{"window":"focused"}}}'
+    one_control: '{"method":"capture.grab","params":{"target":{"element":[0,3,12]}}}'
+    control_in_context: '{"method":"capture.grab","params":{"target":{"element":[0,3,12]},"pad":"loose"}}'
+    toolbar_only: '{"method":"capture.grab","params":{"target":{"window":"focused"},"region":"title-bar"}}'
+    every_button_labelled: '{"method":"capture.grab","params":{"target":{"screen":"focused"},"marks":"button"}}'
+    full_detail_crop: '{"method":"capture.grab","params":{"target":{"element":[0,3]},"size":"full"}}'
+
+# VIDEO
+#
+# Deliberately not the same mechanism.
+
+video:
+  not_through_this_protocol: |
+    Video chunks do not travel over the control socket. They go from the encoder to a
+    sink, and the protocol carries the key or URL of what landed, never the payload.
+    A one-minute chunk is tens of megabytes; a socket built for selectors has no
+    business moving it, and a client that wanted the bytes would rather have the S3
+    URL anyway.
+  what_the_protocol_carries: "recorder.start / recorder.stop / recorder.status, and a chunk event per completed file: {key, startedAt, durationSec, byteLength, sha256, sink}"
+  see: [RECORDER.yml, src/common/profiles.ts]
+
+# METHODS
+
+methods:
+  reading:
+    angel.info: "Version, backend, permissions, modules, active bridge, Steam status."
+    angel.permissions: "Grant state."
+    query.select: "{selector, options} -> matched elements, with cost accounting."
+    query.tree: "{options} -> everything up to budget."
+    query.at: "{x, y} -> the element under a point."
+    window.focused: "The window query walks."
+    window.list: "Every on-screen window."
+  overlay:
+    overlay.highlight: "{rects} -> outline them. Empty clears."
+    overlay.say: "{text, ttlMs} -> one line, expiring. No markup, no buttons."
+    overlay.toggle: "Show or hide."
+  capture:
+    status: partly_built
+    built: [capture.grab, image.fetch, image.pin, image.release]
+    capture.grab: "{target, region?, size?, pad?, format?, quality?, dir?, pid?} -> descriptor. See capture below."
+    capture.batch: "{grabs: [...]} -> descriptors, one round trip. See capture.batching. NOT BUILT."
+    image.fetch: "{id} -> {format, data} base64. The transport of last resort."
+    image.pin: "{id} -> descriptor, exempt from the reaper until released."
+    image.release: "{id} -> null. Deletes it if we own it."
+    not_yet:
+      marks: "Numbered markers drawn on matching elements, with a legend. Refused explicitly rather than ignored."
+      layout_sheet: "Compositing several matches into one contact sheet. Likewise refused."
+    counted_as_reading: |
+      capture.grab needs Screen Recording, which is a heavier permission than
+      Accessibility, and it is still in READ_ONLY_METHODS. The read/act split is about
+      whether a call CHANGES anything, and a screenshot changes nothing. Which OS
+      permissions a call needs is a different axis, reported separately by
+      angel.permissions. Conflating the two would mean an agent allowed to look could
+      not look at the thing it was allowed to look at.
+  developer:
+    status: built
+    window.console: "{action?: show|hide|toggle} -> {visible}. Brings our own console window up."
+    the_way_back_in: |
+      Not a convenience. On macOS this is the only route that always exists.
+
+      The overlay asks to be visible on fullscreen spaces, and that request switches the
+      whole APPLICATION to accessory activation policy: no Dock icon, no Cmd-Tab entry.
+      Measured in both directions — calling app.dock.show() afterwards brings both back and
+      stops the overlay covering another app's fullscreen space. Covering a fullscreen game
+      is the job, so accessory policy stays.
+
+      That leaves the menu bar item as the intended way in, and a menu bar can be too full
+      to show one. macOS drops the item with no warning and no overflow affordance, so the
+      app looks like it failed to start rather than like it ran out of room.
+
+      Shown with the window joining all spaces, so it arrives where the user is rather than
+      on a space they would have to go find.
+    dev.devtools: "{window?, action?} -> {window, open}. Opens a JavaScript console on one of OUR windows."
+    dev.eval: "{code, window?} -> {value}. Evaluates in that window and returns the value."
+    why_on_the_protocol_at_all: |
+      The overlay is created unfocusable so it can never take keyboard from a game, and
+      that makes it the one window no click and no menu accelerator can ever reach. It is
+      also the window whose behaviour is hardest to reason about. So the only way to get a
+      console onto it is to ask for it by name, and asking has to work from somewhere that
+      is not the app's own UI.
+
+      The second reason is scripted use: a verb here works when the app is not frontmost,
+      over ssh, and with nobody at the keyboard.
+    not_read_only: |
+      dev.eval runs arbitrary JavaScript in our renderer, which can call everything the
+      renderer can. Over this socket that is no new capability — a caller who can reach
+      the socket can already drive every verb directly. Over a read-only listener it is a
+      large one, so it is excluded from READ_ONLY_METHODS while capture.grab is included.
+      The line is what a call can DO, not how alarming it sounds.
+    two_things_that_bit:
+      no_top_level_await: |
+        executeJavaScript has no top-level await, so `await $q('button')` — the first thing
+        anyone types — is a syntax error. The code is wrapped in an async arrow. Whether it
+        is wrapped as an expression or as a statement body is decided in the main process
+        by compiling it with new Function and never calling it, which is V8's own answer
+        instead of a regular expression's guess. Injecting the expression form to see
+        whether it parses works too, and leaves a red uncaught SyntaxError in the console
+        every time somebody uses a statement list.
+      the_page_csp_forbids_eval: |
+        The renderer's Content Security Policy has no unsafe-eval, correctly, so new
+        Function is unavailable IN THE PAGE. The caller's code is therefore inlined as
+        source text rather than passed as a string to be compiled. executeJavaScript itself
+        is unaffected, because that is not the page compiling a string.
+
+  absent_on_purpose:
+    input_injection: |
+      Nothing types, clicks, or moves the pointer. The native addons can. Consent for
+      injection is a per-grant question and that machinery does not exist, so the verb
+      does not exist either. A protocol that grows the capability before the consent
+      is a protocol that ships it by accident.
+
+      The consent model is now specified in CAPABILITIES.yml, in three layers: what the OS
+      grants us, what we enforce on modules and clients, and what can only be declared and
+      audited. Note also that writing an accessibility attribute is a different capability
+      from synthesizing input — see APP-CONTROL.yml — so some of what looked blocked by this
+      is not.
+
+# SPLIT
+
+read_vs_act:
+  why_listed_separately: |
+    READ_ONLY_METHODS is a constant in protocol.ts, not a comment. A caller granting
+    access to an agent needs to be able to grant the halves separately: an agent that
+    may look is a different proposition from one that may change the screen.
+  read: [angel.info, angel.permissions, query.select, query.tree, query.at, window.focused, window.list, capture.screen, capture.window, capture.element, image.fetch]
+  act: [overlay.highlight, overlay.say, overlay.toggle, recorder.start, recorder.stop]
+
+see_also:
+  - src/common/protocol.ts
+  - cli/screen_angel/protocol.py
+  - skills/screen-angel/CARD.yml
+  - RECORDER.yml

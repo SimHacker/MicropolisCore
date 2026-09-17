@@ -1,0 +1,195 @@
+# CARD.yml — screen-angel
+# Interface sniff: every verb, every flag, every failure mode.
+#
+# Resolution pyramid:
+#   👁️ GLANCE.yml  read this first — is the skill relevant at all
+#   📇 CARD.yml    this file
+#   📜 SKILL.md    protocol, selector reference, recipes, caveats. Self-contained.
+#   📚 README.md   why each decision was made. Read when something looks arbitrary.
+
+name: screen-angel
+tagline: "Read and act on any application's accessibility tree from a CLI, a script, or an MCP tool call."
+
+description: |
+  Screen Angel is an Electron app that binds the platform accessibility APIs
+  (AXUIElement on macOS, UI Automation on Windows) and exposes them over a local
+  socket. This skill is how an agent talks to it: a Python client module, a thin CLI
+  wrapper, and an MCP stdio server, all three speaking one protocol.
+
+  The layer is application-agnostic. It works on Microsoft Word as readily as on a
+  game, and the game-specific parts live in modules the app loads, not here.
+
+layout: |
+  GLANCE.yml    = is this relevant, and what are the verbs
+  CARD.yml      = this file: full interface, flags, failure modes
+  SKILL.md      = protocol, selector language, worked examples, caveats. Self-contained.
+  README.md     = the design argument: why descriptors not images, why no :nth-child
+  ../../cli/    = the Python package this skill drives
+  ../../PROTOCOL.yml   = wire format, image transports, what is built vs specified
+  ../../SCREEN-ANGEL.yml = the layer's own design document
+
+# THE MODEL
+
+model:
+  one_socket: |
+    The app listens on a Unix domain socket, or a named pipe on Windows. Not a
+    localhost port: a port is reachable by every process on the machine, and this is a
+    service that reads the user's screen.
+  location: "$SCREEN_ANGEL_SOCKET, else $XDG_RUNTIME_DIR/screen-angel-$UID.sock, else \\\\.\\pipe\\screen-angel-$USERNAME"
+  wire: "Newline-delimited JSON. Requests carry an id; replies carry ok plus result or error. Events arrive unbidden with an event key."
+  focus_scoped: |
+    query and tree walk the FOCUSED application. There is no way to walk a background
+    app's tree — that is a property of the platform APIs, not a limitation of this
+    interface. Use windows to see what else exists, and expect the user to switch.
+
+# INTERFACE
+
+commands:
+  info:
+    args: []
+    what: "Version, backend, permissions, loaded modules, active bridge, Steam status."
+    call_first: "Answers 'can I see anything at all'. If permissions are not granted, everything else returns empty rather than failing, which looks like a broken app."
+  permissions:
+    args: []
+    what: "Accessibility and screen-capture grant state."
+  windows:
+    args: []
+    what: "Every on-screen window: pid, app, title, bounds."
+    macos_caveat: |
+      On-screen means the CURRENT Space. Minimized windows and windows on other Spaces
+      are absent, so a full-screen app on its own Space may honestly report only its own
+      windows. Not a filter and not a bug.
+    empty_titles: "macOS withholds window names until Screen Recording is granted. A blank title is usually that."
+  focused:
+    args: []
+    what: "The one window query will walk."
+  query:
+    args: ["<selector>", "--depth N", "--nodes N", "--json"]
+    what: "Match a selector against the focused app's tree."
+    returns: "elements, visited, truncated, durationMs, selector"
+  tree:
+    args: ["--depth N", "--nodes N", "--json"]
+    what: "Dump the whole tree up to budget. Start here on an unfamiliar app."
+  at:
+    args: ["<x>", "<y>", "--json"]
+    what: "The element under a screen coordinate. Cheap; no walk."
+  show:
+    args: ["<selector>", "--depth N", "--nodes N"]
+    what: "query, then outline the matches on the overlay. The visible version of a claim."
+  highlight:
+    args: ["--clear", "or x,y,w,h ..."]
+    what: "Outline arbitrary screen rectangles."
+  say:
+    args: ["<text>", "--ttl MS"]
+    what: "One line of text on the overlay, expiring. No markup, no buttons, by design."
+  overlay:
+    args: ["toggle"]
+    what: "Show or hide the overlay window."
+  watch:
+    args: ["--json"]
+    what: "Block, printing focus changes and bridge attachments as they happen."
+  mcp:
+    args: []
+    what: "Run the MCP stdio server. Same verbs, as tools."
+
+global_flags:
+  --json: "Machine-readable output. Human tables otherwise. Every read command supports it."
+  --socket PATH: "Override the socket location."
+  --timeout SEC: "Default 30. A full tree walk of a browser window genuinely takes seconds."
+
+# SELECTOR LANGUAGE
+
+selectors:
+  combinators:
+    " ": "descendant — any depth below"
+    ">": "direct child"
+    ",": |
+      union — matches either side. Results come back deduplicated and in walk order,
+      so `button, checkbox` reads exactly like a one-role query. This is the usual way
+      to ask the real question: "what can I interact with here?"
+  predicates:
+    "[attr=value]": equals
+    "[attr!=value]": not equals
+    "[attr*=value]": contains
+    "[attr^=value]": starts with
+    "[attr$=value]": ends with
+    "[attr]": present and non-empty
+  attributes: [name, value, role]
+  pseudo: [":focused", ":enabled", ":disabled"]
+  omitted_on_purpose: |
+    No sibling combinators (+ ~) and no :nth-child. Sibling order is not stable
+    between releases of the target application, so a selector that depends on
+    position is a selector that breaks on the day the app updates. Match on what a
+    widget IS, not where it sits.
+  quoting: "Values may be bare, 'single', or \"double\" quoted. Quote anything with spaces."
+  roles: |
+    Normalized to one lowercase vocabulary across platforms: button, textfield,
+    checkbox, menuitem, window, list, row, text, and so on. AXButton and UIA
+    control type 50000 both arrive as 'button'. The raw platform role is still on
+    every element as nativeRole.
+    Guessing from the platform name will bite you: AXStaticText is 'text' not
+    'statictext', AXScrollArea is 'pane', AXTextArea is 'textfield'. SKILL.md has the
+    full 41-name list and the alias table.
+
+# WHAT IT CANNOT DO
+
+boundaries:
+  no_input: |
+    Nothing here types, clicks, or moves the pointer. The native addons can, and the
+    protocol deliberately does not expose it, because consent for injection is a
+    per-grant question and that machinery does not exist yet. Do not tell a user you
+    clicked something.
+  no_background_walk: "Only the focused application's tree is readable. A property of the platform APIs, not of this interface."
+  sparse_electron_and_java: |
+    Chromium exposes its tree only when accessibility is switched on, so a query against
+    another Electron app can legitimately return nothing while a native app in the same
+    session returns hundreds of nodes.
+  no_arbitrary_ui: "say is text and an expiry. Anything that could draw a convincing dialog over another app is a phishing kit."
+  elevated_targets_windows: |
+    An unelevated client cannot read an elevated application's tree at all, and
+    Windows reports permissions as granted anyway. An empty tree from a UAC-elevated
+    app is this, not a bug.
+
+failure_modes:
+  not_running: "NotRunning — no socket. The fix is to launch the app, not to retry."
+  permissions_missing: "Requests succeed and return nothing. Always check info first."
+  truncated: "truncated:true means the budget ran out, not that the app has no more widgets. Raise --nodes or narrow the selector."
+  path_is_not_identity: |
+    element.path is a walk-order handle valid until the tree changes. It is not an id.
+    Do not store it and expect it to mean the same widget later.
+
+# PYTHON API
+
+python:
+  install: "None. Standard library only. Add cli/ to PYTHONPATH or run cli/screen-angel."
+  example: |
+    from screen_angel.client import open_angel
+
+    with open_angel() as angel:
+        print(angel.info()["backend"]["name"])
+        result = angel.show('button[name*=Save]')      # find and outline
+        angel.say(f'{len(result["elements"])} save buttons')
+  modules:
+    protocol.py: "Transport, framing, socket location. No dependencies."
+    client.py:   "Angel class — one method per verb, plus show/find_one compositions."
+    render.py:   "Human-readable tables and trees. The only module that formats."
+    cli.py:      "Thin argparse wrapper. No logic."
+    mcp_server.py: "MCP stdio server. Same client, different mouth."
+  why_python: |
+    A client is a script. It must run on a machine that installed the app from Steam,
+    where there is no node_modules and no build step. The protocol is json over a
+    socket, both standard library, so the client needs no dependencies at all.
+
+# MOOLLM
+
+moollm_compatible: true
+respects: [yaml-jazz, postel, sniffable-python, path]
+composes_with: [cursor-mirror, sister-script, play-learn-lift]
+standalone: |
+  Nothing here requires MOOLLM. SKILL.md carries the full protocol in its body, the
+  CLI is stdlib Python, and the only real dependency is a running Screen Angel.
+
+related:
+  sniffable-python: "The CLI follows its depth conventions; sections are sniffable at glance."
+  sister-script: "CLI and skill are written together; the doc is the spec."
+  postel: "Selectors and coordinates accepted loosely; JSON emitted strictly."

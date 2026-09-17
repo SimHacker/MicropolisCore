@@ -1,0 +1,66 @@
+# DISTRIBUTION.yml — free on Steam, with unlockable advanced features and bridges.
+
+meta:
+  id: distribution
+  status: spec
+  built: [steam_interface]
+  see: src/main/steam/steam.ts
+
+# THE SHAPE
+
+model:
+  base: free
+  why_free: |
+    The base is a DVR, a clipper, an overlay and an accessibility tool. Free is not a
+    marketing choice — the thing has to be installed and running before the moment worth
+    capturing happens, and nobody pre-installs a paid utility on the chance they might want
+    it later. The free tier's job is to be already running.
+  paid:
+    advanced_editing: "Continuous zoom and automated follow. STUDIO.yml editing.advanced."
+    bridges: "Per-game and per-app bridges, each one real work against a specific game's save format and UI."
+    why_these: "Both are the parts where the cost is per-title or per-algorithm rather than per-user, which is exactly what a one-time unlock is for."
+
+why_steam:
+  audience: "The people who want to clip a game are already there, and the app is already next to the game it is recording."
+  already_wired: "src/main/steam/steam.ts exists. The interface is built; the store presence is not."
+  entitlements: "Steam DLC app ids for unlocks, which is the mechanism Steam handles best and the one users already understand."
+
+# WHAT NEVER GOES BEHIND THE PAYWALL
+#
+# A tier list is also a safety decision, and getting it backwards makes the free tier the
+# dangerous one.
+
+always_free:
+  save_file_backup: "APP-CONTROL.yml copies a save before touching it, with no preference to turn it off. A paid backup would mean the free tier is the one that loses people's games."
+  redaction_gate: "Nothing leaves the machine unredacted. A paid privacy feature is not a privacy feature."
+  the_consent_ui: "Granting, seeing and revoking injection rights. Security surfaces are not upsells."
+  accessibility_use: |
+    Reading the screen, speech in and out, screen reading. Charging a disabled person for
+    access to their own computer is not a business model this project will have.
+  export_to_disk: "A user's own content, out of the app, always. Anything else is hostage-taking."
+
+# PRACTICAL
+
+practical:
+  entitlement_source_agnostic: |
+    Unlocks have to be checkable without Steam, because Steam will not be the only channel.
+    One entitlement interface, Steam as its first implementation — otherwise every paid
+    feature grows a Steam dependency and the direct download build cannot compile.
+  overlay_collision: "Steam's overlay and ours are both topmost. Test the interaction early; two click-through layers over one full-screen game is exactly where surprises live."
+  permissions_after_install: |
+    A Steam-installed app still has to walk the user through the macOS Accessibility grant,
+    and that flow is the first thing a new user meets. It has to be good, and it has to
+    explain why a clipping tool wants to read the screen — because that is a reasonable
+    question.
+  notarization: "macOS builds are notarized regardless of channel. A native addon plus a system-level grant is exactly the combination Gatekeeper is strictest about."
+  review_surface: |
+    A tool that reads other applications and can synthesize input will draw questions on
+    review. The answers are the per-app consent grant, the audit log, and the fact that
+    nothing is offered to a remote listener. Those exist for their own sake; they are also
+    the review answer.
+
+see_also:
+  - STUDIO.yml
+  - APP-CONTROL.yml
+  - RECORDER.yml
+  - src/main/steam/steam.ts

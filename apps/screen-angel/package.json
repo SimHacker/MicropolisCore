@@ -1,0 +1,73 @@
+{
+  "name": "screen-angel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Screen Angel — selectors, events and recognition over any application's interface, in a transparent click-through overlay. Host app for the soul-angel module.",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "author": "Don Hopkins",
+  "main": "out/main/index.js",
+  "scripts": {
+    "postinstall": "cmake-js compile --log-level warn",
+    "native": "cmake-js compile",
+    "native:clean": "cmake-js clean",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "check": "svelte-check --tsconfig tsconfig.json && tsc --noEmit -p tsconfig.json",
+    "icons": "./tools/render-icons.sh",
+    "package": "electron-vite build && electron-builder --dir",
+    "dist": "electron-vite build && electron-builder"
+  },
+  "build": {
+    "appId": "com.donhopkins.screen-angel",
+    "productName": "Screen Angel",
+    "files": [
+      "out/**/*",
+      "build/Release/*.node"
+    ],
+    "extraResources": [
+      "resources/trayTemplate.png",
+      "resources/trayTemplate@2x.png",
+      "resources/icon.png"
+    ],
+    "mac": {
+      "icon": "resources/icon.png",
+      "category": "public.app-category.developer-tools",
+      "extendInfo": {
+        "NSAccessibilityUsageDescription": "Screen Angel reads the interface of other applications so it can describe, outline and narrate what is on screen.",
+        "NSScreenCaptureUsageDescription": "Screen Angel captures the screen so it can show you what it sees and record what happened."
+      }
+    },
+    "win": {
+      "icon": "resources/icon.png"
+    },
+    "linux": {
+      "icon": "resources/icon.png",
+      "category": "Development"
+    }
+  },
+  "dependencies": {
+    "@screen-angel/soul-angel": "workspace:*",
+    "steam-bridge": "^0.4.6",
+    "steamworks-ffi-node": "^0.11.2",
+    "yaml": "^2.8.4"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@types/node": "^22.10.0",
+    "cmake-js": "^8.0.0",
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "node-addon-api": "^8.9.2",
+    "svelte": "^5.57.0",
+    "svelte-check": "^4.7.6",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0"
+  },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "44.3.0"
+  }
+}

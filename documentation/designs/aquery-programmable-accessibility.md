@@ -1,5 +1,11 @@
 # aQuery: jQuery for the accessibility tree
 
+> **Renamed September 2026.** This design is now the **Screen Angel**, spec'd at
+> [`apps/screen-angel/`](../../apps/screen-angel/README.md) — with Soul
+> Angel as its first application and The Sims 1 as Soul Angel's. This document keeps the
+> historical name because it is an account of the 2013–2026 proposals, and every source it cites
+> says aQuery.
+
 ## A scriptable layer over every app on your machine — that nobody ever shipped
 
 **Primary sources:** Don Hopkins on RobotJS — [HN 9977226](https://news.ycombinator.com/item?id=9977226) on [9973272](https://news.ycombinator.com/item?id=9973272); Don to Morgan Dixon — [HN 11520967](https://news.ycombinator.com/item?id=11520967); Autumn thread bibliography — [HN 18797818](https://news.ycombinator.com/item?id=18797818) on [18794928](https://news.ycombinator.com/item?id=18794928); Slate + aQuery — [HN 18797587](https://news.ycombinator.com/item?id=18797587); [aQuery wiki (archive)](https://web.archive.org/web/20180826132551/http://donhopkins.com/mediawiki/index.php/AQuery).

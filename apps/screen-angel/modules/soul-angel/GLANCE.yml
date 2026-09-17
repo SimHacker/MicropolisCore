@@ -1,5 +1,6 @@
 # soul-angel — universal game companion (dev home; spec stage, code next)
 # Read order: README.md -> ARCHITECTURE.yml -> SOUL-ALBUM.yml -> DVR.yml -> SOUL-BRIDGE-SDK.yml
+#             -> GAME-BRIDGES.yml -> SOUL-EMIGRATION.yml
 
 app:
   id: soul-angel
@@ -8,14 +9,16 @@ app:
   product: paid_steam_software
   purpose: "Always-on DVR + universal Soul Album + machinima/stream studio + per-game Soul Bridges"
 
-architecture: "Web center of gravity — TypeScript in embedded browser; thin native shell (Windows first, Mac later)"
+architecture: "Web center of gravity — TypeScript in one cross-platform Electron host; native addons only for capture and accessibility (Kando model)"
 
-tiers:
-  1_universal: "DVR ring buffer, scrub-to-card album, narration, Twitch/OBS — ANY game, zero integration"
-  2_soul_bridge: "Per-game TS plugin in web overlay — save/album read-write (The Sims 1 first)"
-  3_broadcast: "Soul City Broadcast Network — TV / radio / magazine channels"
+what_you_get:   # keyed by what the game has to give up for it
+  needs_nothing_from_the_game: "DVR ring buffer, scrub-to-card album, narration, Twitch/OBS — works on ANY game"
+  needs_a_per_game_plugin: "A Soul Bridge: read and write the game's saves and its own album format (The Sims 1 first, Sims 4 with modder help)"
+  needs_a_soul_city_account: "Publish to Soul City Broadcast Network — TV / radio / magazine channels"
 
-subsumes: stream-gateway   # WWSFF apps/stream-gateway specs -> event bus + broadcast sinks here
+emigration: "Souls leave games — enumerate, export, optional player-authored farewell, replant (Tiny Life first)"
+
+subsumes: stream-gateway   # WWSFF apps/stream-gateway specs -> broadcast sinks here, bus at app level
 
 specs:
   overview: README.md
@@ -23,7 +26,11 @@ specs:
   album: SOUL-ALBUM.yml            # story cards, provenance, narration, game-album bridging
   dvr: DVR.yml                     # ring buffer, time scrub, still/clip capture, per-OS capture paths
   bridges: SOUL-BRIDGE-SDK.yml     # per-game plugin interface — FileBridge scoped, overlay-hosted
-  license: LICENSE.md
+  roster: GAME-BRIDGES.yml         # which games, in what order, and what every other game still gets
+  emigration: SOUL-EMIGRATION.yml  # export/farewell/replant ritual; object packs and their positioning rule
+  screen_angel: ../../SCREEN-ANGEL.yml   # the layer this module is the first application of; named aQuery 2013-2026
+  host_app: ../../README.md              # the Electron host that loads this module
+  license: ../../LICENSE.md
 
 show_side:   # product/community framing lives in WWSFF
   product_spec: WillWrightShowForFood/catalogs/soul-city/soul-angel.yml

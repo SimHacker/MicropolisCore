@@ -19,11 +19,14 @@ objects, screen snapshots, video, audio, stories — puts it on conveyor belts, 
 to the Soul City web site, Twitch, YouTube, and any other consumer. The game keeps running;
 the conveyor never stops.
 
-| Tier | Needs from the game | What you get |
-|------|--------------------|--------------|
-| **1 Universal** | Nothing | DVR ring buffer, scrub back in time, still/clip capture, Soul Album story cards, voice narration, Twitch/YouTube/OBS gateway |
-| **2 Soul Bridge** | Per-game plugin | Save read/write/edit/generate, soul (character) enumeration, native album round-trip (e.g. The Sims Family Album) |
-| **3 Broadcast** | Soul City account | Soul City Broadcast Network channels — TV, radio, magazine; federation syndication |
+What you get depends only on how much the game is willing to tell us, and the first row needs
+nothing at all:
+
+| What it needs | What you get |
+|---|---|
+| **Nothing from the game** | DVR ring buffer, scrub back in time, still and clip capture, Soul Album story cards, voice narration, Twitch/YouTube/OBS gateway |
+| **A per-game plugin** (a Soul Bridge) | Read, write, edit, and generate saves; enumerate the characters living in them; round-trip the game's own album format, such as The Sims Family Album |
+| **A Soul City account** | Publish albums to Soul City Broadcast Network channels — TV, radio, magazine — and syndicate across the federation |
 
 ## Naming: Soul Album and Family Album
 
@@ -42,8 +45,21 @@ the album engine, the DVR timeline, the bridges, and the publish pipeline. The n
 is a thin host for the things a browser cannot do: window capture, hardware encoding,
 transparent overlay windows, Steam SDK, input injection, OS accessibility.
 
-Windows ships first (WinUI 3 + WebView2). The Mac port later reuses the entire web layer and
-swaps the shell (ScreenCaptureKit + VideoToolbox). Details: [ARCHITECTURE.yml](ARCHITECTURE.yml).
+One Electron host on all three platforms, with small native addons behind a single JavaScript
+interface and a backend chosen at runtime — the shape [Kando](https://github.com/kando-menu/kando)
+already proves. Only two capability families need native code at all: **capture** and
+**accessibility**. Details: [ARCHITECTURE.yml](ARCHITECTURE.yml).
+
+That shell is not new, and it is not ours. Don proposed it in 2013 — as *aQuery*, now the
+**[Screen Angel](screen-angel/README.md)** — and built a working prototype by making a hidden
+WebView in a macOS window manager un-hidden, transparent and topmost, then drawing pie menus over
+every application on the screen.
+
+**Soul Angel is the Screen Angel's first application, and The Sims 1 is Soul Angel's.** Each is
+the other's beachhead: games are the hardest possible target, because most of them expose no
+accessibility tree at all, so a layer that works here works anywhere. The harvested design, the
+rescued 2013 email thread with Peter Korn, Ben Shneiderman, Blair MacIntyre and James Landay, and
+the Prefab lineage are in [screen-angel/](screen-angel/README.md).
 
 ## Spec map
 
@@ -53,12 +69,17 @@ swaps the shell (ScreenCaptureKit + VideoToolbox). Details: [ARCHITECTURE.yml](A
 | [SOUL-ALBUM.yml](SOUL-ALBUM.yml) | The album schema — story cards, provenance, narration, game-album bridging |
 | [DVR.yml](DVR.yml) | Ring buffer always rolling; pause game, scrub video, freeze frame to card |
 | [SOUL-BRIDGE-SDK.yml](SOUL-BRIDGE-SDK.yml) | Per-game TypeScript plugins in the overlay — scoped file access, switched per game |
+| [GAME-BRIDGES.yml](GAME-BRIDGES.yml) | Which games get bridges and in what order; the album features that need no bridge at all |
+| [UNIVERSAL-JOBS.yml](UNIVERSAL-JOBS.yml) | Jobs a character can hold in any game at all, bridge or no bridge — the journalist, the photographer, the byline that sorts a session into one story per correspondent |
+| [OUT-OF-GAME-JOBS.yml](OUT-OF-GAME-JOBS.yml) | A Sim goes to work and work is a different game: the egg she leaves behind, the outcome that comes back, and the rabbit hole with something playable in it |
+| [SOUL-EMIGRATION.yml](SOUL-EMIGRATION.yml) | How a soul leaves a game and lands in a better one; object packs and why they are never the headline |
+| [screen-angel/](screen-angel/README.md) | The layer this app is the first application of — selectors and events over accessibility APIs plus pixel recognition, harvested from 2013–2026 with sources |
 | [LICENSE.md](LICENSE.md) | Source-available terms — build on it, plug into it; commercial rights reserved |
 
 ## Subsumed: stream-gateway
 
 The stream-gateway project (brain bus → OBS overlay, Twitch/YouTube chat, SSE/WebSocket event
-bus, overlay viewer, capture/compositing research) is subsumed into SoulAngel's universal tier.
+bus, overlay viewer, capture/compositing research) is subsumed into the features that work on any game.
 Its specs remain in WWSFF `apps/stream-gateway/` as design references; the event bus, overlay,
 and broadcast sinks land here as SoulAngel subsystems.
 

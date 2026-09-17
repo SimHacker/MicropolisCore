@@ -1,0 +1,102 @@
+# AR-SDKS.yml — a deliberate raid on augmented reality toolkits for ideas, mapped onto
+# what this system already has.
+#
+# AR glasses SDKs solved a problem with the same shape as ours: get semantic information
+# about a live image, then draw convincingly on top of it, with authoring cheap enough that
+# non-programmers ship effects. They are years ahead on the authoring and effects side and
+# there is no reason to rediscover any of it.
+
+meta:
+  id: ar-sdks
+  status: harvest
+  built: []
+  purpose: "A catalogue of ideas worth taking, each with where it lands here. Not a comparison, not an endorsement, and not a plan to ship all of it."
+  confidence: "Capability categories are solid. Specific product names and feature names are from memory and worth confirming before any of them is quoted publicly — flagged inline where lower."
+  see_also: [MEDIA-STREAMS.yml, ANALYTICS.yml, STUDIO.yml, ACCESSIBLIFY.yml]
+
+# WHY THE ANALOGY HOLDS
+
+the_same_problem:
+  theirs: "A camera frame, on-device models that find faces, bodies, hands and surfaces, and a render layer that draws registered graphics over the world."
+  ours: "A screen frame, an analytics layer that finds people, poses, objects and events, and a transparent overlay that draws registered graphics over the app."
+  the_difference_that_matters: |
+    Their world is three-dimensional and moves because the camera moves. Ours is a flat image
+    that changes because the application redraws it. So everything about tracking transfers
+    with the depth problem deleted, which makes our version strictly easier.
+  the_difference_that_costs_us: "They run the models on-device with a tuned pipeline. We send frames to a local or LAN endpoint. Their latency floor is lower and always will be."
+
+# THE HARVEST
+
+tracking_primitives:
+  what_they_have: [face_landmarks_and_mesh, expression_triggers, full_body_skeleton, hand_tracking_and_gestures, plane_and_surface_detection, world_mesh, image_marker_tracking, person_and_hair_segmentation, depth]
+  what_we_take:
+    expression_triggers: |
+      The idea, not the implementation: a named, discrete event derived from continuous
+      tracking — mouth opened, brows raised — that an author can bind to without touching the
+      landmark data. We want exactly this over analytics output. 'Sim is kissing' is an
+      expression trigger.
+    segmentation_as_a_matte: "A person mask exposed as a texture an author can composite with, rather than as data to interpret. Our masks arrive from analytics and should be usable the same way — as a matte, in the overlay, by an effect."
+    marker_tracking: "The flat-world version is template matching on a region, which is cheaper than anything they have to do and immediately useful for recognizing a fixed UI panel."
+  what_does_not_apply: [plane_detection, world_mesh, depth, spatial_anchors]
+  our_equivalent_of_an_anchor: "The anchored box in STUDIO.yml — a region pinned to a subject and kept on it by tracking. Same concept, two dimensions, and already specified."
+
+authoring:
+  the_actually_important_part: |
+    The tracking is not why those ecosystems produced hundreds of thousands of effects. The
+    AUTHORING is. Every one of these toolkits converged on the same three things, and that
+    convergence is the strongest design signal in this file.
+  node_based_effect_graphs:
+    what: "A visual dataflow editor where authors wire inputs to parameters — Lens Studio's material graph, Spark AR's patch editor, TouchDesigner, Max, Quartz Composer, Blender's node editors, compositing nodes in every video tool."
+    why_it_matters_here: "This IS MediaGraph, arrived at independently and repeatedly by every toolkit that had to let non-programmers build media effects. See MEDIA-STREAMS.yml — the revival does not need to argue for the paradigm any more."
+  trigger_response_without_code:
+    what: "A behavior component: pick a trigger, pick a response, no scripting. The on-ramp under the scripting layer."
+    why_it_matters_here: "Our event stream plus our renderer list is already trigger-and-response (ANALYTICS.yml, renderers). Exposing it as a two-dropdown binding is a small amount of work for most of the reachable audience."
+  templates:
+    what: "Start from a working effect and change it, rather than start from an empty scene."
+    why_it_matters_here: "The single cheapest thing on this list. A dozen working examples is worth more than any amount of documentation, and it is how every one of these ecosystems actually onboarded people."
+  scripting_in_typescript: "Lens Studio scripts in JavaScript and TypeScript, over a scene-object-and-component model. Our overlay is a browser and our modules are TypeScript, so we already have the better version of this — with no custom engine to learn."
+
+effects:
+  what_they_have: [particle_systems, mesh_deformation_and_warping, liquify, post_process_chains, physically_based_materials, tween_and_easing_libraries, face_retexturing, screen_space_distortion]
+  what_we_take:
+    warping_and_distortion: "The heart fountain is the easy case. Displacing the overlay — or a copy of the captured frame — by a field driven by a signal is the auto-rumbler generalized, and it is where the visual payoff is."
+    easing_as_a_first_class_thing: "Every binding wants a curve. Linear signal-to-parameter looks mechanical, and a library of curves is the difference between an effect that reads as physical and one that reads as a debug view."
+    post_process_over_the_captured_frame: |
+      An important consequence: we hold the frame, so effects can process the GAME'S pixels
+      rather than only drawing beside them. Vignette on pause is already this. Zoom, blur,
+      color grade, displacement and time echo are the same capability.
+  the_web_gives_us_this_free: "WebGL and WebGPU, and the entire shader and effect ecosystem around them, run in the overlay already. No engine to build, no renderer to port, and shaders are portable from the places we are borrowing from."
+
+inputs_and_bindings:
+  what_they_have: [tap, gaze, gesture, voice_command, speech_recognition, audio_amplitude_and_spectrum, device_motion]
+  what_we_take:
+    audio_reactive_parameters: "Standard in every one of these toolkits, and the direct descendant of the auto-rumbler. Amplitude and spectrum are nearly free to compute and bind."
+    voice_as_a_trigger: "We already intend speech input and output. What the AR toolkits add is treating an utterance as an ordinary trigger in the same binding system as everything else, rather than as a separate assistant feature."
+    the_general_lesson: "Every input is a signal, every parameter is a sink, and the interesting product is the BINDING TABLE between them. Designing that table once is worth more than adding features to either side."
+
+distribution:
+  what_they_have: [one_click_publish, effect_discovery_surfaces, remixing, creator_attribution]
+  what_we_take:
+    remixing: "An effect that arrives as data can be opened, changed, and republished. This is how a small library becomes a large one without the authors doing the work."
+    attribution: "Carried in the artifact. Relevant well beyond politeness — the descriptions, palettes and effects in this system are shareable artifacts and the person who made one should stay attached to it."
+  ours_is_different: "Distribution here goes through Steam and the module system (DISTRIBUTION.yml, MODULES.yml), and an effect is not a module — it is data. Which is safer, and the reason effects can be shared far more freely than bridges."
+
+specific_toolkits:
+  snap_lens_studio: "The one named. Scripting in JS/TypeScript, scene objects and components, material graph, VFX editor, bring-your-own on-device models, and hand and body tracking on Spectacles. The most complete authoring story of the group."
+  apple_arkit_realitykit: "Face anchors with blend-shape coefficients, body tracking, scene reconstruction, people occlusion. Worth reading for how a platform names and structures tracking results."
+  google_arcore_and_mediapipe: "MediaPipe is the openly usable one — on-device face, hand and pose models with a documented graph model. The plausible path if we ever want tracking locally instead of over a socket."
+  meta_spark_ar: "The patch editor was the best trigger-response authoring in the group. Discontinued — around 80% confident it shut down in early 2025 — which leaves a population of effect authors with nothing to author in. Worth confirming before anyone repeats it."
+  8th_wall_and_webxr: "Web-native AR. Directly relevant because our renderer is a browser, so their constraints are ours and their techniques port without translation."
+  tiktok_effect_house: "Evidence about scale rather than technique: the authoring floor can be low enough that the effect library grows by orders of magnitude."
+
+# WHAT TO DO WITH THIS
+
+sequencing:
+  first: "The binding table. Signals in, parameters out, curves between. The auto-rumbler is the test case and needs no annotation, no model, and no schema."
+  second: "Named triggers over analytics events, so an author binds to 'person fell' without touching a keypoint."
+  third: "Templates. A dozen working effects, as data, remixable."
+  last: "A node editor. It is the thing everyone converged on and also the thing that is worthless without the three above already working."
+
+not:
+  not_an_ar_system: "No camera, no room, no depth, no glasses. The screen is the world here, and that is a smaller and better-defined problem."
+  not_a_feature_list: "A harvest. Most of this will not be built, and the sequencing section is the honest short list."

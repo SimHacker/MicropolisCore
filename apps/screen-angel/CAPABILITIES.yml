@@ -1,0 +1,145 @@
+# CAPABILITIES.yml — who may do what, in three layers that are different in kind.
+#
+# Layer 1 the operating system enforces on us. Layer 2 we enforce on modules, bridges and
+# clients. Layer 3 is declared and audited because it cannot be enforced. Conflating them
+# produces either security theatre or a permission dialog nobody can answer.
+
+meta:
+  id: capabilities
+  status: spec
+  built: [os_grant_reporting]
+  vocabulary: "MOOAM — principal, resource, permission, grant, least privilege. moollm/designs/MOOAM.md"
+
+# LAYER 1 — THE OS
+
+os_layer:
+  who_enforces: "The operating system. Not us, not negotiable, not subdividable, and not fakeable."
+  what_is_granted: "Screen Angel itself, as one application, machine-wide."
+  capabilities:
+    read_tree:
+      macos: "Accessibility (AXIsProcessTrusted)"
+      windows: "UI Automation — available without a prompt; per-process integrity still applies"
+      gives: "Selectors, the tree, element bounds, window lists with titles"
+    read_pixels:
+      macos: "Screen Recording (ScreenCaptureKit)"
+      windows: "Windows.Graphics.Capture"
+      gives: "Grabs, the recorder, thumbnails, region confirmations"
+    write_attributes:
+      macos: "Same Accessibility grant as read_tree. Setting AXValue or AXPosition is not a separate OS permission."
+      windows: "Same UIA access. InvokePattern and TransformPattern come with the tree."
+      gives: "Press a control, focus, move and resize windows. See APP-CONTROL.yml attribute_writes_are_not_injection."
+    inject_input:
+      macos: "Accessibility, again — CGEvent posting rides the same grant"
+      windows: "SendInput at an integrity level the target accepts; UIAccess for elevated targets"
+      gives: "Keystrokes and clicks into applications with no usable tree, which is most games"
+  the_awkward_truth: |
+    The OS does not split these the way the features do. On macOS one Accessibility grant
+    covers reading the tree, writing attributes AND synthesizing input. So the user's
+    coarse-grained yes is coarser than what we want to promise them, which is precisely why
+    layer 2 exists: the fine-grained promise has to be ours, and it has to be visible.
+
+degradation:
+  principle: "Useful with any subset, including none. A missing capability removes features and never breaks the app. robust-first: a crashed tool is infinitely wrong."
+  matrix:
+    nothing_granted:
+      works: "Config, the library, editing and exporting already-captured video, sharing, pie menus and launcher over our own windows, app launching"
+      unavailable: "Everything that touches another application"
+      why_still_useful: "It is a clip editor and a launcher. Small, but not a dialog box apologizing for itself."
+    pixels_only:
+      works: "The whole DVR — ring, recorder, scrub, select, clip, stream, share. Frames mode. OBS."
+      unavailable: "Selectors, element anchoring, attribute writes, tree-based confirmations"
+      note: "The single most valuable feature needs exactly one grant, and it is not the scary one."
+    tree_only:
+      works: "Selectors, highlight overlay, speech driving, screen reading, attribute writes, window management"
+      unavailable: "Capture, recording, thumbnails, region_stable and region_moving confirmations"
+      note: "The window manager also needs exactly one grant. Two big features, one grant each, neither requiring the other."
+    tree_and_pixels:
+      works: "Everything except driving apps that have no usable tree"
+      unavailable: "Pausing a tree-less game, therefore the seamless cut for most games"
+    everything:
+      works: "All of it, including the save-file choreography"
+  reporting: "angel.permissions reports grant state, and the UI says which features are dark and which grant would light them. A disabled feature explains itself rather than being missing."
+
+# LAYER 2 — OURS, AND ENFORCED
+
+app_layer:
+  who_enforces: "Screen Angel, at the host API boundary."
+  why_it_can_be_deterministic_here: |
+    MOOAM's own caution is that inside one LLM call there is no way to know who acted, so
+    its declarations are advisory. A module host is different: a bridge is an object calling
+    a named host method, and the call site is observable. So this is the layer where MOOAM
+    stops being aspirational and becomes enforcement — same words, actual teeth.
+  how_hard_the_teeth_are:
+    deterministic: "Every caller that can only reach us THROUGH the boundary — control socket clients, MCP clients, agents, and sandboxed modules. Refusing the call refuses the capability, full stop."
+    advisory_and_audited: |
+      Trusted in-process modules, which run with the privileges of the main process and can
+      reach the native addon or the filesystem without asking us. Their declared capabilities
+      are checked and every exercised one is logged, which catches mistakes and makes behavior
+      legible — but installation, not the per-call check, is the real grant.
+    specified_in: "MODULES.yml, trust_boundary. Keeping this distinction visible matters more than the tidier claim, because the tidier claim would be false for exactly the modules with the most access."
+  principals: [modules, bridges, plugins, control_socket_clients, mcp_clients]
+  resources: "Host methods, capture targets, specific applications, save files, sinks, export targets, the overlay."
+  grants:
+    shape: "principal has permission on resource. Namespaced by the principal's id so two bridges cannot collide."
+    least_privilege: "Nothing is granted by default. A manifest declaring twelve capabilities gets whichever ones the user turns on, and the others fail as refusals rather than errors."
+    no_self_grant: "A bridge cannot grant itself anything. It declares what it wants; the user decides."
+    discoverable: "Every capability a principal declares is listable, with its description and whether it is currently granted."
+    revocable_live: "Revoked mid-session takes effect on the next call. No restart, and no window where a revoked capability still works."
+    audited: "Every exercised capability is logged with the principal and the target. 'What touched my save file' has an answer."
+
+  arbitrary_and_specific:
+    what: |
+      Layer 2 capabilities are whatever the app or game they concern need them to be. The
+      generic layer does not have to understand them — it enforces names that the bridge
+      defines and the user recognizes.
+    the_sims_example:
+      declared_by: modules/soul-angel/bridges/sims1
+      capabilities:
+        read_save: {destructive: false, default: on}
+        write_save: {destructive: true, default: off, requires: backup}
+        place_object: {destructive: false, default: off}
+        edit_sim: {destructive: true, default: off}
+        kill_sim: {destructive: true, default: off, note: "Don't kill people."}
+        delete_family: {destructive: true, default: off}
+      why_this_is_not_a_joke: |
+        A content generation platform that can place things into a game can place things
+        into a game. The user who wants generated furniture in their living room has not
+        agreed to anything happening to the family living in it, and the difference between
+        those two is not something a generic permission model could ever name. The bridge
+        names it, in the game's own nouns, and the user reads a list they understand.
+    destructive_flag:
+      what: "Marks a capability whose effect cannot be undone by revoking it afterwards."
+      consequences: "Defaults off. Shown apart from the harmless ones. Where a save is involved, gated behind the mandatory backup in APP-CONTROL.yml."
+      why_a_flag_and_not_a_tier: "Destructiveness is a property of the action, not a rank. Reading a save and deleting a family are not two points on one scale."
+
+  content_policy_rides_here: |
+    Capabilities are also where generation policy attaches, because they are already the
+    per-game vocabulary. What a bridge may place, modify or destroy is a capability
+    question, and refusing at the capability boundary is enforceable in a way that
+    instructing a generator not to is not.
+
+# LAYER 3 — DECLARED, AUDITED, NOT ENFORCED
+
+advisory_layer:
+  who: "Agents and skills driving Screen Angel through MCP or the control socket."
+  what_is_enforceable: "The connection. A client gets the capabilities its listener and its grants allow, and calls outside them are refused at the socket. That part is layer 2."
+  what_is_not: |
+    Which character inside a model wanted a thing, or whether a skill honoured what its
+    metadata declared. MOOAM says this plainly and it is true here: we know what arrived on
+    the connection, never who in the soup asked for it.
+  therefore: "Declare in the skill metadata, enforce at the connection, audit the transcript. skill-snitch's model, applied to a native host."
+  read_only_by_default: "The MCP server exposes reading and refuses everything else until granted, which is already how it ships."
+
+# WHAT THE USER SEES
+
+ui:
+  one_screen: "OS grants at the top with what each unlocks, our grants below them grouped by principal, and the audit log a click away."
+  never: "A modal at the moment of need, offering allow or cancel with no context. That dialog trains people to click allow."
+  honesty: "If a capability is granted, say so while it is in effect. An injection grant that is live and invisible is a keylogger by another name."
+
+see_also:
+  - PROTOCOL.yml
+  - APP-CONTROL.yml
+  - DISTRIBUTION.yml
+  - modules/soul-angel/GAME-BRIDGES.yml
+  - "moollm/designs/MOOAM.md"

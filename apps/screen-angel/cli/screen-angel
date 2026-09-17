@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+"""Entry point. Runs from a checkout with no install and no PYTHONPATH.
+
+Deliberately not a console_scripts shim: this has to work when someone has the app from
+Steam and a terminal, with no pip, no virtualenv, and no intention of acquiring either.
+"""
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from screen_angel.cli import main
+
+if __name__ == "__main__":
+    sys.exit(main())

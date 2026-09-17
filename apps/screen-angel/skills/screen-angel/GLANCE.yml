@@ -1,0 +1,54 @@
+# GLANCE.yml — screen-angel
+# |◈| "Be the angel on the shoulder."
+#
+# Resolution pyramid — read down only as far as you need:
+#   👁️ GLANCE.yml  this file   is this relevant, and what are the verbs?
+#   📇 CARD.yml    ~180 lines  full interface, flags, failure modes
+#   📜 SKILL.md    ~400 lines  how to use it, and what will bite you. Self-contained.
+#   📚 README.md   ~200 lines  why it is built this way. The design argument.
+# Beyond the skill: ../../PROTOCOL.yml (wire format) · ../../SCREEN-ANGEL.yml (the layer)
+
+what: |
+  Drive a live desktop through its accessibility tree. Ask what is on screen,
+  match widgets with CSS-like selectors, outline them where the user can see,
+  say one line over everything.
+  Thin CLI and an MCP server over one Python client module.
+
+why: |
+  The 1990s assistant had every part except the one that mattered: it could
+  see the widgets and could not tell what they were FOR. That part is you.
+  This skill is the socket where a recognizer plugs into a desktop.
+
+when:
+  - 'What is the user looking at? → angel info, angel windows'
+  - 'Find a widget → angel query "button[name=Save]"'
+  - 'Show me you found the right one → angel show (outlines it on screen)'
+  - 'What is under the cursor? → angel at X Y'
+  - 'Watch for the app to change → angel watch'
+  - 'Tell the user something in place → angel say "..."'
+
+selectors: |
+  A deliberate CSS subset. Space = descendant, > = child, comma = union.
+  [name=Save] [name*=Sav] [name^=Sa] [name$=ve] [name!=x] [value]
+  :focused :enabled :disabled
+  No sibling combinators, no :nth-child — sibling order is not stable
+  between releases of the app you are pointing at.
+
+key_commands:
+  looking: [info, windows, focused, query, tree, at]
+  showing: [show, highlight, say, overlay]
+  watching: [watch]
+  serving: [mcp]
+
+two_halves:
+  read: "info permissions query tree at focused windows — safe, no visible effect"
+  act: "highlight say overlay — changes the user's screen; nothing types or clicks"
+
+script: cli/screen-angel
+mcp: "python3 -m screen_angel.mcp_server (stdio)"
+permissions: [read, terminal]
+standalone: "Works with no MOOLLM. Needs a running Screen Angel and Python 3.10+, no pip install."
+composes_with:
+  - sniffable-python   # This CLI is written to its depth conventions
+  - yaml-jazz          # Profiles and specs are semantic YAML
+  - postel             # Accepts sloppy selectors and coordinates, emits strict JSON

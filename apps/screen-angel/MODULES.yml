@@ -1,0 +1,94 @@
+# MODULES.yml — Screen Angel as a host: TypeScript modules running inside it with full
+# access, and the trust boundary that honestly implies.
+#
+# Status: the host, the module interface and the built-in registry exist and run
+# (src/main/modules/). Isolation tiers, manifests and the sandboxed tier do not.
+
+meta:
+  id: modules
+  status: partly_built
+  built: [host, module_interface, bridge_registration, builtin_registry, host_api_alias]
+  not_built: [manifests, capability_checks, sandboxed_tier, third_party_loading, signing]
+  see_also: [CAPABILITIES.yml, PROTOCOL.yml, AGENT.yml, ACCESSIBLIFY.yml, modules/soul-angel/SOUL-BRIDGE-SDK.yml]
+
+two_positions: |
+  There are exactly two ways to be a consumer of the layer, and they are not two APIs.
+
+  OUTSIDE it, over a transport — CLI, MCP, skill, socket, HTTP, S3. Serialized, capability
+  checked at the boundary, and unable to crash us.
+
+  INSIDE it, as a loaded TypeScript module — direct calls, no serialization, and full access
+  to the process. This is where Soul Angel and the Sims bridge live.
+
+  Publishing the surface (ACCESSIBLIFY.yml, publishing) and hosting modules are the same
+  layer facing in opposite directions: one turns the merged tree into something anyone can
+  read, the other turns it into something a program can be built on.
+
+# WHAT THE INSIDE POSITION BUYS
+
+why_in_process:
+  latency: "Per-frame work is possible. A bridge that wants to look at the play area thirty times a second cannot pay a serialization round trip for each look."
+  buffers: "Pixels by reference rather than by copy. The difference between handing over a pointer and encoding a PNG is the difference between viable and not."
+  handles: "Native element references can be held across calls instead of re-resolved from a selector every time, which is both faster and more correct when the tree is changing."
+  binary: "Save file parsing, proprietary formats, anything that is real code. No amount of protocol design makes an IFF parser expressible as a sequence of JSON verbs."
+  ui: "A module can contribute its own overlay surfaces and its own panels, as part of our accessible surface rather than beside it."
+
+the_interface:
+  today: "src/main/modules/module.ts — AngelServices, ModuleContext, Bridge, ScreenAngelModule. Read-only services: query, dumpTree, elementAt, focused and open windows, plus focus and bridge events."
+  imported_as: "@screen-angel/host-api. When third-party modules become real, that alias becomes a published package and nothing else moves."
+  growth: "Acting capabilities — writing files, injecting input, driving lifecycle, recording — arrive as named methods on the same services object, each gated per CAPABILITIES.yml."
+  deliberately_smaller_than_the_process: "The services object is what a module SHOULD need. It is not what a module CAN reach, and the difference is the whole of trust_boundary below."
+
+# THE PART THAT MUST BE SAID PLAINLY
+
+trust_boundary:
+  the_fact: |
+    A TypeScript module loaded into the main process runs with the privileges of the main
+    process. It can require the filesystem, open a socket, load the native addon directly,
+    and reach every capability the OS granted us — whether or not the host API offers it.
+
+    So the narrow services object is an ERGONOMIC and AUDIT surface, not a sandbox. It makes
+    the intended path obvious and it makes exercised capabilities loggable. It does not stop
+    a module that declines to use it.
+  therefore: "For in-process modules, INSTALLATION IS THE GRANT. The meaningful decision happens once, at load time, not per call."
+  what_enforcement_still_means_here:
+    deterministic_for: "External clients and sandboxed modules. Their calls cannot reach anything except through the boundary, so refusing a call refuses the capability."
+    advisory_and_audited_for: "Trusted in-process modules. A well-behaved module's declared capabilities are checked and logged, which catches mistakes, makes behavior legible, and answers 'what touched my save file' — and a determined module can step around it."
+    the_honest_summary: "The capability layer is a real security boundary for everything out-of-process and a strong convention plus an audit trail for everything in-process."
+  why_not_just_sandbox_everything: "Because of why_in_process. The reasons to be inside are real, and a design that sandboxes the Sims bridge has not made it safe, it has made it unable to do its job."
+
+isolation_tiers:
+  trusted:
+    what: "In-process. Full access. Direct calls."
+    default_for: "First-party modules that ship with the app — soul-angel and its bridges."
+    admission: "User-visible installation, a readable manifest, and provenance. Signed for anything distributed."
+  sandboxed:
+    what: "A separate process speaking the same protocol as any external client. Capability checks are deterministic and a crash takes down the module, not Screen Angel."
+    default_for: "Third-party modules, anything downloaded, anything unreviewed."
+    cost: "Serialization, and no per-frame work. A module that genuinely needs the inside position has to ask for it and say why."
+    status: not_built
+  the_same_code_either_way:
+    claim: "A module written against the services object runs in either tier without modification, because in-process the calls are direct and out-of-process the identical verbs go over the socket."
+    why_this_is_worth_the_effort: |
+      It makes the tier a deployment decision rather than a rewrite. A third-party bridge
+      starts sandboxed, earns trust, and moves in without its author touching the code —
+      and a first-party bridge can be moved OUT to reproduce a bug in isolation.
+    caveat: "True for the request-response surface. Buffers by reference and held native handles are exactly the things that do not survive the move, so a module using them is declaring which tier it needs."
+
+# BEFORE YOU TRUST ONE
+
+audit:
+  the_problem: "A module is code that arrives from somewhere and then has full access. That is the same shape as every extension ecosystem that went wrong."
+  manifest: "Declares id, name, targets, and every capability wanted, each with a human-readable reason. Listable, diffable across versions, and shown at install rather than buried."
+  static_review: "Scan for the patterns that indicate a module reaching around the host API — direct filesystem access, network, loading native code, spawning processes. Not proof of malice; a reason to read it."
+  runtime_record: "Everything that went through the host API, per module. Combined with the static scan, the pair answers both 'what did it say it would do' and 'what did it actually do'."
+  lineage: "MOOLLM's skill-snitch is the same problem in the same shape — audit an extension before trusting it, then watch it at runtime. Worth borrowing the method rather than reinventing it."
+  version_pinning: "A trusted module that updates itself is a trusted module you did not review. Trust attaches to a version."
+
+failure:
+  containment: "A module that throws is deactivated and reported, never allowed to take the overlay or the recorder down with it. robust-first: degrade to the layer still working with one fewer module."
+  identification: "The log is prefixed with the module id, which is already true in the built host, so a misbehaving module is nameable rather than inferable."
+
+not:
+  not_a_plugin_marketplace: "Distribution is a separate question (DISTRIBUTION.yml). This is the loading and trust model."
+  not_a_sandbox_for_the_trusted_tier: "Said once more because it is the thing most likely to be misread: full access means full access."

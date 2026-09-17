@@ -1,0 +1,300 @@
+# ANALYTICS.yml — sending video out to a video analytics system, and layering what comes
+# back onto the video it came from.
+#
+# Status: specified. Nothing built. The sink interface and the chunk manifest it rides on
+# are specified in RECORDER.yml; the drawing surface exists.
+
+meta:
+  id: analytics
+  status: specified
+  built: []
+  not_built: [annotation_schema, batch_transport, realtime_transport, annotation_rendering, scoring]
+  see_also: [RECORDER.yml, STUDIO.yml, PROTOCOL.yml, APP-CONTROL.yml, MEDIA-STREAMS.yml, AR-SDKS.yml, ACCESSIBLIFY.yml]
+
+premise: |
+  Screen Angel produces video from anything on screen. A video analytics system consumes
+  video and returns annotations: where the people are, how they are posed, what objects are
+  in the scene, which objects a person is carrying or manipulating, and what actions are
+  happening over time. Those annotations can be drawn back over the same video, or over the
+  live screen while the game is still running.
+
+  The round trip is the product: game -> chunks -> analytics -> annotations -> drawn back.
+  Everything in this file is one direction or the other of that loop.
+
+# VOCABULARY
+#
+# The terms below are the standard ones from the computer vision literature, used with
+# their standard meanings. Anything this file invents, it invents because there is no
+# standard term, and it says so.
+
+vocabulary:
+  detection: "A bounding box plus a class label plus a confidence score, for one object in one frame. No identity across frames."
+  track: |
+    One object's trajectory across frames, carrying a stable track ID. The multi-object
+    tracking sense of the word. See naming_collisions — this file never uses 'track' to
+    mean a stream inside a container file.
+  re_identification: "Re-associating a track with the same object after an occlusion, a scene cut, or a move to another camera. ReID in the literature."
+  pose_estimation: |
+    Inferring joint locations for a person. The output is KEYPOINTS — commonly the COCO
+    17-keypoint set — and the figure drawn through them is a SKELETON. Across frames it is
+    pose tracking.
+
+    'Skeletal animation' is the game-engine term for driving a rigged mesh from a bone
+    hierarchy, which is a rendering technique and the opposite direction of data flow.
+    Estimating where the joints are is pose estimation. Keeping the two apart matters here
+    precisely because The Sims is doing skeletal animation while the analytics system is
+    doing pose estimation on the pixels that animation produced.
+  segmentation_mask: "Per-pixel extent of one object instance, rather than a box around it. Instance segmentation."
+  human_object_interaction: |
+    A <human, verb, object> triplet — the exact shape of 'objects being carried and
+    manipulated by people'. HOI detection in the literature.
+  spatio_temporal_action_detection: "An action label attached to a specific person's box over a span of time. The AVA-style task. This is the one that answers 'who is doing what, where, when'."
+  temporal_action_localization: "Start time, end time, action label. No box, no subject."
+  action_segmentation: "A dense per-frame action label for the whole frame. Every frame gets exactly one label."
+  event: |
+    A rule firing over any of the above. Not a vision task — the output of whatever logic
+    sits on top of one. 'Event' is deliberately neutral, and events are what become cues.
+  ground_truth: "The labels treated as correct for scoring purposes. See ground_truth below, which is the reason games are interesting and not just convenient."
+  burn_in: "Rendering annotations permanently into the exported pixels, so they survive any player. The broadcast term. The alternative is keeping them as data alongside the video."
+
+  naming_collisions:
+    overlay: |
+      'The overlay' already means Screen Angel's click-through window, one per display.
+      Annotations are DRAWN ON the overlay; they are not themselves overlays. No new term
+      needed as long as nobody says 'an overlay' meaning a box around a person.
+    track: |
+      A container format calls its streams tracks. Computer vision calls an object's
+      trajectory a track. This file uses only the second sense, and calls the first a
+      STREAM, because the trajectory meaning is the one that appears in annotation data.
+    marks_and_cues: |
+      Established already and restated because it is the same kind of distinction: marks are
+      spatial and belong to one still grab (PROTOCOL.yml), cues are temporal and belong to
+      the timeline (STUDIO.yml). Detections are spatial-and-temporal, which is why they are
+      neither: they are annotations, and the events derived from them become cues.
+
+# THE INTERFACE
+
+interface:
+  shape: "Screen Angel sends video and frames out. Something sends annotations back. Both directions are plain transports — object storage and HTTP — with a documented payload."
+  generic_on_purpose: |
+    This file specifies an open interface with no vendor in it. Leela's video analysis system
+    is a consumer of it and the reason it exists, but the interface names no endpoint, no
+    model, no internal behavior and no proprietary detail, and it must not acquire any.
+
+    Two reasons, and either alone would be sufficient. Coupling: a bridge written against
+    a generic annotation schema keeps working when the analytics system is replaced,
+    upgraded, or run locally for development. Publication: this repository is public.
+  the_proprietary_part_stays_where_it_is: |
+    The analysis itself, what it can detect, how well, and how it is deployed are not
+    described here and are not described anywhere in this repository. What lives here is
+    the plumbing and the drawing.
+
+# GETTING VIDEO OUT
+
+transports_out:
+  batch:
+    what: "Chunks land in object storage through the sink interface that already exists. The analytics system reads the bucket."
+    granularity: "One chunk. With the default minute chunk, an answer arrives within a minute or two of the thing happening."
+    good_for: "Training and test corpora, offline scoring, anything where nobody is watching a screen and waiting."
+    mechanics: "The sink writes the chunk and its manifest. Discovery on the far side is a storage event notification or a poll of the prefix — Screen Angel does not care which, and specifying it here would be specifying someone else's deployment."
+  realtime:
+    what: "The frames output mode posts individual PNGs or JPEGs to an HTTP endpoint on the same machine or the same network."
+    granularity: "One frame. Latency is the encode-free grab plus the request."
+    where_the_analysis_runs: |
+      Localhost, or a GPU box on the same LAN — an edge box, which is how the live demos are
+      run. That is the difference between a demo that feels immediate and one that does not:
+      the constraint is the network hop, not the model, so keeping the analysis on the local
+      segment is what makes real time real.
+    the_same_models_either_way: "Cloud for batch corpora, edge for live. Same analysis; the transport is the only thing that changes, which is why this file specifies transports and nothing else."
+    good_for: "Live demos, and anything where the annotation has to be drawn while the thing it describes is still on screen."
+    why_it_reuses_the_ring: |
+      frames is a policy over the same capture session rather than a second capture path
+      (RECORDER.yml, output_modes). So the realtime feed and the recorded video are the same
+      pixels from the same session, and an annotation computed on a live frame addresses a
+      frame that is also in the ring and can be scrubbed back to.
+    rate: "profile.frames.everyNth or .hz. Full frame rate is rarely the right answer and is rarely affordable on the analysis side."
+  choosing: "Both at once is the normal configuration for a demo: frames for the live overlay, chunks for the recording that gets kept."
+
+# GETTING ANNOTATIONS BACK
+
+transports_in:
+  synchronous: "The realtime path's HTTP response carries the annotations for the frame just posted. Simplest thing that works, and the only one with no correlation problem at all."
+  webhook: "A local listener receives annotations for a chunk when analysis finishes. Screen Angel already runs a local socket server; this is one more method on it."
+  pull: "Annotations appear in object storage beside the chunk and Screen Angel polls or watches for them. Slowest and most robust, and the only one that works when the two sides cannot reach each other directly."
+  ordering: "Annotations arrive late, out of order, and sometimes not at all. Every consumer treats them as an incomplete and growing set, never as a complete one."
+
+# ADDRESSING FRAMES
+
+addressing:
+  rule: "Annotations are addressed in ABSOLUTE TIME — UTC, with sub-frame precision — never by file name and frame index."
+  why_not_file_and_index: |
+    Chunk boundaries are configuration, not structure. The chunk policy can extend a chunk
+    forward, merge a fragment backward, change the duration, or re-chunk an export. Any
+    annotation addressed as (file, frame 372) is invalidated by a setting change that has
+    nothing to do with it. Absolute time survives all of it.
+  how_a_frame_gets_an_absolute_time: "The chunk manifest records startTime; the frame carries its presentation timestamp within the chunk. Absolute time is the sum, and both halves already exist."
+  why_clock_alignment_pays_off_here: |
+    Chunks cut on wall-clock boundaries (RECORDER.yml, policy.alignment.clock) so that an
+    annotation timestamped in wall clock lands on the right frame without anyone correlating
+    anything. This is the payoff that justified the alignment.
+  timecode: "For exports that go into a video editor, SMPTE timecode is the addressing an editor understands, and the mapping from absolute time is mechanical. Worth emitting on export; not worth using internally."
+
+coordinate_space:
+  the_problem: "Annotations come back in the pixel space of the encoded frame. The protocol's native space is screen coordinates. Between them sit a window position, a capture region, a pad, and a scale."
+  the_chain: "screen -> window bounds -> capture region -> pad -> encoded frame size"
+  recorded_where: "In the chunk manifest, once per chunk, with a note when any of it changes mid-chunk — a window move invalidates the mapping for every frame after it."
+  recommendation: "Annotations use coordinates normalized to the encoded frame, [0,1] on both axes. They then survive a resolution change, and mapping to screen coordinates for the live overlay is one affine transform whose terms are all in the manifest."
+  mapping_back_to_elements: |
+    Screen coordinates are also where the accessibility tree lives, so a detection can be
+    mapped to the element under it — turning 'a box at these pixels' into 'this Sim', by
+    name, when the app exposes a tree or a bridge supplies one.
+
+# DRAWING IT BACK
+
+rendering:
+  live:
+    what: "Annotations drawn on the click-through overlay, on top of the running game, in screen coordinates."
+    this_is_the_demo: "A person plays The Sims and sees boxes, skeletons, and action labels appear over the Sims as they move. Nothing is being simulated for the demo's benefit — the analysis is running on the same pixels the player is looking at."
+    latency_honesty: "Drawn annotations lag the pixels they describe by the round trip. At a few hundred milliseconds this reads as responsive; past that it reads as broken, and the honest fix is to lower the frame rate rather than to hide the lag."
+  recorded:
+    soft: "Annotations kept as data beside the video, rendered at playback time in the studio. Toggleable, editable, and correctable."
+    burned_in: "Rendered into the exported pixels. What you want for anything leaving the machine, because no other player knows how to draw the data."
+    default: "Soft while editing, burn-in offered at export, with the data exportable alongside for anyone who wants it."
+  styling: "The same restraint as the rest of the overlay. A skeleton over a Sim is information, not decoration, and twelve simultaneous labels are worse than three."
+
+feeding_back_into_the_tree:
+  the_symmetry: |
+    The analytics system builds a time-and-history-aware semantic layer over a low-level
+    detection and pose layer. Screen Angel builds a merged, annotated semantic layer over a
+    low-level accessibility and pixel layer. Same architecture, different substrate, and they
+    meet in the middle: annotations become world nodes in the merged tree
+    (ACCESSIBLIFY.yml, world_nodes).
+  what_comes_back_is_not_boxes: |
+    The useful output is not "a person at these coordinates" but a statement about the world:
+    a person not wearing required protective equipment, a person on the ground, a welding arc
+    near someone's head, a person standing under a crane hook. Those are semantic events with
+    a subject, a location and a time — exactly the shape of a tree node.
+  once_it_is_a_node: "Every consumer already knows what to do with it. Nothing needs a new pipeline per event type, which is the whole reason to put it there rather than inventing a parallel event bus."
+
+renderers:
+  the_principle: "An event is neutral. What happens when one arrives is policy, and several policies can run at once."
+  available:
+    speech: "Announced through the accessibility surface, so the user's own screen reader says it (ACCESSIBLIFY.yml, reachability.announce)."
+    highlight: "Drawn on the overlay, anchored to the subject, and it follows them because the track ID persists."
+    effect: |
+      Expressive rather than informational, the way augmented-reality glasses would do it —
+      a heart fountain over two Sims kissing. Same event stream, same anchoring machinery,
+      entirely different intent, and it costs nothing extra because the plumbing is shared.
+    cue: "A labelled point on the timeline, so the moment is findable afterwards (see cues_from_events)."
+    scene: "An OBS scene switch, for a stream that reacts to what is happening."
+    nothing: "The default for most events. An overlay that renders everything it knows is unusable."
+  the_range_is_the_point: "A safety event on a construction site and a heart fountain over a Sim are the same mechanism with different styling. A system that only did the serious one would be a worse system and also a harder one to demo."
+
+cues_from_events:
+  what: "Events become cues on the timeline, which is the mechanism that already exists for pause, bridge and user annotations."
+  consequences:
+    timeline: "A detected action is a labelled point on the scrub timeline, so finding the moment someone picked something up is a click rather than a search."
+    selection: "A cue is a selection candidate. 'Clip the ten seconds around this event' needs no new interaction."
+    obs: "Cues already drive scene switches (RECORDER.yml, live_output). So a detected event can switch a stream scene, which is the difference between a demo someone watches and a demo that reacts."
+  threshold: "Every detection becoming a cue makes the timeline useless. Which events become cues is configuration, per bridge."
+
+# WHY GAMES, AND NOT JUST BECAUSE THEY ARE CONVENIENT
+
+ground_truth:
+  the_point: |
+    A game engine knows the answer. The Sims knows where every Sim is, which object each one
+    is carrying, and which action is running, because it is the thing that decided all of it.
+    Read the save file or ask the bridge and you have exact labels for footage you also have
+    the pixels for.
+
+    That makes game footage not merely cheap video but LABELLED video, and labelling is the
+    expensive part of every real corpus.
+  what_it_enables:
+    scoring: "Run the analysis on the footage, compare to what the engine reported, and compute standard metrics: mAP for detection, HOTA or MOTA and IDF1 for tracking, OKS or PCK for pose, mAP for action detection. A demo that shows its own score live is a different kind of demo."
+    regression_testing: "The same scene replayed from the same save file produces near-identical pixels, so a pipeline change produces a comparable number rather than an impression."
+    hard_case_manufacture: "Occlusion, crowding, odd poses, unusual object handling, and lighting changes can be CONSTRUCTED on purpose in a game, then recorded with exact labels. Waiting for them to happen on a factory floor is the alternative."
+  the_catch: "Engine truth is truth about the simulation, not about the pixels. A Sim occluded behind a wall is present in the engine and absent from the frame, so visibility has to be resolved before engine state is usable as ground truth for a vision task."
+
+  our_own_renderer_resolves_the_catch:
+    the_situation: |
+      The simulator cannot be modified or reimplemented. The RENDERING and save-file stack is
+      being reimplemented in TypeScript — which means the data model is ours, in the browser,
+      scriptable end to end. The vitamoo demo (https://vitamoo.space/) is that path already
+      running: environment rendering plus character animation, which is most of what a ground
+      truth generator needs.
+    why_it_changes_the_claim: |
+      Screen-scraping the shipped game gives PARTIAL truth: the simulation state, with
+      visibility unknown. Rendering the scene ourselves gives COMPLETE truth, because
+      occlusion is something the renderer computes rather than something an observer infers.
+    how: |
+      Render auxiliary passes alongside the colour frame — an object-ID buffer and a depth
+      buffer. Then every label a vision task needs falls out by construction:
+
+        instance mask      per-pixel, from the ID buffer
+        bounding box       the extent of each ID in the buffer
+        visibility         whether an ID appears at all, and in how many pixels
+        occlusion degree   rendered pixel count against unoccluded pixel count
+        keypoints          project the animation skeleton's joints to screen space
+        depth ordering     directly
+
+      This is how synthetic vision datasets are made generally, and it is available to us
+      only because the renderer is ours.
+    keypoints_are_the_striking_one: |
+      Character animation is driven by a skeleton, so the joint positions exist exactly. Pose
+      estimation ground truth is a projection rather than an annotation — the one case where
+      skeletal animation and pose estimation meet, with the animation supplying the answer the
+      estimator is being scored against (ACCESSIBLIFY.yml notes why the terms stay separate).
+    the_corpus: "Existing content is the material — objects, characters, animations, and community creations already in the ecosystem. Rendered on demand, from any camera, at any time of day, with exact labels."
+    the_honest_remaining_gap: |
+      It is still rendered imagery, so the sim-to-real domain gap does not go away and nothing
+      above changes what content_generation says about training data. What it does change is
+      the evaluation and regression story, where exact labels are the entire point and looking
+      like a photograph is irrelevant.
+    tools: "Browser-based first, because that is where the renderer is. Blender is the sensible second target for anything needing offline rendering, higher quality, or a pipeline artists already know."
+
+content_generation:
+  demos: "The strongest case, with no caveats. A live, interactive, visually legible demonstration of tracking, pose, object handling and action analysis, driven by whoever is standing in front of it."
+  test_corpora: "Strong. Exactly labelled, reproducible, and cheap to regenerate when the schema changes."
+  training_data:
+    honest_position: |
+      Game footage is not a substitute for footage of the real setting. The sim-to-real
+      domain gap is the well-studied reason — a model trained on rendered people learns
+      rendered-people statistics. The established uses are pretraining, augmentation of a
+      real corpus, and domain randomization to keep a model from overfitting to one look.
+      Claiming more than that would be claiming something the literature does not support.
+    where_it_is_strongest: "Tasks whose labels are structural rather than photometric — occlusion reasoning, interaction topology, action grammar — where what is learned transfers better than appearance does."
+  the_other_direction: |
+    The loop closes through APP-CONTROL.yml: an annotation identifies a moment, the studio
+    selects it, generated content is placed into the save file, the game restarts at the
+    same point, and the recording resumes for a seamless cut. Analysis becomes an input to
+    content generation rather than only a readout of it.
+
+# BEYOND GAMES
+
+real_settings:
+  what_the_user_wants: "The same analysis runs on factory floors, construction sites and labs, and the demo should make that obvious rather than look like a games toy."
+  the_precise_distinction: |
+    Screen Angel's CAPTURE side is screen-only. A factory floor is not a screen, so Screen
+    Angel is not how that footage is acquired.
+
+    Everything downstream of capture is video-generic. The timeline, cues, selection,
+    anchored regions, annotation rendering, composition and export do not care whether the
+    pixels came from a screen grab or a camera. So the studio can be the review and
+    annotation interface over real-site footage, with only an import path missing.
+  consequence: "One UI for both, which is what makes a Sims demo credible as a demonstration of something that runs on a construction site: the customer is looking at the same tool they would use on their own footage."
+
+# OPERATIONAL
+
+credentials:
+  rule: "A profile NAMES a credential and never contains one — env:NAME, aws:PROFILE, or anonymous. A literal key in a profile is rejected rather than warned about."
+  unchanged: "Same rule as every other sink. This file introduces no new credential handling."
+
+redaction:
+  what: "Video going to an analytics system is video leaving the machine, and everything on screen goes with it — other windows, notifications, whatever is behind the game."
+  where_it_belongs: "The redaction gate is a Screen Angel concern, not an analytics concern, and it is always free (DISTRIBUTION.yml, always_free)."
+  minimum: "Region capture bounded to the game window is the cheap default that solves most of it, and it also cuts the bytes."
+
+not:
+  not_an_analysis_system: "Nothing here detects anything. This is transport, addressing, and drawing."
+  not_a_labelling_tool: "Correcting annotations by hand is a real need and a different specification. What exists here is displaying them and exporting them."
+  not_coupled: "No vendor, no endpoint, no model, no proprietary detail — by design and as a publication constraint."

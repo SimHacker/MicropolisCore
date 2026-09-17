@@ -1,0 +1,23 @@
+# electron-vite's output. The root ignores build/ and node_modules/ but not this one.
+out/
+
+# Valve's SDK. Licensed to whoever accepted the agreement, not to this repository —
+# and about 400MB. Get it with tools/steam-setup.sh.
+steamworks_sdk/
+
+# The App ID hint file. The app sets SteamAppId in its own environment instead, so this
+# should not exist; ignored so that a copy made while following someone else's tutorial
+# cannot be committed.
+steam_appid.txt
+
+# steamcmd's authenticated session. config.vdf holds refresh tokens and the ssfn files
+# are the machine's Steam Guard sentry: together they are a login without a password.
+# Depot and app build scripts are NOT secret and are not ignored — only these.
+**/config.vdf
+ssfn*
+
+# Anything reached through `op read` belongs in 1Password, so a .env here is either a
+# convenience copy or a mistake. Either way it does not travel.
+.env
+.env.*
+!.env.example

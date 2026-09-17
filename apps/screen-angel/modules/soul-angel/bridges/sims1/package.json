@@ -1,0 +1,16 @@
+{
+  "name": "@screen-angel/soul-bridge-sims1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The Sims 1 Soul Bridge and Transmogrifier tools — soul-angel's first bridge, and the beachhead for everything above it.",
+  "license": "SEE LICENSE IN ../../../../LICENSE.md",
+  "author": "Don Hopkins",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@micropolis/sims-io": "workspace:*"
+  }
+}
