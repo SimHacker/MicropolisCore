@@ -234,6 +234,11 @@ sinks:
 # because streaming an application is not a game-specific act.
 
 live_output:
+  composite_modes:
+    clean: "Game only. Viewer-safe, no overlay chrome — the default for anything leaving the machine."
+    show: "Game plus overlay chrome. The performance view, where the angel is part of the act."
+    audio: "Game audio and microphone narration mixed, kept per-track wherever the container allows it, because a separable narration track is worth more later than a convenient one now."
+    where_composition_happens: "GPU, one pass, game texture plus overlay texture, feeding the ring and any live output from the same result."
   obs:
     how: "OBS WebSocket v5 — scene switching, start and stop the stream, and the overlay served as a browser source."
     why_first: |

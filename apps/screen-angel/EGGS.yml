@@ -124,8 +124,50 @@ visual_design:
       the_reader_knows_which_rung_it_is_on: "Band height relative to the caps says which zoom variant is on screen, so a two-band read is reported as 'complete for this zoom' rather than as a failed six-band read. Absent bands are absent, not unresolved."
     presence_beats_payload: "At the farthest zoom the only guaranteed message is that an egg exists here and roughly what kind. That is also the most valuable message, because it is the one that makes the player look — and looking is what moves the camera in."
     all_the_way_in: "Full stack, and the About item for everything the stack does not carry (OPTICAL-CHANNEL.yml, the_about_item)."
+  lit_state_is_the_longest_range_channel:
+    the_reference: "A factory at night in Factorio, where lamps wired to circuit conditions turn the whole base into a status readout you can read while running past it. Ours will not be that beautiful. It can be that legible."
+    what_light_says: "Not data — STATE. Lit means this egg can be acted on right now, its menu has live items and something will happen if you pick one. Dark means waiting, inert, or expired. Illumination IS the affordance."
+    why_light_and_not_more_bands:
+      it_survives_distance: "A glow is a large, low-frequency, high-contrast signal. It is the last thing still readable when the bands have collapsed into two pixels, which makes it the natural bottom rung of the zoom ladder — further out than kind."
+      it_needs_no_focus: "Peripheral vision detects brightness change before it resolves detail. A room where three eggs are lit and one just went dark is readable without looking at any of them."
+    excitement_as_a_dimmer: "Brightness and pulse rate are a continuous channel over an existing effect: brighter and faster for the errand about to resolve, dim and slow for the one with a week to run. Enthusiasm is a value here, not decoration."
+    it_is_existing_machinery: "Objects already emit light, already have lit and unlit graphic states, and already animate. An egg wires those to its state machine instead of to a light switch. Nothing new in the renderer, which is the whole rule for this object."
+    the_reader_gets_a_cooperating_object:
+      the_problem: "Bloom and emissive glow wreck colour fidelity, and glare is the worst failure case for a phone camera (MOBILE-CAMERA.yml, off_a_screen_is_harder)."
+      the_fix: "Light is never the carrier of band data. And while an egg is being read closely it dims itself — an object that cooperates with its own reader, which is available precisely because we author both ends."
+      the_ordering: "Far: is anything lit. Middle: what kind. Near: the bands. Dimmed and closest: the full code. Then the dialog."
   legible_to_both_readers: "A player learns 'gold cap band means news' in one session, and the reader decodes the same stripes numerically. One artifact, two audiences, which is the property the whole optical channel rests on (OPTICAL-CHANNEL.yml, the_player_reads_it_too)."
   authored_once: "Shape, bands, caps, palettes, states and the DGRP table are emitted by the same compile that emits the menu tree and the verb registry (compiled_from_one_source)."
+
+# WHAT AN EGG IS, IN OTHER PEOPLE'S VOCABULARIES
+#
+# Several fields already named this object. Each name is worth having because each one carries an
+# operational consequence the others do not — and the section ends with the discipline, because a
+# pattern that explains everything constrains nothing.
+
+what_it_already_is:
+  a_choose_your_own_adventure_page:
+    the_mapping: "The menu tree is the numbered-choice list. 'If you go with her, turn to page 87' is a pie item, and the branch you pick is the page you turn to."
+    what_we_add_to_the_form: "A CYOA book is single-threaded, synchronous and one reader deep. Eggs are that grammar with the single thread removed: many branch points outstanding at once, each belonging to a different character, resolvable in any order, days apart. The bookmark is a place in the world instead of a place in the book."
+    why_it_matters: "The form is already understood by everyone who was eight years old with a paperback. It needs no tutorial, and the multiplicity is the only novel part."
+  a_continuation:
+    the_mapping: "An egg is a reified continuation: the character's story is suspended at a point, and the egg holds what to do with the result when it arrives. Hatching invokes it with a value. Hatching empty invokes it with nothing, which is why cancellation is the cheapest outcome rather than a special case."
+    one_shot: "It hatches once. No multi-shot, no re-entering a resolved egg, no timeline forks — a promise fulfilled twice is a bug in every language that has them."
+    the_part_that_is_actually_new: "Its possible arguments are ENUMERABLE, because the continuation is a declared tree rather than a closure over arbitrary code. That is what makes it safe to hand to an agent: you can read the whole space of what invoking it could do to your character before you invoke it (the_menu_is_the_return_type)."
+    and_it_needs_no_cps_rewrite: "The game is written in direct style and stays that way. Suspension happens at object granularity — a character's queue entry becomes an object — not at stack granularity, so no engine has to be rewritten to gain continuations."
+  a_linda_tuple:
+    the_mapping: "Eggs sit in a shared space, addressed by what they ARE rather than by who is waiting for them. Anyone who matches can act. Gelernter's split holds exactly: the eggs coordinate, the games compute."
+    the_three_operations: "Lay is out. Hatch is in — a destructive take. About is rd — read without consuming, which is why introspection is safe for anyone including a stranger's agent."
+    the_upgrade_over_a_tuple_space: "The space is a PLACE. A tuple space is content-addressable and invisible; a game world is spatially addressed and browsable, so you can walk to a tuple, point at it, and see how many there are. Associative matching is still there; discovery stopped requiring documentation."
+  a_stream_or_an_event_queue:
+    the_mapping: "Eggs accumulating over time are a queue with a clock — the ring's clock (../ANGEL-EVENT-BUS.yml, one_clock_with_the_ring)."
+    visible_backpressure: "This is the real win. Queue depth is furniture: a hallway filling with eggs is congestion you trip over, and nobody has to instrument anything to notice. Nothing is dropped invisibly and nothing is delivered behind your back."
+    ordering: "Spatial and temporal, both legible. Not a hidden FIFO whose order you must trust."
+  an_rpc_and_a_mailbox: "A call outstanding, with a return address that is a location. An actor's mailbox, except you can see the mail."
+  the_discipline_that_keeps_this_from_being_a_mood:
+    the_risk: "Continuation, tuple, stream, promise, queue, page — everything is an egg, which means the word is worth nothing unless it excludes something."
+    an_egg_is_only_an_egg_if: ["it has a place in the world", "its return type is a declared finite tree", "exactly one action commits", "it has a resume point it goes back to", "hatching writes a credited line into the record"]
+    the_test: "Drop any one of those and you have a promise with a sprite. Keep all five and you have something a player can find, inspect, ignore for a week, hand to an agent, take back mid-flight, and audit afterwards — which is the only reason to reify a task at all."
 
 the_grammar:
   lay: "An object spawns an egg with a kind, a payload, a menu tree, and a resume point."

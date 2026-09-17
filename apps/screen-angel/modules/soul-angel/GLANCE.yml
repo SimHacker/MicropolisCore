@@ -1,18 +1,20 @@
-# soul-angel — universal game companion (dev home; spec stage, code next)
+# soul-angel — the Screen Angel module that knows the app is watching a game about people.
+# A module, not an application: the shell, recorder, bus and grants belong to the app upstairs.
 # Read order: README.md -> ARCHITECTURE.yml -> SOUL-ALBUM.yml -> DVR.yml -> SOUL-BRIDGE-SDK.yml
-#             -> GAME-BRIDGES.yml -> SOUL-EMIGRATION.yml
+#             -> GAME-BRIDGES.yml -> SOUL-EMIGRATION.yml -> UNIVERSAL-JOBS.yml -> OUT-OF-GAME-JOBS.yml
 
-app:
+module:
   id: soul-angel
   status: spec
+  of_app: ../../SCREEN-ANGEL.yml
   license: source_available   # LICENSE.md — build on it, plug into it; commercial rights reserved
-  product: paid_steam_software
-  purpose: "Always-on DVR + universal Soul Album + machinima/stream studio + per-game Soul Bridges"
+  product_and_pricing: ../../DISTRIBUTION.yml   # app level; this module is not sold separately
+  purpose: "Universal Soul Album + per-game Soul Bridges + jobs, errands and emigration — the soul half of Screen Angel"
 
-architecture: "Web center of gravity — TypeScript in one cross-platform Electron host; native addons only for capture and accessibility (Kando model)"
+architecture: "Save parsers are pure functions over buffers; bridges ask the app for grants and never for paths. The Electron host, overlay, capture and bus are the app's (ARCHITECTURE.yml, moved_up)"
 
 what_you_get:   # keyed by what the game has to give up for it
-  needs_nothing_from_the_game: "DVR ring buffer, scrub-to-card album, narration, Twitch/OBS — works on ANY game"
+  needs_nothing_from_the_game: "Scrub-to-card album, narration, jobs with no bridge at all — on top of the app's ring buffer and stream output (../../RECORDER.yml)"
   needs_a_per_game_plugin: "A Soul Bridge: read and write the game's saves and its own album format (The Sims 1 first, Sims 4 with modder help)"
   needs_a_soul_city_account: "Publish to Soul City Broadcast Network — TV / radio / magazine channels"
 
@@ -22,14 +24,14 @@ subsumes: stream-gateway   # WWSFF apps/stream-gateway specs -> broadcast sinks 
 
 specs:
   overview: README.md
-  architecture: ARCHITECTURE.yml   # shell vs web split, transparent overlay, capture+composite+screencast
+  architecture: ARCHITECTURE.yml   # what this module owns, and where each app-level concern moved
   album: SOUL-ALBUM.yml            # story cards, provenance, narration, game-album bridging
-  dvr: DVR.yml                     # ring buffer, time scrub, still/clip capture, per-OS capture paths
+  dvr: DVR.yml                     # what a recording MEANS in a game about people; privacy and redaction rules
   bridges: SOUL-BRIDGE-SDK.yml     # per-game plugin interface — FileBridge scoped, overlay-hosted
   roster: GAME-BRIDGES.yml         # which games, in what order, and what every other game still gets
   emigration: SOUL-EMIGRATION.yml  # export/farewell/replant ritual; object packs and their positioning rule
   screen_angel: ../../SCREEN-ANGEL.yml   # the layer this module is the first application of; named aQuery 2013-2026
-  host_app: ../../README.md              # the Electron host that loads this module
+  host_app: ../../README.md              # the app this module runs inside — start there for the full spec map
   license: ../../LICENSE.md
 
 show_side:   # product/community framing lives in WWSFF

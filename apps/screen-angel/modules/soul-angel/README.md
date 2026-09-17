@@ -4,8 +4,12 @@
 streaming studio, and per-game **Soul Bridges** that read and write the game's own soul —
 saves, albums, characters — from a web overlay.
 
-This is the development home. Product spec and show/community framing live in the
-WillWrightShowForFood repo (`catalogs/soul-city/soul-angel.yml`, `apps/soul-angel/`).
+**This is a module of [Screen Angel](../../README.md), not an application.** It was an
+application once, and the general half of it — the shell, the overlay, the recorder, the event bus,
+the grants — moved up into the app when Screen Angel absorbed it. What stayed here is everything
+that only makes sense because the app is looking at a game about people. Product spec and
+show/community framing live in the WillWrightShowForFood repo
+(`catalogs/soul-city/soul-angel.yml`, `apps/soul-angel/`).
 
 **License: source-available, commercial rights reserved. See [LICENSE.md](LICENSE.md).**
 
@@ -37,29 +41,23 @@ nothing at all:
 - We never co-opt a game's own names. Each bridge maps the game's native vocabulary onto
   the uplifted game-independent schema.
 
-## Architecture: web center of gravity, thin native shell
+## Architecture: what is here and what is upstairs
 
-The Cordova/Electron lesson, applied to a game companion: **everything that can be a web app
-is a web app.** TypeScript running in an embedded browser owns the UI, the overlay drawing,
-the album engine, the DVR timeline, the bridges, and the publish pipeline. The native shell
-is a thin host for the things a browser cannot do: window capture, hardware encoding,
-transparent overlay windows, Steam SDK, input injection, OS accessibility.
+The shell is the app's: one Electron host, a transparent always-topmost click-through web view,
+small native addons for capture and accessibility, the shape
+[Kando](https://github.com/kando-menu/kando) proves and the 2013 *aQuery* prototype demonstrated
+first. It is specified in [`SCREEN-ANGEL.yml`](../../SCREEN-ANGEL.yml) and
+[`RECORDER.yml`](../../RECORDER.yml), and nothing about it is soul-specific.
 
-One Electron host on all three platforms, with small native addons behind a single JavaScript
-interface and a backend chosen at runtime — the shape [Kando](https://github.com/kando-menu/kando)
-already proves. Only two capability families need native code at all: **capture** and
-**accessibility**. Details: [ARCHITECTURE.yml](ARCHITECTURE.yml).
+This module owns the part that is: save-format parsers as pure functions, per-game Soul Bridges,
+the album, jobs and errands, emigration, federation sync, and the `soul.*` half of the event bus.
+[`ARCHITECTURE.yml`](ARCHITECTURE.yml) lists what moved up and where each piece went.
 
-That shell is not new, and it is not ours. Don proposed it in 2013 — as *aQuery*, now the
-**[Screen Angel](screen-angel/README.md)** — and built a working prototype by making a hidden
-WebView in a macOS window manager un-hidden, transparent and topmost, then drawing pie menus over
-every application on the screen.
-
-**Soul Angel is the Screen Angel's first application, and The Sims 1 is Soul Angel's.** Each is
+**Soul Angel is Screen Angel's first module, and The Sims 1 is Soul Angel's first bridge.** Each is
 the other's beachhead: games are the hardest possible target, because most of them expose no
 accessibility tree at all, so a layer that works here works anywhere. The harvested design, the
 rescued 2013 email thread with Peter Korn, Ben Shneiderman, Blair MacIntyre and James Landay, and
-the Prefab lineage are in [screen-angel/](screen-angel/README.md).
+the Prefab lineage are in [`SCREEN-ANGEL.yml`](../../SCREEN-ANGEL.yml).
 
 ## Spec map
 
@@ -73,7 +71,7 @@ the Prefab lineage are in [screen-angel/](screen-angel/README.md).
 | [UNIVERSAL-JOBS.yml](UNIVERSAL-JOBS.yml) | Jobs a character can hold in any game at all, bridge or no bridge — the journalist, the photographer, the byline that sorts a session into one story per correspondent |
 | [OUT-OF-GAME-JOBS.yml](OUT-OF-GAME-JOBS.yml) | A Sim goes to work and work is a different game: the egg she leaves behind, the outcome that comes back, and the rabbit hole with something playable in it |
 | [SOUL-EMIGRATION.yml](SOUL-EMIGRATION.yml) | How a soul leaves a game and lands in a better one; object packs and why they are never the headline |
-| [screen-angel/](screen-angel/README.md) | The layer this app is the first application of — selectors and events over accessibility APIs plus pixel recognition, harvested from 2013–2026 with sources |
+| [`../../SCREEN-ANGEL.yml`](../../SCREEN-ANGEL.yml) | **The app this module lives in** — selectors and events over accessibility APIs plus pixel recognition, harvested from 2013–2026 with sources. Start at [`../../README.md`](../../README.md) for the full spec map |
 | [LICENSE.md](LICENSE.md) | Source-available terms — build on it, plug into it; commercial rights reserved |
 
 ## Subsumed: stream-gateway

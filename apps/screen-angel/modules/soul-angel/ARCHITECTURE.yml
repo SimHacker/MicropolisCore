@@ -1,121 +1,54 @@
-# SoulAngel architecture — web center of gravity, thin native shell
-# Cordova/Electron approach: TypeScript in an embedded browser is the app;
-# the platform shell hosts the browser and does only what browsers cannot.
+# Soul Angel architecture — what this MODULE is, now that the app around it exists.
+#
+# This file used to be an application architecture, because Soul Angel used to be the
+# application. Screen Angel is the app; Soul Angel is the module that knows the app is looking at
+# a game about people. Everything here that was about hosting a browser, capturing a window or
+# encoding video has moved up, and this file says where.
 
 meta:
   id: soul-angel-architecture
   status: spec
-  platforms:
-    windows: primary          # where the games are — Sims 1 Legacy is Windows-only
-    macos: same_binary        # Electron host + Mac capture addon; no second app
-    linux: same_binary        # Proton-hosted games capture like any other window
+  parent: ../../SCREEN-ANGEL.yml
+  see_also: [GLANCE.yml, SOUL-ALBUM.yml, SOUL-BRIDGE-SDK.yml, GAME-BRIDGES.yml, SOUL-EMIGRATION.yml, UNIVERSAL-JOBS.yml, OUT-OF-GAME-JOBS.yml, DVR.yml, LICENSE.md]
 
-# ── THE SPLIT ─────────────────────────────────────────────────────────────────
-split:
-  rule: "If the browser can do it, the browser does it. The shell earns every line it keeps."
-  web_owns:
-    - "ALL user interface — panels, album editor, DVR timeline, settings, onboarding"
-    - "Overlay drawing — HUD chrome, speech bubbles, pie menus, markers, annotations (canvas/WebGPU)"
-    - "Soul Bridges — per-game TypeScript plugins, hot-swapped on game focus (SOUL-BRIDGE-SDK.yml)"
-    - "File format parsing — saves, albums, archives, in TS/WASM via scoped FileBridge streams"
-    - "Album engine — cards, provenance, narration UI, publish pipeline (SOUL-ALBUM.yml)"
-    - "Twitch/YouTube web APIs — EventSub, Helix chat, OAuth flows"
-    - "Soul City federation sync — publish albums, pull community content"
-    - "Angel Event Bus clients — consumers and producers of soul.* events (../../ANGEL-EVENT-BUS.yml)"
-    - "Web Audio — narration record/playback, level meters; Web Speech where adequate"
-  shell_owns:
-    - "Window/screen capture — GPU texture per frame (browsers cannot capture other apps usefully)"
-    - "Hardware video encode — DVR ring buffer + streaming (NVENC / Media Foundation / VideoToolbox)"
-    - "Transparent always-on-top overlay window hosting the browser, with click-through toggling"
-    - "Compositing game + overlay for record/screencast output"
-    - "Steam SDK — overlay coexistence, achievements, cloud saves, store hooks"
-    - "Input injection — operator-gated UI automation for bridges that need it"
-    - "OS accessibility — UIA/AX tree reads, high-quality native TTS/STT when web speech falls short"
-    - "Filesystem broker — FileBridge grants scoped per game, per directory, with user consent"
-    - "SQLite — local catalog/album cache (or persistence backend for sql.js in TS)"
-    - "Process/window detection — which game is running/focused, window class fingerprints"
-    - "Autostart, tray, global hotkeys, notifications, crash reporting"
+# WHAT THIS MODULE OWNS
+#
+# The test for every line: would it still be true if the app were pointed at a spreadsheet?
+# If yes, it is not this module's business.
 
-# ── OVERLAY ───────────────────────────────────────────────────────────────────
-overlay:
-  what: |
-    A transparent, always-on-top window covering the game, hosting the web overlay UI.
-    The page renders on transparent background; the shell toggles click-through so the game
-    receives input except over active overlay widgets.
-  host: "Electron BrowserWindow — transparent, frameless, alwaysOnTop, setIgnoreMouseEvents for click-through"
-  hit_testing: "Web layer reports interactive regions -> host updates the click-through mask per region"
-  fullscreen_games: "Borderless-windowed preferred; exclusive fullscreen falls back to second-monitor/detached panel"
-  drawing: "Overlay graphics are plain web rendering — DOM, canvas, WebGPU. No native drawing code."
-  platform_notes:
-    windows: "Layered click-through is native to Electron; legacy 32-bit fullscreen games are the fragile case"
-    macos: "Screen Recording and Accessibility permissions must be granted before the overlay is useful"
-    linux: "Wayland needs the portal for both capture and always-on-top; X11 is the easy path"
+owns:
+  soul_bridges: "Per-game TypeScript plugins, hot-swapped on game focus, and the SDK they are written against (SOUL-BRIDGE-SDK.yml, GAME-BRIDGES.yml)."
+  save_formats: "Reading and writing game saves, in TypeScript and wasm, through the app's scoped file grants. The parsers are pure functions; the grants are not ours."
+  the_album: "Cards, provenance, narration, the publish pipeline (SOUL-ALBUM.yml)."
+  jobs_and_errands: "Characters holding jobs at the host layer, and characters sent into other games (UNIVERSAL-JOBS.yml, OUT-OF-GAME-JOBS.yml)."
+  emigration: "Leaving, arriving, and the ethics of both (SOUL-EMIGRATION.yml)."
+  federation_sync: "Publishing albums into Soul City and pulling community content back."
+  the_soul_domain: "Which events mean something in a game about people, published under soul.* on the app's bus — soul.bridge.data, soul.character.event, soul.album.published, soul.character.enumerated."
+  the_semantics_of_a_recording: "The app records pixels on a clock. This module knows the thing recorded was a wedding and who to credit (UNIVERSAL-JOBS.yml, the_semantic_video_recorder)."
 
-# ── CAPTURE / COMPOSITE / BROADCAST ──────────────────────────────────────────
-pipeline:
-  capture: "Per-window GPU texture via the capture addon — see shell.addon_families.capture for backends"
-  composite:
-    what: "Game texture + overlay texture composed on GPU each frame — one output, game + overlay together"
-    modes:
-      clean: "Game only (viewer-safe, no HUD)"
-      show: "Game + overlay chrome — the performance view"
-    audio: "Game audio + mic narration mixed; per-track when container allows"
-  encode: "Hardware encoder feeds BOTH the DVR ring buffer and any live outputs (DVR.yml)"
-  outputs:
-    obs: "OBS WebSocket v5 control + overlay as browser source (studio setups)"
-    direct: "Built-in RTMP to Twitch/YouTube when OBS absent; WHIP experimental"
-    file: "Local recordings, machinima exports"
-    replay: "DVR clips injectable into the live stream — instant-replay segments"
+moved_up:
+  why: "None of it was soul-specific. A notification fabric, a ring buffer, a transparent window and a capture addon are the same whatever the app is looking at, and keeping a second copy here is how two implementations get built."
+  the_shell_and_the_overlay: "Electron host, transparent always-topmost window, click-through mask and hit testing, fullscreen fallbacks, per-platform notes, the Kando precedent, and the superseded WinUI prototype — ../../SCREEN-ANGEL.yml, implementation.shell."
+  capture_encode_and_the_ring: "Window capture per platform, hardware encode, the ring buffer, composite modes, OBS and RTMP output — ../../RECORDER.yml."
+  the_event_bus: "The Angel Event Bus, its naming grammar and its one clock — ../../ANGEL-EVENT-BUS.yml."
+  grants_and_permissions: "Scoped filesystem grants, OS permission prompts, what a module may reach — ../../CAPABILITIES.yml and ../../MODULES.yml, trust_boundary."
+  driving_other_programs: "Input synthesis, save-quit-edit-relaunch choreography, view-state restore — ../../APP-CONTROL.yml."
+  reading_the_screen: "Accessibility trees where they exist, OCR and recognition where they do not — ../../ACCESSIBLIFY.yml."
+  packaging: "Installers, notarization, Steam coexistence, what is free — ../../DISTRIBUTION.yml, ../../STEAMWORKS.yml."
+  the_redaction_gate: "App level, because it has to cover every sink. What must be redacted in a game about people is still ours (DVR.yml, privacy)."
 
-# ── EVENT BUS (moved up) ─────────────────────────────────────────────────────
-bus:
-  moved_up: "The Angel Event Bus is an app-level spec — ../../ANGEL-EVENT-BUS.yml. Nothing about a notification fabric between a shell, an overlay, modules and outside tools is soul-specific, so it moved for the same reason the ring buffer did."
-  what_stays_here: "Which events mean something in a game about people, published under the soul.* domain."
-  events_owned_here: [soul.bridge.data, soul.character.event, soul.album.published, soul.character.enumerated]
-  soul_angel_is_the_gateway: "Other local tools publish to the bus; SoulAngel is what makes the desktop a door into Soul City."
-  lineage_note: "The WWSFF stream-gateway specs (brain bus, cursor-tap, overlay-viewer, bubble-wrangler) are credited in the app-level file."
+# THE ONE ARCHITECTURAL RULE THAT IS THIS MODULE'S OWN
 
-# ── SHELL IMPLEMENTATIONS ────────────────────────────────────────────────────
-shell:
-  decision: one_electron_host_with_native_addons
-  precedent: |
-    Kando (Simon Schneegans) is the working proof: one cross-platform Electron app whose
-    hard parts live in small native addons behind a single JavaScript interface, with a
-    per-platform backend chosen at runtime. SoulAngel wants the same shape for the same
-    reason — the interesting code is TypeScript, and only two capability families actually
-    need native code.
-  addon_families:
-    capture:
-      what: "Window/screen capture, GPU texture per frame, hardware encode"
-      backends:
-        windows: "Windows.Graphics.Capture + Media Foundation / NVENC; BitBlt/PrintWindow fallback for stubborn legacy windows"
-        macos: "ScreenCaptureKit + VideoToolbox"
-        linux: "PipeWire portal + VA-API"
-    accessibility:
-      what: "OS accessibility tree reads, native TTS/STT, operator-gated input injection"
-      backends:
-        windows: "UI Automation"
-        macos: "AX API"
-        linux: "AT-SPI"
-      caveat: |
-        Games are the worst case for accessibility APIs — most render their UI and expose
-        no tree at all. Treat a11y as a bonus channel where it happens to work (launchers,
-        Win32 dialogs, browsers, the overlay's own UI) and treat OCR over captured frames
-        as the general path for reading text off a game.
-  prior_prototype:
-    what: "WinUI 3 + WebView2 host in C# — the first Windows shell, built before the cross-platform decision"
-    status: "Superseded as the shipping shell; its capture and FileBridge work ports into the Windows capture addon"
-    spec_lineage: "WWSFF apps/soul-angel/windows/ (Windows host + sims1 bridge specs)"
+parsers_are_pure:
+  the_rule: "Every save format parser is a pure function over buffers. No file handles, no paths, no platform calls anywhere above the byte layer."
+  why_it_is_not_style: "It is what lets the same bridge code run in the desktop app, in a browser tab, in a test with a fixture file, and inside an emulator's memory — the same discipline as the Apple ][ ladder, where only L0 touches I/O (documentation/designs/apple-ii-floppy-bridge.md)."
+  and_the_corollary: "A bridge that needs a path is asking the app for a grant, not reaching for a file. That is the boundary that makes third-party bridges possible at all."
 
-security:
-  filesystem: "No ambient FS access from web layer — every path is an explicit, revocable FileBridge grant"
-  bridges: "Third-party bridges run in the overlay sandbox; inject capability is operator-gated per bridge"
-  privacy: "Redaction gate before any frame/audio leaves the machine"
+non_destructive:
+  the_rule: "A bridge never writes over the only copy. Read, patch, keep the original, report what changed."
+  where_the_protocol_lives: "moollm skills/soul-city/SOUL-BRIDGES.md. This module implements it; it does not define it."
 
-see_also:
-  - SOUL-ALBUM.yml
-  - DVR.yml
-  - SOUL-BRIDGE-SDK.yml
-  - GAME-BRIDGES.yml
-  - SOUL-EMIGRATION.yml
-  - LICENSE.md
+lineage:
+  from: "WWSFF apps/soul-angel/ — the Soul Angel application specs, including apps/soul-angel/windows/ for the Windows host and the Sims 1 bridge, and catalogs/soul-city/soul-angel.yml for the catalogue entry."
+  what_changed: "It stopped being an application. The soul-specific half became this module; the general half became the app it now runs inside."
+  the_broadcast_network: "WWSFF apps/soul-angel/SCBN.yml — the Soul City Broadcast Network channels, which UNIVERSAL-JOBS.yml publication surfaces line up with."

@@ -170,8 +170,19 @@ implementation:
     pattern: "A transparent, always-topmost, click-through web view covering all screens, with the platform APIs exposed to its JavaScript"
     provenance: |
       This is exactly what the 2013 Slate prototype did, and exactly what Kando does now, and
-      exactly what Soul Angel's Electron host does. The shell question is settled; it was
+      exactly what this app's own Electron host does. The shell question is settled; it was
       settled by working code three times.
+    host: "Electron BrowserWindow — transparent, frameless, alwaysOnTop, setIgnoreMouseEvents for click-through."
+    hit_testing: "The web layer reports its interactive regions and the shell updates the click-through mask per region, so the game receives every event except over a live widget. Getting this wrong is the difference between an overlay and a wall."
+    fullscreen_games: "Borderless-windowed is the good case. Exclusive fullscreen falls back to a second monitor or a detached panel, because nothing composites over it reliably."
+    platform_notes:
+      windows: "Layered click-through is native to Electron. Legacy 32-bit fullscreen games are the fragile case."
+      macos: "Screen Recording and Accessibility must be granted before the overlay is useful at all (CAPABILITIES.yml)."
+      linux: "Wayland needs the portal for both capture and always-on-top; X11 is the easy path."
+    prior_prototype:
+      what: "A WinUI 3 plus WebView2 host in C#, the first Windows shell, built before the cross-platform decision."
+      status: "Superseded as the shipping shell. Its capture and file-broker work ports into the Windows capture addon."
+      lineage: "WWSFF apps/soul-angel/windows/ — the Windows host specs, from when the soul layer was its own application."
 
   native_bridge:
     what: "Expose native objects and methods to JavaScript through a runtime bridge"
