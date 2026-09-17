@@ -115,6 +115,14 @@ visual_design:
       what_we_do_with_it: "An Egg semi-global holds the shared trees: menu dispatch, hatch, the band state machine, the lighting states. A minted egg is a small object whose GLOB names it, so it arrives with behaviour it did not have to carry."
       inheritance_the_way_it_was_meant: "This is prototype delegation with two levels of ancestry, shipped in 2000 and used exactly as intended. Nothing invented, nothing patched."
       the_open_question: "Tree scoping across files is documented; ART sharing across files is not the same mechanism, since sprites and draw groups are referenced within a file. Either the shared art also resolves through the semi-global, or each minted egg carries the sprite set — a dozen small sprites, cheap enough that this is a measurement rather than a risk. To be settled against the engine before any of this is built."
+    code_below_content_above:
+      the_division: "Code goes in the semi-global. Content goes in the objects. That is the split the file format was built for, and it is also exactly how parameterised user content wants to be minted — heavy on the content, with the behaviour inherited."
+      the_experiment: "Try the semi-global for code first and measure what actually shares. If art turns out not to resolve across files, the fallback is per-egg sprites, which is a dozen small images (the_open_question)."
+      the_compiler_is_what_makes_it_authorable:
+        what_goes_in: "Conversation trees, advertisements, menus and submenus, in the same YAML source everything else compiles from (compiled_from_one_source)."
+        what_comes_out: "The BHAV trees, tree tables and string resources that manage them. Nobody hand-writes SimAntics to add a branch to a dialogue, which is the difference between a system a modder can extend and one only we can."
+        why_it_is_the_same_compiler: "Menus, advertisements and conversation trees are already the source of truth for what an egg can do and what the Angel may read. Emitting the object code from that source is one more back end, not a second authority."
+
     intrinsics_below_heads_above:
       the_split: "The semi-global holds the INTRINSICS: cracking, hatching, the menu dispatcher, the band state machine, the lighting states, custody. Everything an egg is. A minted egg inherits all of it and writes only the part that is interesting about itself."
       an_egg_head_is_local_trees: "An egg that adds its own trees on top of the intrinsics is a SMART EGG — an egg with a head on its shoulders. It can have its own verbs, its own conditions for hatching, its own reactions to being carried around, and it gets everything else for free."
@@ -190,6 +198,12 @@ the_blip_editor:
       why_this_is_the_useful_part: "Emitted light is a local brightness maximum, so an egg segments itself out of a scene. Threshold for candidates, frame-difference for the breathing ones, and you have every egg on screen without matching a single template."
       the_pipeline_order: "Light answers WHERE, the badge answers WHAT KIND, the bands answer WHICH ONE, the dialog answers everything else. Detection is cheap and constant; decoding is expensive and only happens where the light already pointed (MOBILE-CAMERA.yml, the_five_stages)."
       humans_do_the_same_thing: "Attention goes to the bright thing before it goes to the detailed thing. Same signal, same ordering, two very different readers — which is the property worth designing for rather than a coincidence to note."
+    height_is_the_other_state_channel:
+      levitation: "An active egg rises off the ground. Elevation is a large, slow, unmistakable signal that survives being small on screen, and it reads at a glance in a way a colour never will — a floating thing is doing something."
+      it_leaves_its_base_behind: "The egg lifts off a base that stays on the tile. So the grid keeps its geometry when half the eggs are up, the empty socket says an egg belongs here, and an elevated egg matrix still reads as a matrix instead of as scattered debris (matrix_eggs)."
+      it_costs_nothing: "A z offset in the draw group and a slow animation. The same offsets that stack the bands lift the body (offsets_are_what_make_the_set_small)."
+      it_stacks_with_light: "Light says whether it can be acted on; height says whether it is working. Two independent low-frequency channels, both legible at the range where every band has collapsed."
+
     one_vocabulary_for_every_object: "This is a house rule, not an egg feature. Anything with pending state uses the same three states — the machine chewing on a job, the mailbox with something in it, the appliance mid-cycle. Learned once, it makes the whole screen a status board, and a recogniser written for eggs already works on all of it."
     excitement_as_a_dimmer: "Brightness and pulse rate are a continuous channel over an existing effect: brighter and faster for the errand about to resolve, dim and slow for the one with a week to run. Enthusiasm is a value here, not decoration."
     it_is_existing_machinery: "Objects already emit light, already have lit and unlit graphic states, and already animate. An egg wires those to its state machine instead of to a light switch. Nothing new in the renderer, which is the whole rule for this object."
@@ -282,6 +296,11 @@ the_egg_is_its_own_file:
     the_verb: "Eggs do not get constructed, they get CRACKED. Instantiation is an interaction a character performs in the world, in a place, at a time, in front of whoever is standing there — not an event in a log."
     personalise_at_the_crack: "Cracking is where an egg stops being generic: name it, pick its badge, set what it is for, bond it to the character who opened it. The moment of instantiation is the moment of authorship, which is the right place for it and a good one to animate."
     bonding: "Don's reference is the hope chest — an object you accumulate a relationship with rather than merely own (Sims 1 object, unverified as to which release). A cracked egg carries who cracked it and what they did with it, so a well-travelled egg is an heirloom, and its custody chain IS its sentimental value (moollm skills/soul-city/SOUVENIRS.md)."
+    cracking_it_like_a_safe:
+      the_gesture: "The crack menu carries a Dial submenu of eight compass points. Each pick is three bits, and you dial repeatedly to enter a code of any length — the menu stays eight items no matter how long the number (OPTICAL-CHANNEL.yml, dialing_in)."
+      what_you_are_dialling_into: "An identification number for a web object outside the game. Cracking with a combination binds this egg to that external thing, and the same combination dialled into eggs in other lots or other games binds them all to it — every one of them able to send messages up to the same place."
+      why_this_belongs_at_the_crack: "Binding is exactly what cracking is for. The egg goes from generic to specific in one gesture, and the gesture is a safe combination, which tells the player without a tutorial that the number matters."
+
     more_than_one_pair_of_hands:
       the_precedent: "Hot tubs and pool tables already hold several Sims in one interaction, with slots and join verbs. An egg can do the same: two or three characters cracking one egg together, joining and leaving while it is open."
       what_it_changes: "Co-authorship becomes literal. Everyone who joined the crack is credited in the custody chain, and a jointly cracked egg is a shared object rather than one person's with witnesses."

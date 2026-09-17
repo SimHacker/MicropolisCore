@@ -113,6 +113,22 @@ text_is_the_wide_carrier:
     time: "WHEN, and which fixed signal, from an object that must stay in the room and cannot open a dialog. A few bits carried in a blink (time_is_the_fourth_carrier)."
   the_failure_mode_is_legible: "Misread text is a wrong word a person can see is wrong. That is a far better failure than a misdecoded blob, and it can be surfaced verbatim before anything acts on it."
 
+# DIALING IN: THE INBOUND CARRIER WITH NO KEYBOARD
+#
+# Everything above is the game talking. This is how a precise value gets IN, through nothing but
+# the pie menu the game already has, by cracking the object like a safe.
+
+dialing_in:
+  the_mechanism: "A Dial submenu with eight items — N, NE, E, SE, S, SW, W, NW. One pick is one octal digit, three bits. The menu never gets deeper: to enter more, you dial again. Eight items forever, however long the code."
+  why_shallow_beats_deep: "A tree big enough to hold every value is unauthorable and unreadable. Repetition moves the length of the message out of the MENU and into the SEQUENCE, so a four-digit code and a twelve-digit code use the same eight-item menu (EGGS.yml, cracking_is_the_constructor)."
+  it_is_a_safe: "Dialling a combination to open something is a gesture everyone already understands, and the game can animate it. The diegetic frame is not decoration here: it tells the player what kind of thing they are doing, which is entering a number that matters."
+  what_the_number_is_for:
+    binding_to_an_external_identity: "An n-digit code identifies a web object outside the game. Dial it in and this in-game object is bound to that thing — a page, a job, a document, a show segment — so an egg can have an identity that outlives the save file."
+    many_to_one_is_the_point: "The same combination can be dialled into several in-game objects, in different lots or different games, and they all bind to the same web object and all send their messages up to it. One external thing, many local hands on it."
+    check_digits: "The last digit is a check over the others, because eight-way picking is error-prone for a human and a misdial should fail as a rejection rather than as a binding to somebody else's object."
+  either_hand_dials: "A player picks octants with a mouse. Screen Angel picks the same octants the same way, which makes this the inbound half of a genuinely two-way bus rather than a human-only entry form (the_bus)."
+  what_it_is_not: "Not authentication and not a secret. A dialled code is a public name that is awkward to type, so nothing in the binding may grant authority on its own (what_is_deliberately_absent)."
+
 # TIME: THE CARRIER THAT COSTS NO PIXELS
 #
 # Flashing a code at a recorder is LITERALLY winking at the camera — a timed blink of light,

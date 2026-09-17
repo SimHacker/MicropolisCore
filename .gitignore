@@ -83,3 +83,5 @@ packages/*/dist/
 
 # Temp directory
 temp/
+
+.cursor/

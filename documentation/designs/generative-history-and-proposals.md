@@ -33,36 +33,53 @@ undo history for terrain generation is unconfirmed.)
 
 ---
 
-## The six verbs
+## Four primitives, and the buttons woven from them
 
-Every generative surface exposes all six, visibly, to whoever is driving — human or agent:
+Most of the verbs people ask for are not primitives. There are four:
 
-| Verb | Guarantee |
+| Primitive | What it does |
 |---|---|
-| **Generate** | New candidate, recorded as a new history entry with its seed and parameters |
-| **Reroll** | Another candidate; the previous one stays in the history |
-| **Edit** | Hand-authored change over a generated base, recorded as its own entry |
-| **Revise** | Regenerate within whatever the user has pinned; pinned parts are inputs, not outputs |
-| **Reset** | Back to the last committed state |
-| **Clear** | Deliberately to nothing — and itself an undoable entry |
+| **Produce** | Run the generator with a given set of inputs; append the result as a new entry |
+| **Edit** | Apply a hand-authored change to an entry; append the result as a new entry |
+| **Select** | Make any entry in the history current |
+| **Delete** | Remove entries. The only destructive operation, and itself undoable |
 
-**Reset and clear are different verbs.** Collapsing them is how people lose work by pressing the
-button that promised safety.
+Everything the user sees is a combination. *Generate* is produce with new inputs. *Reroll* is produce
+with the **same** inputs. *Revise* is produce with the pinned inputs held. *Reset* is select. *Clear*
+is select-the-empty-entry. Nothing except delete removes work, which is what lets the interface be
+direct-manipulation and reversible at once: drag, pick and reroll freely, and the only dangerous
+button says *delete* on it. A RISC command set with a CISC surface.
 
-**A reroll may not silently clobber hand-work.** If the next generation would overwrite edits, that
-is a question, not an action — and the question is answerable by either driver
-([moollm INTERFACE-TO-AGENCY](https://github.com/SimHacker/moollm/blob/main/designs/INTERFACE-TO-AGENCY.md)).
+Storage is cheap. Keep every roll.
 
----
+## Determinism is a property of the generator, not of the design
+
+The terrain generator is deterministic: same seed, same world, so rolling again means changing the
+seed. A model is not: the same prompt and parameters give a different answer every time. So *produce
+with identical inputs* is a real operation rather than a no-op — and that is what a reroll actually is
+in a model workflow.
+
+Which means an entry records all of its inputs, not just a seed:
+
+- **seed** where one exists (terrain, layout, CA rules)
+- **prompt and parameters** where the generator is a model
+- **model identity and version**, because the same prompt against a different model is a different generator
+- **heat**, the sampling temperature
+
+Heat is the knob worth exposing. Low heat rerolls hover near the last result, which is what you want
+when something is almost right; high heat leaves the neighbourhood. One control spanning "again, but
+a little different" to "surprise me," rather than two buttons with confusable names.
 
 ## What an entry holds
 
 ```
 entry {
   id            -- monotonic, per session
-  kind          -- generated | loaded | edited | cleared
-  seed          -- RNG seed, for kind=generated (the whole point)
+  kind          -- produced | loaded | edited
+  seed          -- RNG seed where the generator has one
   params        -- generator inputs: size, water ratio, tree density, scenario
+                -- or: prompt, model id, model version, heat
+  parent        -- the entry this was produced or edited from
   pins          -- what the user froze before the last revise
   source        -- who proposed it: player id, or agent id plus its brief
   artifact_ref  -- content hash for kind=loaded|edited; absent for generated
@@ -70,9 +87,10 @@ entry {
 }
 ```
 
-A generated entry is a few dozen bytes. A loaded or edited entry needs the bytes, so it is stored by
-content hash against the registry ([sims-content-registry.md](sims-content-registry.md)) — which is
-also how identical rerolls are detected instead of duplicated.
+A produced entry is a few dozen bytes when the generator is seeded, and a prompt plus parameters when it is a model. A loaded or edited entry needs the bytes, so it is stored by
+content hash against the registry ([sims-content-registry.md](sims-content-registry.md)) — which is also how two rolls that happened to
+land on the same bytes get stored once. Rolls with identical *inputs* are all kept, because with a
+nondeterministic generator they are different answers to the same question.
 
 ---
 
