@@ -29,7 +29,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { decodeFontPackNode } from '@micropolis/optical-codec/node/pack';
-import { createFontContext, type CoverageFont, type FontContext, type FontPack } from '@micropolis/optical-codec';
+import { createFontContext, type CoverageFont, type FontContext, type FontPack, type Template } from '@micropolis/optical-codec';
 
 /** The size the control panel draws its description in. */
 export const PANEL_FONT_SIZE = 8;
@@ -56,7 +56,10 @@ export const ALPHABETS = {
 const here = dirname(fileURLToPath(import.meta.url));
 export const FONT_PACK_PATH = join(here, '..', '..', 'assets', 'interface.fontpack');
 
+export const ANCHOR_PACK_PATH = join(here, '..', '..', 'assets', 'interface.anchors');
+
 let pack: FontPack | null = null;
+let anchors: Template[] | null = null;
 const contexts = new Map<string, FontContext>();
 
 export function hasFontPack(): boolean {
@@ -74,6 +77,25 @@ export function sims1FontPack(): FontPack {
 		pack = decodeFontPackNode(new Uint8Array(readFileSync(FONT_PACK_PATH)));
 	}
 	return pack;
+}
+
+/**
+ * The anchor templates: crops of the panel's own art that know where in the layout they sit.
+ *
+ * Empty rather than throwing when the pack is not built, because the panel finder has a second way in
+ * — the 2004 corner colours — and losing resolution independence is not the same as being broken.
+ */
+export function sims1Anchors(): Template[] {
+	if (anchors === null) {
+		anchors = existsSync(ANCHOR_PACK_PATH)
+			? (decodeFontPackNode(new Uint8Array(readFileSync(ANCHOR_PACK_PATH))).templates ?? [])
+			: [];
+	}
+	return anchors;
+}
+
+export function hasAnchors(): boolean {
+	return existsSync(ANCHOR_PACK_PATH);
 }
 
 /** The game's interface face at one point size. */

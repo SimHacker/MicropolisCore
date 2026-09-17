@@ -1,6 +1,7 @@
 export * from './raster';
 export * from './coverage-font';
 export * from './coverage-pack';
+export * from './template';
 export * from './font-pack';
 export * from './font-context';
 export * from './egg-code';

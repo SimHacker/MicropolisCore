@@ -98,6 +98,12 @@ the_text_reader_is_finished_first:
   the_reader_is_not_greedy: "It scores whole lines rather than choosing the best letter at each position, because per-position choices are wrong in ways that only show up later: a backtick eats an 'h' one column early, and every local rule that fixes that breaks something else. FONT-RECOGNITION.yml has both misreads."
   why_this_matters_to_the_rest: "The bridges now have pixels: AngelServices.grabFrame returns a decoded, native-scale frame, which is the capability every game-facing reader needs and none of them had."
 
+the_reader_finds_its_own_coordinates:
+  what: "The window is located by correlating the application's own interface art against the frame, which yields its origin and its scale; every rectangle is then measured from a window edge. packages/optical-codec/src/template.ts."
+  why_it_is_not_a_detail: "Coordinates measured once at one resolution are the difference between a demo and a tool. With them, a reader works on one screenshot; without them, it works on a window that is not the whole frame, on a stretched capture, and on the two resolutions the game offers, and it REFUSES a frame of something else rather than reading whatever is at those pixels."
+  the_finding_that_generalises: "Striding over the frame to find art is both slower and wrong. Hard interface edges correlate badly a couple of rows out of position, so a coarse grid scores the art low AT the art and hands the answer to whatever it landed on squarely. Visit every position with a thinned template instead — then search each separated neighbourhood with the whole one. This applies to the egg reader too, which has the same shape of problem."
+  what_it_does_not_solve: "A smooth upscale. The art is found, the scale is reported, the frame is decimated back to native pixels, and blurred masks show up as low confidence. That is a report, not a rescue."
+
 the_verb:
   recognize_scan: "One capture plus one decode, in the main process, returning payloads and boxes in screen points. One verb rather than two because handing the caller an image would put a decoder in every client and move pixels across a socket to be looked at once (src/common/protocol.ts, src/main/recognize/service.ts)."
   png_always: "The capture service prefers JPEG for screens and is right to, but a small QR code is what JPEG damages worst — hard edges, tiny features, artifacts landing on the modules. Recognition overrides the default."

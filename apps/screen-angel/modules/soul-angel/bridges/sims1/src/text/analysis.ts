@@ -2,10 +2,10 @@
  * The driver's reading layer: what does the game currently say?
  *
  * The Sims 1 answers nothing when asked, so this asks the screen instead. One frame, the panel found
- * by its corners, the description read with the game's own font, and a plain answer — including the
- * plain answer "I could not read that", which matters more than it sounds. A recogniser that returns
- * confident nonsense when the window is the wrong size is worse than one that returns nothing, since
- * everything downstream would then be acting on invented text.
+ * by the game's own art, the description read with the game's own font, and a plain answer —
+ * including the plain answer "I could not read that", which matters more than it sounds. A recogniser
+ * that returns confident nonsense when the window is not what it expected is worse than one that
+ * returns nothing, since everything downstream would then be acting on invented text.
  *
  * Pull, not push. Nothing here starts a timer: the caller decides when it is worth a frame, because
  * the caller is the one that knows whether a player is pointing at something or the game is paused
@@ -14,8 +14,8 @@
 
 import type { AngelServices, WindowInfo } from '@screen-angel/host-api';
 
-import { sims1PanelFont } from './font';
-import { PANEL_ASSUMPTIONS, readPanelText, type PanelText } from './panel';
+import { sims1Anchors, sims1PanelFont } from './font';
+import { readPanelText, type PanelText } from './panel';
 
 export interface PanelReading {
 	/** What the game says, or null when there was no panel or it could not be read. */
@@ -39,9 +39,13 @@ const MIN_CONFIDENCE = 0.85;
 
 export function createPanelReader(angel: AngelServices) {
 	const font = sims1PanelFont();
+	// Absent in a checkout with no anchors built: the reader falls back to the 2004 corner colours,
+	// which need no assets and assume the frame is the window at native scale.
+	const anchors = sims1Anchors();
 
 	return {
 		font,
+		anchors,
 
 		/** One frame, one answer. */
 		async read(window?: WindowInfo): Promise<PanelReading> {
@@ -51,26 +55,24 @@ export function createPanelReader(angel: AngelServices) {
 			const frame = await angel.grabFrame({ window: window?.windowId ?? 'focused' });
 			const size = { width: frame.width, height: frame.height };
 
-			if (frame.width !== PANEL_ASSUMPTIONS.windowWidth || frame.height !== PANEL_ASSUMPTIONS.windowHeight) {
+			const panel = readPanelText(frame, font, anchors);
+			if (panel === null) {
 				return {
 					panel: null,
 					frame: size,
 					because:
-						`the panel coordinates were measured at ${PANEL_ASSUMPTIONS.windowWidth}x` +
-						`${PANEL_ASSUMPTIONS.windowHeight} and this frame is ${size.width}x${size.height}. ` +
-						PANEL_ASSUMPTIONS.why
+						anchors.length > 0
+							? "no control panel in this frame: neither the panel's own art nor its corner colours are there"
+							: 'no control panel in this frame, looking only at the corner colours since no anchors are built'
 				};
-			}
-
-			const panel = readPanelText(frame, font);
-			if (panel === null) {
-				return { panel: null, frame: size, because: 'no control panel in this frame' };
 			}
 			if (panel.confidence < MIN_CONFIDENCE) {
 				return {
 					panel: null,
 					frame: size,
-					because: `found the panel but the glyphs only explain ${(panel.confidence * 100).toFixed(0)}% of the pixels, which is noise rather than text`
+					because:
+						`found the panel by ${panel.window.found} at scale ${panel.window.scale} but the glyphs only explain ` +
+						`${(panel.confidence * 100).toFixed(0)}% of the pixels, which is noise rather than text`
 				};
 			}
 

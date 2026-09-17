@@ -2,13 +2,14 @@
 #
 # Companions: ../../../RECOGNIZER.yml (the reader stack) · ../../../OPTICAL-CHANNEL.yml (codes, of
 # which text is the widest) · src/text/ (the code) · tools/ (importers and exporters) ·
-# assets/interface.fontpack (every face) · assets/font-provenance.json (what only a person knows)
+# assets/interface.fontpack (every face) · assets/interface.anchors (the art it finds the panel by) ·
+# assets/font-provenance.json (what only a person knows)
 
 status:
-  built: [font_pack_format, importers, exporters, canvas_shaped_api, coverage_matcher, line_reader, panel_finder, analysis_layer, tests, fixture_renderer]
-  not_built: [resolution_independent_panel_finder, tooltip_and_dialog_regions, live_polling, cjk_faces]
+  built: [font_pack_format, importers, exporters, canvas_shaped_api, coverage_matcher, line_reader, anchor_matcher, resolution_independent_panel_finder, analysis_layer, tests, fixture_renderer]
+  not_built: [tooltip_and_dialog_regions, live_polling, cjk_faces, verification_against_a_real_frame]
   fonts_in_use: "The game's own VariableSans_08 for the panel. The 2004 hand-measured capture rides along as the one face that came from a screen rather than from an asset, which makes it the test that the reader works on captured pixels."
-  one_file: "assets/interface.fontpack, 92,044 bytes, twelve faces. Committed; the game's own font files are not."
+  two_files: "assets/interface.fontpack, 92,044 bytes, twelve faces. assets/interface.anchors, 2,214 bytes, three crops of panel background art. Both committed; the game's own files are not."
 
 the_claim_this_settles:
   what_the_specs_kept_saying: "That text is the widest carrier on the screen and the easiest thing on it to read. That was an assertion."
@@ -74,6 +75,26 @@ identifying_the_2004_capture:
   where_it_disagrees: "K \\ ] ^ ` { } and n, measured in 2004 and not matching now. Small punctuation, most likely mis-measured off a magnified screenshot, and worth a look if any of them ever misreads."
   the_space_that_had_to_be_chosen: "The 2004 tables measured the space cell's ink, which is one pixel of nothing. An advance of 1 makes word breaks unrecoverable, so that face carries 4 — what the Simplifier's own reader used, against the 3 the game advances. A space is a gap and nothing else, so a face whose space is no wider than its letter spacing has word breaks nobody can read back; the tests say so rather than pretending otherwise."
 
+finding_the_panel_without_knowing_the_resolution:
+  what_it_replaced: "Four corner pixels at columns measured off an 800x600 screenshot in 2004. That reads one resolution, in a frame that is exactly the window, and refuses everything else — a demo."
+  what_the_game_actually_does:  # read out of the shipped source, not guessed from screenshots
+    the_hud_hangs_off_the_bottom: "SimsApp.cpp: area.top = area.bottom - 150, full width. 150 pixels, never scaled."
+    the_left_column_does_not_move: "WinCPanel.cpp: 220 wide at every resolution. Subpanels start at x 220, are 100 tall, and stretch right."
+    the_witness_in_the_art: "PanelBack.bmp is 804 across, which is 1024 - 220. The asset dimensions confirm the layout arithmetic."
+    it_is_hardcoded: "In C++, not in the .uis files, which are design artefacts the shipped build does not read."
+  and_therefore: "Every rectangle is an offset from a window edge — x from the left, y counted UP from the last row. The same numbers are right at 800x600 and 1024x768. Don's own 2004 code had this correction sketched as gBigScreen and left it commented out, 'currently disabled and not supported'."
+  the_anchors: "Three crops of background art the game blits and no skin replaces: PanelBack, UniversalBack, BackPatch. tools/import-anchors.ts lifts them from UIGraphics/cpanel into assets/interface.anchors, each carrying the offset from the window edges at which it is drawn — so a match yields the window's left edge, its bottom row and its scale, and the layout follows."
+  what_that_buys: "A window that is not the whole frame. A stretched capture, decimated back to native pixels before any text is read. A recoloured skin, since correlation is normalised and greyscale. And a refusal on a frame of something else, which four corner pixels cannot manage honestly."
+  the_colour_path_stays: "As the fallback when there are no anchors to hand. It needs no assets, and it is what the Simplifier did. Every reading reports which of the two answered."
+
+matching_art_is_not_the_obvious_loop:
+  where: "packages/optical-codec/src/template.ts, and test/template.test.ts, which fails if any of this is undone."
+  the_score: "Normalised cross-correlation on greyscale. Centred and divided by its own spread, so a dimmed window, a gamma tweak and a re-encode all still match, and a bright flat region cannot win the way it can against a sum of differences."
+  the_mistake_that_looks_efficient: "Stride over the frame — every fourth position — then refine around the winner. Interface art is hard horizontal edges, and a template landing two rows off correlates badly, so the grid never learns the art's real score AT the art. Some unrelated neighbourhood the grid happened to land on squarely out-scores it, and the refinement polishes the wrong answer. Measured, not reasoned: PanelBack sat at y 620 scoring 1.000, and a strided search reported 0.688 at y 618, 29 pixels off."
+  what_is_done_instead: "Visit every position, with a thinned template — every eighth pixel each way by default. Cheaper per position than the strided full template AND correct, because the survey is never asked to score a misalignment it created."
+  the_second_trap: "Keep the top N and they all land on one peak, so the runner-up neighbourhood — which may be the art — is never looked at. Candidates must be spatially separated, and then each neighbourhood searched exhaustively with the WHOLE template. Re-scoring only the survey's own pick fails when the art repeats on the sampling period: the thinned scores tie and scan order breaks the tie, not the art. The stripe fixture in the tests is built to tie on purpose."
+  scale_is_searched_not_assumed: "1 first, then 2, 1.5, 1.25, stopping at an exact hit. Nothing below 1: a capture smaller than the art has thrown away the pixels the reader needs, and finding the panel in it would only license reading text that is no longer there."
+
 the_reader_is_a_whole_line_search:
   what_it_does: "Every column of the strip is accounted for exactly once. A letter costs the squared miss between its coverage and the pixels; a column with no letter on it costs whatever ink sits there unexplained; the cheapest path across the strip wins. Viterbi over pen positions, with each glyph's advance as the step."
   what_it_replaced: "Choosing the best letter at each position in turn, which is what the 2004 code did and what this did first."
@@ -87,7 +108,7 @@ the_reader_is_a_whole_line_search:
 the_honest_failure:
   the_rule: "Report nothing rather than something wrong."
   how: "Confidence is how much of the strip's ink the letters explain. Below 0.85 the reader is sampling the wrong rows, and the analysis layer returns null with a sentence naming the check that failed."
-  the_wrong_resolution_case: "Checked before reading rather than after: the panel coordinates were measured at 800x600, so a frame of another size is refused by size instead of read and reported at low confidence."
+  the_wrong_scale_case: "A capture at any scale but 1 is decimated back to the game's own pixels before a letter is matched, because the masks are exact. A nearest-neighbour stretch comes back exactly; a smooth one comes back blurred and says so in the confidence. That is a report, not a promise that it works."
   why_this_matters_more_than_accuracy: "Everything above this layer — a job, an Angel, a narrated recording — would act on invented text without knowing. A refusal is recoverable; a confident misread is not."
 
 the_layers:
@@ -96,7 +117,8 @@ the_layers:
   optical_codec_coverage_font: "The coverage matcher: prepare, read a line, read a block, and draw — drawing being how the tests produce pixels to read."
   optical_codec_font_context: "Draw, measure and read through one object, in Canvas's vocabulary."
   src_text_font: "Which face for which job, loaded once, plus the alphabet the reader is offered."
-  src_text_panel: "The Sims-specific geometry. Corner colours at fixed columns, one upward scan for the top edge because only the top edge moves, then the description block at its measured offset."
+  optical_codec_template: "Find known art in a frame, and with it the frame's origin and scale."
+  src_text_panel: "The Sims-specific geometry, in edge-relative terms. Anchors first, corner colours as the fallback, one upward scan for the strip's top edge because only the top edge moves, then the description block at its measured offset in the game's own pixels."
   src_text_analysis: "What the driver offers upward: one frame, one answer, or a reason. Pull, not push — the caller is the one that knows whether anything is happening (RECOGNIZER.yml, when_to_look)."
   the_bridge: "On attach it reports both halves: how empty the accessibility tree is, and what it read off the pixels anyway. The pairing IS the architecture argument, made by the machine on every attach instead of in a document."
 
@@ -105,10 +127,10 @@ how_it_is_tested_without_the_game:
   the_synthetic_font: "packages/optical-codec/test builds its own awkward five-pixel font — one letter a strict subset of another, one a single stroke that fits inside them all, one with a descender — so the matcher's claims, the container's round trip and the metrics can all be tested by anyone, with no installation and no licence question."
   what_was_retired: "The colour matcher, the hand-measured tables in source, the JSON font, the BMP and the eleven separate .gzf files. One format, one matcher, one file. The captured face is now coverage like everything else, its screenshot colours divided back out into the coverage they always were."
   the_fixture: "tools/render-panel-fixture.ts draws the panel we claim to read and reads it back, and writes fixtures/panel.png so a person can see what the machine is matching."
-  what_it_cannot_cover: "Whether the corner colours still identify the panel in the Legacy re-release, and whether the description really is drawn at the offsets measured in 2004. Both need one real frame."
+  the_resolution_tests: "The same synthetic panel at 800x600 and at 1024x768, inset into a 1280x800 desktop where the corner path correctly finds nothing, and stretched, where the match reports the scale and the reader decimates before reading. Each asserts the text, not just that something was found."
+  what_it_cannot_cover: "Whether the shipped art still matches in the Legacy re-release, and whether the description really is drawn at the offsets measured in 2004. Both need one real frame. Everything above is measured against pixels this repository drew."
 
 what_is_worth_building_next:
   which_size_draws_what: "Size 8 is settled for the description. The title, the tooltips and the Simoleon counter are drawn at some of the other ten, and identifying each is the same comparison run against a real frame."
-  find_the_panel_by_its_art: "Template-match a piece of the panel frame instead of sampling four corners at fixed columns. That is what makes any window size work, and it is the difference between a demo and a tool."
   the_other_regions: "Tooltips, the dialog box the 2004 code already knew how to dismiss, the Simoleon counter, the queue. Each is a rectangle and a font; the machinery is done."
   the_cjk_faces: "Japanese and Chinese builds load different font files, and none of this has been pointed at one."

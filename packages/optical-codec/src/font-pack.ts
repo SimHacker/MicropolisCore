@@ -19,7 +19,8 @@
  *   u16      version
  *   u16      chunk count
  *   chunks   'FACE' one coverage face, in the packed form of coverage-pack.ts
- *            'META' UTF-8 JSON: where the faces came from, and what is known about them
+ *            'TMPL' one greyscale anchor template, for finding known art in a frame
+ *            'META' UTF-8 JSON: where the contents came from, and what is known about them
  *
  * Each chunk names its own codec, so compression is per chunk and can differ between them. Faces
  * deflate to about half: eleven sizes of an interface font are 191 KB packed and 89 KB stored.
@@ -30,6 +31,7 @@
 
 import { packCoverageFont, unpackCoverageFont } from './coverage-pack';
 import type { CoverageFont } from './coverage-font';
+import type { Template } from './template';
 
 const MAGIC = 0x464e5450; // 'FNTP'
 const VERSION = 1;
@@ -38,6 +40,7 @@ const CHUNK_HEADER_BYTES = 12;
 
 const FACE = 0x46414345; // 'FACE'
 const META = 0x4d455441; // 'META'
+const TMPL = 0x544d504c; // 'TMPL'
 
 /** 0 is stored as-is, 1 is raw deflate: the one codec Node and every browser both have built in. */
 export type PackCodec = 0 | 1;
@@ -46,6 +49,12 @@ export const DEFLATE_RAW: PackCodec = 1;
 
 export interface FontPack {
 	faces: CoverageFont[];
+	/**
+	 * Anchor templates: fixed pieces of an application's own interface art, used to find where its
+	 * layout is in a frame. They live beside the faces because they answer the same question from the
+	 * other end — the faces say what the text is, the anchors say where to look for it.
+	 */
+	templates?: Template[];
 	/**
 	 * Where the faces came from and what is known about them. JSON, because this is the part a
 	 * person reads when they find the file in five years and wonders what it is.
@@ -68,6 +77,7 @@ export function encodeFontPack(pack: FontPack, deflate?: Deflate): Uint8Array {
 
 	if (pack.meta !== undefined) add(META, new TextEncoder().encode(JSON.stringify(pack.meta)));
 	for (const face of pack.faces) add(FACE, packCoverageFont(face));
+	for (const template of pack.templates ?? []) add(TMPL, packTemplate(template));
 
 	let total = HEADER_BYTES;
 	for (const chunk of chunks) total += CHUNK_HEADER_BYTES + chunk.stored.length;
@@ -101,6 +111,7 @@ export function decodeFontPack(bytes: Uint8Array, inflate?: Inflate): FontPack {
 
 	const count = view.getUint16(6, true);
 	const faces: CoverageFont[] = [];
+	const templates: Template[] = [];
 	let meta: unknown;
 
 	let at = HEADER_BYTES;
@@ -123,15 +134,67 @@ export function decodeFontPack(bytes: Uint8Array, inflate?: Inflate): FontPack {
 		}
 
 		if (type === FACE) faces.push(unpackCoverageFont(raw));
+		else if (type === TMPL) templates.push(unpackTemplate(raw));
 		else if (type === META) meta = JSON.parse(new TextDecoder().decode(raw));
 	}
 
-	return { faces, meta };
+	return templates.length === 0 ? { faces, meta } : { faces, templates, meta };
+}
+
+/**
+ * A template as bytes: name, size, where it is anchored, then the greyscale plane.
+ *
+ * The anchor travels with the art because they are one fact. A crop of a panel background is not
+ * useful on its own; a crop that knows it sits 220 pixels from the left and 100 up from the bottom
+ * hands back the whole layout the moment it is found.
+ */
+function packTemplate(template: Template): Uint8Array {
+	const name = new TextEncoder().encode(template.name);
+	const out = new Uint8Array(2 + name.length + 10 + template.plane.length);
+	const view = new DataView(out.buffer);
+	view.setUint16(0, name.length, true);
+	out.set(name, 2);
+	let at = 2 + name.length;
+	view.setUint16(at, template.width, true);
+	view.setUint16(at + 2, template.height, true);
+	// Anchors are signed, since "so many pixels up from the bottom" is how interface art is placed.
+	view.setInt16(at + 4, template.anchor?.x ?? 0, true);
+	view.setInt16(at + 6, template.anchor?.y ?? 0, true);
+	out[at + 8] = (template.anchor === undefined ? 0 : 1) | (template.anchor?.fromRight ? 2 : 0) | (template.anchor?.fromBottom ? 4 : 0);
+	out[at + 9] = 0;
+	out.set(template.plane, at + 10);
+	return out;
+}
+
+function unpackTemplate(bytes: Uint8Array): Template {
+	const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+	const nameLength = view.getUint16(0, true);
+	const name = new TextDecoder().decode(bytes.subarray(2, 2 + nameLength));
+	let at = 2 + nameLength;
+	const width = view.getUint16(at, true);
+	const height = view.getUint16(at + 2, true);
+	const flags = bytes[at + 8];
+	const anchor =
+		(flags & 1) === 0
+			? undefined
+			: {
+					x: view.getInt16(at + 4, true),
+					y: view.getInt16(at + 6, true),
+					fromRight: (flags & 2) !== 0,
+					fromBottom: (flags & 4) !== 0
+				};
+	const plane = bytes.slice(at + 10, at + 10 + width * height);
+	return anchor === undefined ? { name, width, height, plane } : { name, width, height, plane, anchor };
 }
 
 /** The face of a given point size, or undefined. Sizes are what the application asks in. */
 export function faceOfSize(pack: FontPack, size: number): CoverageFont | undefined {
 	return pack.faces.find((face) => face.size === size);
+}
+
+/** A template by name. */
+export function templateNamed(pack: FontPack, name: string): Template | undefined {
+	return pack.templates?.find((template) => template.name === name);
 }
 
 /** The face by name, for faces that are not one of a numbered family. */

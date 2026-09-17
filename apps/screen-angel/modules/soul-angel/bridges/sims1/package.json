@@ -16,6 +16,7 @@
   },
   "scripts": {
     "import-fonts": "tsx tools/import-fonts.ts",
+    "import-anchors": "tsx tools/import-anchors.ts",
     "export-fonts": "tsx tools/export-fonts.ts",
     "identify": "tsx tools/identify-font.ts",
     "fixture": "tsx tools/render-panel-fixture.ts",
