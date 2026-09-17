@@ -78,7 +78,7 @@ This maps cleanly onto the **[characters-as-hydrogen](characters-as-hydrogen.md)
 
 ## Import/export design (deterministic, layered, lossless)
 
-Same shape as the Sims import/export ([sims-content-registry.md](sims-content-registry.md)) and the [sim-obliterator BRIDGE/UPLIFT](moollm-micropolis-integration.md): read the native files, **interpolate up** into higher-level human/LLM-friendly formats, edit, and **write back down** so the native engine still loads them — preserving comments, metadata, and *anything we don't understand*.
+Same shape as the Sims import/export ([sims-content-registry.md](sims-content-registry.md)) and the [Sims save bridge](moollm-micropolis-integration.md): read the native files, **interpolate up** into higher-level human/LLM-friendly formats, edit, and **write back down** so the native engine still loads them — preserving comments, metadata, and *anything we don't understand*.
 
 ### Layers of representation (move up and down losslessly)
 

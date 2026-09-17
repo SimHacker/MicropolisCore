@@ -3,7 +3,7 @@
 **Status:** Active design (synthesis)  
 **Monorepo:** MicropolisCore  
 **Companion documents:** [soul-city.md](soul-city.md) · [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) · [moollm-micropolis-integration.md](moollm-micropolis-integration.md)  
-**External primary sources (MOOLLM repo):** [designs/MOOLLM-MANIFESTO.md](https://github.com/SimHacker/moollm/blob/main/designs/MOOLLM-MANIFESTO.md) · [designs/sim-obliterator/](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator) · [skills/character/](https://github.com/SimHacker/moollm/tree/main/skills/character) · [skills/mind-mirror/](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) · [skills/incarnation/](https://github.com/SimHacker/moollm/tree/main/skills/incarnation)
+**External primary sources (MOOLLM repo):** [designs/MOOLLM-MANIFESTO.md](https://github.com/SimHacker/moollm/blob/main/designs/MOOLLM-MANIFESTO.md) · [MOOLLM: skills/soul-city/](https://github.com/SimHacker/moollm/tree/main/skills/soul-city) · [skills/character/](https://github.com/SimHacker/moollm/tree/main/skills/character) · [skills/mind-mirror/](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) · [skills/incarnation/](https://github.com/SimHacker/moollm/tree/main/skills/incarnation)
 
 > **Trademark notice.** This document uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) granted by Micropolis GmbH. *SimCity* and *The Sims* are trademarks of Electronic Arts Inc. and are referenced only historically, to describe the original games' design and the public source code released by EA for the OLPC project, or in this project's role as a *companion* to the EA-published Sims Legacy Collection. Nothing here is affiliated with or endorsed by EA or Micropolis GmbH.
 
@@ -106,7 +106,7 @@ moocroworld/                     ← the world is a filesystem
     │   └── SKILL.md
     ├── mind-mirror/
     ├── incarnation/
-    └── sim-obliterator/
+    └── soul-city/
 ```
 
 The terms are deliberate:
@@ -321,7 +321,7 @@ MOOLLM's [mind-mirror](https://github.com/SimHacker/moollm/tree/main/skills/mind
 
 Both systems read each other. Five `sims_traits` numbers in a save file produce a starting point for the mind-mirror. The mind-mirror's circumplex (dominance × hostility) lets the LLM speak in a character's voice with calibrated tone, idiom, and stance.
 
-The key Sims↔MOOLLM field mapping (verified against the original `PersonData.h`, 12/17/99 release) is documented in [the BRIDGE.md doc](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md). The TypeScript implementation lives in [packages/sims-io/src/l3/person-data.ts](../../packages/sims-io/src/l3/person-data.ts).
+The key Sims↔MOOLLM field mapping (verified against the original `PersonData.h`, 12/17/99 release) is documented in [`packages/sims-io`](../../packages/sims-io). The TypeScript implementation lives in [packages/sims-io/src/l3/person-data.ts](../../packages/sims-io/src/l3/person-data.ts).
 
 > Note that the 80-field base game `PersonData` (kNumPersonDataFields = 80, capped at 88 for expansion-pack additions) is already implemented and tested in `packages/sims-io`. The L4 "ContentIndex bridge" task in [documentation/TODO.md](../TODO.md) is exactly the step that produces the data MOOLLM's character skill expects.
 
@@ -355,7 +355,7 @@ From the [MOOLLM Manifesto](https://github.com/SimHacker/moollm/blob/main/design
 | # | Innovation | What it means for Soul City |
 |---|---|---|
 | 1 | **Instantiation** | A skill like [adventure](https://github.com/SimHacker/moollm/tree/main/skills/adventure) can be *cloned* into a living instance: `adventure-4/` with 150+ files. A Sims uplift is an instantiation: clone the `sim-obliterator` skill against a save file, get a directory of characters, rooms, and inventories that can be played and edited. |
-| 2 | **Multi-Tier Persistence** | GLANCE → CARD → SKILL → README → examples → templates → source. Maps directly onto the [IFF Semantic Image Pyramid](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md) — six layers from raw binary up to narrative entity, lossless round-trips through the lower four. |
+| 2 | **Multi-Tier Persistence** | GLANCE → CARD → SKILL → README → examples → templates → source. Maps directly onto the [layered resource stack](../vitamoo/OBLITERATOR-TYPESCRIPT.md) — six layers from raw binary up to narrative entity, lossless round-trips through the lower four. |
 | 3 | **K-lines** | Names that activate conceptual clusters. *"Bella Goth"* in an LLM call activates a whole network: her family, her trauma, the kitchen fire, fan stories. *"Pleasantview"* activates the neighborhood. *"SimAntics"* activates a programming culture. |
 | 4 | **Empathic Templates** | Smart generation, not string substitution. A new Sim isn't filled in from a template — they're *generated* with awareness of who they are, who their family is, what their history says. |
 | 5 | **Speed of Light** | Many turns of many characters in one LLM call. A whole neighborhood can converse, gossip, fall in love, fight, and reconcile in a single context window. The context window is a **stage**, not a buffer. |
@@ -391,7 +391,7 @@ The context-assembly protocol is staged so we only spend tokens we have to:
 | `README.md` / `examples/` | Only on demand or failure recovery | Whatever |
 | `templates/` | Only when instantiating | Whatever |
 
-This is the same pyramid as the **IFF Semantic Image Pyramid** for Sims resources (see [IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)) — six layers from raw binary up to narrative entity, with lossless round-trips through the lower four. **The same multi-resolution discipline applies to skills, characters, rooms, and Sims resources alike.**
+This is the same pyramid as the **IFF Semantic Image Pyramid** for Sims resources (see [`packages/vitamoo`](../../packages/vitamoo)) — six layers from raw binary up to narrative entity, with lossless round-trips through the lower four. **The same multi-resolution discipline applies to skills, characters, rooms, and Sims resources alike.**
 
 ```
 Skill pyramid              IFF resource pyramid           Character pyramid
@@ -564,7 +564,7 @@ This is not a paste-on legal notice. It is a statement about what kinds of repre
 
 ## The Bifrost: the bridge as a structured ontological transition
 
-The [PSYCHOPOMP-AND-THE-BIFROST.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/PSYCHOPOMP-AND-THE-BIFROST.md) doc names the architecture of *crossing*:
+The [MOOLLM: SOUL-BRIDGES.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md) doc names the architecture of *crossing*:
 
 ```
 Midgard (The Sims 1)          Bifrost (sims-io + bridge)        Asgard (MOOLLM)
@@ -638,7 +638,7 @@ The pattern has deep precedent in Don's previous work:
 
 The Adventure Compiler is **all of these, generalized**: any MOOLLM object description can compile to a playable Sims artifact. Any MOOLLM story can compile to a Family Album. Any MOOLLM room's furniture can compile to in-game furniture.
 
-Critically, the **reverse direction also exists**. Tornadoed Family Album → parsed → MOOLLM adventure source. The compiler is bidirectional in the sense that both ends accept and emit the same intermediate representation. Round-trips lose only what the IFF Semantic Image Pyramid says is lossy at each layer boundary (see [IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)).
+Critically, the **reverse direction also exists**. Tornadoed Family Album → parsed → MOOLLM adventure source. The compiler is bidirectional in the sense that both ends accept and emit the same intermediate representation. Round-trips lose only what the IFF Semantic Image Pyramid says is lossy at each layer boundary (see [`packages/vitamoo`](../../packages/vitamoo)).
 
 For MicropolisCore the Adventure Compiler is the eventual *unifying program* that ties together [packages/sims-io](../../packages/sims-io), the MOOLLM bridge, the SPR2 export pipeline, the image-generation API integration, and the LLM-driven content authoring loop. It is not Phase 0 work. But every Phase 0 design decision should leave room for it to slot in cleanly later. The data contracts in [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md) Phase 2 are explicitly chosen with the Adventure Compiler in mind.
 
@@ -823,7 +823,7 @@ The Coherence Engine framing is the conceptual *and* engineering grounding for t
 | Speed of Light | Lives in MOOLLM. Called from MicropolisCore over MCP (see [moollm-micropolis-integration.md](moollm-micropolis-integration.md)). |
 | Incarnation / autonomy | Lives in MOOLLM. Enforced at the bridge — the L4 export carries the autonomy contract. |
 | Psychopomp character | Future `apps/simopolis/` UI, but the character itself is just another `CHARACTER.yml`. |
-| Adventure compiler | The pipeline that takes a MOOLLM adventure and emits Sims IFF objects + browser experience + Python server. Documented in MOOLLM's [BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md). |
+| Adventure compiler | The pipeline that takes a MOOLLM adventure and emits Sims IFF objects + browser experience + Python server. Documented in MOOLLM's [`packages/sims-io`](../../packages/sims-io). |
 
 The architectural rule: **MOOLLM is the agent layer; MicropolisCore is the engine + I/O + rendering layer.** They communicate over well-defined interfaces (eventually MCP), and neither side is allowed to ghost the other. If an LLM-driven action changes the world, it produces an inspectable artifact: a command proposal, a commit, an issue, an annotation. This is the discipline of [moollm-micropolis-integration.md](moollm-micropolis-integration.md) at the engineering level.
 
@@ -1163,14 +1163,14 @@ The deeper integration — MCP service to MOOLLM, the psychopomp character, the 
 | `card` skill | [skills/card/](https://github.com/SimHacker/moollm/tree/main/skills/card) |
 | `constructionism` skill | [skills/constructionism/](https://github.com/SimHacker/moollm/tree/main/skills/constructionism) |
 | `coherence-engine` skill | [skills/coherence-engine/](https://github.com/SimHacker/moollm/tree/main/skills/coherence-engine) |
-| `sim-obliterator` skill | [skills/sim-obliterator/](https://github.com/SimHacker/moollm/tree/main/skills/sim-obliterator) |
+| `soul-city` skill | [MOOLLM: skills/soul-city/](https://github.com/SimHacker/moollm/tree/main/skills/soul-city) |
 | `micropolis` skill | [skills/micropolis/](https://github.com/SimHacker/moollm/tree/main/skills/micropolis) |
 | `adventure` skill | [skills/adventure/](https://github.com/SimHacker/moollm/tree/main/skills/adventure) |
 | `bootstrap` (Semantic Image Pyramid) | [skills/bootstrap/](https://github.com/SimHacker/moollm/tree/main/skills/bootstrap) |
-| Bridge field mapping | [designs/sim-obliterator/BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md) |
-| IFF Semantic Image Pyramid (6 layers) | [designs/sim-obliterator/IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md) |
-| The Uplift vision and story | [designs/sim-obliterator/THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md) |
-| Psychopomp character design | [designs/sim-obliterator/PSYCHOPOMP-AND-THE-BIFROST.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/PSYCHOPOMP-AND-THE-BIFROST.md) |
+| Bridge field mapping | [`packages/sims-io`](../../packages/sims-io) |
+| IFF Semantic Image Pyramid (6 layers) | [`packages/vitamoo`](../../packages/vitamoo) |
+| The Uplift vision and story | [MOOLLM: skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md) |
+| Psychopomp character design | [MOOLLM: SOUL-BRIDGES.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md) |
 | GitHub as MMORPG | [designs/GITHUB-AS-MMORPG.md](https://github.com/SimHacker/moollm/blob/main/designs/GITHUB-AS-MMORPG.md) |
 | Speed of Light vs Carrier Pigeon | [designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md](https://github.com/SimHacker/moollm/blob/main/designs/SPEED-OF-LIGHT-VS-CARRIER-PIGEON.md) |
 

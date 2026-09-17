@@ -528,7 +528,7 @@ It is **a coherent-state transformer for valid Sims save files, intent-driven by
 | MOOLLM `incarnation` skill | [skills/incarnation/](https://github.com/SimHacker/moollm/tree/main/skills/incarnation) |
 | MOOLLM `mind-mirror` skill | [skills/mind-mirror/](https://github.com/SimHacker/moollm/tree/main/skills/mind-mirror) |
 | MOOLLM `representation-ethics` skill | [skills/representation-ethics/](https://github.com/SimHacker/moollm/tree/main/skills/representation-ethics) |
-| Sims ↔ MOOLLM field mapping (BRIDGE.md) | [external `BRIDGE.md`](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md) |
+| Sims ↔ MOOLLM field mapping (BRIDGE.md) | [`packages/sims-io`](../../packages/sims-io) |
 | SimAntics VM Design Document (Don Hopkins, Maxis) | https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf |
 | Will Wright, "Interfacing to Microworlds" (Stanford, 1996) | [video](https://www.youtube.com/watch?v=nsxoZXaYJSk) · [Don's notes](https://donhopkins.medium.com/designing-user-interfaces-to-simulation-games-bd7a9d81e62d) |
 | David Marusek, *The Wedding Album* (1999) | [Wikipedia](https://en.wikipedia.org/wiki/The_Wedding_Album_(short_story)) |

@@ -37,7 +37,7 @@ The phases are sized so that **each phase is independently shippable** and produ
 | `apps/micropolis` SvelteKit shell | ✅ | Svelte 5 runes, CI green |
 | `apps/vitamoospace` viewer | 🟡 in progress | Roots/Catalog tabs |
 | MOOLLM character / mind-mirror / incarnation skills | ✅ (external) | Live in `moollm` sister repo |
-| Bridge field-mapping spec | ✅ (external) | [BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md) |
+| Bridge field-mapping spec | ✅ (external) | [`packages/sims-io`](../../packages/sims-io) |
 
 This is enough to start shipping. The unshipped work is mostly *gluing* what we have.
 
@@ -350,7 +350,7 @@ Now scale, but only across **archive-friendly sources without a live commercial 
 ### Highlights
 
 - Generalize the importer to handle skin and object IFFs in addition to neighborhoods.
-- Generative regeneration of low-resolution skins via image generation, anchored to the original art's palette and silhouette (see [BRIDGE.md skin regenesis](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)).
+- Generative regeneration of low-resolution skins via image generation, anchored to the original art's palette and silhouette (see [skin regenesis](soul-city-uplift-roadmap.md)).
 - Per-source license profiles: which terms apply, what takedown channels look like.
 - Family Album auto-internationalizer: every imported story available in all 20 Sims-supported languages, generated once on import.
 
@@ -442,5 +442,5 @@ When all five of these are reliably true, Soul City is a thing, not a roadmap.
 | Bridge-target catalogue (post-Phase-2 expansion targets) | [federation-peer-games.md](federation-peer-games.md) |
 | Open work tracking | [documentation/TODO.md](../TODO.md) |
 | MOOLLM integration layer model | [moollm-micropolis-integration.md](moollm-micropolis-integration.md) |
-| Bridge field mapping | [external `BRIDGE.md`](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md) |
-| IFF layer pyramid | [external `IFF-LAYERS.md`](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md) |
+| Bridge field mapping | [`packages/sims-io`](../../packages/sims-io) |
+| IFF layer pyramid | [`packages/vitamoo`](../../packages/vitamoo) |

@@ -395,7 +395,7 @@ The character filenames come from `Neighbour.originalFileName` (parsed from NBRS
 
 ### B. sims-io L4 — MOOLLM CHARACTER.yml emit (Phase 0)
 
-`packages/sims-io/src/l4/moollm-character.ts`: per Sim, write a MOOLLM-shaped `CHARACTER.yml` with `sims_traits`, `relationships`, `gold`, `job`, and an *empty* `mind_mirror` placeholder. LLM enrichment of the placeholder is Phase 1. Field mapping is fully specified in the external [BRIDGE.md](https://github.com/SimHacker/moollm/tree/main/designs/sim-obliterator/BRIDGE.md).
+`packages/sims-io/src/l4/moollm-character.ts`: per Sim, write a MOOLLM-shaped `CHARACTER.yml` with `sims_traits`, `relationships`, `gold`, `job`, and an *empty* `mind_mirror` placeholder. LLM enrichment of the placeholder is Phase 1. Field mapping is specified in [`packages/sims-io`](../packages/sims-io).
 
 ### C. Skin/sprite export: SPR2 → PNG in TypeScript (Phase 0)
 

@@ -5,7 +5,7 @@
 **Status:** Active design  
 **Monorepo:** MicropolisCore  
 **Companion documents:** [soul-city.md](soul-city.md) · [moollm-microworld-os.md](moollm-microworld-os.md) · [the-computer-as-portal.md](the-computer-as-portal.md) · [the-imagine-loop.md](the-imagine-loop.md) · [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)  
-**External:** [THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md) · [BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)
+**External:** [MOOLLM: skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md) · [`packages/sims-io`](../../packages/sims-io)
 
 > **Trademark notice.** This document uses *Micropolis* under the [Micropolis Public Name License](../../MicropolisPublicNameLicense.md) from Micropolis GmbH. *SimCity* and *The Sims* are Electronic Arts Inc. trademarks; references are historical or made only in the project's role as a *companion* to the EA-published Sims Legacy Collection. No affiliation with or endorsement by EA or Micropolis GmbH is implied.
 
@@ -236,7 +236,7 @@ Now MOOLLM enters. Each parsed Sim becomes a `CHARACTER.yml` per the [character 
 4. Generate `emoji_identity`, `description`, `dialogue.greetings`, `recent_memories` consistent with the source material.
 5. Never invent facts about real people. The author handle of the album is *not* a character. The Sims in the album *are*.
 
-This is the same uplift documented in [THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md), now run at scale across thousands of recovered **household lots**. Each enrichment commits to git with a reference back to its `provenance.yml`. Nothing is hidden.
+This is the same uplift documented in [MOOLLM: skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md), now run at scale across thousands of recovered **household lots**. Each enrichment commits to git with a reference back to its `provenance.yml`. Nothing is hidden.
 
 ### Stage 5 — Place (where the city becomes the index)
 
@@ -283,7 +283,7 @@ The mapping policy is also explicit (no auto-magic):
 In `apps/micropolis`, a tile-house with a bound household gets a small visual marker. Click it → zoom in. The zoom-in opens into `apps/simopolis` (the future unified shell, see [soul-city.md](soul-city.md)) showing:
 
 1. The Micropolis lot as a Sims-resolution scene.
-2. The recovered Family Album, paged, in its original language plus auto-translated alternates (see [the Adventure Compiler's auto-internationalizer](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md#auto-internationalizer)).
+2. The recovered Family Album, paged, in its original language plus auto-translated alternates (see [the recovered-album translation pass](the-tornado-and-the-archives.md)).
 3. The characters as MOOLLM citizens — clickable, talkable, walkable.
 4. A "Who made this?" panel that displays provenance: source site, original author handle, archive snapshot link, license terms.
 
@@ -427,7 +427,7 @@ We are not starting from zero. The substrate is in place:
 | VitaBoy character renderer (WebGPU)                 | ✅ In progress                                | [packages/vitamoo/](../../packages/vitamoo), [packages/mooshow/](../../packages/mooshow)                                                         |
 | Prototype 1998 content + retail demo pack           | ✅ Imported                                   | [content/vitamoo/sims-prototype-1998/](../../content/vitamoo/sims-prototype-1998), [content/vitamoo/sims-demo/](../../content/vitamoo/sims-demo) |
 | MOOLLM character / mind-mirror / incarnation skills | ✅ Exist in MOOLLM repo                       | external                                                                                                                                             |
-| Bridge field-mapping spec (Sims↔MOOLLM)             | ✅ Specified                                  | [external BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)                                                |
+| Bridge field-mapping spec (Sims↔MOOLLM)             | ✅ Specified                                  | [`packages/sims-io`](../../packages/sims-io)                                                |
 
 
 What's missing — and what this design defines as work — is the *tornado pipeline itself*. That's the next document, [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md).
@@ -485,9 +485,9 @@ This is the demo. It is also the test of whether we built it right.
 | Soul City overall vision                                   | [soul-city.md](soul-city.md)                                                                                                                                             |
 | MOOLLM-OS substrate                                        | [moollm-microworld-os.md](moollm-microworld-os.md)                                                                                                                       |
 | Phased roadmap                                             | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)                                                                                                               |
-| Uplift story arc                                           | [THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md)                                                            |
-| Sims ↔ MOOLLM field mapping                                | [BRIDGE.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md)                                                                    |
-| IFF layer pyramid                                          | [IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)                                                            |
+| Uplift story arc                                           | [MOOLLM: skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md)                                                            |
+| Sims ↔ MOOLLM field mapping                                | [`packages/sims-io`](../../packages/sims-io)                                                                    |
+| IFF layer pyramid                                          | [`packages/vitamoo`](../../packages/vitamoo)                                                            |
 | Will Wright, "Interfacing to Microworlds" (Stanford, 1996) | [video](https://www.youtube.com/watch?v=nsxoZXaYJSk) · [Don's notes](https://donhopkins.medium.com/designing-user-interfaces-to-simulation-games-bd7a9d81e62d)             |
 | "The Wedding Album", David Marusek (1999)                  | [Wikipedia](https://en.wikipedia.org/wiki/The_Wedding_Album_(short_story))                                                                                                 |
 | **Will Wright, *"Will Wright on Custom Content Community"*, TechTV / G4, 2001-05-01** | [YouTube (LUCPIX upload, with transcript)](https://www.youtube.com/watch?v=hLHnmRtqNno) — **primary source for the scale figures above** |

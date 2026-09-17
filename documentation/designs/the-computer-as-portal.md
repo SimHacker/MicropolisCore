@@ -89,7 +89,7 @@ uplifted-computer.iff
 └── SLOT, TTAB, FWAV, …  Other standard chunks
 ```
 
-The catalog is just data. Adding a new app = appending a new STR# line + a new SPR2 sprite + (optionally) a new BHAV that does interesting per-app behavior. The Adventure Compiler ([external `BRIDGE.md` → Adventure Compiler](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md#adventure-compiler-moollm--multi-target-export)) produces the whole IFF from a YAML description.
+The catalog is just data. Adding a new app = appending a new STR# line + a new SPR2 sprite + (optionally) a new BHAV that does interesting per-app behavior. The Adventure Compiler ([Adventure Compiler](soul-city-uplift-roadmap.md)) produces the whole IFF from a YAML description.
 
 ```yaml
 # uplifted-computer.yml — Adventure Compiler source
@@ -524,7 +524,7 @@ For Micropolis content specifically, the [tile-renderer](../../packages/tile-ren
 
 For Sims content, the same WebGPU stage that powers `apps/vitamoospace` produces character renders; we just sample a few canonical poses or animations and palette-quantize them down to SPR2.
 
-LLM image-gen integration (the [BRIDGE.md skin regenesis](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md) path) lets us go further: take a recovered low-resolution album screenshot, upscale it, re-render it stylistically consistent with the Sims 1 palette, write it back as an SPR2 sprite that looks *like* it belongs in the game. But none of that is required for Phase 0 of this feature; raw screenshots already work.
+LLM image-gen integration (the [skin regenesis](soul-city-uplift-roadmap.md) path) lets us go further: take a recovered low-resolution album screenshot, upscale it, re-render it stylistically consistent with the Sims 1 palette, write it back as an SPR2 sprite that looks *like* it belongs in the game. But none of that is required for Phase 0 of this feature; raw screenshots already work.
 
 ---
 
@@ -604,12 +604,12 @@ It does not turn the Sims into a different game. It uses the Sims's existing obj
 | MOOLLM microworld substrate                                | [moollm-microworld-os.md](moollm-microworld-os.md)                                                                                                                      |
 | Tornado archive recovery                                   | [the-tornado-and-the-archives.md](the-tornado-and-the-archives.md)                                                                                                      |
 | Phased roadmap                                             | [soul-city-uplift-roadmap.md](soul-city-uplift-roadmap.md)                                                                                                              |
-| Adventure Compiler architecture                            | [external BRIDGE.md → Adventure Compiler](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/BRIDGE.md#adventure-compiler-moollm--multi-target-export) |
-| Slideshow object pattern (precedent for pageable books)    | [external BRIDGE.md → Slideshow objects](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/THE-UPLIFT.md)                                             |
+| Adventure Compiler architecture                            | [Adventure Compiler](soul-city-uplift-roadmap.md) |
+| Slideshow object pattern (precedent for pageable books)    | [slideshow objects](soul-city-uplift-roadmap.md)                                             |
 | SimAntics VM Design Document (Don Hopkins, Maxis)          | [https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf](https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf)                                        |
 | Will Wright, "Interfacing to Microworlds" (Stanford, 1996) | [video](https://www.youtube.com/watch?v=nsxoZXaYJSk) · [Don's notes](https://donhopkins.medium.com/designing-user-interfaces-to-simulation-games-bd7a9d81e62d)            |
 | Transmogrifier (Maxis)                                     | [VM Design Document](https://donhopkins.com/home/TheSimsDesignDocuments/VMDesign.pdf)                                                                                     |
-| IFF Semantic Image Pyramid                                 | [external IFF-LAYERS.md](https://github.com/SimHacker/moollm/blob/main/designs/sim-obliterator/IFF-LAYERS.md)                                                             |
+| IFF Semantic Image Pyramid                                 | [`packages/vitamoo`](../../packages/vitamoo)                                                             |
 | Sims I/O TypeScript (L0–L3 today, L4 next)                 | [packages/sims-io/](../../packages/sims-io)                                                                                                                             |
 
 
