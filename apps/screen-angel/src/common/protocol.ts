@@ -60,6 +60,18 @@ export interface ControlMethods {
 		params: GrabParams & { dir?: string; pid?: number; maxDepth?: number; maxNodes?: number };
 		result: GrabResult;
 	};
+	/**
+	 * One still frame, decoded rather than delivered: what codes are on screen, and where.
+	 *
+	 * Reading, by the same argument as capture.grab — it looks and changes nothing. The verb pairs
+	 * a capture with a decode so that no client needs a decoder and no pixels cross a socket to be
+	 * looked at once. QR today; egg band codes when the reader for them exists
+	 * (apps/screen-angel/RECOGNIZER.yml).
+	 */
+	'recognize.scan': {
+		params: RecognizeParams & { pid?: number };
+		result: RecognizeResult;
+	};
 	/** The bytes, base64. The fallback for callers whose transport leaves no choice. */
 	'image.fetch': { params: { id: string }; result: { format: ImageFormat; data: string } };
 	/** Exempt from the reaper until released. Handing out a resource link implies this. */
@@ -220,6 +232,32 @@ export type GrabSize = 'fit' | 'full' | number;
 /** Context around the target. 'tight' clips focus rings; the default exists for that reason. */
 export type GrabPad = 'tight' | 'snug' | 'loose' | number;
 
+/** A capture target, narrowed to what recognition needs: where to look, and how closely. */
+export interface RecognizeParams {
+	target: GrabTarget;
+	region?: GrabRegion;
+	size?: GrabSize;
+	pad?: GrabPad;
+}
+
+export interface RecognizedCode {
+	text: string;
+	/** QRCode or MicroQRCode. Present so a caller can tell which without parsing the payload. */
+	format: string;
+	/** Screen points, like every other rectangle in this protocol. */
+	box: Rect;
+}
+
+export interface RecognizeResult {
+	/** The frame this was read from, so a caller can fetch or pin the pixels behind a finding. */
+	image: { id: string; width: number; height: number; scale: number };
+	qr: RecognizedCode[];
+	/** Empty until the egg reader lands, rather than absent, so callers are written once. */
+	eggs: never[];
+	/** Split, because the two halves fail and slow down for entirely different reasons. */
+	timing: { grabMs: number; decodeMs: number };
+}
+
 export interface GrabParams {
 	target: GrabTarget;
 	region?: GrabRegion;
@@ -281,6 +319,7 @@ export const READ_ONLY_METHODS: ControlMethod[] = [
 	'window.focused',
 	'window.list',
 	'capture.grab',
+	'recognize.scan',
 	// Pin and release only move our own cache entries around. A read-only caller needs
 	// them anyway: handing out a resource link and later letting go of it is how the
 	// deferred-fetch transports work, and withholding them would make the cheapest

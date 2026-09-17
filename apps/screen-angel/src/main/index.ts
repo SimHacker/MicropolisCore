@@ -16,6 +16,7 @@ import type { QueryOptions, Rect } from '@common/types';
 
 import { getBackend, UnsupportedPlatformError, type ScreenAngelBackend } from './backends';
 import { CaptureService } from './capture/service';
+import { RecognizeService } from './recognize/service';
 import { ImageStore } from './capture/store';
 import { ControlServer, type ControlHandlers } from './control/server';
 import { DevTools, enableRemoteDebugging } from './devtools';
@@ -61,6 +62,7 @@ let host: ModuleHost | null = null;
 let control: ControlServer | null = null;
 let images: ImageStore | null = null;
 let capture: CaptureService | null = null;
+let recognize: RecognizeService | null = null;
 
 async function start(): Promise<void> {
 	backend = getBackend();
@@ -100,6 +102,7 @@ async function start(): Promise<void> {
 		windows: () => requireBackend().getOpenWindows(),
 		focusedWindow: () => requireBackend().getFocusedWindow()
 	});
+	recognize = new RecognizeService(capture);
 
 	await steam.init(STEAM_APP_ID);
 
@@ -236,6 +239,7 @@ async function startControlServer(): Promise<void> {
 		// whose own format gives them nowhere to put a file.
 		'capture.grab': ({ dir, pid, maxDepth, maxNodes, ...params }) =>
 			requireCapture().grab(params, ['file', 'base64'], { dir, pid, maxDepth, maxNodes }),
+		'recognize.scan': ({ pid, ...params }) => requireRecognize().scan(params, pid),
 		'image.fetch': ({ id }) => requireCapture().fetchBase64(id),
 		'image.pin': ({ id }) => requireCapture().pin(id),
 		'image.release': async ({ id }) => {
@@ -343,6 +347,13 @@ function requireCapture(): CaptureService {
 		throw new Error('Capture is not available: no backend started.');
 	}
 	return capture;
+}
+
+function requireRecognize(): RecognizeService {
+	if (recognize === null) {
+		throw new Error('Recognition is not available: no backend started.');
+	}
+	return recognize;
 }
 
 app.whenReady().then(start).catch((error) => {

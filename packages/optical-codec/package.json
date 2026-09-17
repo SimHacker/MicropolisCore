@@ -1,0 +1,34 @@
+{
+  "name": "@micropolis/optical-codec",
+  "version": "0.1.0",
+  "description": "The optical channel's reader and its test bench: QR detection via zxing-wasm, egg band codes, a synthetic screenshot renderer, and the degradation suite that decides whether the legibility claims are true.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/wasm.d.ts",
+      "import": "./dist/node/wasm.js"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "fixtures": "tsx scripts/write-fixtures.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7",
+    "vitest": "^2.1.9",
+    "zxing-wasm": "^3.1.4"
+  }
+}
