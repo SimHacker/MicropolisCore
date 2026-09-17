@@ -35,6 +35,8 @@ what_it_unlocks:
 # same package, imported by both.
 
 stages:
+  find_the_bright_things_first: "Before any recognition, threshold for local brightness maxima and frame-difference for slow pulses. Eggs emit light when they are worth reading, so a two-instruction GPU pass produces the candidate list and everything expensive runs only inside those boxes (EGGS.yml, it_solves_finding_before_reading). On a phone this is the difference between a live viewfinder and a slideshow."
+
   acquire:
     desktop: "Screen capture into the ring buffer (RECORDER.yml). Pixel-exact, no optics, known geometry."
     phone: "getUserMedia camera frames. Lossy, warped, lit by the room."

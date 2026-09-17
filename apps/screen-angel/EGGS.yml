@@ -107,8 +107,16 @@ visual_design:
     what_they_do: "Three things a color code cannot do for itself: mark where the band stack starts and ends, give a scale reference, and provide a black and a white sample for calibration."
     why_calibration_matters: "Games tint everything — night, fire, aurora, colored lighting, weather. A known black and a known white in the same object let the reader normalize the bands before decoding them, instead of guessing whether that band is orange or brown under a sunset."
     symmetric_on_purpose: "Both caps carry the same pattern, so the object is unchanged top-to-bottom in appearance terms and there is no 'wrong way round' to detect or author."
+  one_object_for_every_egg:
+    the_rule: "There is ONE egg object. One GUID, one sprite set, one behaviour tree, installed once. Every egg that has ever existed is that object holding different data."
+    why_not_a_family_of_types: "A type per kind of errand means art per type, code per type, a GUID per type, and a dependency per type in everyone's Downloads folder. None of that variation is real: the shape is identical, the menu is generated, and the differences are all values."
+    what_travels_is_data_not_code:
+      the_split: "The object is ours, installed once, and its behaviour is the same for everybody. A minted egg is an instance: a band layout, a payload, a menu tree and its custody chain, referencing the universal object by GUID (the_egg_is_its_own_file)."
+      why_that_matters: "Sharing an egg never ships executable behaviour. A stranger's egg is a table of colours and some text, so the worst a malicious one can do is lie in words a player reads — no custom BHAV to audit, no code to trust, and nothing to review beyond what is on the label."
+      and_no_dependency_hell: "One object satisfies every egg forever. No per-type GUID collisions, no missing-object placeholders, no version skew between the egg you downloaded and the game you have (documentation/designs/sims-content-registry.md)."
+
   built_from_draw_groups:
-    the_mechanism: "One egg object whose DGRP entries compose a body sprite plus per-band sprites. Selecting which band sprites to draw, and with which palette, produces any code from a small fixed set of parts."
+    the_mechanism: "The one egg object's DGRP entries compose a body sprite plus per-band sprites. Selecting which band sprites to draw, and with which palette, produces any code from a small fixed set of parts."
     the_payoff: "Combinatorial appearance without combinatorial art. A hundred distinct eggs are a hundred DGRP selections over the same dozen sprites, not a hundred drawings."
     palettes: "Band color comes from PALT selection where the game allows it, which moves color out of the pixels and into data — the same reason the original content pipeline did it that way."
     state_changes: "Kind, state and 'has news' are ordinary object graphic-state changes. The game already switches an object's appearance when its state changes; an egg is just an object that does it meaningfully."
@@ -130,6 +138,14 @@ the_blip_editor:
   who_it_is_for:
     us: "Faster than reasoning about offset tables, and it is the only honest way to check legibility claims."
     players: "The floor is low on purpose. An egg is a stack of coloured rings — anyone who can pick colours can mint one, and minting writes an .iff they can hand to a friend (the_egg_is_its_own_file). The fidelity of the art is what decides whether that sentence is true, which is the whole masking argument arriving in the tooling (moollm skills/design-sense/lenses/masking.md)."
+  the_badge_above_it:
+    what: "An iconic overlay floating above the egg: a newspaper, an envelope, a suitcase, a camera, a question mark, a tick. It names the KIND and the STATE in one glyph."
+    who_it_is_for: "People, first. A player should not have to learn a colour code to tell the egg awaiting an answer from the egg that has already resolved. Nobody memorises a palette to check on their household."
+    the_reader_may_use_it_too: "It is a distinct high-contrast silhouette, so of course the recogniser can read it — and doing so gives a coarse KIND that must agree with the top bands. Two independent statements of the same fact is a free cross-check, and a disagreement is a discarded read rather than a wrong action."
+    why_above_and_not_on_the_body: "Nothing occludes it, it does not spend a band, and a big simple glyph in clear space outlives the stack as you zoom out. It sits between light and bands on the range ladder: further than colour, nearer than glow."
+    it_is_existing_machinery: "Games already float things over objects — thought balloons, status icons, the diamond over a selected Sim. A badge is that overlay slot pointed at egg state (SCREEN-ANGEL.yml)."
+    custom_badges_are_the_safe_kind_of_content: "A badge is a picture with no authority: it labels, it cannot act. So players and shows can ship their own without anyone auditing anything, which makes it the natural place for personality in a system that is otherwise deliberately uniform (the_blip_editor)."
+
   zoom_is_the_resolution_dial:
     the_shape: "Zoomed all the way out the egg says one thing — I am an egg, over here — plus the first band or two. Zoom in and more bands appear. All the way in is the full-resolution egg with the whole stack. Detail on demand, where the demand is the camera."
     big_endian:
@@ -148,6 +164,15 @@ the_blip_editor:
     why_light_and_not_more_bands:
       it_survives_distance: "A glow is a large, low-frequency, high-contrast signal. It is the last thing still readable when the bands have collapsed into two pixels, which makes it the natural bottom rung of the zoom ladder — further out than kind."
       it_needs_no_focus: "Peripheral vision detects brightness change before it resolves detail. A room where three eggs are lit and one just went dark is readable without looking at any of them."
+    the_three_states_are_the_whole_vocabulary:
+      dark: "Nothing to do. Disabled, waiting on a schedule, already answered, or expired. An unlit object is out of the conversation."
+      steady: "Actionable NOW. The menu has live items and picking one will do something."
+      breathing: "Working. The call is out, the job is running, nobody has to do anything yet. A slow rise and fall is unmistakably different from steady at any distance, and reads as patience rather than as an alarm."
+    it_solves_finding_before_reading:
+      why_this_is_the_useful_part: "Emitted light is a local brightness maximum, so an egg segments itself out of a scene. Threshold for candidates, frame-difference for the breathing ones, and you have every egg on screen without matching a single template."
+      the_pipeline_order: "Light answers WHERE, the badge answers WHAT KIND, the bands answer WHICH ONE, the dialog answers everything else. Detection is cheap and constant; decoding is expensive and only happens where the light already pointed (MOBILE-CAMERA.yml, the_five_stages)."
+      humans_do_the_same_thing: "Attention goes to the bright thing before it goes to the detailed thing. Same signal, same ordering, two very different readers — which is the property worth designing for rather than a coincidence to note."
+    one_vocabulary_for_every_object: "This is a house rule, not an egg feature. Anything with pending state uses the same three states — the machine chewing on a job, the mailbox with something in it, the appliance mid-cycle. Learned once, it makes the whole screen a status board, and a recogniser written for eggs already works on all of it."
     excitement_as_a_dimmer: "Brightness and pulse rate are a continuous channel over an existing effect: brighter and faster for the errand about to resolve, dim and slow for the one with a week to run. Enthusiasm is a value here, not decoration."
     it_is_existing_machinery: "Objects already emit light, already have lit and unlit graphic states, and already animate. An egg wires those to its state machine instead of to a light switch. Nothing new in the renderer, which is the whole rule for this object."
     the_reader_gets_a_cooperating_object:
