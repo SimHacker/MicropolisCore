@@ -266,6 +266,9 @@ band_codes:
     frame: "Fixed sentinel bands top and bottom, like the guard bars on a barcode. They mark where the code starts, which way is up, and how tall a band is at this zoom."
     payload: "Version, type, then value bands. Four value bands over ten colors is ten thousand distinct messages; six over twelve is about twenty-one bits, which is plenty for a type plus an id plus a magnitude."
     order_is_big_endian: "Most significant band first, so the code degrades by truncation rather than by corruption. Kind, version, identity, magnitude, fine parameters — in that order, always (EGGS.yml, zoom_is_the_resolution_dial)."
+    the_zero_symbol: "A blank blip is part of the alphabet, not an absence of one. It aligns short codes, separates groups, and lets one egg silhouette carry payloads of different lengths."
+    length_needs_no_field: "The caps delimit the stack and their polarity orders it — white end first, black end last. A code is complete when both caps are in frame, which is why a telescoping egg carrying more bands needs no change to the format (EGGS.yml, the_stack_is_self_delimiting)."
+    segments_refine_rows: "At the closest zoom a row may be split into three or four arcs. The leading arc is the row's coarse value and is drawn to dominate when the row collapses, so a segmented row is a legal read at every zoom and a richer one up close. Refinement never contradicts the prefix."
     check_digit: "One band is a mod-10 check over the others. Cheap to compute, cheap to verify, and it turns the whole failure class of 'misread one color' into a discarded read instead of a wrong action. One per disclosure group, not one at the end, so that every legal partial read is checkable."
   the_calibration_band:
     the_problem: "Games light their sprites. Night, indoor lamps, room tinting, and disaster effects all shift hue and brightness, so a band's rendered color is not the color the artist authored."

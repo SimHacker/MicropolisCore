@@ -112,6 +112,24 @@ visual_design:
     the_payoff: "Combinatorial appearance without combinatorial art. A hundred distinct eggs are a hundred DGRP selections over the same dozen sprites, not a hundred drawings."
     palettes: "Band color comes from PALT selection where the game allows it, which moves color out of the pixels and into data — the same reason the original content pipeline did it that way."
     state_changes: "Kind, state and 'has news' are ordinary object graphic-state changes. The game already switches an object's appearance when its state changes; an egg is just an object that does it meaningfully."
+    offsets_are_what_make_the_set_small: "A DGRP entry places each sprite at its own offset, so ONE band drawing instanced at rising offsets is an entire stack. The parts list does not grow with the number of bands, only the entry list does — and since the egg looks the same from every angle, the same entries serve all four rotations."
+    telescoping_eggs: "A heavy egg is a tall egg. Need more payload, add more band entries and the body grows; the sprite set is unchanged. Height becomes an honest advertisement of capacity, readable in silhouette before a single colour is decoded — a big egg is carrying something big."
+    the_stack_is_self_delimiting: "White cap on top, coloured blips between, black cap at the bottom. The polarity gives the reading order and the two caps give the extent, so a variable-length code needs no length field and no terminator — you have found the whole message when you have found both caps."
+    the_zero_blip: "An empty slot is a legal symbol. Blank blips give alignment when a code is shorter than the space it sits in, separate groups the way a resistor's tolerance gap does, and let a fixed-height egg carry a variable payload without changing its silhouette."
+    segmented_rings: "At the closest zoom a ring can be broken into three or four arcs, multiplying what one row of the stack holds. Coarse reads are unaffected because the leading arc carries the row's coarse value and is drawn wide enough to dominate when the row collapses to a couple of pixels — the segments refine a value they never contradict (OPTICAL-CHANNEL.yml, band_codes)."
+
+the_blip_editor:
+  why_it_exists: "Anything with an alphabet needs a tool that shows you the alphabet. Hand-editing offset tables to see whether a code reads at medium zoom is exactly the kind of work that stops people from making eggs at all."
+  what_it_does:
+    lay_out_the_stack: "Pick blips, order them, set groups, drop in zeros, split a ring into arcs. The palette and the legal symbol set come from the same registry the compile uses, so an illegal egg cannot be drawn."
+    preview_every_zoom_at_once: "The three zooms side by side, plus a simulated far-out silhouette, because the interesting failures are all failures at ONE distance."
+    round_trip_immediately: "The recognizer runs on the preview and prints what it read. If the editor cannot decode its own picture, the egg is wrong while you are still looking at it."
+    abuse_the_preview: "Night lighting, fire tint, weather, a colour-blind filter, a JPEG pass, and a hand-held-phone blur. The lighting states that will break a palette are enumerable, so enumerate them here rather than discovering them in a stream (MOBILE-CAMERA.yml)."
+    emit_the_source: "Output is the same YAML the compile consumes — bands, offsets, palettes, states, and the symbol registry entries. No exported binary, nothing to keep in sync (compiled_from_one_source)."
+    generate_the_tests: "Every egg the editor saves adds its own decode case to the conformance suite. The tests are a by-product of authoring rather than a separate chore."
+  who_it_is_for:
+    us: "Faster than reasoning about offset tables, and it is the only honest way to check legibility claims."
+    players: "The floor is low on purpose. An egg is a stack of coloured rings — anyone who can pick colours can mint one, and minting writes an .iff they can hand to a friend (the_egg_is_its_own_file). The fidelity of the art is what decides whether that sentence is true, which is the whole masking argument arriving in the tooling (moollm skills/design-sense/lenses/masking.md)."
   zoom_is_the_resolution_dial:
     the_shape: "Zoomed all the way out the egg says one thing — I am an egg, over here — plus the first band or two. Zoom in and more bands appear. All the way in is the full-resolution egg with the whole stack. Detail on demand, where the demand is the camera."
     big_endian:
