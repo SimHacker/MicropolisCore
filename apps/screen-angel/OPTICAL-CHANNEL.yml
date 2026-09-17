@@ -54,8 +54,14 @@ the_message:
         https://sc.example/e/K3F9
 
     Six characters, one short host, decodes reliably at dialog size. The token identifies a
-    compiled request: grammar version, verb, source object, author, and which variant of that
-    object's requests this is.
+    compiled request: grammar version, verb, source object, author, and which of this object's
+    fixed signals this symbol is. Nothing in it varies at runtime, because nothing in a shipped
+    bitmap can (the_token_is_fixed_not_fresh).
+
+    What a phone therefore gets is the KIND of thing, not the instance — a page about this
+    request from this object, not about Brenda specifically. The instance is on screen in words
+    next to the symbol, which the layer can read and a person can read and a photograph
+    preserves, and which the redirector never sees.
   resolved_two_ways:
     for_a_person: "The redirector expands it to a full page about that event, with as long a URL as it likes on the far side, because a browser does not care."
     for_the_angel: "Locally, offline, from the lookup table the same compile emitted (compiled_from_one_source). No network, no redirector dependency, no round trip in the hot path."
@@ -67,13 +73,57 @@ the_message:
     brief: "Optional authored text. The only unconstrained field and the dangerous one; see routing, below."
   where_runtime_context_comes_from:
     from_the_observation: "The moment is ours: we know when the code appeared, what was on screen around it, which window had focus, and where we are in the ring. Nothing has to be encoded to know when now is."
-    from_variants: "An object that needs to say several different things ships several codes and shows the one that applies. A static-content game gets parameters by having authored them all — which the compiler makes cheap and hand-authoring would not."
+    from_variants: "An object that needs to say several different things ships several codes and shows the one that applies. A static-content game gets parameters by having authored them all — which the compiler makes cheap and hand-authoring would not (the_token_is_fixed_not_fresh, a_fixed_set_per_object)."
+    from_the_words_on_screen: "The title, the description and the button labels, interpolated at runtime from string tables. This is where names, amounts and outcomes live, and it is the widest carrier of the three (text_is_the_wide_carrier)."
     from_a_band_code: "Values chosen at runtime, because bands are composed rather than baked (band_codes). This is the path for anything the author could not know."
     from_asking: "The About item on any egg returns the live payload on demand, which is the general answer and the reason none of the other paths have to be complete (the_about_item)."
     from_the_egg_appearance: "Persistent state — which call is outstanding, what kind, whether it has news — is carried by the sprite (sprite_codes)."
     from_the_bridge: "Where one exists, the specifics come from the save file, which is better than any code."
-  dedupe_without_a_nonce: "A static code cannot carry one, so identity is the token plus the appearance: a code that has been continuously visible since we last acted on it is the same request, not a new one. Disappearance and reappearance is a new request."
-  ttl: "Measured from when we first saw it. A request to capture a kiss is stale in thirty seconds."
+  the_token_is_fixed_not_fresh:
+    say_it_plainly: "This is not a nonce. A nonce is used once and a shipped bitmap is used forever, so calling it one would be a lie that invites someone to rely on freshness the artifact cannot provide."
+    what_it_is_instead: "A fixed signal token, baked at compile time, one per distinct thing this object can say."
+    a_fixed_set_per_object:
+      how_many: "As many as the author wants. An object ships a set of symbols and displays whichever one applies, so the CHOICE of symbol is the runtime information even though every symbol is static."
+      the_same_trick_as_the_bands: "Bands select draw groups; symbols select bitmaps. In both cases the object cannot compose a new value, but it can pick one — and picking is enough to signal."
+      it_is_an_alphabet_not_a_payload: "The set is enumerable, published by the compile, and closed. Recognition becomes a lookup against known symbols instead of a decode of arbitrary content, and an unregistered symbol is discarded rather than interpreted."
+      the_security_property_is_free: "A token that cannot be minted at runtime cannot be forged at runtime. What a piece of content is able to say is fixed when it is compiled and signed, which is a much smaller thing to reason about than an open message field."
+    where_freshness_actually_comes_from: "Our side. The layer knows which call it issued, when the symbol first appeared, where that is in the ring, and whether the symbol has been continuously visible since we last acted on it. Continuously visible is the same request; gone and back is a new one."
+    ttl: "Measured from when we first saw it, never from anything the symbol claims. A request to capture a kiss is stale in thirty seconds."
+
+# THE WIDE CARRIER IS TEXT
+#
+# The bitmap constraint bites hardest on exactly the values that are worth sending: which
+# character, how much, what happened. Text has none of that constraint, and every engine worth
+# bridging already interpolates it.
+
+text_is_the_wide_carrier:
+  the_asymmetry_that_decides_it: "String tables interpolate; bitmaps do not. A 1999 engine composes 'Brenda got the photographer job' out of a template and a token at runtime, and cannot compose a QR code at all. So runtime specifics travel as words."
+  where_the_words_are:
+    dialog_title: "The short one. Which kind of thing this is, and about whom."
+    dialog_description: "The long one. Unbounded, and where the parameters land — names, amounts, durations, outcomes, a whole paragraph if the moment deserves it."
+    button_labels: "The branch vocabulary, and the return path. What can happen next is spelled out in the words on the buttons."
+  read_and_clicked_not_guessed:
+    reading: "Text on screen is the easiest thing on it to read — accessibility tree where the app exposes one, OCR where it does not, and OCR on our own shipped fonts at known sizes rather than text in the wild (ACCESSIBLIFY.yml)."
+    clicking: "A button is the easiest thing on screen to hit, and hitting it is what a person does too. No private control path (EGGS.yml, either_hand_drives_it)."
+  and_it_is_the_same_text_the_player_reads: "Nothing is added to the interface for the machine's benefit. The dialog a player reads and the message the layer parses are one artifact, which is the property that keeps the whole channel honest and the reason it stays legible when it breaks."
+  the_division_of_labour:
+    symbol: "WHICH channel and which of this object's fixed signals. Verified against the registry, unforgeable at runtime."
+    bands: "Small live values worth showing continuously, checked, from a closed palette."
+    text: "Everything else, in words, unbounded, human first."
+  the_failure_mode_is_legible: "Misread text is a wrong word a person can see is wrong. That is a far better failure than a misdecoded blob, and it can be surfaced verbatim before anything acts on it."
+
+# WHAT THE THREE CARRIERS ADD UP TO
+#
+# Not a protocol bolted onto a game — a bus whose alphabet is enumerable on both sides.
+
+the_bus:
+  deterministic: "Out: a closed set of symbols, a closed palette of bands, and text from templates the compile emitted. Back: a declared tree of buttons. Every legal message in either direction is enumerable before the game runs, which is what makes this testable rather than hopeful — the compile can generate the conformance suite for its own channel."
+  two_way: "Out through the screen, back through the controls. Neither direction needs the game to cooperate beyond drawing its own dialogs and honouring its own buttons."
+  three_ways_drivable:
+    human: "Reads the words, clicks the button. This is just playing the game."
+    agent: "Reads the same words, clicks the same button, and has to justify the pick against the declared tree."
+    deterministic_layer: "Matches a symbol, checks the bands, and follows a compiled table with no model involved. The path that must keep working when nothing else does (robust-first)."
+  why_all_three_matter: "A bus only a model can drive is untestable. A bus only a table can drive cannot handle content nobody anticipated. A bus only a person can drive does not automate. Same buttons, three drivers, and the ability to hand off mid-flight is the whole point (moollm designs/INTERFACE-TO-AGENCY.md)."
 
 # WHY THE URL HAS TO BE REAL
 #
@@ -138,6 +188,9 @@ compiled_from_one_source:
     tree_declaration: "The machine-readable shape of the pie menu and dialog tree — which items exist, which branches take parameters, which leaves terminate. This is what makes walking it planned rather than exploratory (return_path, walking_the_tree)."
     sprite_atlas: "The exact art that shipped, at the game's zooms and rotations, which is what turns egg recognition into template matching against known targets (sprite_codes)."
     verb_registry: "The closed set of verbs, their parameters, and their URLs."
+    symbol_registry: "Every fixed signal token any object can display, with what each one means. Recognition is a lookup against this; anything absent from it is discarded (the_token_is_fixed_not_fresh)."
+    string_templates: "The STR# templates with their substitution slots, which is what makes reading runtime text deterministic instead of interpretive. 'GET_JOB: %1 got the %2 job' matched against the words on screen yields two captured fields, no model required — and where a template does not match, the text is surfaced verbatim rather than guessed at (text_is_the_wide_carrier)."
+    localization_note: "Templates come per locale from the same compile, so a bus that reads its own text keeps working in a language nobody on the team speaks."
     the_web_pages: "The human-readable page for each verb, generated from the same declaration that generated the code that emits it (dereferenceable)."
   why_this_is_the_load_bearing_part: |
     Every hard property claimed elsewhere in this file depends on it. The walk is safe because
@@ -159,11 +212,12 @@ compiled_from_one_source:
     request_edit: "Hand a captured selection plus a brief to the editing model. The creative verb, and the one with no authority attached."
   what_is_deliberately_absent: "No verb writes a save file, spends money, publishes anything, or launches anything. The channel exists to describe moments, not to reach into the host."
 
-# TWO CARRIERS, DIFFERENT BANDWIDTH
+# THREE CARRIERS, DIFFERENT BANDWIDTH
 #
-# A QR code is a one-shot burst: a whole URL, once, in a dialog. Some things need to be
-# readable continuously instead — what kind of thing is this, and does it have news? That is a
-# different job and a distinctive sprite does it better.
+# A symbol is a one-shot burst in a dialog: a fixed token, once. Text is the wide one and
+# carries the specifics in words (text_is_the_wide_carrier). And some things need to be
+# readable CONTINUOUSLY instead — what kind of thing is this, and does it have news? A dialog
+# cannot do that at all, and a distinctive sprite does it at any zoom.
 
 sprite_codes:
   what: "An in-world object drawn to be recognized: a big, color-coded easter egg whose appearance states its KIND and its STATE, continuously, at a glance."
