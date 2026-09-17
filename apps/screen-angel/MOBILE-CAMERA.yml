@@ -1,0 +1,151 @@
+# MOBILE-CAMERA.yml — Screen Angel with a phone camera instead of a framebuffer. Point it at any
+# screen: your own monitor, a console on a TV, an arcade cabinet, a stream on someone else's desk.
+#
+# The stack is deliberately the same one. Acquisition differs, action differs, and everything
+# between them is the identical code, because the middle is pure functions over pixels and bytes.
+
+meta:
+  id: mobile-camera
+  status: spec
+  built: []
+  not_built: [pwa_shell, camera_pipeline, gpu_prepass, band_profile_for_camera, short_code_service, native_shell]
+  confidence: "Platform support facts are checked against caniuse and the WebKit tracker as of Sep 2026, cited inline. Performance numbers are estimates and marked as such. The stage split is a design decision, not a measurement."
+  see_also: [OPTICAL-CHANNEL.yml, EGGS.yml, ACCESSIBLIFY.yml, AR-SDKS.yml, CAPABILITIES.yml, RECORDER.yml, APP-CONTROL.yml, DISTRIBUTION.yml]
+
+# WHY A CAMERA VERSION IS MORE THAN A PORT
+#
+# Four properties the desktop version cannot have, none of them about convenience.
+
+what_it_unlocks:
+  read_only_by_construction:
+    what: "A phone has no injection path into a game running on another machine. Not restricted — absent."
+    why_it_matters: "Every objection to a layer that watches your screen is an objection about what it might DO. Here there is provably nothing it can do, so the idea can be demonstrated to a sceptic with the scary half removed (APP-CONTROL.yml is simply not in this build)."
+  screens_that_cannot_be_instrumented:
+    consoles_and_cabinets: "A PS2, a Switch, an arcade cabinet, a Vectrex. No process to attach to, no file to read, no API to ask. A camera does not care."
+    someone_elses_screen: "A stream on a monitor across the room, a friend's laptop, a projector at a conference talk."
+    a_photograph: "A still of a screen from years ago still carries its codes. The channel outlives the running program, which is the preservation argument for putting data in pixels at all."
+  distance_is_the_zoom_dial:
+    what: "The zoom ladder (EGGS.yml, zoom_is_the_resolution_dial) works with your feet. Across the room reads the kind; leaning in reads the identity; up close reads the whole stack."
+    the_lovely_consequence: "Camera etiquette evaporates. The desktop layer has to borrow the player's camera and put it back (OPTICAL-CHANNEL.yml, camera_etiquette); here the human IS the camera operator and every resolution change is something they chose to do with their hand."
+  the_stranger_finally_has_a_reader: "dereferenceable promises that every code resolves to a page built for a stranger holding a phone. This is that phone, and it is also ours, so the same scan can render the page AND annotate the screen in place."
+
+# KEEPING THE STACKS PARALLEL
+#
+# The answer to 'how much is shared' is a stage split. Two of five stages differ; three are the
+# same package, imported by both.
+
+stages:
+  acquire:
+    desktop: "Screen capture into the ring buffer (RECORDER.yml). Pixel-exact, no optics, known geometry."
+    phone: "getUserMedia camera frames. Lossy, warped, lit by the room."
+    shared: "Nothing. This is the platform seam, and it is the only one that should be."
+  normalize:
+    desktop: "Almost nothing to do. Maybe a scale."
+    phone: "The whole extra stage: locate the screen, correct perspective, de-flicker, white balance off the known references, downsample properly. See off_a_screen_is_harder."
+    shared: "The interfaces. Normalize emits exactly what capture emits on the desktop — a rectified buffer with known geometry — so nothing downstream can tell which it got."
+  recognize:
+    what: "Find symbols, find eggs, read bands, read text. Template matching against our own shipped atlas."
+    shared: "ALL of it. One package, Rust compiled to wasm, plus shaders. Pure functions over buffers, no platform calls."
+    why_it_can_be: "The desktop stack already refuses to let recognition touch I/O, for the same reason the Apple ][ ladder does (documentation/designs/apple-ii-floppy-bridge.md): only the bottom rung is platform-specific."
+  interpret:
+    what: "Symbol registry lookup, string-template matching, band checksums, the outstanding-call table, event emission."
+    shared: "ALL of it. Plain TypeScript over the same compiled registries (OPTICAL-CHANNEL.yml, compiled_from_one_source)."
+  act:
+    desktop: "Click the pie item, walk the declared tree, hatch the egg."
+    phone: "Cannot touch the game. Three real options instead: resolve the short code against the service and show the page; annotate the screen in AR and tell the human which item to pick; or relay to a desktop Angel on the same LAN over the control protocol (PROTOCOL.yml), which is the only path that can actually click."
+    shared: "The declared tree and the verb registry. Both builds read the same declaration of what is possible; only the actuator differs."
+  the_shape_in_one_line: "Two front-ends, one recognizer, one interpreter, two back-ends. Anything that ends up in the middle is written once or it is a bug."
+
+# WHAT IS ACTUALLY HARD, AND IT IS NOT THE DECODER
+#
+# QR decoding is solved. Photographing a display is the part that will eat the time.
+
+off_a_screen_is_harder:
+  moire: "The display's pixel grid beats against the sensor grid and produces patterns that look like data. Fix: never decode at native resolution — box-filter down first, and average two or three frames, which also costs nothing else you wanted."
+  rolling_shutter_and_refresh: "The sensor scans while the display redraws, so a single frame can hold two different screen states with a seam across it. Fix: temporal integration, and reject frames whose reference caps disagree top to bottom."
+  pwm_backlight: "Brightness flickers at a frequency the sensor samples. Fix: longer exposure where the platform allows setting it, multi-frame averaging where it does not."
+  glare_and_reflection: "A specular highlight destroys a region completely and is the most common real failure. Fix: detect saturation and say 'move a bit' — a legible instruction beats a silent misread."
+  keystone: "Nobody holds a phone perpendicular to a monitor. Fix: rectify from the egg's own cap fiducials, which is what they were put there for."
+  subpixel_fringing:
+    the_problem: "LCD subpixels are RGB stripes, so a camera sees colour at the edge of every band that the artist never drew. This is the one that specifically threatens BAND CODES, because bands are read by colour."
+    the_fix: "Sample band interiors, never edges. Erode the region before averaging, and decode the palette RELATIVELY — rank against the reference swatches rather than matching absolute RGB."
+  auto_everything: "Auto-exposure and auto-white-balance retune while you are reading, so the same band is a different colour a second later. Fix: lock exposure and white balance where the platform exposes it, and normalize off the caps every single frame regardless."
+  the_caps_were_already_the_answer:
+    what: "The high-contrast caps exist so game lighting cannot turn orange into brown (EGGS.yml, the_caps_are_the_fiducial). A camera pipeline is a second, worse lighting problem with exactly the same shape."
+    consequence: "One mechanism covers both, and the mobile build needs no new visual design. That is the payoff for having put a known black and a known white in the object instead of trusting absolute colour."
+
+# WHERE THE WORK GOES: GPU, WASM, OR JS
+#
+# The deciding constraint is not FLOPS. It is that getting data BACK off the GPU costs a
+# round trip, so the GPU is only worth it when it returns something much smaller than the frame.
+
+pipeline_placement:
+  gpu_shaders:
+    good_for: "Per-pixel work with no data dependence: colour conversion, box-filter pyramids, thresholding, local contrast, the cap-and-band response map, and a first-pass 'is there anything egg-shaped here' reduction."
+    why: "The frame is already a texture — camera to a video element to an external texture in WebGPU, zero copies. This work is embarrassingly parallel and would otherwise be the slowest part in wasm."
+    the_rule: "A shader pass must return a SMALL buffer: candidate positions, a histogram, a few hundred bytes. Reading a full frame back per frame defeats the whole point."
+  wasm:
+    good_for: "Everything with structure: connected components, perspective solve, template matching, band segmentation, Reed-Solomon decode."
+    language: "Rust, because this package is shared with the desktop build and one implementation of the recognizer is the entire point of the stage split. Also the ecosystem for image work and wasm-bindgen is good enough that the choice is not interesting."
+    speed_reality: "Decode is microseconds once the region is located. Locating is the cost, and locating is mostly what the GPU pre-pass is for."
+  javascript: "Orchestration, frame pacing, the event bus, the UI. Never per-pixel."
+  worker_thread: "All of the above off the main thread. A dropped UI frame while reading a code is a bug that will be blamed on the recognizer."
+  estimate_not_measurement: "A plausible budget is a coarse survey every frame at 720p and a full decode on demand, on mid-range hardware. Unverified; the first prototype should publish real numbers and this line should then be deleted."
+
+qr_decoding_decision:
+  the_finding: "BarcodeDetector is platform-gated rather than browser-gated: Chromium exposes it but detection only works where the OS supplies it — Android with Play services, ChromeOS, macOS. Windows and desktop Linux are non-functional. Firefox has never had it. Safari lists it behind a Shape Detection flag on macOS and iOS, and on iOS enabling the flag does not make it work — WebKit bug 281848, open since Oct 2024, still NEW as of Jul 2026."
+  sources: ["https://caniuse.com/mdn-api_barcodedetector", "https://bugs.webkit.org/show_bug.cgi?id=281848"]
+  the_decision: "ONE decoder: the barcode-detector ponyfill over zxing-wasm (ZXing-C++ compiled to WebAssembly), on every platform, with no native fast path."
+  why_no_native_branch: "A branch that cannot run on the developer's iPhone, on Firefox, or on desktop Linux is a branch that is never exercised in development and fails in the field. A uniform slower path is worth more than a fast path nobody can test. Revisit only with a measurement showing it matters on Android."
+  cost: "Roughly 450 kB gzipped of wasm, lazy-loaded on the scan screen and explicitly precached by the service worker. Feature-detect with getSupportedFormats, never with constructor presence, if the native path is ever added."
+  and_do_not_write_our_own: "Finder patterns, perspective correction, error correction, version detection — decades of edge cases. The interesting code here is band codes and egg recognition, which nobody else has written."
+
+band_codes_on_a_camera:
+  a_reduced_profile: "Cameras get a smaller alphabet than framebuffers: fewer, more separated colours per band, more bands to compensate. Same encoding, a camera-safe palette, chosen by measurement against real photographs of real displays rather than in theory."
+  relative_not_absolute: "Decode by ranking against the reference swatches present in the same object. Absolute colour matching is the thing that will not survive a phone camera."
+  graceful_by_default: "If only the first group is readable, that is a legitimate answer — kind and version, correct, from across the room. Big-endian ordering means partial reads are prefixes, not failures (OPTICAL-CHANNEL.yml, order_is_big_endian)."
+
+# HOW MUCH OF SCREEN ANGEL RUNS ON A PHONE
+
+module_by_module:
+  recognizer: "Yes. Identical code."
+  interpreter_and_registries: "Yes. Identical code, and the registries are static assets."
+  overlay_and_annotation: "Yes, and better — AR annotation over a live camera view is what the phone form factor is FOR (AR-SDKS.yml)."
+  event_bus: "Yes. It is just code, and events are stamped on this device's clock (ANGEL-EVENT-BUS.yml)."
+  album_and_publishing: "Yes. Cards, stills, clips, and a share sheet that is nicer than any desktop equivalent."
+  text_reading: "Yes, with a caveat. In-browser OCR is mediocre; the platform OCR APIs are excellent and need a native shell to reach. Start with template matching against compiled strings, which is cheaper AND more accurate than general OCR because we know what the text should say (OPTICAL-CHANNEL.yml, string_templates)."
+  recorder_and_ring: "Partly, and deliberately limited. A short rolling buffer while the app is foregrounded is fine. Continuous background capture is a battery and thermal problem, and a phone camera sees the ROOM rather than a window — which is a privacy line, not a performance one."
+  app_control: "No. There is nothing to control. This is a feature (read_only_by_construction)."
+  soul_bridges_and_save_files: "No. No access to another machine's saves, and on iOS barely to its own. Bridges stay on the desktop, which is where the files are."
+  agent_layer: "Optional, and probably remote. A model on the phone can caption; the reasoning can live on the desktop Angel or a service, gated the same way (AGENT.yml)."
+
+# CAN IT BE HTML PLUS WEBGPU
+
+web_platform_feasibility:
+  yes_for: "getUserMedia, WebGPU or WebGL2 for the pre-pass, wasm for recognition and decode, WebCodecs for clips, service worker for offline, IndexedDB for the album, installable PWA."
+  webgpu_note: "WebGPU shipped in Safari 26, which makes a WebGPU-first mobile build plausible rather than desktop-only — VERIFY on the actual target OS versions before committing, and keep a WebGL2 path because the pre-pass is simple enough that two implementations are cheap."
+  the_real_gaps:
+    camera_control: "Manual exposure, focus and white balance via applyConstraints are well supported on Android Chrome and barely on iOS Safari. Everything in off_a_screen_is_harder that says 'where the platform allows' is this gap."
+    no_barcodedetector_on_ios: "Settled above. Costs a wasm download, not a feature."
+    background_operation: "Denied on the web, correctly. A scanner is a thing you point, not a thing that watches."
+    store_presence: "A PWA cannot be in an app store, and 'point your phone at the screen' is exactly the pitch that wants to be findable there."
+  the_recommendation:
+    first: "PWA, shipped from the same repo as the desktop web layer, sharing the recognizer package. Fastest path to something real, works from a URL, and a URL is what a QR code on a stream can point at."
+    later_and_only_if_needed: "A thin native shell for three things and no more: camera control, platform OCR, and store distribution. Capacitor-shaped, with the same web app inside it, so the shell can never become a second implementation."
+    never: "A separate mobile codebase. The moment recognition is written twice, the two readers disagree about what an egg says, and a channel with two decoders has no specification."
+
+short_codes_and_the_service:
+  what_the_phone_resolves: "The fixed signal token in the symbol, against the redirector — which is exactly what a stranger's phone already gets (OPTICAL-CHANNEL.yml, dereferenceable). Our reader gets more only because it also reads the bands and the words on screen."
+  offline_first_anyway: "The token table is a static asset the app already has, so scanning works on a plane. The network buys the page, not the parse — the same rule as the desktop build (the_angel_never_needs_the_network)."
+  what_the_service_sees: "A token was resolved. Not by whom, not about which household, not what happened next. The privacy posture does not get weaker because the reader got more convenient (privacy_consequence)."
+  what_it_must_never_become: "A phone-shaped telemetry channel. If the service starts learning which characters are in which households, the correct description of this app changes from reader to tracker."
+
+consent:
+  your_own_screen: "Ordinary use. Point and read."
+  someone_elses_screen: "Reading what you can already see is looking. PUBLISHING what you read is a different act and needs the same treatment as recording another player (modules/soul-angel/DVR.yml, privacy)."
+  the_room_is_in_frame: "The desktop layer sees a window; a phone sees whatever is behind the monitor, including people. Frames stay on the device, nothing is uploaded by default, and the retention window is short and visible."
+
+not:
+  a_remote_control: "No injection, no input synthesis, no save writes. If a phone needs to cause something, it asks a desktop Angel that has the grants."
+  a_second_specification: "The phone cannot read a code the desktop cannot, and it cannot mean anything different by it."
+  a_reason_to_change_the_art: "If a code needs redesigning to survive a camera, the reduced palette profile is the change — not new geometry, not a bigger symbol, and not per-device variants of the same egg."

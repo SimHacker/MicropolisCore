@@ -257,7 +257,7 @@ band_codes:
     not_followable: "There is no URL in it, so a curious stranger cannot dereference it. A band code is a colorful object, and that is all it is to anyone without our decoder."
     therefore_use_it_for: "Machine data that has no business being a public link: pending call ids, outcome codes, state, magnitudes."
     and_qr_for: "Anything a human should be able to follow. Where we WANT the phone to work, the URL rule and its landing page apply in full (dereferenceable)."
-    the_ar_reader_is_the_fun_exception: "A reader of our own — a phone or browser AR app pointed at a screen or a stream — can annotate every egg it sees. That turns a private channel into an optional spectator feature without ever making it a link."
+    the_ar_reader_is_the_fun_exception: "A reader of our own — a phone or browser AR app pointed at a screen or a stream — can annotate every egg it sees. That turns a private channel into an optional spectator feature without ever making it a link. Specified in MOBILE-CAMERA.yml, where distance replaces the zoom control and the reader has no way to touch the game at all."
   a_general_purpose_device:
     what: "One egg object, authored once, that any other object can spawn and configure. The caller sets type and payload; the egg renders the bands."
     what_it_actually_is: "A memory-mapped output register with a sprite for a face. The object writes a value, the screen displays it, we read it — IPC out of a closed program using nothing but the frame buffer."
