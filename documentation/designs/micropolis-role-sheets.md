@@ -3,7 +3,9 @@
 **Status:** Active design  
 **Premise:** Micropolis does **not** (yet) represent individual people inside the city sim. It *does* import/export **characters** — real players and simulated agents — that plug into **roles**. Each role is a socket; any character can occupy it; experience travels with the character.
 
-**MOOLLM ontology:** a role sheet is a game **organelle** under a soul — same grain as a Sims family album sheet or CK3 character. See [SOUL-MODEL.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-MODEL.md) · [character-endosymbiosis.yml](https://github.com/SimHacker/DonHopkins/blob/main/projects/micropolis-moollm/process/character-endosymbiosis.yml).
+**MOOLLM ontology:** a role sheet is a game **organelle** under a soul — same grain as a Sims family album sheet or CK3 character. See [SOUL-MODEL.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-MODEL.md) · [CHARACTER-ENDOSYMBIOSIS.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md).
+
+**This document is the role gate, implemented.** The upstream protocol calls it that: a city sim has no individuals to receive, so a named character crosses as an **office** rather than as a resident — and scope is the price of the visa, from mayor down to three minutes at the public microphone. Everything below is that gate for one specific city sim. Protocol: [SOUL-BRIDGES.md § The role gate](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md#3-the-role-gate-entering-a-game-that-has-no-individuals).
 
 **Companions:** [collaborative-microworld-lineage.md](collaborative-microworld-lineage.md) § roles · [cua-computer-use-agents-and-simplifier.md](cua-computer-use-agents-and-simplifier.md) · [family-album-as-storymaker.md](family-album-as-storymaker.md) · [github-as-mmorpg-multiverse.md](github-as-mmorpg-multiverse.md) · moollm [`skills/micropolis/artifacts/unfulfilled-dreams.yml`](https://github.com/SimHacker/moollm/blob/main/skills/micropolis/artifacts/unfulfilled-dreams.yml)
 
@@ -23,7 +25,7 @@ MultiPlayerIdeas already named the political cast — mayor, treasurer, planner,
 |-------|------------|
 | **Tool / tool cluster** | Bulldozer, zone paint, budget panel, query, disasters, map overlays… |
 | **Role** | A named responsibility that owns one tool or a cluster — mayor, architect, bulldozer driver, zoner, city council, journalist, newspaper writer, blogger, photographer, data analyzer, GitHub issue creator / responder / implementor / reviewer |
-| **Character** | A real player or simulated agent (MOOLLM / WWSFF / adventure-4 soul) that **occupies** a role for a tour of duty |
+| **Character** | A real player or simulated agent (a MOOLLM soul, an adventure-4 citizen, an imported Sim) that **occupies** a role for a tour of duty |
 | **Role sheet** (mayor sheet when the role is mayor) | The organelle: tenure, skills earned, album pages, city refs, exportable YAML |
 
 Any character can plug into any role their consent and permissions allow. Swapping characters does not rewrite the city; it rewrites who is *accountable* and whose **album** accrues the screenshots.
@@ -52,7 +54,7 @@ Not XP bars for their own sake — **deep, portable craft**:
 - Photographed disasters for the paper; captions later became album cards
 - Reviewed a student mayor’s PR timeline and left a teachable comment
 
-That experience **travels with the character** to other games and shows (Sims job nostalgia, Repo Show guest credit, adventure-4 resume). Micropolis keeps Micropolis organization; sync history, don’t smash schemas — [endosymbiosis](https://github.com/SimHacker/DonHopkins/blob/main/projects/micropolis-moollm/process/character-endosymbiosis.yml).
+That experience **travels with the character** to other games and shows (Sims job nostalgia, Repo Show guest credit, adventure-4 resume). Micropolis keeps Micropolis organization; sync history, don’t smash schemas — [endosymbiosis](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md).
 
 ---
 

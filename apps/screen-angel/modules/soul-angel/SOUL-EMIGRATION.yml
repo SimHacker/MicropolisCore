@@ -1,0 +1,71 @@
+# SOUL-EMIGRATION — taking a soul out of a game, and where it goes next
+# A bridge that only reads is a museum. Enumeration exists so a soul can leave.
+
+meta:
+  id: soul-angel-soul-emigration
+  status: spec
+  parent: SOUL-ALBUM.yml
+
+premise: |
+  The player made these characters. When a game's owners stop caring about it — or start
+  caring about it in the wrong direction — the characters are the part worth rescuing, and
+  the album is their biography. Emigration is the Soul City import path with the player's
+  own Sims as the cargo.
+
+# ── THE RITUAL ───────────────────────────────────────────────────────────────
+ritual:
+  1_enumerate: "Bridge lists the souls in the save — names, portraits, relationships, album pages, gravestones"
+  2_export: "Soul written to the game-independent soul model; album pages travel as Soul Album cards with provenance"
+  3_farewell: "OPTIONAL, player-authored — an ending played in the original game, recorded by the DVR, kept as the last album page"
+  4_replant: "Soul imported into a destination game through that game's bridge; customs rules apply (soul-city PORTABLE-NPCS.md §6)"
+
+invariant:
+  rule: "The soul is saved BEFORE the ending is played."
+  why: |
+    Sync, not transporter murder. The copy in Soul City is what survives, which is exactly
+    why the ending in the original game can be as final as the player wants it to be. Order
+    of operations is the whole ethics of the feature.
+
+farewell:
+  what: |
+    Sims players have always written endings, and the swimming pool with the ladder removed
+    is folk practice older than any of this. The DVR is the first tool that turns one into an
+    artifact instead of an anecdote: the ending gets recorded, captioned, dated, and filed as
+    the page where this character left this game.
+  system_opinion: |
+    None, past the invariant. The platform does not author the ending, rate it, or ask why.
+    It records what the player does and makes sure the soul was already safe.
+  album_semantics: "A farewell page is a normal card with an exit marker — the emigration album shows a life, a departure, and an arrival"
+
+# ── OBJECT PACKS ─────────────────────────────────────────────────────────────
+object_packs:
+  what: |
+    Objects that carry their own behavior and advertise it, authored by anyone, dropped into
+    a game through its bridge. This is the extension point the entire platform exists to have:
+    the Sims socket reopened, with the album and the DVR watching what happens.
+  positioning:
+    rule: "The platform is a construction set. Packs carry viewpoints. Never ship a viewpoint as the product."
+    why: |
+      The pitch is that you can make and program objects. The moment one pack becomes the
+      headline, the platform reads as that pack's delivery mechanism, and everyone who wanted
+      the construction set walks away from it. Packs are third-party drops, attributed to their
+      authors, discovered rather than bundled.
+  procedural_rhetoric:
+    lineage: "Bogost — the argument lives in the rules, not in a cutscene bolted onto them"
+    why_objects_are_good_at_it: |
+      An advertising object makes its case by being available and being chosen. It does not
+      lecture; it sits in the catalog offering something, and the player finds out what the
+      offer costs by accepting it. That is a better rhetorical instrument than any amount of
+      text, and it is the thing Sims objects were always secretly good at.
+    consequence_for_us: |
+      Packs that argue something are exactly what an open object system is for, and exactly
+      what we must not author as the product. Build the socket, document it, and let authors
+      be authors.
+
+see_also:
+  - GAME-BRIDGES.yml
+  - SOUL-ALBUM.yml
+  - moollm skills/soul-city/PORTABLE-NPCS.md    # advertisements, prototype/instance, customs
+  - moollm skills/soul-city/SOUL-MODEL.md       # souls, minds, personas
+  - moollm skills/soul-city/SOUL-BRIDGES.md     # the two gates; §6 states this invariant as fork-and-sync
+  - moollm skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md  # membranes, diffusion, exchange rates

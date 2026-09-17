@@ -22,7 +22,7 @@ Resume summary: [donhopkins.com/home/resume.html](https://donhopkins.com/home/re
 
 **Will Wright** has generously granted Don permission to **publish Phoneloper as open source**. A dedicated GitHub repo is coming soon (Python/Tkinter + modified Flite + Phonelope editor).
 
-**Repo Show (planned):** [phoneloper-speech-synthesis](https://github.com/SimHacker/DonHopkins/blob/main/projects/micropolis-moollm/shows/phoneloper-speech-synthesis.yml) — invite **Kevin Lenzo** (Flite author; [Cepstral](https://en.wikipedia.org/wiki/Cepstral) co-founder with Alan W. Black). Don corresponded with Kevin while building Phoneloper (~2003), found a bug in Flite, and submitted a fix. Show Kevin what was built on his engine — and the path toward a browser vocal jam duet with [Pink Trombone](https://dood.al/pink-trombone/). Cepstral’s embedded/handheld TTS deployment class matches the **talking toys** SFC researched (never shipped, but the stack was real).
+**Repo Show (planned):** `phoneloper-speech-synthesis` (private notes) — invite **Kevin Lenzo** (Flite author; [Cepstral](https://en.wikipedia.org/wiki/Cepstral) co-founder with Alan W. Black). Don corresponded with Kevin while building Phoneloper (~2003), found a bug in Flite, and submitted a fix. Show Kevin what was built on his engine — and the path toward a browser vocal jam duet with [Pink Trombone](https://dood.al/pink-trombone/). Cepstral’s embedded/handheld TTS deployment class matches the **talking toys** SFC researched (never shipped, but the stack was real).
 
 ---
 

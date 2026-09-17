@@ -5,7 +5,7 @@
 **Speaker:** Don Hopkins
 **Title:** Pie Menus: Definitions, Roles and Future Directions
 
-**Companion docs:** [PIE-MENU-MODEL.md](./PIE-MENU-MODEL.md) · [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md) · [pie-menus-fitts-law.md](../pie-menus-fitts-law.md) · [Brad Myers / Garnet / VPL](../brad-myers-visual-programming-hn.md) · [Brad Myers correspondence](https://github.com/SimHacker/DonHopkins/blob/main/characters/don-hopkins/correspondence/brad-myers.yml) · [Panopto video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f0600d9d-282e-4b83-a6f4-a9f2003ad407)
+**Companion docs:** [PIE-MENU-MODEL.md](./PIE-MENU-MODEL.md) · [gesture-space-and-pie-menus.md](../gesture-space-and-pie-menus.md) · [pie-menus-fitts-law.md](../pie-menus-fitts-law.md) · [Brad Myers / Garnet / VPL](../brad-myers-visual-programming-hn.md) · Brad Myers correspondence (private notes) · [Panopto video](https://scs.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f0600d9d-282e-4b83-a6f4-a9f2003ad407)
 
 ---
 

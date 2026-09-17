@@ -4,7 +4,7 @@
 
 **Don Hopkins relationship:** Visiting Garnet group at CMU (~1992–1993); PostScript printing driver; coined **GLASS** (*Graphical Layer And Server Simplifier*). Guest lecture in Brad’s **05-640 Interaction Techniques** class (Feb 2019). Pie-menu demo videos submitted to Brad’s **All the Widgets** compilation (SIGCHI ’90). Extensive HN correspondence with Brad and citations of his work (1990–2024).
 
-**Companion:** [cmu-05640-pie-menus-guest-lecture.md](piecraft/cmu-05640-pie-menus-guest-lecture.md) · [Brad Myers correspondence](https://github.com/SimHacker/DonHopkins/blob/main/characters/don-hopkins/correspondence/brad-myers.yml) · [openlaszlo/README.md](../openlaszlo/README.md) (Garnet constraints vs Laszlo)
+**Companion:** [cmu-05640-pie-menus-guest-lecture.md](piecraft/cmu-05640-pie-menus-guest-lecture.md) · Brad Myers correspondence (private notes) · [openlaszlo/README.md](../openlaszlo/README.md) (Garnet constraints vs Laszlo)
 
 ---
 
@@ -155,7 +155,7 @@ Brad’s own account on taxonomy thread ([26057530](https://news.ycombinator.com
 
 Brad Myers is a strong **Micropolis Class** guest: Garnet constraints ↔ OpenLaszlo/Micropolis declarative UI; *All the Widgets* inventor interviews; pie menus in his course and book; spreadsheets + C32 as constraint spreadsheets; SimAntics as shipped VPL; **Pick, Click, Flick!** manuscript.
 
-**Show proposal:** [shows/brad-myers-garnet-vpl.yml](https://github.com/SimHacker/DonHopkins/blob/main/projects/micropolis-moollm/shows/brad-myers-garnet-vpl.yml) in DonHopkins repo.
+**Show proposal:** `brad-myers-garnet-vpl.yml` (private notes).
 
 **Suggested episode topics:**
 

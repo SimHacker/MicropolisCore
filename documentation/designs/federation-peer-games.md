@@ -277,6 +277,22 @@ Wildly popular games where bridges would unlock huge audiences, but the technica
 
 Small player bases relative to Tier 1–3, but the **fit is so right** they should be on the long-term roadmap.
 
+### Afterlife (LucasArts, 1996) — ⚖️ the SOUL LEDGER
+
+Full design: **[afterlife-soul-bridge.md](afterlife-soul-bridge.md)**. The one peer on this
+board that crosses on the **population** gate instead of the character gate — and the only
+shipped game whose native population unit *already is a soul*.
+
+| Aspect | Notes |
+|---|---|
+| Spiritual fit | **11/10 — on the nose.** SimCity plus Dante, played straight: you are the demiurge zoning Heaven and Hell for the dead of a fictional planet. Zones are sins and virtues, currency is pennies from heaven, and **karma trains carry souls off to be reincarnated** — the export path is already in the game's fiction. Shipped in 1996, the same year Wright asked for data that moves between games. |
+| Technical fit | **3/10 — hostile.** Undocumented DOS-era binary saves, no community tooling, no modding culture to learn from, reverse engineering from zero. The honest first milestone is `measure` alone: parse a save well enough to report a soul count, and stop. |
+| **Fails criterion 1 on purpose** | Its souls are *not* named individuals — they are anonymous units in an aggregate. That makes it the reference case for the **hydraulics gate** (`measure` / `drain` / `squirt`, souls conserved) rather than for character bridging. See [SOUL-BRIDGES.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md). |
+| What the bridge ships | Drain N souls from a hell or heaven save; squirt them into a sleepy Micropolis city, evolving **existing** zones only, never creating them. Resurrection as re-zoning. Then the interesting part: a squirted crowd lands in zones that already [bind to Sims neighborhoods](soul-city.md#how-sims-save-files-actually-bind-to-micropolis-tiles), so one anonymous soul can acquire a household, a name, and eventually a [role sheet](micropolis-role-sheets.md). |
+| Reverse direction | "Hell is full" → zombie waves at *They Are Billions* scale; then dezombify the horde and rehouse it. Same three verbs, sign flipped. |
+| Caveats | Abandonware in practice, not in law. Nominative use only; operate on files the user already owns; never redistribute assets or binaries. |
+| Why it matters | It demonstrates the transition no other peer sets up cleanly: **statistical population becoming a named citizen, and back.** Also the best answer to "why would anyone want this?" — its saves are full of souls nobody can visit anymore. |
+
 ### Caves of Qud (Freehold Games, ongoing since 2010)
 
 | Aspect | Notes |

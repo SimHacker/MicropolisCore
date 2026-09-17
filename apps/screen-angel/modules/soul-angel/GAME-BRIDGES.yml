@@ -1,0 +1,118 @@
+# GAME-BRIDGES — which games get bridges, in what order, and why
+# The SDK says HOW to write a bridge (SOUL-BRIDGE-SDK.yml). This says WHICH ones we write.
+# The PROTOCOL — what may cross a save-file border at all — is upstream in moollm:
+#   skills/soul-city/SOUL-BRIDGES.md   two gates, conservation, fork-and-sync, the squirt restraint
+# Cite it; do not restate it. Two gates, because a save file affords two different crossings:
+#   hydraulics = population as conserved fluid   (measure / drain / squirt)
+#   role gate  = a named character as an office  (mayor, byline, seat; scope is the visa)
+
+meta:
+  id: soul-angel-game-bridges
+  status: spec
+  parent: SOUL-BRIDGE-SDK.yml
+  protocol: moollm skills/soul-city/SOUL-BRIDGES.md
+
+# ── EVERY GAME GETS AN ALBUM ──────────────────────────────────────────────────
+works_on_any_game:
+  claim: "Capture plus a caption is enough to build a family album for a game that has never heard of us."
+  what: |
+    The Sims 1 family album pattern, reimplemented outside the game and pointed at anything:
+    the DVR is always rolling, the player scrubs back to the moment that mattered, freezes a
+    frame, writes a line under it, and the card lands in the Soul Album with its provenance
+    intact — game, timestamp, save, clip. Video is recorded the whole time, so a card can
+    carry the motion as well as the still.
+  needs_from_the_game: nothing
+  why_it_matters: |
+    This is the cross-game capability the whole product rests on. A bridge is an upgrade,
+    not a prerequisite. Any game the player loves becomes a game they can keep a scrapbook
+    about, and every scrapbook imports into Soul City the same way.
+  a_bridge_adds: "What the game knows that the screen does not — names, relationships, save structure, souls."
+
+# ── ROSTER ───────────────────────────────────────────────────────────────────
+roster:
+
+  sims1:
+    priority: primary
+    why: |
+      The album is native to it, the format is understood, and EA put it back on sale —
+      Legacy Collection, Steam appid 3314060, 31 Jan 2025, $19.99, base game plus all
+      seven expansions. A buyable game with a living audience beats a beloved dead one.
+    capabilities: [read_saves, write_saves, read_albums, write_albums, enumerate_souls, generate_content]
+    constraints:
+      binary: "32-bit, Windows 10/11 only — this game gets no bridge on Mac or Linux, though the album and DVR features still work over Proton"
+      saves: "Legacy Collection moved the save paths; the bridge probes both old and new locations"
+      mods: "EA neither tests nor supports mods and says so in writing — the modding surface is ours to characterize, and the risk is the player's to accept"
+    spec_lineage: "WWSFF apps/soul-angel/windows/ — sims1 bridge specs, code migrates here"
+
+  sims4:
+    priority: secondary
+    why: |
+      The largest living player base in the franchise, which makes it the bridge that lets the
+      most players actually vote with their feet. Worth real effort for reach alone.
+    modding: "Python script mods plus package files — a deep, well-organized modding culture that already knows everything we would spend a year learning"
+    approach: partner_not_reverse_engineer
+    approach_note: |
+      We do not know this game well. The correct move is to collaborate with people who do,
+      pay or credit them properly, and let them own the bridge internals while we own the
+      album schema and the host.
+    collaborators:
+      lumpinou:
+        who: "Lumpinou — LGBTQIA+ / Gender & Orientation Overhaul for The Sims 4 (lumpinoumods.com)"
+        why: |
+          Deep, current knowledge of the Sims 4 scripting surface, and his mod already reasons
+          about most of the state a soul export has to carry — identities, orientations,
+          relationships, transition history. Also exactly the kind of work worth preserving when
+          the game's owners lose interest in it.
+        status: not_yet_contacted
+      object_makers:
+        who: "Long-lineage Sims custom-content makers — Steve Alvey (SimSlice) and Heather Castillo (SimFreaks) and that generation"
+        why: "Object authoring is the skill the platform is trying to reopen; they had it first"
+        status: not_yet_contacted
+
+  sims2_and_sims3:
+    priority: out_of_scope
+    why: |
+      Attention goes to the two ends of the franchise — the origin, where the album and the
+      object socket were invented, and the current game, where the players are. The middle
+      gets a bridge if a modder wants to write one.
+    door: "SDK is public; a community bridge is welcome and unblocked"
+
+  afterlife_1996:
+    priority: someday
+    gate: hydraulics          # NOT the character gate — its souls are anonymous units, by design
+    why: |
+      The only shipped game whose population unit already IS a soul. Karma trains already carry
+      souls off to be reincarnated, so the export path is in the game's own fiction. Abandonware
+      with no community and no tooling, which is the whole reason its saves are worth opening:
+      they are full of souls nobody can visit anymore.
+    capabilities: [measure]   # honest scope. Parse a save, report a soul count, stop.
+    constraints:
+      format: "Undocumented DOS-era binary. Reverse engineering from zero; no SMAPI/SimPE equivalent exists."
+      runtime: "1996 DOS/Windows/Mac — we read and write saves, we do not need to run it"
+      ip: "Abandonware in practice, not in law. User's own files only; no asset or binary redistribution."
+    design: documentation/designs/afterlife-soul-bridge.md
+
+  tinylife:
+    role: destination
+    why: |
+      A friendly indie life sim with an active solo developer who has already engaged with the
+      Soul City bridge idea and liked it — "pandoc but for life sim characters," a consistent
+      link rather than a one-off conversion. Souls need somewhere good to land, and a game
+      whose author answers his messages is worth more than a big one that does not.
+    status: "Developer contact established and warm; consent for portrayal handled separately"
+
+# ── DETECTION ────────────────────────────────────────────────────────────────
+switching:
+  what: "Host detects the focused game and hot-swaps the bridge; no match falls back to the album and DVR features that need no bridge"
+  signals: [steam_appid, process_name, window_class, window_title_patterns]
+  note: "Legacy re-releases ship new appids for old games — fingerprint on more than one signal"
+
+see_also:
+  - SOUL-BRIDGE-SDK.yml
+  - SOUL-EMIGRATION.yml
+  - SOUL-ALBUM.yml
+  - ARCHITECTURE.yml
+  - moollm skills/soul-city/SOUL-BRIDGES.md   # the protocol: two gates, conservation, fork-and-sync
+  - moollm skills/soul-city/README.md         # the substrate's front door + Wright's 1996 ask
+  - documentation/designs/federation-peer-games.md   # the graded long list this roster draws from
+  - documentation/designs/afterlife-soul-bridge.md   # worked hydraulics case
