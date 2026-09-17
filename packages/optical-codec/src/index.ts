@@ -6,6 +6,7 @@ export * from './font-pack';
 export * from './font-context';
 export * from './egg-code';
 export * from './egg-render';
+export * from './egg-read';
 export * from './qr';
 export * from './scan';
 export * from './scene';

@@ -8,8 +8,8 @@
 # MOBILE-CAMERA.yml (the hard optical path) · RECORDER.yml (where frames come from)
 
 status:
-  built: [codec_package, qr_path, synthetic_scene_renderer, egg_renderer, abuse_suite_minus_jpeg, recognize_scan_verb]
-  not_built: [frame_source, gpu_prefilter, egg_path, worker_pool, overlay_debug_view]
+  built: [codec_package, qr_path, synthetic_scene_renderer, egg_renderer, egg_reader, band_alphabets, abuse_suite_minus_jpeg, recognize_scan_verb, coverage_font_reader, anchor_matcher]
+  not_built: [frame_source, egg_path_in_the_verb, gpu_prefilter, worker_pool, overlay_debug_view, verification_against_a_real_frame]
   decided: [zxing_for_qr, local_only_no_remote_model, codec_first_in_node]
   where: "packages/optical-codec (codec, renderer, fixtures, tests) · src/main/recognize/service.ts (the verb)"
 
@@ -130,11 +130,33 @@ measured_legibility:
   what_it_decides: "How big the About dialog draws its code, and what to say to anyone who wants it smaller."
 
 the_eggs_are_drawn_before_the_game_draws_them:
-  what: "packages/optical-codec renders eggs into synthetic frames — caps, calibration swatches, bands, segments, levitation, glow — and reports the ground-truth box and digits for each one."
+  what: "packages/optical-codec renders eggs into synthetic frames — caps, bands, segments, levitation, glow — and reports the ground-truth box and digits for each one."
   why_not_wait_for_screenshots: "There are no eggs in The Sims yet, so there is nothing to photograph. Generating the frame gives the reader targets today and stays useful afterwards: a real capture tells you whether it works, a synthetic frame tells you which pixel broke it."
   the_test_that_matters: "The bands are pixel-identical lit and dark. The glow draws behind the body, so the cosmetic layer cannot reach the pixels the reader samples — which is the rule above, enforced rather than asserted."
+
+the_egg_reader:
+  where: "packages/optical-codec/src/egg-read.ts, swept by scripts/measure-eggs.ts."
+  how_it_finds_one: "Column by column: the brightest and darkest runs in a column are candidate caps, and a candidate survives only if the distance between their centres divides evenly by a band height that also explains the colour changes between them. Then adjacent columns that agree are grouped, and a group narrower than a band is tall is thrown away."
+  the_caps_do_three_jobs: "They delimit the stack, they set the scale — a cap is exactly one band tall, so the metric comes out of the picture rather than out of a config file — and they are the white and black reference for an affine colour correction. A sunset shifts the bands and the caps by the same amount, and correcting by the caps removes it before a single digit is decided."
+  it_refuses_rather_than_guesses: "Every band reports the distance to the runner-up colour. The smallest of those is the reading's confidence, and a reading below the floor is returned as refused WITH its digits, so a caller can see what was nearly there. A failed check digit is refused the same way."
+  the_measured_floor: "SIX PIXELS A BAND reads twelve colours through every degradation in the suite. Five reads twelve through all but a window at a third scale. Below four, only a clean or evenly-dimmed grab reads at all."
+  the_grid:
+    clean_screen_grab: "2px and up, twelve colours."
+    evening_light: "2px and up. A global dim costs nothing, because the caps dim with the bands and the correction is affine."
+    window_at_50_percent: "4px and up."
+    window_at_33_percent: "6px and up."
+    soft_focus: "5px and up."
+    phone_noise_and_warm_cast: "2px and up, once the frame is median-filtered across the width."
+    phone_noisy_and_soft: "5px and up."
+    phone_tilted: "4px and up."
+  two_findings_worth_keeping:
+    noise_invents_boundaries: "Finding the band count from colour changes works and then stops working the moment there is grain, because every row becomes a change. A band is one colour all the way across, so a median of five neighbours across the width removes it and cannot move a horizontal boundary. Without that filter every noisy cell in the sweep read nothing at all."
+    a_band_can_be_mistaken_for_a_cap: "The reader looks for the caps as the extremes of a column's range and claims the top and bottom 15% of it, so a dark band inside that claim becomes a black cap and the whole egg vanishes — not misread, not refused, invisible. Seven of sixteen codes were being lost this way. The fix is a bound on the palette, not on the reader: bands live between luma 72 and 188 (src/egg-code.ts)."
+  what_the_alphabet_is_set_to: "Octal, with twelve measured as legible. The headroom is spent on margin rather than on digits: the sweep is synthetic, the game's own rendering is not in it, and an octal band is the same symbol as a dialled compass digit (EGGS.yml, cracking_it_like_a_safe)."
+  still_only_pixels_we_drew: "Same caveat as the QR numbers. tools/verify-frame.ts is the thing that turns this from a floor into a fact, and it needs one real frame."
 
 open_items:
   packaging_the_wasm: "The Node path finds the wasm inside node_modules by walking up from an exported entry point. A packaged app needs those two files unpacked from the asar and resolved from resources instead."
   jpeg_in_the_abuse_suite: "Needs a real DCT and quantisation table. Standing in for it with blur plus noise would let us claim a pass we had not earned."
-  the_palette_is_provisional: "Ten separated RGB values, chosen against theory. The spec requires choosing them against the game's rendered output, and that has not happened."
+  the_palette_is_provisional: "The palettes are packed rather than picked — scripts/pick-palettes.ts maximises the smallest gap between colours, under a distance from the caps and a luma window. What is settled is HOW MANY colours a band can hold and how far apart they have to be. Choosing them against the game's own rendered output has not happened, and the sweep cannot do it."
+  the_egg_field_is_still_empty: "The reader exists in the codec and the verb still returns an empty array. Wiring is small; doing it before there is a frame to verify against would mean shipping a path nobody has seen work."

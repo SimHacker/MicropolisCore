@@ -8,7 +8,7 @@
 meta:
   id: eggs
   status: design
-  built: []
+  built: [band_code, egg_renderer, egg_reader, measured_band_height]
   not_built: [egg_object, menu_tree_compile, selection_accumulator, hatch_semantics, resume_point, recall]
   see_also: [OPTICAL-CHANNEL.yml, ANGEL-EVENT-BUS.yml, RECORDER.yml, modules/soul-angel/OUT-OF-GAME-JOBS.yml, modules/soul-angel/UNIVERSAL-JOBS.yml]
   upstream: "moollm skills/soul-city/GLOSSARY.md (Egg, Errand) and skills/soul-city/SOUL-BRIDGES.md (The errand)"
@@ -223,6 +223,14 @@ the_blip_editor:
     nothing_transmits_silently: "Every message this channel sends is a visible change in a lit object. The player can always see that the egg said something, and can open it to read what. A covert channel is not merely disallowed here, it is unavailable — the carrier is the same light the player is looking at."
   legible_to_both_readers: "A player learns 'gold cap band means news' in one session, and the reader decodes the same stripes numerically. One artifact, two audiences, which is the property the whole optical channel rests on (OPTICAL-CHANNEL.yml, the_player_reads_it_too)."
   authored_once: "Shape, bands, caps, palettes, states and the DGRP table are emitted by the same compile that emits the menu tree and the verb registry (compiled_from_one_source)."
+
+  the_numbers_are_measured_now:
+    where: "packages/optical-codec — egg-render.ts draws them, egg-read.ts reads them, scripts/measure-eggs.ts sweeps band height against the degradation suite, and ../RECOGNIZER.yml, the_egg_reader has the full grid."
+    a_band_is_six_pixels: "Six device pixels a band reads twelve colours through everything in the suite: a window at a third scale, soft focus, a warm noisy phone grab, a tilted one. Five is enough for all but the smallest window. That is the number the art has to hit at the zoom where a code is meant to be read, and it is a drawing requirement, not a hope."
+    the_caps_earn_their_place: "Everything the section above claimed for them holds up under measurement, and two of the three turned out to be load-bearing in a way that was easy to underrate. A cap is exactly one band tall, so the reader derives the band height from the picture instead of being told it — an egg is self-describing at any zoom or capture scale. And correcting the bands by the sampled cap colours means an evening-light frame reads exactly as well as a clean one, which is the single best cell in the grid."
+    what_the_bands_may_not_be: "A colour whose luma is near either cap's gets read AS a cap, and then the egg is not misread, it is invisible. So the palette is bounded away from both — luma 72 to 188 — and the palettes are packed by a script that maximises the smallest gap under that bound rather than chosen by eye (src/egg-code.ts)."
+    twelve_is_legible_and_eight_is_shipped: "The measurement says twelve colours a band survives the suite. The default is octal anyway: the suite is synthetic and the game's own rendering is not in it, and an octal band is the same symbol as a dialled compass point (cracking_it_like_a_safe). The version band is the second thing on the stack precisely so this can change later."
+    what_is_still_not_known: "Whether any of it survives the game actually drawing an egg. Nothing here has been checked against a frame the game produced, because there is no egg in the game yet."
 
 # WHAT AN EGG IS, IN OTHER PEOPLE'S VOCABULARIES
 #

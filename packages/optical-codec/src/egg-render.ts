@@ -1,40 +1,54 @@
 /**
  * Drawing an egg, so there is something to read before there is a game to read it in.
  *
- * This is not the game's art. It is a stand-in with the properties the format depends on —
- * cap polarity, band order, band height, the calibration swatch — so the reader can be built
- * and tested against images we can generate a thousand of. When the real DGRP sprites exist
- * this becomes the reference the sprites are checked against.
+ * This is not the game's art. It is a stand-in with the properties the format depends on — cap
+ * polarity, cap height as the metric, band order — so the reader can be built and tested against
+ * images we can generate a thousand of. When the real DGRP sprites exist this becomes the reference
+ * the sprites are checked against.
  *
- * Glow and levitation are drawn because the player sees them. Nothing in the reader may look
- * at either (RECOGNIZER.yml, lighting_is_never_a_signal).
+ * EVERY SLAB IS ONE BAND TALL
+ *
+ * The caps included. That is what lets the sentinel carry the metric: measure the white run and you
+ * know the band height at this zoom, which is the number the reader needs before it can slice
+ * anything. Two adjacent bands of the same digit are one run of double height, so a reader that
+ * segmented on colour change would silently drop a digit — it has to step by a measured height
+ * instead, and the cap is where the measurement comes from.
+ *
+ * Glow and levitation are drawn because the player sees them. Nothing in the reader may look at
+ * either (RECOGNIZER.yml, lighting_is_never_a_signal).
  */
 
-import { CALIBRATION, CAP_BOTTOM, CAP_TOP, digitsToColours, encodeDigits, prefixLength, type EggCode } from './egg-code';
+import { ALPHABET, CAP_BOTTOM, CAP_TOP, digitsToColours, encodeDigits, prefixLength, type BandAlphabet, type EggCode } from './egg-code';
 import { fillEllipse, fillRect, type RGB, type Raster } from './raster';
 
 export interface EggStyle {
-	/** Height of one band in pixels. The whole geometry follows from this. */
+	/** Height of one band in pixels, and of each cap. The whole geometry follows from this. */
 	bandHeight: number;
 	/** Half-width of the widest part of the body. */
 	radius: number;
 	/** How much of the stack this zoom resolves. */
 	zoom: 'far' | 'mid' | 'near' | 'full';
+	/** Which colours the bands come from. */
+	alphabet: BandAlphabet;
 	/** Cosmetic. Drawn for the player, invisible to the reader. */
 	lit?: 'dark' | 'steady' | 'breathing';
 	/** Cosmetic. Pixels of levitation, with a base left behind on the floor. */
 	levitation?: number;
 	/** Split each band into arcs, the way the closest zoom does. Leading arc dominates. */
 	segments?: number;
+	/** Taper the silhouette into an egg. Off gives a cylinder, which is the easy case for a reader. */
+	tapered?: boolean;
 }
 
 export const DEFAULT_STYLE: EggStyle = {
 	bandHeight: 6,
 	radius: 9,
 	zoom: 'full',
+	alphabet: ALPHABET,
 	lit: 'steady',
 	levitation: 0,
-	segments: 1
+	segments: 1,
+	tapered: true
 };
 
 export interface EggPlacement {
@@ -50,89 +64,84 @@ export interface DrawnEgg {
 	/** The digits actually drawn, which at a coarse zoom is a prefix of the full code. */
 	digits: number[];
 	code: EggCode;
+	/** Band height as drawn, which is what the reader has to recover from the caps. */
+	bandHeight: number;
 }
 
 /**
  * Draw one egg and answer where it landed.
  *
- * The returned box is ground truth for tests: a recognizer that finds the egg somewhere else
- * is wrong even if it decodes the right number.
+ * The returned box is ground truth for tests: a recognizer that finds the egg somewhere else is
+ * wrong even if it decodes the right number.
  */
 export function drawEgg(target: Raster, code: EggCode, place: EggPlacement, style: Partial<EggStyle> = {}): DrawnEgg {
 	const s: EggStyle = { ...DEFAULT_STYLE, ...style };
-	const digits = encodeDigits(code).slice(0, prefixLength(s.zoom));
-	const colours = digitsToColours(digits);
+	const digits = encodeDigits(code, s.alphabet).slice(0, prefixLength(s.zoom));
+	const colours = digitsToColours(digits, s.alphabet);
 
-	const capHeight = Math.max(2, Math.round(s.bandHeight * 0.8));
-	const calHeight = Math.max(2, Math.round(s.bandHeight * 0.6));
-	const bodyHeight = capHeight * 2 + calHeight * CALIBRATION.length + s.bandHeight * colours.length;
+	const band = Math.max(1, Math.round(s.bandHeight));
+	// Two caps and the bands. The caps are the delimiters, the metric, and the colour references.
+	const bodyHeight = band * (colours.length + 2);
 	const lift = s.levitation ?? 0;
 
 	if (lift > 0) drawBase(target, place.x, place.y, s.radius);
 
 	const bottom = place.y - lift;
 	const top = bottom - bodyHeight;
+	const profile = { top, height: bodyHeight, radius: s.radius, tapered: s.tapered !== false };
 
 	// Behind the body, never over it. A halo that touched a band would make the read depend on the
 	// lighting state, which is the one thing the format is not allowed to do.
 	if (s.lit && s.lit !== 'dark') drawGlow(target, place.x, top + bodyHeight / 2, s.radius, bodyHeight, s.lit);
 
 	let y = top;
-	drawSlab(target, place.x, y, capHeight, s.radius, top, bodyHeight, CAP_TOP, 1);
-	y += capHeight;
-
-	for (const swatch of CALIBRATION) {
-		drawSlab(target, place.x, y, calHeight, s.radius, top, bodyHeight, swatch, 1);
-		y += calHeight;
-	}
+	drawSlab(target, place.x, y, band, profile, CAP_TOP, 1);
+	y += band;
 
 	for (const colour of colours) {
-		drawSlab(target, place.x, y, s.bandHeight, s.radius, top, bodyHeight, colour, s.segments ?? 1);
-		y += s.bandHeight;
+		drawSlab(target, place.x, y, band, profile, colour, s.segments ?? 1);
+		y += band;
 	}
 
-	drawSlab(target, place.x, y, capHeight, s.radius, top, bodyHeight, CAP_BOTTOM, 1);
+	drawSlab(target, place.x, y, band, profile, CAP_BOTTOM, 1);
 
 	return {
 		box: {
 			x: Math.round(place.x - s.radius),
 			y: Math.round(top),
 			width: Math.round(s.radius * 2),
-			height: Math.round(bodyHeight)
+			height: bodyHeight
 		},
 		digits,
-		code
+		code,
+		bandHeight: band
 	};
+}
+
+interface Profile {
+	top: number;
+	height: number;
+	radius: number;
+	tapered: boolean;
 }
 
 /**
  * One horizontal slice of the solid of revolution.
  *
- * The width tapers with height so the silhouette is an egg rather than a stack of blocks,
- * which is what makes the shape rotation-invariant in the game and what makes the template
- * match cheap here.
+ * The width tapers with height so the silhouette is an egg rather than a stack of blocks, which is
+ * what makes the shape rotation-invariant in the game and what makes the template match cheap here.
  */
-function drawSlab(
-	target: Raster,
-	cx: number,
-	y: number,
-	height: number,
-	radius: number,
-	bodyTop: number,
-	bodyHeight: number,
-	colour: RGB,
-	segments: number
-): void {
+function drawSlab(target: Raster, cx: number, y: number, height: number, profile: Profile, colour: RGB, segments: number): void {
 	for (let row = 0; row < height; row++) {
 		const yy = y + row;
-		const t = (yy - bodyTop) / bodyHeight; // 0 at the top cap, 1 at the bottom
-		const w = radius * silhouette(t);
+		const t = (yy - profile.top) / profile.height; // 0 at the top cap, 1 at the bottom
+		const w = profile.tapered ? profile.radius * silhouette(t) : profile.radius;
 		if (segments <= 1) {
 			fillRect(target, cx - w, yy, w * 2, 1, colour);
 			continue;
 		}
-		// Arcs across the visible face. The leading arc keeps the band's coarse value, so a
-		// segmented band collapses to a legal read rather than to a blur of two values.
+		// Arcs across the visible face. The leading arc keeps the band's coarse value, so a segmented
+		// band collapses to a legal read rather than to a blur of two values.
 		const arc = (w * 2) / segments;
 		for (let i = 0; i < segments; i++) {
 			const shade = i === 0 ? colour : dim(colour, 1 - i * 0.12);
