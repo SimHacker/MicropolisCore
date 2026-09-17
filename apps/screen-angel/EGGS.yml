@@ -201,3 +201,23 @@ not:
   not_a_progress_bar: "It does not promise a completion time and it does not pretend to know one."
   not_a_message_queue: "One egg, one call, in the world, at a place. Volume is not the point."
   not_a_way_to_apply_undeclared_effects: "If it is not in the tree, it cannot happen. A job that wants a new consequence recompiles and says so."
+
+# THE EGG IS A FILE
+#
+# Spore already did the important half of this: a creature card was a PNG with the creature
+# encoded inside it. The picture WAS the file. You could post it anywhere a picture goes, and
+# dragging it back into the game gave you the creature — advertisement and payload in one
+# artifact. An egg inherits that, with a return address added.
+
+the_egg_is_its_own_file:
+  the_prior_art:
+    spore_creature_cards: "Creature data embedded in the exported PNG, shared through the Sporepedia and anywhere else a picture could travel, re-imported by dropping the picture back in. The seed of the creature was inside its portrait, which is why the sharing culture worked at all — nothing to zip, nothing to explain (documentation/designs/federation-peer-games.md, Spore)."
+    what_it_proved: "A container that is ALSO its own thumbnail removes the step where sharing breaks. Every scheme that needs a picture plus a data file loses the data file."
+  our_container_is_iff: "We do not need to invent the trick, because the Sims already has a container that games load, players install and communities have traded for two decades. An egg is minted as an .iff — OBJD, DGRP, SPR2, BHAV, the object as the game expects it — so the same bytes are a placeable object in a lot, a picture of itself, and a message with a payload. No side-car, no new loader, and the Downloads folder is already the inbox (documentation/designs/sims-content-registry.md)."
+  minted_locally: "The compile that emits the egg's shape, bands, states and menu tree can write the .iff on the player's own machine. Nothing has to be online for an egg to exist, be placed, be read or be hatched — the network is for sharing, never for existing (robust-first)."
+  then_published: "Mint local, upload to the server, and it is a link like every other piece of Sims content. Someone downloads it into Downloads and the registry picks it up on the next scan: fresh GUID, hashed, dependency-walked, collision-checked, same path as any custom object (guid-collision, sims-content-registry.md)."
+  a_sealed_egg_is_giftable:
+    what: "An egg can be shared before it is hatched. The recipient picks from the menu and hatches it themselves, so the gift is a choice rather than a result."
+    the_chain_of_custody: "Who minted it, who held it, who hatched it — appended, never rewritten. A regifted egg carries its whole history, which is the interesting part of a souvenir (moollm skills/soul-city/SOUVENIRS.md)."
+    what_never_travels: "Only what the soul owns. An egg carries its own declared payload and its credits, not the household around it, and not a scrap of anyone who did not agree to be in it (soul_domain, ../modules/soul-angel/ARCHITECTURE.yml)."
+  the_file_and_the_screen_are_the_same_object: "The optical carriers exist for the case where a file cannot cross — a closed game, a stream, a photograph of someone else's monitor (OPTICAL-CHANNEL.yml). When both ends can touch a filesystem, the .iff is the lossless path and the bands are just its portrait. One artifact, two routes, and neither is the fallback for the other."

@@ -142,6 +142,7 @@ the_bus:
     human: "Reads the words, clicks the button. This is just playing the game."
     agent: "Reads the same words, clicks the same button, and has to justify the pick against the declared tree."
     deterministic_layer: "Matches a symbol, checks the bands, and follows a compiled table with no model involved. The path that must keep working when nothing else does (robust-first)."
+  when_the_screen_is_not_needed_at_all: "This channel is for ends that cannot share a filesystem. When they can, the egg is simply a file — minted locally as an .iff, published, downloaded, installed (EGGS.yml, the_egg_is_its_own_file). Spore's creature cards are the proof that a container which doubles as its own picture is what makes sharing survive contact with people."
   why_all_three_matter: "A bus only a model can drive is untestable. A bus only a table can drive cannot handle content nobody anticipated. A bus only a person can drive does not automate. Same buttons, three drivers, and the ability to hand off mid-flight is the whole point (moollm designs/INTERFACE-TO-AGENCY.md)."
 
 # WHY THE URL HAS TO BE REAL
