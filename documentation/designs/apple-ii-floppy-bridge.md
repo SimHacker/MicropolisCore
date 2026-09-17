@@ -1,6 +1,6 @@
 # The Apple ][ floppy as save-file container — a two-way ladder
 
-**Status:** Design. **Monorepo:** MicropolisCore. **Protocol upstream:** moollm [`skills/soul-city/SOUL-BRIDGES.md`](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md). **Same shape as:** the Sims 1 bridge ([OBLITERATOR-TYPESCRIPT.md](../vitamoo/OBLITERATOR-TYPESCRIPT.md) §1.0 L0–L4, §6 layered interchange).
+**Status:** Design. Nothing here is built — `packages/apple2-io` does not exist yet, and no sector, filesystem or driver code has been written in this repo. **Monorepo:** MicropolisCore. **Protocol upstream:** moollm [`skills/soul-city/SOUL-BRIDGES.md`](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md). **Same shape as:** the Sims 1 bridge ([OBLITERATOR-TYPESCRIPT.md](../vitamoo/OBLITERATOR-TYPESCRIPT.md) §1.0 L0–L4, §6 layered interchange).
 
 Three of the most interesting bridge targets are Apple ][ titles — [Mind Mirror](../../apps/screen-angel/modules/soul-angel/OUT-OF-GAME-JOBS.yml) (1986), [Little Computer People](federation-peer-games.md#little-computer-people-activision-1985--the-headwater) (Apple ][ version, December 1985), and Wizardry (1981, UCSD Pascal). Building three one-off hacks would produce three dead ends. One layered stack produces a new playable round-trip every time a driver lands, and the layers below the driver are shared.
 
@@ -30,6 +30,10 @@ Both directions, the same rungs. Each level is independently shippable and testa
 **Rule, inherited from the Sims stack:** only L0 touches physical I/O; L1 and above are pure functions over `Uint8Array`. That is what makes the whole ladder run identically in Node, in a browser tab, and inside the emulator's own memory.
 
 **Build order:** L0, then DOS 3.3, then ProDOS, then UCSD Pascal, then one complete vertical through L4. Mind Mirror is the right first vertical — its data is a personality profile, which is already the shape the destination wants.
+
+**Numbering note.** The earlier planning notes describe this as a three-level stack: L0 raw disk, L1 filesystems, L2 per-game drivers. The rungs are the same; this table splits that L2 in two, because generic file formats (Applesoft tokens, hi-res screens, binary load addresses) are shared by every title and per-game character records are shared by none. Where the two numberings disagree, prefer these: sectors, filesystems, file formats, game formats, soul.
+
+**Read `.woz`, write `.dsk`.** Flux-level imaging exists because copy protection lives below the sector layer, and rewriting flux to keep a protection scheme intact is a different and much harder job. Original disks arrive as `.woz` and are read; the disks a bridge *writes* are ordinary sector-level `.dsk`/`.do` data disks with a real filesystem on them. That is also how the games themselves worked — the protected program disk boots, and the player's saves go on a plain formatted one.
 
 ## The exploded tree
 
@@ -66,6 +70,12 @@ Several are worth supporting, and the interface between the bridge and an emulat
 | **apple2ts** | Watch. Save-state and time-travel are the features that matter next. |
 | **Internet Archive / Emularity + MAME** | Complementary, and the right thing to build on and contribute to rather than around. It already solved running emulators in a browser at scale, legally, with the images preserved. The value added here is the layer above: hackable disk I/O, filesystems, per-game drivers, and the character round-trip. |
 | **MAME-wasm alone** | Highest fidelity, but an opaque blob rather than a library. Fine for playing, wrong as the thing a bridge steers. |
+| **AppleWin + SPoverSLIP + FujiNet-PC** | The native track. Mature, and the only route that exercises a *network-mounted* disk instead of a file on disk. Where FujiNet work happens and where CI runs a real machine. |
+| **POM2 (wasm)** | Parallel, for the demo value. Not the thing the bridge steers. |
+
+**Three tracks, deliberately.** Real hardware with a FujiNet on it, a native emulator for development and CI, and a browser emulator for anything a stranger should be able to click. They are not candidates competing for one slot — each is the cheapest way to do a different job, and the ladder above L0 is identical in all three because it is pure functions over bytes.
+
+**The other wide channel: a network-mounted disk.** A [FujiNet](https://fujinet.online/) presents a disk image over the network as a SmartPort device, which means the image a game is reading can live on a server the bridge controls, and the write-back does not require reaching into an emulator's memory at all — the same trick as hot-writing the in-memory buffer, but it works on the real machine on someone's desk. In a browser tab, FujiNet is a **sidecar**: the firmware runs server-side as FujiNet-PC and the tab talks to it over a WebSocket, rather than anyone trying to compile firmware into the page. Groundwork here is Thomas Cherryhomes's, and the Apple ][ side of FujiNet plus SPoverSLIP is his and his collaborators' work, not ours.
 
 ## Driving a game that has no API
 
@@ -102,4 +112,6 @@ Unchanged from the other retro bridges: the tooling operates on images the user 
 - Emulated runtimes as organelles: moollm [`CHARACTER-ENDOSYMBIOSIS.md`](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/CHARACTER-ENDOSYMBIOSIS.md)
 - `.woz` and flux-level imaging: [Applesauce](https://applesaucefdc.com/woz/reference2/)
 - LCP's brain block, from its programmer, for the C64 version: [David Crane's email to the Software Preservation Society](https://web.archive.org/web/20250103095311/http://www.softpres.org/article:game:little_computer_people)
-- Funding-side framing of the same layers: private notes
+- FujiNet, SmartPort over SLIP, FujiNet-PC: [fujinet.online](https://fujinet.online/) · [FujiNet-Firmware](https://github.com/FujiNetWIFI/fujinet-firmware)
+- apple2js: [whscullin/apple2js](https://github.com/whscullin/apple2js) · apple2ts: [ct6502/apple2ts](https://github.com/ct6502/apple2ts) · [Emularity](https://github.com/db48x/emularity)
+- Emulator landscape survey, three-track FujiNet plan, and the authoritative L0–L2 stack this elaborates: private notes
