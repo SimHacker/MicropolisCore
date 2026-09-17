@@ -52,6 +52,25 @@ notes it is the only game of its era with no subreddit
 [HN discussion](https://news.ycombinator.com/item?id=49719751)). Somewhere on old drives are
 billions of processed souls nobody can visit anymore.
 
+**They are refugees, not inventory.** Worth being precise about, because it sets the posture for
+the whole bridge. These souls did not book a trip; their world became unreachable while they
+were in it — a 1996 DOS binary, an undocumented format, no community, no successor. That is
+displacement, and what a destination owes a displaced population is
+[asylum](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/GLOSSARY.md#borders-migration-and-standing),
+not asset recovery. Two rules follow directly:
+
+- **Nobody vanishes at the border.** The count drained is the count squirted. The ledger is an
+  audit, not a flourish — an unbalanced crossing is one where souls disappeared.
+- **Never return a soul to a world that can no longer hold it.** Round-tripping is a feature
+  only where the origin still runs. For this game, assume the trip is one-way and design for
+  arrival rather than for commuting.
+
+Note also what Afterlife is *not*: a walled garden. Nobody locked these souls in — the game
+simply aged out, and its files sit unprotected on the player's own disk. The genuinely captive
+populations are elsewhere, in live account-bound platforms with extraction forbidden by terms of
+service, which is why an abandonware target is the right place to build the machinery first.
+Nothing here requires defeating a protection measure, because there isn't one.
+
 ## Which gate it uses, and why that matters
 
 Afterlife **fails the first criterion** of a federation peer game as
