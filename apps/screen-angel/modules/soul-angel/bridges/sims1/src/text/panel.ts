@@ -12,7 +12,7 @@
  * coordinates, which is a real piece of work and is not this piece of work.
  */
 
-import { readBlock, type BitmapFont, type Raster } from '@micropolis/optical-codec';
+import { readCoverageBlock, type PreparedFont, type Raster } from '@micropolis/optical-codec';
 
 /**
  * Corner colours of the panel frame, and the columns they sit in.
@@ -51,7 +51,7 @@ export interface PanelText {
 	region: PanelRegion;
 	/** The description block, lines joined with newlines, as the game wrapped them. */
 	description: string;
-	/** Matched ink over total ink. Low means the geometry or the scale is wrong, not that the text is odd. */
+	/** How well the glyphs explain the pixels. Low means the geometry or scale is wrong, not that the text is odd. */
 	confidence: number;
 }
 
@@ -80,11 +80,11 @@ export function findPanel(frame: Raster): PanelRegion | null {
 }
 
 /** Find the panel and read its description. Null when there is no panel to read. */
-export function readPanelText(frame: Raster, font: BitmapFont): PanelText | null {
+export function readPanelText(frame: Raster, font: PreparedFont): PanelText | null {
 	const region = findPanel(frame);
 	if (region === null) return null;
 
-	const block = readBlock(frame, font, {
+	const block = readCoverageBlock(frame, font, {
 		x: DESCRIPTION.x,
 		y: region.y + DESCRIPTION.yFromTop,
 		maxX: PANEL.rightX,

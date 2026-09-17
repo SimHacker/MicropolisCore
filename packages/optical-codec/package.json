@@ -17,6 +17,10 @@
     "./node/png": {
       "types": "./dist/node/png.d.ts",
       "import": "./dist/node/png.js"
+    },
+    "./node/bmp": {
+      "types": "./dist/node/bmp.d.ts",
+      "import": "./dist/node/bmp.js"
     }
   },
   "engines": {

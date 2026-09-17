@@ -14,7 +14,7 @@
 
 import type { AngelServices, WindowInfo } from '@screen-angel/host-api';
 
-import { sims1UIFont } from './font';
+import { sims1PanelFont } from './font';
 import { PANEL_ASSUMPTIONS, readPanelText, type PanelText } from './panel';
 
 export interface PanelReading {
@@ -29,15 +29,16 @@ export interface PanelReading {
 /**
  * How low a read can score before it is reported as a failure instead of as text.
  *
- * A correct read of this font scores 1.0 — the patterns came from the same pixels the game draws — so
- * anything much below that is not slightly-wrong text, it is the recogniser sampling the wrong rows
- * and assembling letters out of noise. The threshold is generous rather than tight because a scaled
+ * The score is how well the glyphs' own coverage explains the pixels, and a native-scale frame of
+ * text drawn with this font scores close to 1.0 — it is the same arithmetic the game's blitter did,
+ * run backwards. Anything much below that is not slightly-wrong text, it is the recogniser sampling
+ * the wrong rows and assembling letters out of noise. Generous rather than tight, because a scaled
  * or blurred frame collapses far past it.
  */
-const MIN_CONFIDENCE = 0.9;
+const MIN_CONFIDENCE = 0.85;
 
 export function createPanelReader(angel: AngelServices) {
-	const font = sims1UIFont();
+	const font = sims1PanelFont();
 
 	return {
 		font,
@@ -69,7 +70,7 @@ export function createPanelReader(angel: AngelServices) {
 				return {
 					panel: null,
 					frame: size,
-					because: `found the panel but read it at ${(panel.confidence * 100).toFixed(0)}% ink match, which is noise rather than text`
+					because: `found the panel but the glyphs only explain ${(panel.confidence * 100).toFixed(0)}% of the pixels, which is noise rather than text`
 				};
 			}
 

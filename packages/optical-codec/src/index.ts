@@ -1,5 +1,7 @@
 export * from './raster';
 export * from './bitmap-font';
+export * from './coverage-font';
+export * from './coverage-pack';
 export * from './egg-code';
 export * from './egg-render';
 export * from './qr';

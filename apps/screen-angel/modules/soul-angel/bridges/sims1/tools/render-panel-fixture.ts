@@ -3,21 +3,22 @@
  *
  *   pnpm --filter @screen-angel/soul-bridge-sims1 fixture
  *
- * Not a screenshot of The Sims. The font came out of the game, so this is the game's text drawn with
- * the game's own pixels on a stand-in panel — which is enough to exercise every stage of the reader
- * and to see with your own eyes what it is matching.
+ * Not a screenshot of The Sims. The font came out of the game and is blended the way the game blends
+ * it, so this is the game's own anti-aliasing on a stand-in panel — enough to exercise every stage of
+ * the reader and to see with your own eyes what it is matching.
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createRaster, drawText, fillRect, setPixel, toPNG } from '@micropolis/optical-codec';
+import { createRaster, drawCoverageText, fillRect, setPixel, toPNG } from '@micropolis/optical-codec';
+import { deflateSync } from 'node:zlib';
 
-import { sims1UIFont } from '../src/text/font';
+import { PANEL_FONT_SIZE, sims1GameFont, sims1PanelFont } from '../src/text/font';
 import { readPanelText } from '../src/text/panel';
 
-const font = sims1UIFont();
+const font = sims1GameFont(PANEL_FONT_SIZE);
 const frame = createRaster(800, 600, [18, 22, 34]);
 
 // A floor to sit the panel on, so the fixture looks like a frame rather than a swatch.
@@ -42,14 +43,14 @@ const lines = [
 	'Room 3, sound every hour.',
 	'The Sims never look at it.'
 ];
-lines.forEach((line, i) => drawText(frame, font, line, 419, topY + 31 + i * font.height));
+lines.forEach((line, i) => drawCoverageText(frame, font, line, 419, topY + 31 + i * font.height, [222, 228, 255]));
 
 const out = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures');
 mkdirSync(out, { recursive: true });
-writeFileSync(join(out, 'panel.png'), toPNG(frame));
+writeFileSync(join(out, 'panel.png'), toPNG(frame, deflateSync));
 
-const read = readPanelText(frame, font);
+const read = readPanelText(frame, sims1PanelFont());
 console.log(`panel: ${JSON.stringify(read?.region)}`);
-console.log(`ink match: ${((read?.confidence ?? 0) * 100).toFixed(1)}%`);
+console.log(`pixels explained: ${((read?.confidence ?? 0) * 100).toFixed(1)}%`);
 console.log(`read back:\n${read?.description}`);
 console.log(`\nwrote fixtures/panel.png`);
