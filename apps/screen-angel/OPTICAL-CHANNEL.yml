@@ -110,14 +110,33 @@ text_is_the_wide_carrier:
     symbol: "WHICH channel and which of this object's fixed signals. Verified against the registry, unforgeable at runtime."
     bands: "Small live values worth showing continuously, checked, from a closed palette."
     text: "Everything else, in words, unbounded, human first."
+    time: "WHEN, and which fixed signal, from an object that must stay in the room and cannot open a dialog. A few bits carried in a blink (time_is_the_fourth_carrier)."
   the_failure_mode_is_legible: "Misread text is a wrong word a person can see is wrong. That is a far better failure than a misdecoded blob, and it can be surfaced verbatim before anything acts on it."
 
-# WHAT THE THREE CARRIERS ADD UP TO
+# TIME: THE CARRIER THAT COSTS NO PIXELS
+#
+# Flashing a code at a recorder is LITERALLY winking at the camera — a timed blink of light,
+# aimed at a lens, with meaning attached, that everyone in the room can see happen. The gesture
+# the LLOOOOMM fiction gave its consciousness camera turns out to be the cheapest carrier we have
+# (modules/soul-angel/UNIVERSAL-JOBS.yml, the_wink_is_not_a_metaphor_here).
+
+time_is_the_fourth_carrier:
+  what: "A known number of frames of brightness change, in a known rhythm. The value is in the schedule, not in the picture."
+  what_it_is_for: "Objects that must remain in the world and cannot pop a dialog, at zoom levels where no spatial detail survives. Chiefly: an egg saying which of its fixed signals just became true (EGGS.yml, the_wink)."
+  the_trade: "A band costs pixels side by side and is read in one frame. A wink costs one pixel and many frames. Same few bits, opposite budgets, and the reader spends whichever it has — which is why zooming out does not end the conversation, it only slows it down."
+  cheap_to_read: "The recorder already timestamps every frame it keeps (../RECORDER.yml). A rhythm is a diff over frames the ring is holding anyway, needing no decode, no rectification and no model."
+  robust: "Brightness over time is the last signal standing after downscaling, blur, moire and a hand-held phone (MOBILE-CAMERA.yml). It is the bottom rung of the ladder, below kind, at the range where the egg is two pixels."
+  bounded_by_construction:
+    few_bits: "An index into this object's fixed symbol set, plus a frame marker. Never a payload — the specifics still go in words (text_is_the_wide_carrier)."
+    kind_to_watch: "Rates chosen to look like a pulse rather than a strobe, avoiding photosensitive-trigger frequencies, and never faster than the game holds a steady frame."
+    never_silent: "The carrier is the same light the player is looking at, so every transmission is a visible event in the world. There is no version of this channel that whispers."
+
+# WHAT THE FOUR CARRIERS ADD UP TO
 #
 # Not a protocol bolted onto a game — a bus whose alphabet is enumerable on both sides.
 
 the_bus:
-  deterministic: "Out: a closed set of symbols, a closed palette of bands, and text from templates the compile emitted. Back: a declared tree of buttons. Every legal message in either direction is enumerable before the game runs, which is what makes this testable rather than hopeful — the compile can generate the conformance suite for its own channel."
+  deterministic: "Out: a closed set of symbols, a closed palette of bands, a closed set of blink rhythms, and text from templates the compile emitted. Back: a declared tree of buttons. Every legal message in either direction is enumerable before the game runs, which is what makes this testable rather than hopeful — the compile can generate the conformance suite for its own channel."
   two_way: "Out through the screen, back through the controls. Neither direction needs the game to cooperate beyond drawing its own dialogs and honouring its own buttons."
   three_ways_drivable:
     human: "Reads the words, clicks the button. This is just playing the game."
@@ -212,7 +231,7 @@ compiled_from_one_source:
     request_edit: "Hand a captured selection plus a brief to the editing model. The creative verb, and the one with no authority attached."
   what_is_deliberately_absent: "No verb writes a save file, spends money, publishes anything, or launches anything. The channel exists to describe moments, not to reach into the host."
 
-# THREE CARRIERS, DIFFERENT BANDWIDTH
+# FOUR CARRIERS, DIFFERENT BANDWIDTH
 #
 # A symbol is a one-shot burst in a dialog: a fixed token, once. Text is the wide one and
 # carries the specifics in words (text_is_the_wide_carrier). And some things need to be
@@ -221,6 +240,7 @@ compiled_from_one_source:
 
 sprite_codes:
   what: "An in-world object drawn to be recognized: a big, color-coded easter egg whose appearance states its KIND and its STATE, continuously, at a glance."
+  and_it_can_blink: "A sprite that stays in the room can also carry a few bits in time, which is what makes the far end of the zoom ladder two-way instead of merely visible (time_is_the_fourth_carrier)."
   why_not_just_use_qr_for_this:
     persistence: "A QR code lives in a dialog that opens and closes. An egg sits in the room for a week. Continuous presence is the requirement, and a code that must be modal cannot meet it."
     legible_when_small: "A QR code needs enough pixels to decode. A saturated color blob with a distinct silhouette is recognizable at any zoom the game offers, and games are played zoomed out."

@@ -136,6 +136,16 @@ visual_design:
       the_problem: "Bloom and emissive glow wreck colour fidelity, and glare is the worst failure case for a phone camera (MOBILE-CAMERA.yml, off_a_screen_is_harder)."
       the_fix: "Light is never the carrier of band data. And while an egg is being read closely it dims itself — an object that cooperates with its own reader, which is available precisely because we author both ends."
       the_ordering: "Far: is anything lit. Middle: what kind. Near: the bands. Dimmed and closest: the full code. Then the dialog."
+  the_wink:
+    what_it_is: "A blink: the egg brightens for a known number of frames, in a known rhythm, and goes back to its resting state. Light that carries a value in TIME rather than in space."
+    it_is_literally_a_wink: "One eye, one beat, aimed at the camera, meaning attached, and visible to everyone else in the room. That is not an analogy for the gesture — the word already covers this. The fiction's consciousness camera captured winks (modules/soul-angel/UNIVERSAL-JOBS.yml, ubikam); an egg signalling a recorder does the same thing with a lamp and a clock."
+    it_breaks_frame_on_purpose: "A wink is an aside to the audience: the object addresses the one viewer who can read it while the scene continues uninterrupted. Nothing in the simulation has to stop, and no other character has to notice."
+    why_time_is_worth_a_carrier:
+      it_needs_almost_no_area: "A band needs pixels side by side. A blink needs one pixel and a few frames, so a value that will not fit in the art at this zoom fits in the schedule. Space and time trade against each other and the reader can spend whichever it has."
+      the_clock_is_already_frame_accurate: "The recorder timestamps every frame it keeps (../RECORDER.yml). Reading a rhythm costs nothing extra when the ring already knows exactly when each frame arrived."
+      it_survives_the_things_that_kill_detail: "Downscaling, blur, moire and a phone held at arm length all destroy fine spatial structure and leave brightness over time almost untouched (MOBILE-CAMERA.yml, off_a_screen_is_harder)."
+    the_rate_is_bounded: "Slow enough to be pleasant to watch and safe — no photosensitive-trigger frequencies, and never faster than the game's own frame budget can hold steady. A wink is a few bits, deliberately: enough to say which of my fixed signals this is, never enough to smuggle a payload."
+    nothing_transmits_silently: "Every message this channel sends is a visible change in a lit object. The player can always see that the egg said something, and can open it to read what. A covert channel is not merely disallowed here, it is unavailable — the carrier is the same light the player is looking at."
   legible_to_both_readers: "A player learns 'gold cap band means news' in one session, and the reader decodes the same stripes numerically. One artifact, two audiences, which is the property the whole optical channel rests on (OPTICAL-CHANNEL.yml, the_player_reads_it_too)."
   authored_once: "Shape, bands, caps, palettes, states and the DGRP table are emitted by the same compile that emits the menu tree and the verb registry (compiled_from_one_source)."
 

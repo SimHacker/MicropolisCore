@@ -42,7 +42,30 @@ the_semantic_video_recorder:
     ubikam: "A character in the LLOOOOMM corpus, which is FICTION: moollm temp/lloooomm/00-Characters/ubikam/ubikam.yml. 'The consciousness camera. Takes semantic selfies that capture internal state as art.' In the mythology Shneiderman brought it into being by describing it, it captures winks that outlive their moment, and its name crosses Mark Weiser's ubiquitous computing with Philip K. Dick's Ubik."
     what_the_fiction_got_right: "Its SELFIE record is title, short post, long post, internal state, external state, and chosen output format — which is the album card and the correspondent formats, specified in a story before it was specified here (SOUL-ALBUM.yml, publication_surfaces above)."
     the_wink_as_a_trigger: "In the fiction a wink at the camera is a capture command with meaning attached. That is a real interaction worth having: one gesture that says mark this AND says why, rather than a mark the player has to explain later (../../STUDIO.yml, cues)."
+    the_wink_is_not_a_metaphor_here: "An egg flashing its code at the recorder is a wink in every sense the word has. It is a timed blink of light aimed at a lens. It is an aside to the audience — the object breaking frame to address the one viewer who can read it, while the scene carries on. It is consensual and legible: a wink is something you SEE someone do, so the object cannot signal without the player watching it signal. And it is a trigger with meaning attached, which is the fiction's own definition. The optical channel arrived at the gesture from the engineering end (../../EGGS.yml, the_wink; ../../OPTICAL-CHANNEL.yml, time_is_the_fourth_carrier)."
   what_we_do_not_take_from_it: "No sentience, and no claims about interior states. A semantic record says what was on screen, what changed, and who did it. What a character felt is only in the record if that character's own files say so, and it is attributed to them."
+
+# DREAMS AND READINGS
+#
+# The factual record is the floor, not the ceiling. What a night meant, what the recurring
+# image was about, what the family is actually doing to each other — that is the fun, and a
+# model is good at it. The order of play is what keeps it fun instead of insulting.
+
+the_interpretive_layer:
+  what_it_is: "A second ply over the record: dreams, readings, symbolism, what-it-meant, the sense a stretch of footage makes when someone tells it as a story. Speculative by definition and marked as such."
+  the_player_dreams_first:
+    the_rule: "Every interpretive field is offered to the human before it is offered to a model. Blank, with the footage, with room to write. The model only ever gets a turn after the player has had one, or has explicitly passed."
+    why_it_is_not_only_manners: "A first reading is unrecoverable data. Show someone a machine's interpretation and you have overwritten the one they were going to have — anchoring is not a bias you can ask them to ignore. Whatever they write unprompted is the most interesting sentence in the file, and it exists only if nothing spoke ahead of it."
+    passing_is_a_real_answer: "'You dream this one' is a supported choice, recorded as a choice, and reversible later. Never a default, and never the fast path."
+  everything_generated_is_a_draft:
+    editable_in_place: "Any generated line opens as text a player can rewrite, cut, or replace wholesale. There is no interpretive field a person can only accept or reject."
+    edited_means_theirs: "Touch a generated line and the byline changes: the player is the author, the model is credited as a draft source. Untouched, it stays the model's, said so on the card."
+    deletable_without_a_trace_in_the_record: "Dropping a reading removes it. The factual segment underneath is unaffected, because it never depended on it."
+  it_never_mixes_with_the_record:
+    separate_ply: "Readings live in their own layer with their own provenance, not folded into the segment's fields. A query can ask for the record with no interpretation in it and get exactly that."
+    visibly_different: "Speculation is styled as speculation on album cards and in the timeline. A reader should never have to check a field to tell whether a sentence is a claim about pixels or a claim about meaning."
+  dreams_as_a_beat: "A character can hold the night beat: her own dreams, in her voice, as album cards. Which is the one place first-person interior content is legitimate — it is authored by whoever owns that soul, human or model, and attributed to them (soul_domain, SOUL-ALBUM.yml)."
+  the_literary_warrant: "Perky Pat and A Scanner Darkly are already the reference frame for a character watching her own household (moollm designs/sims/sims-pkd-perky-pat-and-a-scanner-darkly.md). Dick's own warning is the same as the rule above: the danger arrives when the interpretation stops being marked as one."
 
 the_job_model:
   what_a_job_is: "A standing brief attached to a character: a beat, a voice, an output kind, and a scope. Not a script, not a schedule — a description of what this correspondent is interested in and what she produces."
@@ -66,12 +89,6 @@ catalogue:
   architecture_critic: "The built environment — a beat that works in a city sim with no people in it at all."
   archivist: "No voice, no story. Keeps the record complete, indexed and findable, which is the least glamorous job here and the one that makes the others possible later."
   biographer: "One subject, long arc, across sessions and across games."
-  household_diarist:
-    what: "The character's own home is the beat. She takes the job in this layer rather than in another game, so her body leaves and her attention stays — she spends the day watching her own family on screen and comes back with a journal."
-    why_it_is_the_strangest_and_best_one: "It needs no bridge, no destination and no cooperation, and it turns an absence into a point of view. The egg sits at the door she left from (../../EGGS.yml) and the journal comes home as a souvenir."
-    the_novel_about_it: "A Scanner Darkly, where an agent is assigned to surveil the house he lives in, files reports under a name his superiors cannot connect to him, and stops being able to connect it either. The two halves came apart because the credit did (moollm designs/sims/sims-pkd-perky-pat-and-a-scanner-darkly.md)."
-    therefore_the_rule: "Both minds publish under one soul's name into one album, and the journal states who wrote it and about whom. An unattributed observing mind is not a feature we ship."
-    the_consent_line: "Your own household is a diary. Someone else's is surveillance and needs their grant — same rule as recording real players (consent, below)."
 
 the_byline:
   mechanism: "Every capture carries a credit. Events credited to one correspondent correlate into that correspondent's story, album, or column."
