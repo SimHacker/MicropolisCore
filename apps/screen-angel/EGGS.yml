@@ -273,3 +273,16 @@ the_egg_is_its_own_file:
     the_chain_of_custody: "Who minted it, who held it, who hatched it — appended, never rewritten. A regifted egg carries its whole history, which is the interesting part of a souvenir (moollm skills/soul-city/SOUVENIRS.md)."
     what_never_travels: "Only what the soul owns. An egg carries its own declared payload and its credits, not the household around it, and not a scrap of anyone who did not agree to be in it (soul_domain, ../modules/soul-angel/ARCHITECTURE.yml)."
   the_file_and_the_screen_are_the_same_object: "The optical carriers exist for the case where a file cannot cross — a closed game, a stream, a photograph of someone else's monitor (OPTICAL-CHANNEL.yml). When both ends can touch a filesystem, the .iff is the lossless path and the bands are just its portrait. One artifact, two routes, and neither is the fallback for the other."
+
+# TODO — THE EGG MATRIX
+#
+# Not designed, just claimed. Multi-tile eggs tiled into a grid, running a rule, on a dance floor.
+
+matrix_eggs:
+  todo: true
+  the_idea: "Lay eggs out in a grid instead of stacking bands up one body. Each tile is a blip, so the payload scales with AREA rather than with height — a 2D code that lives in the room permanently, needs no dialog, and can be as large as the floor."
+  it_is_already_a_dance_floor: "The Sims shipped multi-tile floors whose tiles light in patterns. A grid of eggs lighting in patterns IS that object, so the choreography and the payload are the same pixels: the players see a party, the reader sees frames."
+  cellular_automata: "Tiles with a local rule and neighbours are a CA, and a CA display is the cheapest possible animation — no authored frames, just a rule and a seed. Which is Don's own territory twice over: CAM6 (github.com/SimHacker/CAM6) and the Micropolis simulation itself."
+  the_bit_worth_keeping: "A CA is decoration that is also state, evolving from a seed that fits in a few bytes. Store the seed and the whole dance is recoverable (documentation/designs/generative-history-and-proposals.md)."
+  open_questions: "How a grid stays readable at game zooms, whether frames or a still carry the value, master/slave tile arrangement for multi-tile objects, and whether any of this is legible enough to be a channel or is simply beautiful. Unresolved and cheerfully so."
+
