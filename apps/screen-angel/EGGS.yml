@@ -112,6 +112,18 @@ visual_design:
     the_payoff: "Combinatorial appearance without combinatorial art. A hundred distinct eggs are a hundred DGRP selections over the same dozen sprites, not a hundred drawings."
     palettes: "Band color comes from PALT selection where the game allows it, which moves color out of the pixels and into data — the same reason the original content pipeline did it that way."
     state_changes: "Kind, state and 'has news' are ordinary object graphic-state changes. The game already switches an object's appearance when its state changes; an egg is just an object that does it meaningfully."
+  zoom_is_the_resolution_dial:
+    the_shape: "Zoomed all the way out the egg says one thing — I am an egg, over here — plus the first band or two. Zoom in and more bands appear. All the way in is the full-resolution egg with the whole stack. Detail on demand, where the demand is the camera."
+    big_endian:
+      the_rule: "Most significant first, top down. Kind, then version, then identity, then magnitude, then the fine parameters."
+      why_it_is_the_whole_trick: "A truncated read is a valid PREFIX, not a corrupt code. What the far zoom shows is exactly what the near zoom shows first, so nothing has to be re-read when the camera moves in and nothing is wrong when it does not. Same property as an address prefix or an interlaced image: you always have a correct coarse answer and the refinement is additive."
+      the_check_travels_with_each_group: "Every group that can legally be the last visible one ends with its own check band. Otherwise a single trailing check digit would make every partial read unverifiable, which is the failure mode that turns progressive disclosure into guessing."
+    authored_not_merely_downsampled:
+      what: "The far-zoom art draws FEWER bands, taller. It is not the near-zoom art scaled down until the stripes alias into mud."
+      why: "The game already ships a separate sprite per zoom (DGRP), so choosing what a zoom level says costs nothing extra and is decided by the author instead of by resampling. Legibility at the smallest zoom becomes a drawing decision, which is the kind of problem that gets solved."
+      the_reader_knows_which_rung_it_is_on: "Band height relative to the caps says which zoom variant is on screen, so a two-band read is reported as 'complete for this zoom' rather than as a failed six-band read. Absent bands are absent, not unresolved."
+    presence_beats_payload: "At the farthest zoom the only guaranteed message is that an egg exists here and roughly what kind. That is also the most valuable message, because it is the one that makes the player look — and looking is what moves the camera in."
+    all_the_way_in: "Full stack, and the About item for everything the stack does not carry (OPTICAL-CHANNEL.yml, the_about_item)."
   legible_to_both_readers: "A player learns 'gold cap band means news' in one session, and the reader decodes the same stripes numerically. One artifact, two audiences, which is the property the whole optical channel rests on (OPTICAL-CHANNEL.yml, the_player_reads_it_too)."
   authored_once: "Shape, bands, caps, palettes, states and the DGRP table are emitted by the same compile that emits the menu tree and the verb registry (compiled_from_one_source)."
 

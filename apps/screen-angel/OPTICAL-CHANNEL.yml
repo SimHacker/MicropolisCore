@@ -190,12 +190,15 @@ band_codes:
     symbols: "One band is one digit, resistor-style: a palette of ten to twelve maximally separated colors, chosen against the game's actual rendered output rather than against theory."
     frame: "Fixed sentinel bands top and bottom, like the guard bars on a barcode. They mark where the code starts, which way is up, and how tall a band is at this zoom."
     payload: "Version, type, then value bands. Four value bands over ten colors is ten thousand distinct messages; six over twelve is about twenty-one bits, which is plenty for a type plus an id plus a magnitude."
-    check_digit: "One band is a mod-10 check over the others. Cheap to compute, cheap to verify, and it turns the whole failure class of 'misread one color' into a discarded read instead of a wrong action."
+    order_is_big_endian: "Most significant band first, so the code degrades by truncation rather than by corruption. Kind, version, identity, magnitude, fine parameters — in that order, always (EGGS.yml, zoom_is_the_resolution_dial)."
+    check_digit: "One band is a mod-10 check over the others. Cheap to compute, cheap to verify, and it turns the whole failure class of 'misread one color' into a discarded read instead of a wrong action. One per disclosure group, not one at the end, so that every legal partial read is checkable."
   the_calibration_band:
     the_problem: "Games light their sprites. Night, indoor lamps, room tinting, and disaster effects all shift hue and brightness, so a band's rendered color is not the color the artist authored."
     the_fix: "Include a known reference swatch — white plus mid-gray — in every code. Read the shift off the reference, apply the inverse to the value bands. A color checker chart, built into the object."
     why_it_matters: "Without it the palette has to be robust against every lighting state in the game. With it, the palette only has to be robust against the lighting state in that frame, which is a far easier problem."
-  zoom_and_rotation: "The game renders objects at fixed zooms and four rotations, so the composition is authored to read at all of them — bands wide enough to survive the smallest zoom, and either rotationally symmetric or shipped as four consistent variants."
+  zoom_and_rotation:
+    rotation_is_solved_by_the_shape: "The egg is a solid of revolution, so there is one variant per zoom instead of four per zoom. Rotation is not a case to handle (EGGS.yml, rotationally_invariant)."
+    zoom_is_not_a_problem_to_survive_but_the_dial_itself: "Rather than authoring one code that reads at the smallest zoom, each zoom draws a big-endian prefix of the stack: far out is a couple of tall bands, all the way in is the full code. The reader gets a correct coarse answer at every distance instead of an all-or-nothing decode at one distance."
   the_tradeoff_that_makes_it_worth_having:
     not_followable: "There is no URL in it, so a curious stranger cannot dereference it. A band code is a colorful object, and that is all it is to anyone without our decoder."
     therefore_use_it_for: "Machine data that has no business being a public link: pending call ids, outcome codes, state, magnitudes."
@@ -208,6 +211,11 @@ band_codes:
 
 the_about_item:
   the_convention: "Every egg has an About interaction, and it is always the NORTH item on the pie menu. It opens a dialog with the full payload as a QR code, the same payload in readable text, and a link to the live page."
+  the_dialog_also_branches:
+    what: "Below the QR and the text, the egg's own menu tree rendered as buttons — the same nested outcomes the pie menu offers, one level shown at a time, with the parent path visible above."
+    why_both: "The pie menu is faster for anyone who knows the tree; buttons are readable for anyone who does not, keyboard reachable, screen-reader reachable, and the same target whether a hand or an agent picks it. Two renderings, one tree, one compile (EGGS.yml, the_menu_is_the_return_type)."
+    where_hatch_lives: "The commit item is a button like any other, positioned so it cannot be reached by accident, and labelled with what it will do rather than with the word HATCH alone."
+    the_dialog_is_the_top_of_the_zoom_ladder: "Sprite says an egg is here, bands say a little about it, this dialog says everything and offers every branch. The camera walks the first two rungs; a click reaches this one."
   why_north: "Cardinal directions are the fastest and most memorable pie targets, and north is the one anybody can hit without reading the menu. A fixed slot is a protocol: the layer flicks north on an unknown egg and does not need to have been told anything about it first."
   what_it_buys:
     the_graphics_stop_carrying_bits: "If the full payload is one click away, the sprite only has to say 'egg, this kind, has news' and the bands only have to carry what is worth showing continuously. Encoding pressure drops off the art entirely."
@@ -225,9 +233,10 @@ the_about_item:
 levels:
   sprite: "GLANCE. It exists, it is this kind, it has news. Continuous, free, legible at any zoom, readable by the player in the same look."
   band_code: "CARD. Small live values, checked — type, id, magnitude — for what is worth showing without a click."
-  about_dialog: "SKILL. The full payload, on demand: QR for us, text for the player, version for negotiation."
+  about_dialog: "SKILL. The full payload, on demand: QR for us, text for the player, version for negotiation, and the branch buttons for acting."
   web_page: "README. Everything else, for whoever followed the link, with no size limit at all (dereferenceable)."
   rule: "Read no lower level than the question requires, and never encode at one level what the level below it can answer."
+  the_first_two_rungs_are_a_continuum: "Sprite and band code are not two discrete steps but one stack read to a depth set by the camera, big-endian so every depth is correct (EGGS.yml, zoom_is_the_resolution_dial). Shneiderman's mantra with a zoom control wired to it: overview first, zoom and filter, details on demand."
 
 # THE PART THAT HAS TO BE RECONCILED
 #
