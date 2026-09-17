@@ -171,6 +171,23 @@ The missing dimension was designed and then dropped. Producer Sam Nelson on the 
 
 ---
 
+### Creatures (CyberLife / Mindscape, 1996) — 🥚 the PRIOR ART {#creatures}
+
+*Steve Grand's norns: genomes, neural-net brains, biochemistry — and **an export file**. Creatures shipped character transmigration in 1996 and the players built the marketplace around it, which makes this the closest thing to prior art the entire Bifrost has. Everything in [SOUL-BRIDGES.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md) has a 1996 counterpart here, including the failure modes.*
+
+> **What it got right before us, and what it lacked.** `File > Export` writes a creature to a `.exp` file and **removes it from your world**; import restores it identically and *"usually the game then tries to delete the file, simulating a move rather than copy"* — which is `drain` and `squirt` with conservation enforced by the game, along with the hole players found inside a year (make the file read-only and a move becomes a copy). Import is blocked when the population is over eight, **greyed out in the menu, with recently deceased creatures still counting against the cap** — a destination-side capacity constraint, which is why a bridge asks *can you take her* before *will you*. And breeders kept backups against **import shock**, so the named failure mode of transmigration has been in the wild for thirty years. Creatures 1 could not export a *pregnant* norn until the 1.0.2 patch: dependent state at the border, decided by patch. Sources: [Export](https://creatures.wiki/Export), [Import](https://www.creatures.wiki/Import), and CyberLife's own [adoption agency](http://www.creaturesvillage.com/creatures1/com_centre/cc_adoption.htm) (2000). **What it did not have is a second game to send them to** — every `.exp` file went from one copy of Creatures to another. The bridge existed; the federation did not.
+
+| Aspect | Notes |
+|---|---|
+| Spiritual fit | **10/10.** A creature with a genome, a brain, a life, and a portable file, plus a player culture of adoption, breeding and gene-pool trading that ran for years. Jenn Frank wrote *Playing God: On Death, Motherhood and Creatures* after finding a childhood stash of exported norns on old floppies — souls on a shelf, waiting, which is this project's premise arrived at by accident. |
+| Where the state lives | **A `.exp` file the player already owns and already knows how to trade.** Genome plus brain and body state, one creature per file, designed for exactly this. No reverse engineering of a monolithic neighbourhood save, no hunting for a byte offset: the game's own authors made the unit of exchange a single creature. |
+| Technical fit | **8/10 — the best pre-2000 target after LCP, and easier.** [openc2e](https://github.com/openc2e/openc2e) is an open-source reimplementation of the engine, the community documented the formats and the CAOS scripting language, and the titles are sold on GOG. Bridge = read `.exp`, map genome and drives onto the soul shape, write back. |
+| What the bridge ships | Norn → soul, and soul → norn. The drives and the biochemistry map onto motives more directly than most modern games manage, and the genome is a personality substrate with no equivalent anywhere else in the Federation. Export direction is genuinely useful: a Sim who visits as a norn comes back with a genome she did not have. |
+| Caveats | Nominative use, operate on files the user owns, no game data vendored. Honour the destination cap rather than routing around it — a bridge that ignores a game's own population limit is not respecting the game, and the eight-creature ceiling is a design decision, not a bug to defeat. |
+| Why it matters | It is the counterexample to the claim that cross-game character portability is unproven. It was proven in 1996, by players, with floppies and web forms. What it lacked was somewhere else to go — which is the only thing this project actually adds. See [The Sims 0](https://github.com/SimHacker/moollm/blob/main/designs/sims/sims-0-the-missing-game.md#creatures-shipped-the-soul-bridge-in-1996). |
+
+---
+
 ## Tier 2 — strong fits (🟢🟢)
 
 Excellent additions to the Federation; ship after Tier 1 is mature, or in parallel if engineering bandwidth allows.
@@ -212,7 +229,7 @@ Excellent additions to the Federation; ship after Tier 1 is mature, or in parall
 | **Petz — Dogz / Catz** (PF Magic 1995→; later Mindscape / Ubisoft) | **The most lineage-apt** — proto-Sims virtual creatures with real behavior; Petz designer Andrew Stern later made *Façade*. Active community tooling for `.pet` files (PetzA, the "hexing" scene). Spiritual sibling to the Sims. **Top pet-bridge candidate.** |
 | **Stardew Valley** / **RimWorld** | Already Tier-1 peers — both carry **animals** (Stardew dog/cat/horse + farm animals; RimWorld tameable colonist-bonded animals). A Sims cat retiring to a Stardew farm rides the existing bridge. |
 | **Nintendogs (+ Cats)** (Nintendo DS/3DS) | The iconic dog/cat game — but **Nintendo-locked** proprietary saves (same caveat as Animal Crossing / Pokémon: user-exported only, high barrier). Aspirational, not near-term. |
-| **Creatures** (Norns; Cyberlife/Steve Grand 1996) | Alife-adjacent (not dogs/cats) but the creature-AI lineage; the open-source **openc2e** engine reimplementation exists. Watch-list. |
+| **Creatures** (Norns; Cyberlife/Steve Grand 1996) | **Promoted out of this table — see [Tier 1: Creatures, the prior art](#creatures).** It shipped creature export/import between players in 1996, which makes it prior art for the whole Bifrost rather than a pet bridge. |
 | **The Sims' own pet packs** | The native home for Sims dogs/cats; the bridge's job is moving them OUT (to Petz/Stardew) and other animals IN. |
 
 ### Cities: Skylines / Cities: Skylines II (Colossal Order / Paradox, 2015 / 2023)

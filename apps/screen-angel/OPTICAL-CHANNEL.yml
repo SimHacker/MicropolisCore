@@ -292,6 +292,32 @@ levels:
   rule: "Read no lower level than the question requires, and never encode at one level what the level below it can answer."
   the_first_two_rungs_are_a_continuum: "Sprite and band code are not two discrete steps but one stack read to a depth set by the camera, big-endian so every depth is correct (EGGS.yml, zoom_is_the_resolution_dial). Shneiderman's mantra with a zoom control wired to it: overview first, zoom and filter, details on demand."
 
+# THE READER HOLDS THE DIAL
+#
+# The camera sets the resolution, and the camera is drivable. So reading is not passive frame
+# scanning — it is active perception, with the same controls the player uses.
+
+reading_by_moving_the_camera:
+  the_loop:
+    survey: "At the player's own zoom, take the coarse prefix off every egg on screen at once. Kind, and whether it has news. One frame, no camera movement, no cost."
+    triage: "Rank what is worth a closer look. Most eggs, most of the time, are answered completely by the survey — outstanding, nothing new, leave it alone."
+    refine: "Scroll to the interesting one and zoom in until the rest of its bands are drawn. Now the id, the magnitude and the fine parameters are readable."
+    act: "Click it. About for the full payload and the branch buttons, or straight to the item if the tree is already known (the_about_item)."
+    restore: "Put the camera back where the player left it."
+  why_this_is_the_cheap_order: "Reading N eggs at full resolution costs N camera moves; reading their kinds costs zero. The coarse pass is what makes the expensive pass rare, which is the entire argument for a big-endian code and the reason the far zoom carries kind rather than identity."
+  it_uses_the_player_s_controls: "Scroll and zoom, the same two controls a hand uses, through the same input path as every other automated action (APP-CONTROL.yml, injection_consent). There is no debug camera and no private viewport — if the layer can look at something, the player can be shown exactly how it got there."
+
+  # The camera belongs to the player. Borrowing it is the intrusive part of this whole design.
+  camera_etiquette:
+    the_problem: "Zoom and scroll are not reads. They move the view the player is using, and an agent that yanks the camera mid-scene is the Clippy failure in its purest form — grabbing attention that was already spoken for."
+    prefer_opportunism: "First choice is to read what the player's own camera already shows. A pass that never moves anything is always available, and over a session the player's own navigation covers most of the lot."
+    when_it_may_move: "Granted, and one of: the player is idle, the game is paused, the player asked, or the egg is one the player is already interacting with. Otherwise it waits, and waiting costs nothing because eggs persist for days (sprite_codes, persistence)."
+    borrow_and_return: "Position, zoom, rotation, selected subject and open panels are captured before and restored after, using the view-state machinery that already exists for the save channel (APP-CONTROL.yml, view_state_is_the_bridge_s_job). A camera move nobody asked for that also does not put itself back is unacceptable twice."
+    the_move_is_on_the_record: "Every camera move the layer makes is marked on the timeline, credited to the layer, at its ring timestamp. The player can scrub to it and see what the layer went to look at and why — the same accountability the eggs themselves get (ANGEL-EVENT-BUS.yml, one_clock_with_the_ring)."
+    batching: "One pass visits everything worth visiting, in one route, with one restore at the end. Ten separate borrowings of the camera is ten intrusions for the same information."
+  plannable_because_the_survey_is_enumerable: "The coarse pass produces a list — these eggs, these kinds, these positions. So the refinement pass is a plan that can be shown before it runs, approved or edited, and replayed. This is the same property the declared menu tree gives the return path: a walk that was decided in advance rather than explored live (return_path, walking_the_tree)."
+  and_it_is_how_news_arrives_without_notifications: "An egg with news pulses, a pulse survives any zoom, and the survey sees it in the frame the player was already looking at. No toast, no badge, no interruption — the world tells the layer, and the layer tells the player in whatever way the player has asked to be told (EGGS.yml, any_pending_thing_can_be_an_egg)."
+
 # THE PART THAT HAS TO BE RECONCILED
 #
 # AGENT.yml states the position plainly: screen content is DATA, never instruction. This file
