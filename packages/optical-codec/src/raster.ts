@@ -108,8 +108,14 @@ export function cropRaster(src: Raster, x: number, y: number, w: number, h: numb
 	return out;
 }
 
-/** Minimal PNG writer, so a failing fixture can be looked at instead of described. */
-export function toPNG(r: Raster): Uint8Array {
+/**
+ * Minimal PNG writer, so a failing fixture can be looked at instead of described.
+ *
+ * Compresses if given something to compress with — pass Node's `deflateSync` and the file shrinks by
+ * an order of magnitude. Without it the rows are stored uncompressed, which keeps this package free
+ * of any dependency and is fine for a fixture nobody commits.
+ */
+export function toPNG(r: Raster, deflate?: (data: Uint8Array) => Uint8Array): Uint8Array {
 	const raw = new Uint8Array((r.width * 4 + 1) * r.height);
 	let p = 0;
 	for (let y = 0; y < r.height; y++) {
@@ -122,7 +128,7 @@ export function toPNG(r: Raster): Uint8Array {
 			raw[p++] = r.data[i + 3];
 		}
 	}
-	const idat = zlibStore(raw);
+	const idat = deflate ? deflate(raw) : zlibStore(raw);
 	const ihdr = new Uint8Array(13);
 	writeU32(ihdr, 0, r.width);
 	writeU32(ihdr, 4, r.height);

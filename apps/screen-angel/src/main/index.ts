@@ -77,7 +77,7 @@ async function start(): Promise<void> {
 		const info = backend.getBackendInfo();
 		console.log(`[main] backend: ${info.name}`);
 
-		host = new ModuleHost(backend);
+		host = new ModuleHost(backend, requireCapture());
 		await host.load(builtInModules());
 		host.start();
 

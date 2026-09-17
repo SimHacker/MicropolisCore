@@ -1,0 +1,55 @@
+# FONT-RECOGNITION.yml — reading The Sims 1 interface by matching the font it draws with
+#
+# Companions: ../../../RECOGNIZER.yml (the reader stack) · ../../../OPTICAL-CHANNEL.yml (codes, of
+# which text is the widest) · src/text/ (the code) · assets/ (the font)
+
+status:
+  built: [font_compiler, matcher, panel_finder, analysis_layer, tests]
+  not_built: [title_font, resolution_independent_panel_finder, tooltip_and_dialog_regions, live_polling]
+  provenance: "Font atlas and metrics from Don Hopkins' Simplifier, 2004 (TheSims/SimsKit/Simplifier)"
+
+the_claim_this_settles:
+  what_the_specs_kept_saying: "That text is the widest carrier on the screen and the easiest thing on it to read. That was an assertion until now."
+  what_is_true_now: "The Sims 1 interface font reads at 100% ink match on a frame we generated with the same patterns, and a misaligned read collapses to under 90% rather than degrading into plausible text. It is the only carrier in the whole optical channel that is finished."
+
+it_is_not_ocr:
+  the_difference: "OCR guesses at letters drawn by an unknown font at an unknown size, and pays for that generality everywhere. This has the exact bitmap the game draws with, so a character is not recognised but CONFIRMED — sample the pixels that should have ink, check their colours, take the highest-scoring glyph."
+  what_it_costs: "A few hundred integer comparisons per character. No model, no training, no network, and the same answer every time."
+  what_it_requires: "Native scale, integer pixel positions, and the font the patterns came from. Outside those conditions nothing here works at all, which is a feature — see the_honest_failure below."
+  and_therefore: "No vision model belongs in this path. A model asked to read text we already have the bitmap for would paper over exactly the misalignment the confidence number exists to expose (RECOGNIZER.yml, no_model_in_the_loop)."
+
+where_the_data_came_from:
+  the_original: "Simplifier, 2004 — an accessibility experiment that read The Sims 1 interface off the screen and spoke it through SAPI, because the game exposes nothing to the accessibility tree and a screen reader had nothing to work with."
+  what_was_copied: "res/Font.bmp, the 252x112 atlas sampled from the game, and the gFontX / gFontY / gFontW tables — the position and advance width of every printable character, measured by hand with a screenshot and a magnifier."
+  why_copy_rather_than_re_derive: "The measuring is the work. The bitmap is one file; the numbers next to it are a week nobody has to spend twice."
+  what_was_left_behind: "MFC, the COM voice, the window plumbing, and the input injection. This layer reads and returns; nothing in it clicks anything."
+  the_scoring_is_his: "Ink on pure black scores -10, ink within the colour fuzz scores +1, ink outside it scores -2, and a candidate dies below -2. Tuned against a real screen in 2004 and kept unchanged, including the part that looks like a hack: the black penalty is what stops a tooltip's dark border from being read as letters."
+
+the_one_change_from_2004:
+  what: "A glyph must now account for at least 80% of its own ink to be believed, not merely score above -1."
+  why: "The original relied on a black background to kill wrong guesses: a wrong glyph put some ink on the background, and background-is-black scored -10. On the panel's dark blue that protection is gone. A three-pixel hyphen matched two pixels of a four's crossbar, won the position, and ate the digit — 'Comfort 4' read as 'Comfort-'. Requiring most of a glyph's ink closes it at no cost."
+  how_it_was_found: "By rendering the same string on both backgrounds and diffing the reads. Which is the argument for having the renderer at all."
+
+the_honest_failure:
+  the_rule: "Report nothing rather than something wrong."
+  how: "A correct read of this font scores 1.0, because the patterns are the pixels. Below 0.9 the matcher is sampling the wrong rows and assembling letters out of noise, so the analysis layer returns null with a sentence explaining which check failed."
+  the_wrong_resolution_case: "Checked before reading, not after: the panel coordinates were measured at 800x600, so a frame of any other size is refused by size rather than read and reported at low confidence."
+  why_this_matters_more_than_accuracy: "Everything above this layer — a job, an Angel, a narrated recording — would act on invented text without knowing. A refusal is recoverable; a confident misread is not."
+
+the_layers:
+  assets_simplifier_font_bmp: "The original 2004 atlas, unmodified. Kept because a compiled file nobody can regenerate is a binary blob with extra steps."
+  tools_compile_font: "BMP plus metrics to ui-font.json — for each glyph, the pixels that have ink and the colour each should be. Also writes a PNG of the atlas so a human can see what the machine matches against. 94 glyphs, 1707 ink pixels, 18 per glyph."
+  packages_optical_codec_bitmap_font: "The generic matcher: readLine, readBlock, drawText, measureText. Knows nothing about The Sims — it takes a font and a raster."
+  src_text_panel: "The Sims-specific geometry. Corner colours at fixed columns, a single upward scan for the top edge because only the top edge moves, then the description block at its measured offset."
+  src_text_analysis: "What the driver offers upward: one frame, one answer, or a reason. Pull, not push — nothing here starts a timer, because the caller is the one that knows whether anything is happening (RECOGNIZER.yml, when_to_look)."
+  the_bridge: "On attach it reports both halves: how empty the accessibility tree is, and what it read off the pixels anyway. The pairing IS the architecture argument, made by the machine on every attach instead of in a document."
+
+how_it_is_tested_without_the_game:
+  the_trick: "The font data came out of the game, so drawing with it produces the pixels the game produces. Render a string, read it back, and any disagreement is a bug in one of our two halves rather than a question about a screenshot."
+  what_that_covers: "Every printable character, inferred spaces, colour drift, additive noise, the panel corner signature, line wrapping, and the deliberate off-by-one-row misread that proves the confidence number reacts."
+  what_it_cannot_cover: "Whether the corner colours still identify the panel in the Legacy re-release, and whether the title font — a second, larger face the 2004 code skipped — is where it used to be. Both need one real frame, and neither blocks the rest."
+
+what_is_worth_building_next:
+  the_title_font: "The original skipped it with a comment: 'Skip over the title. Handle that bigger font later.' Twenty-two years later it is still later. The atlas has rows below the ASCII range with no metrics attached, which is where it may already be."
+  find_the_panel_by_its_art: "Template-match a piece of the panel frame instead of sampling four corners at fixed columns. That is what makes any window size work, and it is the difference between a demo and a tool."
+  the_other_regions: "Tooltips, the dialog box the 2004 code already knew how to dismiss, the Simoleon counter, the queue. Each is a rectangle and a font; the machinery is done."

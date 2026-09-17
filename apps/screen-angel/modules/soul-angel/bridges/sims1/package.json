@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "The Sims 1 Soul Bridge and Transmogrifier tools — soul-angel's first bridge, and the beachhead for everything above it.",
+  "description": "The Sims 1 Soul Bridge and Transmogrifier tools \u2014 soul-angel's first bridge, and the beachhead for everything above it.",
   "license": "SEE LICENSE IN ../../../../LICENSE.md",
   "author": "Don Hopkins",
   "main": "src/index.ts",
@@ -11,6 +11,17 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@micropolis/optical-codec": "workspace:*",
     "@micropolis/sims-io": "workspace:*"
+  },
+  "scripts": {
+    "font": "tsx tools/compile-font.ts",
+    "test": "vitest run",
+    "fixture": "tsx tools/render-panel-fixture.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "vitest": "^2.1.9",
+    "typescript": "^5.7"
   }
 }

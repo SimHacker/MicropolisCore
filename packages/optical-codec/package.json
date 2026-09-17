@@ -13,6 +13,10 @@
     "./node": {
       "types": "./dist/node/wasm.d.ts",
       "import": "./dist/node/wasm.js"
+    },
+    "./node/png": {
+      "types": "./dist/node/png.d.ts",
+      "import": "./dist/node/png.js"
     }
   },
   "engines": {

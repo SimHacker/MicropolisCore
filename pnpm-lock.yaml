@@ -162,9 +162,22 @@ importers:
 
   apps/screen-angel/modules/soul-angel/bridges/sims1:
     dependencies:
+      '@micropolis/optical-codec':
+        specifier: workspace:*
+        version: link:../../../../../../packages/optical-codec
       '@micropolis/sims-io':
         specifier: workspace:*
         version: link:../../../../../../packages/sims-io
+    devDependencies:
+      tsx:
+        specifier: ^4.19.2
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@25.6.0)(lightningcss@1.33.0)
 
   apps/vitamoospace:
     dependencies:

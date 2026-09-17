@@ -103,7 +103,7 @@ text_is_the_wide_carrier:
     dialog_description: "The long one. Unbounded, and where the parameters land — names, amounts, durations, outcomes, a whole paragraph if the moment deserves it."
     button_labels: "The branch vocabulary, and the return path. What can happen next is spelled out in the words on the buttons."
   read_and_clicked_not_guessed:
-    reading: "Text on screen is the easiest thing on it to read — accessibility tree where the app exposes one, OCR where it does not, and OCR on our own shipped fonts at known sizes rather than text in the wild (ACCESSIBLIFY.yml)."
+    reading: "Text on screen is the easiest thing on it to read — accessibility tree where the app exposes one, and where it does not, matching the application's own font bitmap rather than OCR. Built for The Sims 1 and reading at 100% ink match (modules/soul-angel/bridges/sims1/FONT-RECOGNITION.yml). Having the exact glyph patterns turns recognition into confirmation, which is why this is the finished carrier while the rest are specifications."
     clicking: "A button is the easiest thing on screen to hit, and hitting it is what a person does too. No private control path (EGGS.yml, either_hand_drives_it)."
   and_it_is_the_same_text_the_player_reads: "Nothing is added to the interface for the machine's benefit. The dialog a player reads and the message the layer parses are one artifact, which is the property that keeps the whole channel honest and the reason it stays legible when it breaks."
   the_division_of_labour:

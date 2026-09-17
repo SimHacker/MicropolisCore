@@ -10,10 +10,16 @@
 
 import { EventEmitter } from 'node:events';
 
+import { decodePNG } from '@micropolis/optical-codec/node/png';
+
 import type { ModuleDescription } from '@common/ipc';
 import type { WindowInfo } from '@common/types';
 
 import type { ScreenAngelBackend } from '../backends';
+import type { CaptureService } from '../capture/service';
+import type { GrabTarget } from '@common/protocol';
+import type { Raster } from '@micropolis/optical-codec';
+
 import {
 	matchesWindow,
 	type AngelServices,
@@ -37,7 +43,10 @@ export class ModuleHost extends EventEmitter {
 	private lastWindowKey = '';
 	private activeBridge: { bridge: Bridge; module: ScreenAngelModule } | null = null;
 
-	constructor(private readonly backend: ScreenAngelBackend) {
+	constructor(
+		private readonly backend: ScreenAngelBackend,
+		private readonly capture: CaptureService
+	) {
 		super();
 		this.services = {
 			getPermissions: () => backend.getPermissions(),
@@ -45,8 +54,29 @@ export class ModuleHost extends EventEmitter {
 			dumpTree: (options) => backend.dumpTree(options),
 			elementAt: (x, y) => backend.elementAt(x, y),
 			getFocusedWindow: () => backend.getFocusedWindow(),
-			getOpenWindows: () => backend.getOpenWindows()
+			getOpenWindows: () => backend.getOpenWindows(),
+			grabFrame: (target) => this.grabFrame(target)
 		};
+	}
+
+	/**
+	 * A frame as pixels, for the bridges that have to read the interface rather than query it.
+	 *
+	 * PNG and 'full' size, then decoded here: lossless because a font matcher compares colours
+	 * exactly, and unscaled because it compares them at fixed offsets. The image is released
+	 * immediately — a bridge polling a panel would otherwise fill the capture cache with frames
+	 * nobody is going to look at twice.
+	 */
+	private async grabFrame(target: GrabTarget = { window: 'focused' }): Promise<Raster> {
+		const grabbed = await this.capture.grab({ target, format: 'png', size: 'full' }, ['file']);
+		try {
+			const { data } = await this.capture.fetchBytes(grabbed.id);
+			return decodePNG(new Uint8Array(data));
+		} finally {
+			await this.capture.release(grabbed.id).catch(() => {
+				// The reaper will get it. A failed cleanup is not worth failing a read over.
+			});
+		}
 	}
 
 	public async load(modules: ScreenAngelModule[]): Promise<void> {

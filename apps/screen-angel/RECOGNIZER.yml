@@ -51,7 +51,7 @@ egg_reading:
     two_lock_the_caps: "Find the white-over-black adjacency. It gives the axis, the scale, the extent of the stack, and a black and a white sample for normalisation, all from the same feature."
     three_sample_the_bands: "Walk the axis, sample each band's centre, normalise against the cap samples so a sunset or a fire does not turn orange into brown."
     four_classify_and_check: "Nearest palette entry in a perceptually even space, then verify the group's check band. Big-endian order means a truncated read is a legal coarse answer rather than a failure (OPTICAL-CHANNEL.yml, band_codes)."
-    five_read_the_words_if_a_dialog_is_open: "Text is the wide carrier and its templates are known at compile time, so matching beats OCR wherever the string came from a template we emitted (OPTICAL-CHANNEL.yml, text_is_the_wide_carrier)."
+    five_read_the_words_if_a_dialog_is_open: "Text is the wide carrier and its templates are known at compile time, so matching beats OCR wherever the string came from a template we emitted (OPTICAL-CHANNEL.yml, text_is_the_wide_carrier). BUILT, for The Sims 1: the game's own font atlas, matched pixel by pixel, at 100% ink on an aligned frame — modules/soul-angel/bridges/sims1/FONT-RECOGNITION.yml."
   the_zoom_oracle: "We author both ends, so the reader can be told the zoom instead of inferring it. The single largest cost in a general detector is the scale search, and we can delete it."
 
 # WHERE THE CODE LIVES
@@ -88,6 +88,12 @@ when_to_look:
 #
 # The specification above was written before any of it ran. This section is what happened when it
 # did, and it is allowed to contradict the section above — the numbers win.
+
+the_text_reader_is_finished_first:
+  what: "Reading the interface font by matching the bitmap the application draws with. Not OCR: the pattern IS the glyph, so a character is confirmed rather than guessed, and a misaligned read collapses into detectable nonsense instead of plausible text."
+  where: "packages/optical-codec/src/bitmap-font.ts (generic) · modules/soul-angel/bridges/sims1/src/text/ (The Sims 1 geometry and font) · FONT-RECOGNITION.yml (the full account)."
+  the_provenance: "Font atlas and hand-measured metrics from Don's Simplifier, 2004 — the accessibility experiment that read The Sims 1 aloud because the game exposes nothing to query. The measuring was the work; copying it across saves a week nobody should spend twice."
+  why_this_matters_to_the_rest: "The bridges now have pixels: AngelServices.grabFrame returns a decoded, native-scale frame, which is the capability every game-facing reader needs and none of them had."
 
 the_verb:
   recognize_scan: "One capture plus one decode, in the main process, returning payloads and boxes in screen points. One verb rather than two because handing the caller an image would put a decoder in every client and move pixels across a socket to be looked at once (src/common/protocol.ts, src/main/recognize/service.ts)."

@@ -11,13 +11,16 @@
  * modules become real, that alias becomes a published package and nothing else moves.
  */
 
+import type { Raster } from '@micropolis/optical-codec';
+
 import type { BridgeMatcher } from '@common/bridge';
 import { matchesWindow } from '@common/bridge';
+import type { GrabTarget } from '@common/protocol';
 import type { Permissions, QueryOptions, QueryResult, UIElement, WindowInfo } from '@common/types';
 
 // Re-exported so a module has one import for everything it needs, and no reason to
 // reach into @common — which is the host's business, not a module's.
-export type { BridgeMatcher, Permissions, QueryOptions, QueryResult, UIElement, WindowInfo };
+export type { BridgeMatcher, GrabTarget, Permissions, QueryOptions, QueryResult, Raster, UIElement, WindowInfo };
 export { matchesWindow };
 
 /**
@@ -39,6 +42,16 @@ export interface AngelServices {
 	elementAt(x: number, y: number): Promise<UIElement | null>;
 	getFocusedWindow(): Promise<WindowInfo | null>;
 	getOpenWindows(): Promise<WindowInfo[]>;
+	/**
+	 * Pixels, decoded, at native scale.
+	 *
+	 * The capability that makes a bridge to a game possible at all. The Sims 1 exposes an empty
+	 * accessibility tree, so a bridge that can only query elements can only report that there is
+	 * nothing to report — every fact about that game's interface is in its pixels. Native scale
+	 * rather than fitted, because a recogniser matching a bitmap font needs the pixel grid the
+	 * application drew on and a resample destroys exactly that.
+	 */
+	grabFrame(target?: GrabTarget): Promise<Raster>;
 }
 
 export interface HostEvents {
