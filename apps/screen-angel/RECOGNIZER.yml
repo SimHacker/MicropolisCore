@@ -1,0 +1,82 @@
+# RECOGNIZER.yml — finding and reading codes on a screen
+#
+# Two readers, one skeleton. QR is somebody else's solved problem and we import it. The egg is
+# OUR art, which makes its reader easier than a QR reader rather than harder — we chose the
+# target, so there is no perspective solve, no rotation hypothesis, and no error-correcting code.
+#
+# Companions: OPTICAL-CHANNEL.yml (what the codes MEAN) · EGGS.yml (what the art IS) ·
+# MOBILE-CAMERA.yml (the hard optical path) · RECORDER.yml (where frames come from)
+
+status:
+  not_built: [frame_source, gpu_prefilter, qr_path, egg_path, worker_pool, abuse_suite, overlay_debug_view]
+  decided: [zxing_for_qr, local_only_no_remote_model, codec_first_in_node]
+
+# THE DECISION THAT SHAPES EVERYTHING ELSE
+#
+# A screen grab and a phone photo are not the same problem and must not share a hot path.
+
+two_paths_one_decoder:
+  screen_capture_is_the_easy_case: "Pixel-exact, no lens, no room light, axis-aligned, integer scale, and we can know the game's zoom level. Almost every expensive stage in a camera pipeline is skippable."
+  the_phone_is_the_hard_case: "Perspective, blur, moire, rolling shutter, glare, white balance drift (MOBILE-CAMERA.yml). Same decoder at the end, far more work in front of it."
+  the_rule: "One decoder, two front ends. The screen path may never pay for the camera path's normalisation, and the camera path may never fork the decoder."
+
+# QR: BUY, DO NOT BUILD
+
+qr_reading:
+  choice: "zxing-wasm — ZXing-C++ compiled to WebAssembly, MIT, reader-only binary about 1 MiB, roughly monthly releases and several million downloads a month. One code path in Node, Electron, and the browser, which is what makes the tests and the runtime the same thing (https://github.com/Sec-ant/zxing-wasm)."
+  write_against_the_standard_api: "Use the barcode-detector ponyfill so our calls are the W3C Barcode Detection API shape backed by zxing-wasm. If a platform's native detector ever becomes worth using, that is a swap rather than a rewrite (https://github.com/Sec-ant/barcode-detector)."
+  why_not_the_native_detector:
+    the_platform_gap: "Chromium ships BarcodeDetector on macOS, Android and ChromeOS only, because it wraps Apple Vision and ML Kit. It was announced for Windows and Linux in Chrome 98 and then withdrawn, and the Chromium position is that Windows provides no bitmap-level barcode API to implement it with (blink-dev, Intent to Ship: Barcode Detection API)."
+    presence_is_not_support: "'BarcodeDetector' in self can be true while detect() returns nothing, and a ponyfill can shadow the native class. Any probe has to decode a baked-in synthetic code and check the result before trusting it."
+    the_consequence: "A cross-platform Electron app has to ship the WASM path anyway. Adding native as a fast path is an optimisation to measure later, not an architecture."
+  why_not_jsqr: "Pure JavaScript, about 45 KiB, still widely used, and it loads anywhere — but the last real release was 2021 and it is the weakest tier on small, blurry or damaged codes. Worth keeping in mind as a zero-WASM fallback for a constrained web build; not the primary."
+  the_escalation_tier_if_we_ever_need_it: "OpenCV.js QRCodeDetector, or the WeChat super-resolution detector, for codes the fast path misses. Multi-megabyte payloads, so it can only ever be an opt-in package loaded on demand — never in the default bundle."
+  no_model_in_the_loop: "Decided: local and deterministic. A vision model that guesses at a code we authored would paper over exactly the failures the abuse suite exists to find."
+
+# THE EGG READER: EASIER BY CONSTRUCTION
+
+egg_reading:
+  why_it_is_easier_than_qr:
+    we_chose_the_target: "The egg is a solid of revolution with fiducial caps and a fixed palette, drawn by our own compile. Template matching against a known target beats general detection."
+    no_rotation_hypothesis: "Rotationally invariant art means one template per zoom instead of four (EGGS.yml, rotationally_invariant)."
+    one_dimension_not_two: "Bands are sampled along a single axis between two caps. A QR reader solves a homography; this reads a line."
+    self_delimiting: "The caps bound the message, so there is no length field to parse and no terminator to find (EGGS.yml, the_stack_is_self_delimiting)."
+    no_error_correction_needed: "A per-group check band turns a misread into a discarded read. No Reed-Solomon, no bit interleaving, no Galois field."
+  the_stages:
+    zero_find_the_lit_things: "Threshold for local brightness maxima, frame-difference for slow pulses. Eggs light up when they are worth reading, so the candidate list is a cheap GPU pass and everything expensive runs only inside those boxes (EGGS.yml, it_solves_finding_before_reading)."
+    one_confirm_the_silhouette: "Match the egg template at the expected size. Where the game's zoom is known, the size is known, and the scale search disappears entirely."
+    two_lock_the_caps: "Find the white-over-black adjacency. It gives the axis, the scale, the extent of the stack, and a black and a white sample for normalisation, all from the same feature."
+    three_sample_the_bands: "Walk the axis, sample each band's centre, normalise against the cap samples so a sunset or a fire does not turn orange into brown."
+    four_classify_and_check: "Nearest palette entry in a perceptually even space, then verify the group's check band. Big-endian order means a truncated read is a legal coarse answer rather than a failure (OPTICAL-CHANNEL.yml, band_codes)."
+    five_read_the_words_if_a_dialog_is_open: "Text is the wide carrier and its templates are known at compile time, so matching beats OCR wherever the string came from a template we emitted (OPTICAL-CHANNEL.yml, text_is_the_wide_carrier)."
+  the_zoom_oracle: "We author both ends, so the reader can be told the zoom instead of inferring it. The single largest cost in a general detector is the scale search, and we can delete it."
+
+# WHERE THE CODE LIVES
+
+the_stack:
+  layer_0_codec_in_pure_typescript:
+    what: "packages/optical-codec — encode a value to a picture, decode a picture to a value, plus the degradation harness. No DOM, no GPU, no game."
+    why_first: "It runs in Node in CI, it is the definition of correct, and every other layer calls it. It also makes the legibility claims in EGGS.yml falsifiable instead of asserted."
+    the_abuse_suite: "Round-trip through dim, tint, blur, downscale to a dozen pixels, JPEG, additive noise, and colour-blind simulation. Every failure becomes a stored fixture, and every egg the editor saves adds a case (EGGS.yml, the_blip_editor)."
+  layer_1_frame_source:
+    what: "One interface over screen capture, a video element, a camera, and a synthetic test source, so the same reader runs against a fixture and a live game."
+    how: "getDisplayMedia into WebCodecs VideoFrame, driven by requestVideoFrameCallback so every frame carries the presentation timestamp the recorder's clock already wants (RECORDER.yml)."
+  layer_2_prefilter_on_the_gpu_when_measured_necessary:
+    what: "Greyscale, mip-chain downsample, separable box blur for an adaptive threshold, and a brightness-maximum reduction to produce candidate boxes."
+    where: "WebGPU compute, with a WebGL2 fragment-shader pyramid as the fallback. Both are present in Chromium, so Electron gets this for free."
+    the_actual_bottleneck: "Readback, not arithmetic. Copy only the candidate tiles, double-buffer so the CPU never waits on the GPU, and never read a full frame back per frame."
+    honest_ordering: "CPU first. A 640-wide greyscale threshold on a modern machine is cheap, and a GPU stage added before it is proven necessary is a stage that has to be debugged for no reason."
+  layer_3_decode_in_workers: "A small worker pool: zxing-wasm for QR, layer 0 for eggs, SharedArrayBuffer for the handoff where it is available. The UI thread never decodes."
+  layer_4_the_debug_overlay_is_the_feature: "Draw boxes on what was found, with what it read and how sure it is, live in the transparent overlay. That is the development tool and the product's honesty at the same time — automation you can watch is the whole thesis (moollm designs/INTERFACE-TO-AGENCY.md)."
+  the_native_escape_hatch: "Electron's main process can load a Rust addon if WASM ever proves too slow. Only after measurement, and only behind the same interface."
+
+# CADENCE
+#
+# Nothing here needs to run every frame, and pretending otherwise is how a recogniser becomes a
+# space heater.
+
+when_to_look:
+  survey: "A few times a second at low resolution, to answer whether anything lit changed."
+  burst: "Full-rate reads on the candidate boxes for a moment after a change, then back to survey."
+  on_demand: "A dialog opening, a player selecting an egg, or the Angel deciding to act are all reasons to look immediately at one place."
+  idle_is_free: "A screen where nothing lit has changed costs one downscaled diff. The dance-floor case is the interesting stress test, and it is bounded by the candidate count rather than by area (EGGS.yml, matrix_eggs)."
