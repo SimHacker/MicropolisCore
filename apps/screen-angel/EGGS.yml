@@ -115,9 +115,14 @@ visual_design:
       what_we_do_with_it: "An Egg semi-global holds the shared trees: menu dispatch, hatch, the band state machine, the lighting states. A minted egg is a small object whose GLOB names it, so it arrives with behaviour it did not have to carry."
       inheritance_the_way_it_was_meant: "This is prototype delegation with two levels of ancestry, shipped in 2000 and used exactly as intended. Nothing invented, nothing patched."
       the_open_question: "Tree scoping across files is documented; ART sharing across files is not the same mechanism, since sprites and draw groups are referenced within a file. Either the shared art also resolves through the semi-global, or each minted egg carries the sprite set — a dozen small sprites, cheap enough that this is a measurement rather than a risk. To be settled against the engine before any of this is built."
-    data_only_is_verifiable_not_promised:
-      the_rule: "A shared egg contains no behaviour of its own. Payload, band layout, strings, custody — and nothing in the local tree range."
-      how_it_is_checked: "By parsing, not by trust: reject any downloaded egg carrying resources in 0x1000-0x1FFF. A structural check the registry can run on every file, which is worth more than a policy nobody can enforce (documentation/designs/sims-content-registry.md)."
+    intrinsics_below_heads_above:
+      the_split: "The semi-global holds the INTRINSICS: cracking, hatching, the menu dispatcher, the band state machine, the lighting states, custody. Everything an egg is. A minted egg inherits all of it and writes only the part that is interesting about itself."
+      an_egg_head_is_local_trees: "An egg that adds its own trees on top of the intrinsics is a SMART EGG — an egg with a head on its shoulders. It can have its own verbs, its own conditions for hatching, its own reactions to being carried around, and it gets everything else for free."
+      why_this_is_the_low_floor_and_no_ceiling: "A data-only egg is a table of colours anyone can mint (the_blip_editor). A smart egg is a program. Same object family, same file format, no migration between them — the beginner's egg and the researcher's egg are the same egg (moollm skills/design-sense/methods/low-floor-no-ceiling.md)."
+    two_tiers_and_the_check_is_structural:
+      plain_eggs: "No local trees. Payload, band layout, strings, custody, nothing executable. Safe to accept from a stranger because the worst it can do is lie on its own label, and that is verifiable by parsing: no resources in 0x1000-0x1FFF."
+      smart_eggs: "Local trees, which is code from whoever minted it. Fine from your own machine or a source you trust, and gated like any custom content when it arrives from outside — announced, attributable, refusable. Never silently installed because it looked like an egg."
+      why_say_it_this_way: "The tier is a property of the FILE, readable before anything runs, so the registry sorts incoming eggs without asking anyone to trust a claim (documentation/designs/sims-content-registry.md)."
     what_travels_is_data_not_code:
       the_split: "The object is ours, installed once, and its behaviour is the same for everybody. A minted egg is an instance: a band layout, a payload, a menu tree and its custody chain, referencing the universal object by GUID (the_egg_is_its_own_file)."
       why_that_matters: "Sharing an egg never ships executable behaviour. A stranger's egg is a table of colours and some text, so the worst a malicious one can do is lie in words a player reads — no custom BHAV to audit, no code to trust, and nothing to review beyond what is on the label."
@@ -273,6 +278,15 @@ the_egg_is_its_own_file:
   minting_is_a_proposal: "Band layout is generated from the payload, so minting gets the same six verbs as any generator: generate, reroll, edit, revise, reset, clear, with the previous layout still there. Keep the seed (documentation/designs/generative-history-and-proposals.md)."
   minted_locally: "The compile that emits the egg's shape, bands, states and menu tree can write the .iff on the player's own machine. Nothing has to be online for an egg to exist, be placed, be read or be hatched — the network is for sharing, never for existing (robust-first)."
   then_published: "Mint local, upload to the server, and it is a link like every other piece of Sims content. Someone downloads it into Downloads and the registry picks it up on the next scan: fresh GUID, hashed, dependency-walked, collision-checked, same path as any custom object (guid-collision, sims-content-registry.md)."
+  cracking_is_the_constructor:
+    the_verb: "Eggs do not get constructed, they get CRACKED. Instantiation is an interaction a character performs in the world, in a place, at a time, in front of whoever is standing there — not an event in a log."
+    personalise_at_the_crack: "Cracking is where an egg stops being generic: name it, pick its badge, set what it is for, bond it to the character who opened it. The moment of instantiation is the moment of authorship, which is the right place for it and a good one to animate."
+    bonding: "Don's reference is the hope chest — an object you accumulate a relationship with rather than merely own (Sims 1 object, unverified as to which release). A cracked egg carries who cracked it and what they did with it, so a well-travelled egg is an heirloom, and its custody chain IS its sentimental value (moollm skills/soul-city/SOUVENIRS.md)."
+    more_than_one_pair_of_hands:
+      the_precedent: "Hot tubs and pool tables already hold several Sims in one interaction, with slots and join verbs. An egg can do the same: two or three characters cracking one egg together, joining and leaving while it is open."
+      what_it_changes: "Co-authorship becomes literal. Everyone who joined the crack is credited in the custody chain, and a jointly cracked egg is a shared object rather than one person's with witnesses."
+      why_it_is_worth_it: "It turns an asynchronous mechanism into a social occasion, which is the part of this a player will actually remember."
+
   a_sealed_egg_is_giftable:
     what: "An egg can be shared before it is hatched. The recipient picks from the menu and hatches it themselves, so the gift is a choice rather than a result."
     the_chain_of_custody: "Who minted it, who held it, who hatched it — appended, never rewritten. A regifted egg carries its whole history, which is the interesting part of a souvenir (moollm skills/soul-city/SOUVENIRS.md)."
