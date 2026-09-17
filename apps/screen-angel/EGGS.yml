@@ -149,9 +149,14 @@ the_blip_editor:
   the_badge_above_it:
     what: "An iconic overlay floating above the egg: a newspaper, an envelope, a suitcase, a camera, a question mark, a tick. It names the KIND and the STATE in one glyph."
     who_it_is_for: "People, first. A player should not have to learn a colour code to tell the egg awaiting an answer from the egg that has already resolved. Nobody memorises a palette to check on their household."
-    the_reader_may_use_it_too: "It is a distinct high-contrast silhouette, so of course the recogniser can read it — and doing so gives a coarse KIND that must agree with the top bands. Two independent statements of the same fact is a free cross-check, and a disagreement is a discarded read rather than a wrong action."
+    the_reader_may_use_it_too: "LATER, and optional. A distinct high-contrast silhouette is readable, and a badge read would give a coarse KIND that could be cross-checked against the top bands — two dissimilar encodings of one fact. But nothing depends on it today: the bands carry the value and the badge exists for the player, so badge art is under no machine-vision constraint yet."
     why_above_and_not_on_the_body: "Nothing occludes it, it does not spend a band, and a big simple glyph in clear space outlives the stack as you zoom out. It sits between light and bands on the range ladder: further than colour, nearer than glow."
     it_is_existing_machinery: "Games already float things over objects — thought balloons, status icons, the diamond over a selected Sim. A badge is that overlay slot pointed at egg state (SCREEN-ANGEL.yml)."
+    a_standard_modular_set_todo:
+      todo: "Not specced. For looks first: the player needs to know the mailbox has a new message, and nothing more than that is required of a badge today."
+      the_precedent: "Donna's SimBabes modular wedding cake toppers — bride and groom in any combination of gender and skin tone, assembled from parts instead of drawn once per pairing. A handful of pieces covering a space that would otherwise need dozens of drawings (Don's recollection; find the creator's page before citing this publicly)."
+      what_that_suggests: "One standard symbol set with combinable slots — subject, action, urgency — rather than a flat list of finished glyphs. Same combinatorial move as the bands, in a channel meant for people."
+      deliberately_deferred: "How large the set is, what the slots are, and whether the recogniser ever reads it. Decorative and honest beats specified and wrong."
     custom_badges_are_the_safe_kind_of_content: "A badge is a picture with no authority: it labels, it cannot act. So players and shows can ship their own without anyone auditing anything, which makes it the natural place for personality in a system that is otherwise deliberately uniform (the_blip_editor)."
 
   zoom_is_the_resolution_dial:
