@@ -1,6 +1,13 @@
 # SOUL-ALBUM — the universal album schema
 # Generic cross-game "Soul Album"; per-game bridges map native albums onto it
 # (e.g. The Sims Family Album). We uplift, we never co-opt game vocabulary.
+#
+# Object model and metadata floor live upstream, in moollm skills/soul-city/SOUVENIRS.md:
+# a card is a self-describing OBJECT whose type is an interpretation of its properties, an album
+# is a polymorphic ordered array of them, and metadata uses Dublin Core names where they exist
+# (`coverage` carrying BOTH geographies, real-world and in-game; `relation` carrying the pointers
+# to souls, objects, and places in frame). Unknown types pass through whole — never dropped.
+# This file implements that; it does not redefine it.
 
 meta:
   id: soul-album
@@ -64,3 +71,5 @@ see_also:
   - DVR.yml
   - SOUL-BRIDGE-SDK.yml
   - ARCHITECTURE.yml
+  - moollm skills/soul-city/SOUVENIRS.md   # souvenir object model, album shape, Dublin Core floor
+  - moollm skills/soul-city/SOUL-BRIDGES.md  # who may cross, and what the destination owes them
