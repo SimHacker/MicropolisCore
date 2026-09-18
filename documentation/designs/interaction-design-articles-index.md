@@ -6,6 +6,8 @@ Forty years of human–computer interaction work — pie menus, marking menus, a
 
 Each article is *standalone*. None of them ask you to read another file first. They cite primary sources (HN item IDs, papers with PDFs, archive.org scans) and they cross-link the parts of Soul City that need the ideas.
 
+**Citing Don's HN comments: mind the handle cutover.** Comments through **12 Apr 2014** are under **`SimHacker`** (588 of them); from **14 Apr 2014** onward they are under **`DonHopkins`** (11,699 and counting). Searching the wrong handle for an early comment returns nothing, which is how a fabricated item ID gets written down — `7328476` was cited across nine docs here as the 2014 car-UI source and is actually an unrelated dead "Who is hiring" comment. Resolve IDs against `hn.algolia.com/api/v1/search?tags=comment,author_SimHacker` (or `author_DonHopkins`) and paste the ID you actually opened.
+
 ---
 
 ## Articles
