@@ -1,6 +1,6 @@
 # SimCity tool palette and pie menu layout
 
-**Primary source:** Don Hopkins (SimHacker), [HN comment on “A New Car UI”](https://news.ycombinator.com/item?id=7328476) (Feb 19, 2014) — parent context on touch-screen controls; this doc extracts the SimCity / pie-menu design argument.
+**Primary source:** Don Hopkins (SimHacker), [HN comment on “A New Car UI”](https://news.ycombinator.com/item?id=7263027) (Feb 19, 2014) — parent context on touch-screen controls; this doc extracts the SimCity / pie-menu design argument. Companion comment in the same thread on Fitts's Law: [7262676](https://news.ycombinator.com/item?id=7262676).
 
 **Screenshot:** [SimCity on Sun workstation (Tcl/Tk/X11 multiplayer)](http://www.donhopkins.com/home/catalog/simcity/SimCity-Sun.gif) — palette as legend for on-map cursors.
 
@@ -119,7 +119,7 @@ Not in scope for Micropolis v1; documented as rationale for why **curated** layo
 
 ## 8. Relation to car touch UI (2014 thread)
 
-The parent HN thread ([*A New Car UI*](https://news.ycombinator.com/item?id=7328476)) criticized **undifferentiated touch strips** and **invisible finger-count gestures** in automotive UI. Don’s counterpoint: **differentiation through layout, size, color, and spatial memory** — the same problem SimCity solved with totem-pole palette + **self-revealing** pies (not blind multitouch). Full harvest: [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md). Applies to Soul City build mode, vitamoo lot editor, streamer overlay toolbars.
+The parent HN thread ([*A New Car UI*](https://news.ycombinator.com/item?id=7261003)) criticized **undifferentiated touch strips** and **invisible finger-count gestures** in automotive UI. Don’s counterpoint: **differentiation through layout, size, color, and spatial memory** — the same problem SimCity solved with totem-pole palette + **self-revealing** pies (not blind multitouch). Full harvest: [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md). Applies to Soul City build mode, vitamoo lot editor, streamer overlay toolbars.
 
 ---
 
@@ -139,7 +139,7 @@ The parent HN thread ([*A New Car UI*](https://news.ycombinator.com/item?id=7328
 
 | Resource | Link |
 |----------|------|
-| HN comment (2014) | Search SimHacker Feb 19 2014 on [item?id=7328476](https://news.ycombinator.com/item?id=7328476) parent car-UI thread |
+| HN comment (2014) | [item?id=7263027](https://news.ycombinator.com/item?id=7263027) — SimHacker, 19 Feb 2014, in the [*A New Car UI*](https://news.ycombinator.com/item?id=7261003) thread |
 | Multiplayer demo video | [YouTube SimCityNet](https://www.youtube.com/watch?v=_fVl4dGwUrA&t=5m45s) |
 | SimCity catalog | [donhopkins.com/home/catalog/simcity/](http://www.donhopkins.com/home/catalog/simcity/) |
 | Interaction corpus index | [interaction-design-articles-index.md](interaction-design-articles-index.md) |

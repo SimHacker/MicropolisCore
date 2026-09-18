@@ -191,5 +191,5 @@ Implementation in [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md); command-bus
 | Nine-slice tool cursor / chrome | [ui-frame-nine-slice.md](ui-frame-nine-slice.md) |
 | Holodeck layer stack | [unified-webgpu-renderer.md](unified-webgpu-renderer.md) |
 | SimCity palette layout (totem pole, cost→size, MP legend) | [simcity-tool-palette-design.md](simcity-tool-palette-design.md) |
-| Car multitouch vs self-revealing pies (HN 7328476) | [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md) |
+| Car multitouch vs self-revealing pies (HN 7261003) | [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md) |
 | macOS Pie Menu app, rehearsal argument (HN 41160268) | [macos-pie-menu-app-hn-2024.md](macos-pie-menu-app-hn-2024.md) |

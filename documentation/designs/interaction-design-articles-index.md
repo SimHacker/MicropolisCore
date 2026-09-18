@@ -50,7 +50,7 @@ Three clusters, three substrate threads, one Soul City vertical they all feed.
 
 **PieCraft & editable pies (13)** — [piecraft/](piecraft/) archives the 2012–2019 product vision (Unity Asset Store, combat-pressure menus, Target/Pie/Slice/Item, Monster Hunter validation, CMU lecture) and wires it to MicropolisCore’s holodeck, virtual pointer, and SimCity palette — the constructionist game Don sketched; Micropolis ships the curated SimCity layer first.
 
-**Automotive touch vs pies (14)** — [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md) harvests [HN 7328476](https://news.ycombinator.com/item?id=7328476): Matthaeus Krenn’s finger-count car UI, critics (shape coding, recall), Don’s saturated-gesture-space reply, ConnectedTV “finger pies,” iLoci/MediaGraph, Kurtenbach 7→8, and why Micropolis uses pop-up pies + totem-pole palette instead of blind multitouch.
+**Automotive touch vs pies (14)** — [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md) harvests [HN 7261003](https://news.ycombinator.com/item?id=7261003): Matthaeus Krenn’s finger-count car UI, critics (shape coding, recall), Don’s saturated-gesture-space reply, ConnectedTV “finger pies,” iLoci/MediaGraph, Kurtenbach 7→8, and why Micropolis uses pop-up pies + totem-pole palette instead of blind multitouch.
 
 **macOS Pie Menu app (15)** — [macos-pie-menu-app-hn-2024.md](macos-pie-menu-app-hn-2024.md) harvests [HN 41160268](https://news.ycombinator.com/item?id=41160268): Marius Hauken’s App Store radial shortcuts, desktop ecosystem (Kando, Charmstone, Maya), Don’s SimCity/Sims/MicropolisCore links, rehearsal-vs-keyboard argument, PIXIE prior art, and icon-vs-label lessons for `ToolCatalog`.
 
@@ -89,7 +89,7 @@ These are the *meaty* comments the articles dig into. Each is cited inline in th
 | [46768906](https://news.ycombinator.com/item?id=46768906) | Show HN: Cua-Bench — 90% Win11 → 9% XP | (9) |
 | [42874938](https://news.ycombinator.com/item?id=42874938) | Don on 4D Trajectory-Based Operations | (10) |
 | [11219792](https://news.ycombinator.com/item?id=11219792) | macOS Fitts regressions (scrollbar, dock, separators) | (4) |
-| [7328476](https://news.ycombinator.com/item?id=7328476) | *A New Car UI* — multitouch car demo; Don on pies vs blind gestures, palette, PieCraft, ConnectedTV, TomTom | (12), (14) |
+| [7261003](https://news.ycombinator.com/item?id=7261003) | *A New Car UI* — multitouch car demo. Don's replies: [7263027](https://news.ycombinator.com/item?id=7263027) palette, differentiation, PieCraft · [7262676](https://news.ycombinator.com/item?id=7262676) Fitts's Law | (12), (14) |
 | [40693944](https://news.ycombinator.com/item?id=40693944) | micropolisweb.com — WASM/WebGL launch; strip UI to browser; pies soon; Norman; Embind/LLM port story | [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md), (11), (12) |
 | [9149874](https://news.ycombinator.com/item?id=9149874) on [9148746](https://news.ycombinator.com/item?id=9148746) | Maxis shutdown — EA timeline, Ocean **holodeck**, Origin/SC2013, Lucy Bradshaw, SFC/Bar Karma | [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) §4 |
 | [18015780](https://news.ycombinator.com/item?id=18015780), [18044422](https://news.ycombinator.com/item?id=18044422) on [18011332](https://news.ycombinator.com/item?id=18011332) | *Ask HN: startup fail* — HiveMind/Ansari litigation; SFC IP | [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) §4–§5 |

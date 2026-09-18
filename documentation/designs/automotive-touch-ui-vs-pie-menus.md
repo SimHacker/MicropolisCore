@@ -1,6 +1,6 @@
 # Automotive touch UI vs pie menus (HN 2014)
 
-**Primary thread:** [A New Car UI — matthaeuskrenn.com](https://news.ycombinator.com/item?id=7328476) (Feb 18–21, 2014) — multitouch finger-count gestures on a dashboard tablet.
+**Primary thread:** [A New Car UI — matthaeuskrenn.com](https://news.ycombinator.com/item?id=7261003) (Feb 18–21, 2014) — multitouch finger-count gestures on a dashboard tablet.
 
 **Don Hopkins comments on that thread** (SimHacker): palette/totem-pole design ([simcity-tool-palette-design.md](simcity-tool-palette-design.md)), PieCraft ([piecraft/PIECRAFT.md](piecraft/PIECRAFT.md)), **pie menus as self-revealing saturated gesture space** (not blind multitouch), **ConnectedTV** finger pies on Palm, **iLoci** / Method of Loci, **MediaGraph** prototype, Fitts / 7-vs-8 wedge study, TomTom automotive politics.
 
@@ -161,7 +161,7 @@ That is **shape coding on a legend** — palette visible while learning pies, hi
 
 | Resource | URL |
 |----------|-----|
-| HN thread (2014) | https://news.ycombinator.com/item?id=7328476 |
+| HN thread (2014) | https://news.ycombinator.com/item?id=7261003 |
 | Car UI article | https://matthaeuskrenn.com/new-car-ui/ |
 | Prototype | https://matthaeuskrenn.com/new-car-ui/prototype/ |
 | Shape coding (Chapanis) | https://en.wikipedia.org/wiki/Alphonse_Chapanis |

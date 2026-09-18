@@ -27,7 +27,7 @@ and multiplayer presence — on the WebGPU holodeck.
 | Pie tabs / federation shell | [PIE-TAB-WINDOWS.md](../notes/PIE-TAB-WINDOWS.md) |
 | PieCraft, Target/Pie/Slice/Item | [piecraft/README.md](piecraft/README.md) |
 | SimCity totem-pole palette | [simcity-tool-palette-design.md](simcity-tool-palette-design.md) |
-| Car touch UI vs self-revealing pies | [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md) ([HN 7328476](https://news.ycombinator.com/item?id=7328476)) |
+| Car touch UI vs self-revealing pies | [automotive-touch-ui-vs-pie-menus.md](automotive-touch-ui-vs-pie-menus.md) ([HN 7261003](https://news.ycombinator.com/item?id=7261003)) |
 | macOS Pie Menu app (shortcut radials) | [macos-pie-menu-app-hn-2024.md](macos-pie-menu-app-hn-2024.md) ([HN 41160268](https://news.ycombinator.com/item?id=41160268)) |
 | micropolisweb launch — pies “soon”, Norman anecdote | [micropolis-web-hn-2024.md](micropolis-web-hn-2024.md) ([HN 40693944](https://news.ycombinator.com/item?id=40693944)) |
 | Multiplayer cursor smoothing | [Liveblocks — How to animate multiplayer cursors](https://liveblocks.io/blog/how-to-animate-multiplayer-cursors) · [HN 31987713](https://news.ycombinator.com/item?id=31987713) (Don Hopkins comment) |

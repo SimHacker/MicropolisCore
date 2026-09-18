@@ -4,7 +4,7 @@
 
 **Don Hopkins (SimHacker)** posted throughout the thread: SimCity/X11 and Flash demos, CHI’88 study, patent FUD, PIXIE 1969 prior art, rehearsal vs keyboard shortcuts, MicropolisCore/SvelteKit roadmap, Adobe Photoshop petition.
 
-**Related threads:** [Kando launch (Dec 2024)](https://news.ycombinator.com/item?id=39206966) · [Kando Show HN (Aug 2024)](https://news.ycombinator.com/item?id=42525290) · [Car UI / pies (2014)](https://news.ycombinator.com/item?id=7328476)
+**Related threads:** [Kando launch (Dec 2024)](https://news.ycombinator.com/item?id=39206966) · [Kando Show HN (Aug 2024)](https://news.ycombinator.com/item?id=42525290) · [Car UI / pies (2014)](https://news.ycombinator.com/item?id=7261003)
 
 ---
 
