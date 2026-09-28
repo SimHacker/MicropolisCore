@@ -4,13 +4,14 @@
  * `extendSimCommands(argv)` adds the `sim` branch using the shared WASM loader.
  */
 
+import { writeFileSync } from 'node:fs';
 import type { Argv } from 'yargs';
 import type { MainModule, Micropolis } from '../../src/types/micropolisengine.d.js';
 import { createNoopJsCallback } from '../../src/lib/wasm/callbacks';
 import { loadMicropolisMainModule } from '../../src/lib/wasm/node';
 import { normalizeStructuredFormat, stringifyStructured } from '../lib/format.js';
 
-type Flags = { city?: string; ticks?: number; format?: string };
+type Flags = { city?: string; ticks?: number; format?: string; output?: string };
 
 function stringFlag(v: unknown, fallback: string): string {
 	return typeof v === 'string' && v.length > 0 ? v : fallback;
@@ -53,6 +54,7 @@ function summarize(
 async function runSmoke(flags: Flags) {
 	const ticks = numberFlag(flags.ticks, 10);
 	const city = stringFlag(flags.city, '/cities/haight.cty');
+	const output = stringFlag(flags.output, '');
 	const engine = await loadMicropolisMainModule();
 	const micropolis = new engine.Micropolis();
 	const cb = createNoopJsCallback(engine);
@@ -61,7 +63,18 @@ async function runSmoke(flags: Flags) {
 	try {
 		const loaded = micropolis.loadCity(city);
 		for (let i = 0; i < ticks; i += 1) micropolis.simTick();
-		return summarize(engine, micropolis, { loaded, city, ticks });
+		const summary = summarize(engine, micropolis, { loaded, city, ticks });
+		let saved: string | null = null;
+		let bytes = 0;
+		if (output.length > 0) {
+			const savedPath = '/micropolis-save.cty';
+			micropolis.saveCityAs(savedPath);
+			const buf = engine.FS_readFile(savedPath) as Uint8Array;
+			writeFileSync(output, buf);
+			saved = output;
+			bytes = buf.length;
+		}
+		return { ...summary, saved, bytes };
 	} finally {
 		micropolis.delete();
 	}
@@ -104,6 +117,11 @@ export function extendSimCommands(argv: Argv): Argv {
 							describe: 'Virtual path passed to loadCity (packaged .cty)'
 						})
 						.option('ticks', { type: 'number', default: 10, describe: 'Number of simTick() calls' })
+						.option('output', {
+							alias: 'o',
+							type: 'string',
+							describe: 'Write the city to this .cty file after ticking'
+						})
 						.option('format', {
 							alias: 'f',
 							type: 'string',
