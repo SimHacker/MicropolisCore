@@ -101,6 +101,16 @@ build_MicropolisEngine:
 	cd packages/micropolis-engine ; make all
 
 ########################################################################
+# build and install MicropolisEngine with AddressSanitizer
+
+asan:
+	echo "Building and installing MicropolisEngine with AddressSanitizer..."
+	cd packages/micropolis-engine ; make install-asan
+
+clean-asan:
+	cd packages/micropolis-engine ; make clean-asan
+
+########################################################################
 # build micropolis
 
 build_micropolis:
