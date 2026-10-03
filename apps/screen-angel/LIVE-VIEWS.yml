@@ -57,12 +57,36 @@ proxy_space:
     Screen Angel goes native full screen in a Space of its own, opaque, and draws every other
     window as a live texture. No transparency, no click-through, no fighting the real desktop,
     and nothing it does can disturb a real window by accident, because no real window is here.
-  textures: "Each window is a ScreenCaptureKit stream with a per-window filter. Frames reach the renderer as VideoFrames and WebGPU imports them with importExternalTexture, so a window is a texture: clip it, zoom it, mesh it, warp it, tile it, or put it on a pie menu."
+  textures: "Each window is a ScreenCaptureKit stream with a per-window filter, delivered as GPU surfaces end to end (zero_copy, below), so a window is a texture: clip it, zoom it, mesh it, warp it, tile it, or put it on a pie menu."
   only_what_changed: "SCStreamFrameInfo carries dirty rects. Recognition rescans only those, and an idle window costs nothing."
   frames_are_ours: "Accessibility reports the window frame and its content area, so the capture is cropped with sourceRect and the title bar and traffic lights never reach the proxy. We draw our own frame, or none, or a mesh."
   window_management_is_ours: "Move, resize and close happen to the proxy and are then applied to the real window through Accessibility, deliberately. Zoom and warp never touch the real window at all; resize does, because the app has to relayout."
   exclude_ourselves: "Filter our own process out of every list, or the proxies draw the proxies."
   lineage: "The uwm pie-menu window manager linked into Mitch Bradley's Forth for the CHI'88 paper, then NeWS, where windows were already PostScript drawing surfaces you could scale and rotate. This is that again, above a compositor we control instead of inside a window server we do not."
+
+# ZERO COPY
+#
+# Pixels never visit main memory, never become a PNG, and are never base64. Checked against
+# the installed Electron 44.3 typings (node_modules/electron/electron.d.ts), where all of
+# this is marked experimental.
+
+zero_copy:
+  the_rule: "A frame is a GPU surface from capture to screen. Bytes exist only at the two edges that need them: an encoder's bitstream going to a peer, and a still a client explicitly asked to keep."
+  macos_path:
+    1_capture: "SCStream hands CMSampleBuffers whose CVPixelBuffer is IOSurface-backed. Ask for NV12 (420v) or BGRA."
+    2_native_to_electron: "The addon puts the IOSurfaceRef in a Buffer and main calls sharedTexture.importSharedTexture({textureInfo: {pixelFormat, codedSize, handle: {ioSurface}}}). The handle is process-local, which is fine: the addon lives in main."
+    3_to_renderer: "sharedTexture.sendSharedTexture({frame, importedSharedTexture}) into the renderer, which registered setSharedTextureReceiver. Chromium moves it through the GPU process by reference."
+    4_draw: "importedSharedTexture.getVideoFrame() gives a WebCodecs VideoFrame, and WebGPU importExternalTexture samples it directly."
+    5_lifetime: "VideoFrame.close() and release() promptly, and keep the IOSurface alive until allReferencesReleased fires. Only a few textures may be in flight; a leak stalls capture rather than growing memory."
+  windows_path: "The same, with an NT shared handle (handle.ntHandle) from Windows.Graphics.Capture's D3D11 texture. NV12 handles carry a keyed mutex."
+  chromium_pages: "Offscreen rendering with webPreferences.offscreen.useSharedTexture: the paint event's details.texture.textureInfo is already in this shape, dirty rect included, so a page and a captured window are the same kind of object to the compositor."
+  recognition: "Vision and Core ML take a CVPixelBuffer directly, so local recognition reads the same IOSurface the compositor draws, in the addon, before anything is copied anywhere. Windows: WinRT OCR and DirectML take the D3D surface."
+  encoding: "VideoFrame into a WebCodecs VideoEncoder is hardware encode from the GPU surface. That bitstream is the first bytes in the pipeline, and they go straight onto the wire."
+  why_it_matters: "A 4K BGRA frame is 33 MB. At 60 fps that is 2 GB/s per window across a bus, which is the whole difference between sixteen live proxies and one slideshow."
+  links:
+    shared_texture: "https://www.electronjs.org/docs/latest/api/shared-texture"
+    offscreen_shared_texture: "https://www.electronjs.org/docs/latest/api/structures/offscreen-shared-texture"
+    iosurface: "https://developer.apple.com/documentation/iosurface"
 
 # THE PARKING LOT
 

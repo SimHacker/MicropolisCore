@@ -26,9 +26,11 @@ levels:
     what: "Pages in WebContentsViews inside Screen Angel. No other process, no OS window per tab, no window manager involved at all."
     cdp: "webContents.debugger speaks the full Chrome DevTools Protocol in-process: attach, sendCommand, events. No debugging port, so nothing else on the machine can attach. https://www.electronjs.org/docs/latest/api/debugger"
     pixels: |
-      Offscreen rendering hands us each frame with its dirty rect, or with useSharedTexture a
-      GPU texture and no CPU copy — the fastest path there is, and it never draws to a real
-      window. Frames stop when the page is idle.
+      Offscreen rendering with webPreferences.offscreen.useSharedTexture: the paint event
+      carries details.texture, an IOSurface (macOS) or NT handle (Windows) plus the dirty rect.
+      No CPU copy, never drawn to a real window, no frames when the page is idle. The same
+      shape as a captured window (LIVE-VIEWS.yml, zero_copy), so the compositor cannot tell
+      a page from an app. Never use the NativeImage argument: that is the GPU-to-CPU copy.
       https://www.electronjs.org/docs/latest/tutorial/offscreen-rendering
     why_it_wins: "Snappiest by far, nothing goes stale because nothing is ever hidden from the OS's point of view, every tab is a texture, and Screen Angel's own UI is the same kind of page — recursion into itself for free (ACCESSIBLIFY.yml, recursion)."
     costs:
@@ -55,7 +57,8 @@ screencast:
   what: "Page.startScreencast pushes frames as base64 JPEG or PNG with format, quality, maxWidth, maxHeight and everyNthFrame; each must be acked with Page.screencastFrameAck before the next. Page.captureScreenshot for single stills, and both work on background tabs. https://chromedevtools.github.io/devtools-protocol/tot/Page/"
   fast_enough_for: "Thumbnails, previews, a dozen tabs in a grid, recognition on changed frames, and agent work. The ack is natural backpressure: a slow consumer simply gets fewer frames."
   not_for: "Smooth video or games. Per-frame CPU JPEG plus base64 is about a third larger than the bytes and has no inter-frame compression. For motion use offscreen shared textures locally, and a tabCapture or window stream into a WebRTC track remotely, with hardware encoding."
-  rule: "Screencast for looking, WebRTC for watching, shared textures for compositing."
+  rule: "Shared textures inside the app, always. WebRTC tracks between machines. CDP screencast never internally; it exists for remote agents that speak only CDP, and for Chrome we did not build."
+  why_never_internally: "Chrome GPU-renders the frame, reads it back to CPU, JPEG-encodes, base64-encodes, sends it as JSON text, and we decode all of that to upload it to the GPU again. Owning the Electron means owning the pipeline, so we skip every step of it."
 
 # WHAT THE BRIDGE GIVES THE REST OF THE APP
 
