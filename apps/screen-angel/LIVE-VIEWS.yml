@@ -1,0 +1,187 @@
+# LIVE-VIEWS.yml — every window as a live texture we own: the parking lot, the proxy space,
+# the three modes, and the same views carried between machines and onto a phone.
+#
+# The window manager in SCREEN-ANGEL.yml (full_scope) assumed we would arrange real windows.
+# This file is the turn away from that: leave the real windows where nobody touches them, and
+# compose live images of them in a space that is entirely ours. The OS window manager stays,
+# demoted to a backstage hand.
+
+meta:
+  id: live-views
+  status: design
+  built: [still_capture_by_window_id]
+  measured: [offscreen_capture_works]
+  not_built:
+    - visibility_field
+    - offscreen_capture_fallback
+    - live_streams
+    - proxy_space
+    - parking_lot
+    - hop_mode
+    - forwarded_input
+    - peers
+    - phone_client
+  see_also: [BROWSER.yml, PROTOCOL.yml, CAPABILITIES.yml, APP-CONTROL.yml, ACCESSIBLIFY.yml, RECORDER.yml, MOBILE-CAMERA.yml, DISTRIBUTION.yml, SCREEN-ANGEL.yml]
+  platform_order: "macOS first, until it works perfectly. Windows second. Linux is not a design driver: it can come to the design, the design does not bend to it."
+
+# WHAT WE MEASURED
+#
+# The premise rests on one fact, so it was checked before anything was written.
+
+offscreen_capture_works:
+  date: 2026-10-03
+  how: "SCShareableContent with onScreenWindowsOnly NO, then SCContentFilter(desktopIndependentWindow:) and SCScreenshotManager, from a throwaway Swift script."
+  result: "Four Chrome windows the window server reported as NOT on screen (other Spaces, behind others) came back full-resolution and current: 2570x1982, 3214x2032, 2444x2158, 2716x1776."
+  consequence: "Today's 'That window is not on screen' error is our own lookup filter (onScreenWindowsOnly YES in Native.mm), not a platform limit. Fixing it is one flag plus a fallback."
+  not_yet_measured:
+    - "Minimized windows: current, stale, or blank."
+    - "Whether a hidden app keeps PAINTING. A grab returns the window server's last backing store, which is current for a static page and frozen for a video an app stopped drawing. Test: a playing video on another Space, grabbed twice seconds apart."
+  noise: "The full list is mostly Chrome furniture: 1x1 windows, 403x84 popups, 89- and 139-point toolbar strips. Listing off-screen windows needs a minimum size and a title-or-AX-window test, or the list is useless."
+  gotcha: "A command-line Swift probe must touch NSApplication.shared before ScreenCaptureKit builds a filter, or CoreGraphics asserts (CGS_REQUIRE_INIT). Electron is already initialized, so the app never sees this."
+
+# THE NEXT TWO STEPS (agreed, macOS)
+
+next:
+  visibility_field:
+    what: "window.list entries gain visibility: onscreen | offscreen | minimized | other — so a caller knows before grabbing whether the frame will be live."
+    how: "CGWindowListCopyWindowInfo(kCGWindowListOptionAll) with kCGWindowIsOnscreen, and kAXMinimizedAttribute per window when Accessibility is granted. Telling 'another Space' from 'hidden app' needs private CGS calls, so it is not promised."
+    flag: "window.list {all: true} includes non-on-screen windows; the default stays on-screen so nothing downstream changes meaning."
+  offscreen_capture_fallback:
+    what: "captureImage by windowId retries against the full shareable content when the window is not in the on-screen set."
+    where: "Native.mm ShareableContentSync gains an onScreenOnly parameter; capture/targets.ts findWindow looks in the full list."
+
+# THE PROXY SPACE
+
+proxy_space:
+  idea: |
+    Screen Angel goes native full screen in a Space of its own, opaque, and draws every other
+    window as a live texture. No transparency, no click-through, no fighting the real desktop,
+    and nothing it does can disturb a real window by accident, because no real window is here.
+  textures: "Each window is a ScreenCaptureKit stream with a per-window filter. Frames reach the renderer as VideoFrames and WebGPU imports them with importExternalTexture, so a window is a texture: clip it, zoom it, mesh it, warp it, tile it, or put it on a pie menu."
+  only_what_changed: "SCStreamFrameInfo carries dirty rects. Recognition rescans only those, and an idle window costs nothing."
+  frames_are_ours: "Accessibility reports the window frame and its content area, so the capture is cropped with sourceRect and the title bar and traffic lights never reach the proxy. We draw our own frame, or none, or a mesh."
+  window_management_is_ours: "Move, resize and close happen to the proxy and are then applied to the real window through Accessibility, deliberately. Zoom and warp never touch the real window at all; resize does, because the app has to relayout."
+  exclude_ourselves: "Filter our own process out of every list, or the proxies draw the proxies."
+  lineage: "The uwm pie-menu window manager linked into Mitch Bradley's Forth for the CHI'88 paper, then NeWS, where windows were already PostScript drawing surfaces you could scale and rotate. This is that again, above a compositor we control instead of inside a window server we do not."
+
+# THE PARKING LOT
+
+parking_lot:
+  why: |
+    A grab of a hidden window is only as fresh as the app's last paint, and apps stop painting
+    when they are fully hidden: Chrome detects occlusion, App Nap throttles, minimized windows
+    stop. A virtual display is a real display as far as the app is concerned, so a window
+    parked there, unoccluded, keeps drawing.
+  one_not_many: "One large virtual display, windows tiled without overlap, is enough. Occlusion is computed per window, not per display. A second display only when the first is full or a window needs a different scale."
+  macos:
+    api: "CGVirtualDisplay, private and undocumented."
+    precedent: ["DeskPad (open source): https://github.com/Stengo/DeskPad", "BetterDisplay: https://github.com/waydabber/BetterDisplay"]
+    costs:
+      - "Shows up in System Settings > Displays."
+      - "The cursor can wander onto it. Arrange it touching at a corner, and push the cursor back if it arrives."
+      - "GPU memory for a big HiDPI framebuffer, and parked apps really are still running."
+      - "A macOS update can break it. The fallback is grabbing hidden windows directly, which already works, with stale frames for apps that stop painting."
+  windows:
+    api: "An Indirect Display Driver (IddCx), which must be signed and installed with admin rights."
+    precedent: ["https://learn.microsoft.com/en-us/windows-hardware/drivers/display/indirect-display-driver-model-overview", "virtual-display-rs: https://github.com/MolotovCherry/virtual-display-rs", "Parsec's virtual display driver"]
+  only_when_needed: "Park a window only after it is shown to go stale or to ignore synthetic input. Grabbing in place is cheaper and invisible."
+
+# SPACES
+
+spaces:
+  per_display: "With 'Displays have separate Spaces' on (the default), each display has its own current Space. Activating a window on the virtual display switches THAT display's Space and leaves ours alone."
+  same_display_is_the_disruptive_case: "Activating an app whose window is on another Space of OUR display switches our display away. Parking avoids it."
+  moving_a_window_to_a_space:
+    public_api: "None. Accessibility moves windows between displays, not Spaces."
+    switch_then_move: |
+      Yes, with a visible jump: switch the display to the target Space (the Mission Control
+      Ctrl-arrow or Ctrl-number shortcuts, posted as key events, if the user has them enabled),
+      then move the window there by display. Or carry it: hold a synthetic drag on the title
+      bar while posting the Space switch, and the window rides along — the trick tiling window
+      managers like Amethyst use. Both are disruptive and timing-sensitive; reserve them for
+      putting a window back where it came from.
+    private: "CGSMoveWindowsToManagedSpace and friends. yabai needs System Integrity Protection partly disabled for its Space features, which rules that path out for a shipped app. https://github.com/koekeishiya/yabai"
+  app_switch_setting: "'When switching to an application, switch to a Space with open windows for the application' can drag our display along on activation. Raise the parked window and make it the app's main window through Accessibility BEFORE activating, so the app's focused window is the parked one."
+
+# THE THREE MODES
+
+modes:
+  proxy:
+    looks_like: "Screen Angel full screen, opaque, every window a live proxy."
+    can: "Clip, zoom, rearrange, compose, mesh, annotate. Everything."
+    costs: "Capture, and input that has to be forwarded."
+  overlay:
+    looks_like: "One or more real windows on the normal desktop, Screen Angel transparent and click-through above them. Mostly built already (src/main/overlay/)."
+    can: "Highlight, label, point, say. Cannot clip or zoom the real window."
+    costs: "Nearly nothing. Input is real."
+  hop:
+    looks_like: "One real app on the main display, optionally full screen, Screen Angel out of the way."
+    can: "Nothing but the way back."
+    costs: "None. Native performance, for when proxies are the wrong trade."
+  constraints:
+    two_windows_not_one: "Real windows cannot join our full-screen Space (only Split View shares one), so overlay mode leaves it and uses the overlay window. Proxy and overlay are different windows, not two states of one."
+    hopping_in: "Move the window from the parking lot to the main display, which lands it on the current Space. Optionally set AXFullScreen."
+    hopping_out: "Unset full screen (about a second of animation before it can move), then move it back to the parking lot. Remember original frame and full-screen state per window."
+    the_way_back: "A global hotkey (Carbon RegisterEventHotKey needs no permission), plus Command-Tab, plus a click anywhere on the overlay. Never Input Monitoring just to watch for one key."
+  order: "Proxy, read-only. Overlay, which mostly exists. Hop. Forwarded input in proxy mode last."
+
+# INPUT TO A WINDOW THAT IS NOT IN FRONT
+
+input:
+  ladder:
+    1_accessibility_actions: "AXPress, set value, focus. Works on any Space, activates nothing. UI Automation Invoke and Value are the Windows equivalent."
+    2_keys_to_a_process: "CGEventPostToPid. Usually works without activation. Windows: PostMessage to a background window works for some apps, SendInput only reaches the foreground."
+    3_activate_the_parked_app: "Real focus, real keys. Input methods, dead keys, repeat and shortcuts all just work, which is a feature. Safe because the window is on the parking lot, not on our display's other Spaces."
+    4_mouse: "Synthetic clicks into a non-frontmost window are app-dependent. Test per app; prefer the rungs above."
+  keep_our_window_from_stealing_focus: "Clicking a proxy re-activates Screen Angel and takes focus back from the app we just activated. Needs a non-activating panel (Electron type 'panel' on macOS, or focusable false). Whether a non-activating panel can also be native full screen is the open question this whole mode hangs on."
+  costs_of_activation: ["The menu bar becomes the target's, which is arguably honest.", "We stop seeing keys, so the hotkey is the only way back.", "Activation is cooperative on macOS 14+, and we are the app yielding, so that is fine."]
+  consent: "Everything on this ladder past rung 1 is injection and goes through the consent gate (APP-CONTROL.yml, CAPABILITIES.yml)."
+
+# MANY ANGELS
+
+peers:
+  idea: |
+    One Screen Angel per machine, peered. The Sims runs on the Windows laptop; the Mac's
+    Screen Angel shows its windows as proxies next to local ones and drives it. Each Angel
+    reads, recognizes and acts on the machine that owns the screen, and only results cross
+    the wire — the NeWS argument: send the program to the data, not the pixels to the program.
+  why_not_an_existing_remote_desktop: "They ship pixels of a whole screen. We want per-window streams plus semantics, which none of them carry."
+  studied_not_adopted:
+    rdp: "Built into Windows; RemoteApp sends single windows and virtual channels carry custom data. Windows hosts only."
+    vnc: "Everywhere and built into macOS. Old, slow, whole screen."
+    sunshine_moonlight: "Best latency tricks, hardware encode. GPL, whole screen. https://github.com/LizardByte/Sunshine"
+    rustdesk: "Complete and open, with relays. AGPL. https://github.com/rustdesk/rustdesk"
+    parsec: "Superb latency and a virtual display driver. Proprietary."
+  transport: "WebRTC. One video track per viewed window, data channels for trees, tree diffs, selector queries, recognition results, input and control. NAT traversal, congestion control and encryption come free, and Electron and every browser already speak it."
+  compression: "Hardware H.264/HEVC, or AV1 where both ends have it. Set MediaStreamTrack.contentHint 'text' or 'detail' for document windows so the encoder favours sharp edges over motion. https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/contentHint"
+  send_cheapest_first: "Semantics (tree, text, recognized elements), then cropped stills on demand, then a video track only for windows someone is watching, at the size they are watching it."
+  local_is_remote_with_zero_hops: "The local proxy space consumes the same frames and the same channels as a remote peer. One path, exercised every day."
+  recognition_stays_home: "Vision text recognition (VNRecognizeTextRequest) and Core ML on macOS, Windows.Media.Ocr and ONNX Runtime with DirectML on Windows, and the existing QR and egg readers (RECOGNIZER.yml). Run on dirty rects only."
+  permissions: "A peer is a principal in CAPABILITIES.yml layer 2. Read and act are granted separately, per peer, and an act grant is visible while it is live."
+
+phone:
+  what: "A phone as a peer client: views of any window on any peered Angel, and the phone's speaker and microphone as the speech channel. WebRTC audio tracks both ways."
+  speech: "Recognition and synthesis run wherever is best, on the phone or on the desktop Angel. The command language is the selector language spoken aloud (SCREEN-ANGEL.yml)."
+  touch: "Taps and drags on a proxy become forwarded input, through the same ladder and the same consent."
+  relation_to_mobile_camera: "MOBILE-CAMERA.yml is the phone reading a screen through its camera with no path to act. This is the phone as a window into a desktop Angel that does have the grants. Same PWA, two modes; the phone itself still holds no injection path."
+
+# OPEN TESTS, IN ORDER
+
+tests:
+  - "Video on another Space, grabbed twice. Does a hidden app keep painting?"
+  - "Same, minimized."
+  - "CGVirtualDisplay up, video window parked on it, grabbed twice."
+  - "Activate the parked app. Does our display's Space stay put, with and without the app-switch setting?"
+  - "Electron panel window, non-activating, in native full screen: possible or not?"
+  - "Keys by CGEventPostToPid to a parked Chrome and a parked native app."
+  - "SCStream per-window to WebGPU texture: latency and CPU at 4 and at 16 windows."
+
+links:
+  screencapturekit: "https://developer.apple.com/documentation/screencapturekit"
+  dirty_rects: "https://developer.apple.com/documentation/screencapturekit/scstreamframeinfo/dirtyrects"
+  windows_graphics_capture: "https://learn.microsoft.com/en-us/windows/uwp/audio-video-camera/screen-capture"
+  webgpu_external_texture: "https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/importExternalTexture"
+  webcodecs: "https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API"
+  vision_text: "https://developer.apple.com/documentation/vision/vnrecognizetextrequest"
+  electron_browser_window_panel: "https://www.electronjs.org/docs/latest/api/browser-window"
+  prefab: "sources/prefab-bibliography.md — pixel-based reverse engineering of interfaces, and its authors' own proposal to run it under remote desktop."

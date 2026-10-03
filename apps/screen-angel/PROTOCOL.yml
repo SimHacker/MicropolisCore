@@ -587,6 +587,7 @@ read_vs_act:
   act: [overlay.highlight, overlay.say, overlay.toggle, recorder.start, recorder.stop]
 
 see_also:
+  - LIVE-VIEWS.yml
   - src/common/protocol.ts
   - cli/screen_angel/protocol.py
   - skills/screen-angel/CARD.yml

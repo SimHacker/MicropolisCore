@@ -453,10 +453,12 @@ uses:
 open_questions:
   - "Does a published shadow surface confuse a screen reader that is also reading the real app? Two trees describing one screen is a UX problem before it is a technical one. Partly answered by making exploration a mode rather than an always-on state (reachability), and fully answered only by testing with someone who uses a screen reader daily."
   - "Whether a non-focusable background window's announcements are spoken, per platform and per screen reader. This gates the announce mode and is the first thing to measure."
-  - "A full BROWSER.yml is warranted: tabs as targets, multiple windows, per-tab sessions, and the embedded-web-view detection problem are each bigger than a section."
+  - "A full BROWSER.yml is warranted: tabs as targets, multiple windows, per-tab sessions, and the embedded-web-view detection problem are each bigger than a section. Started: BROWSER.yml."
 
 see_also:
   - SCREEN-ANGEL.yml
+  - BROWSER.yml
+  - LIVE-VIEWS.yml
   - PROTOCOL.yml
   - APP-CONTROL.yml
   - CAPABILITIES.yml

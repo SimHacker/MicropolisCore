@@ -148,6 +148,6 @@ consent:
   the_room_is_in_frame: "The desktop layer sees a window; a phone sees whatever is behind the monitor, including people. Frames stay on the device, nothing is uploaded by default, and the retention window is short and visible."
 
 not:
-  a_remote_control: "No injection, no input synthesis, no save writes. If a phone needs to cause something, it asks a desktop Angel that has the grants."
+  a_remote_control: "No injection, no input synthesis, no save writes. If a phone needs to cause something, it asks a desktop Angel that has the grants — the phone-as-peer mode in LIVE-VIEWS.yml."
   a_second_specification: "The phone cannot read a code the desktop cannot, and it cannot mean anything different by it."
   a_reason_to_change_the_art: "If a code needs redesigning to survive a camera, the reduced palette profile is the change — not new geometry, not a bigger symbol, and not per-device variants of the same egg."

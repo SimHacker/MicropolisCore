@@ -139,6 +139,7 @@ ui:
 
 see_also:
   - PROTOCOL.yml
+  - LIVE-VIEWS.yml
   - APP-CONTROL.yml
   - DISTRIBUTION.yml
   - modules/soul-angel/GAME-BRIDGES.yml

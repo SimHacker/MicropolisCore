@@ -1,0 +1,78 @@
+# BROWSER.yml — the browser bridge, the most important one: tabs as targets, the DevTools
+# protocol from inside Electron, and our own Electron as a browser.
+#
+# ACCESSIBLIFY.yml (web_content, open_questions) asked for this file. The browser is the app
+# Screen Angel deals with most, the most complex, and the only one we can open from the
+# inside on every platform. We are also written in it — TypeScript, SvelteKit, WebRTC — so
+# the bridge shares code with the app rather than translating to it.
+
+meta:
+  id: browser
+  status: design
+  built: []
+  not_built: [own_browser, extension, cdp_bridge, tab_targets, screencast_views]
+  see_also: [LIVE-VIEWS.yml, ACCESSIBLIFY.yml, APP-CONTROL.yml, PROTOCOL.yml, CAPABILITIES.yml, MODULES.yml]
+
+why_not_pixels: |
+  Pixels of a browser tell us what a page looks like. The browser itself will tell us what it
+  IS: the DOM, the accessibility tree, every tab including background ones, and an input path
+  that needs no window focus. Reverse engineering a browser from screenshots is the Prefab
+  approach applied to the one app that does not need it.
+
+# THREE WAYS IN, BY HOW MUCH WE OWN
+
+levels:
+  own_electron_browser:
+    what: "Pages in WebContentsViews inside Screen Angel. No other process, no OS window per tab, no window manager involved at all."
+    cdp: "webContents.debugger speaks the full Chrome DevTools Protocol in-process: attach, sendCommand, events. No debugging port, so nothing else on the machine can attach. https://www.electronjs.org/docs/latest/api/debugger"
+    pixels: |
+      Offscreen rendering hands us each frame with its dirty rect, or with useSharedTexture a
+      GPU texture and no CPU copy — the fastest path there is, and it never draws to a real
+      window. Frames stop when the page is idle.
+      https://www.electronjs.org/docs/latest/tutorial/offscreen-rendering
+    why_it_wins: "Snappiest by far, nothing goes stale because nothing is ever hidden from the OS's point of view, every tab is a texture, and Screen Angel's own UI is the same kind of page — recursion into itself for free (ACCESSIBLIFY.yml, recursion)."
+    costs:
+      not_their_browser: "No saved passwords, profile, sync or extensions. Fine for agent work and proxies, wrong for a person's own browsing."
+      drm: "Stock Electron has no Widevine, so Netflix-class video will not play. castLabs ships Electron with it: https://github.com/castlabs/electron-releases"
+      sign_in: "Some identity providers refuse embedded browsers."
+      patching: "We ship Chromium, so we ship its security fixes. Electron's release cadence makes this a schedule, not a project."
+  extension_in_their_browser:
+    what: "For the browser the user already runs, with their sessions."
+    tabs: "chrome.tabs lists every tab. chrome.windows.create({tabId}) tears a tab into its own window in one call."
+    cdp: "chrome.debugger gives an extension the same protocol, at the price of a 'is debugging this browser' infobar the user will see. https://developer.chrome.com/docs/extensions/reference/api/debugger"
+    pixels: "chrome.tabCapture gives a MediaStream of a tab, which goes straight into a WebRTC track. Needs a user gesture to start. https://developer.chrome.com/docs/extensions/reference/api/tabCapture"
+    talks_to_us: "Native messaging to the Screen Angel process, or the control socket. The extension is a bridge in the MODULES.yml sense."
+    cost: "A second distribution channel with its own review, packaged per browser."
+  launched_with_a_port:
+    what: "A browser we start with --remote-debugging-port (APP-CONTROL.yml already launches apps). Full CDP from outside."
+    constraint: "Cannot attach to a Chrome that was not started this way."
+    keep_it_painting: "--disable-backgrounding-occluded-windows, --disable-renderer-backgrounding, --disable-background-timer-throttling. For a browser we launch, this may make the parking lot unnecessary (LIVE-VIEWS.yml, parking_lot)."
+  fallback: "The platform accessibility tree, like any app. Chromium builds it lazily, so an empty tree is not proof of an inaccessible page."
+
+# CDP SCREENCAST: GOOD ENOUGH FOR WHAT
+
+screencast:
+  what: "Page.startScreencast pushes frames as base64 JPEG or PNG with format, quality, maxWidth, maxHeight and everyNthFrame; each must be acked with Page.screencastFrameAck before the next. Page.captureScreenshot for single stills, and both work on background tabs. https://chromedevtools.github.io/devtools-protocol/tot/Page/"
+  fast_enough_for: "Thumbnails, previews, a dozen tabs in a grid, recognition on changed frames, and agent work. The ack is natural backpressure: a slow consumer simply gets fewer frames."
+  not_for: "Smooth video or games. Per-frame CPU JPEG plus base64 is about a third larger than the bytes and has no inter-frame compression. For motion use offscreen shared textures locally, and a tabCapture or window stream into a WebRTC track remotely, with hardware encoding."
+  rule: "Screencast for looking, WebRTC for watching, shared textures for compositing."
+
+# WHAT THE BRIDGE GIVES THE REST OF THE APP
+
+gives:
+  targets: "Every tab is a target in window.list terms, with an id, a title, a URL and a visibility — background tabs included, which the OS window list cannot see."
+  tree: "Accessibility.getFullAXTree and DOM queries, merged into the same tree the selectors walk, tagged with provenance (ACCESSIBLIFY.yml)."
+  input: "Input.dispatchMouseEvent and Input.dispatchKeyEvent go to a page directly. No focus, no activation, no Space switch — the whole of LIVE-VIEWS.yml's input ladder collapses to one rung for web content."
+  fixes: "Runtime.evaluate to add ARIA, so the browser republishes a better tree to every screen reader, not just to us (ACCESSIBLIFY.yml, web_content)."
+
+# TABS AND WINDOWS
+
+tabs:
+  pull_them_apart: "For a proxy space, each tab can be its own target without being its own window: screencast or offscreen frames per tab. Tear tabs into real windows only when a page needs native rendering (WebGL-heavy pages, DRM video) in somebody else's browser."
+  chrome_is_ours: "In our own browser there is no title bar, tab strip or traffic light to crop, because there is no OS window. In theirs, crop the frame and draw our own (LIVE-VIEWS.yml, frames_are_ours)."
+
+order:
+  - "CDP over webContents.debugger in our own Electron. Smallest step, no new distribution, and it exercises the merged tree."
+  - "Offscreen rendering into the proxy space."
+  - "The extension, for the user's own browser."
+  - "Launched-with-a-port, for agent sessions that need a real Chrome profile."

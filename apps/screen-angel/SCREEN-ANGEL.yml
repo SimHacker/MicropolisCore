@@ -96,6 +96,7 @@ surface:
       After the gate: app control, then game management, then save editing.
       Last: window manager and shell, because they are the only items that need all four
       primitives finished and the only ones a user cannot opt out of once adopted.
+    window_manager_revised: "LIVE-VIEWS.yml: compose live proxies in a Space of our own instead of arranging real windows, which can be adopted and abandoned a mode at a time."
 
 the_problem:
   low_level: |
