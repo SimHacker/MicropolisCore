@@ -137,7 +137,7 @@ void Micropolis::doZone(const Position &pos)
         return;
     }
 
-    printf("UNEXPECTED ZONE: %d !!!\n", tile);
+    // Tiles 1019-1023 reach here, outside USED_TILE_COUNT.
 }
 
 /**
