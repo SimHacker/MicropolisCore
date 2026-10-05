@@ -300,7 +300,7 @@ void Micropolis::voteProblems(const short problemTable[PROBNUM])
             voteCount++;
         }
         problem++;
-        if (problem > PROBNUM) {
+        if (problem >= PROBNUM) {
             problem = 0;
         }
         loopCount++;
