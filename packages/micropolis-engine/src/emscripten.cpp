@@ -1262,6 +1262,8 @@ function createTypedArrayFromMap(mapInstance) {
     .function("makeEarthquake", &Micropolis::makeEarthquake)
     .function("makeFire", &Micropolis::makeFire)
     .function("makeFlood", &Micropolis::makeFlood)
+    .function("makeTornado", &Micropolis::makeTornado)
+    .function("makeMonster", &Micropolis::makeMonster)
     .function("setFire", &Micropolis::setFire)
     .function("fireBomb", &Micropolis::fireBomb)
 
