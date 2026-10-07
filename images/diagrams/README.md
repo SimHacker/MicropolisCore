@@ -23,4 +23,9 @@ Static illustrations from [**Building SimCity: How to Put the World in a Machine
 
 ## CHM mirror
 
-Original hosting reference: [Computer History Museum — SimCity reverse diagrams](https://smalltalkzoo.thechm.org/users/Dan/uploads/SimCityReverseDiagrams/)
+Original hosting: [the PDF at the Computer History Museum](https://smalltalkzoo.computerhistory.org/users/Dan/uploads/SimCityReverseDiagrams.pdf)
+
+## Articles
+
+- Don Hopkins, [Designing User Interfaces to Simulation Games](https://donhopkins.medium.com/designing-user-interfaces-to-simulation-games-bd7a9d81e62d) (the diagrams with Will Wright's 1996 talk)
+- [Building SimCity on Hacker News](https://news.ycombinator.com/item?id=40698442), with Chaim in the thread
