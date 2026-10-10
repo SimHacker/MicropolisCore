@@ -738,6 +738,12 @@ void Micropolis::simInit()
     resetMapState();
     resetEditorState();
     clearMap();
+
+    // A freshly initialized simulation gets a random world by default. Embedders
+    // that want reproducible runs call seedRandom() after init() and before
+    // loading or generating a city.
+    randomlySeedRandom();
+
     initWillStuff();
     setFunds(5000);
     setGameLevelFunds(LEVEL_EASY);
