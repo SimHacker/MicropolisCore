@@ -257,6 +257,43 @@ lineage:
       direction."
     why_it_matters_here: "Kando is the existence proof for Soul Angel's shell. See ../ARCHITECTURE.yml"
 
+  petal:
+    who: "Kiruna Labs, Apache-2.0. https://github.com/kiruna-labs/petal (a clone sits beside this repo at ../petal, to harvest from)"
+    what: |
+      Multi-window screen sharing where each shared window arrives as its own borderless native
+      window, with telepointers, drawing, consent-gated remote control and an opt-in AI that sees
+      a shared window. Tauri 2: a Rust core (ScreenCaptureKit and Windows.Graphics.Capture, a
+      native compositor, input injection) under a Svelte 5 page in the system webview.
+    shell_decision: |
+      Considered in October 2026 and kept Electron. Tauri suits Petal because its webview only
+      draws chrome; the work is native. Screen Angel's plan needs Chromium itself:
+      webContents.debugger for in-process CDP, offscreen shared textures so a page and a captured
+      window are the same object, pages as targets inside the app, castLabs Widevine and the
+      Steam overlay path (BROWSER.yml, LIVE-VIEWS.yml, STEAMWORKS.yml). Tauri on macOS is
+      WKWebView, which has none of these, and it would mean three engines on three platforms.
+    harvest:
+      - "Capture: ScreenCaptureKit and Windows.Graphics.Capture streams, the permission flow"
+      - "Click-through overlay windows on both platforms (share_overlay.rs, windows_share_overlay.rs)"
+      - "Input injection that does not steal focus, behind a consent prompt (remote_control*.rs, docs/remote-control-trust-model.md): the model for APP-CONTROL.yml and agent actions"
+      - "Telepointers and fading strokes on a shared window (telepointer.rs, draw.rs)"
+      - "WebRTC over a LiveKit SFU with hardware H.264 (MEDIA-STREAMS.yml)"
+      - "docs/ENGINEERING.md: the crash classes native window code invites; read before touching ours"
+    rust:
+      decision: "Yes for new native work, as napi-rs addons loaded by Electron; no rewrite of what works."
+      why: |
+        napi-rs builds against Node-API, which is ABI-stable, so an addon need not be rebuilt for
+        each Electron version, and prebuilt per-platform packages replace the cmake-js postinstall.
+        Petal's Rust ports in as code rather than as ideas, through the same objc2,
+        screencapturekit and windows crates. Rust's ownership rules also guard the hard part of
+        this code: CF/AX object lifetimes, threads and callbacks, the crash classes Petal's
+        ENGINEERING.md catalogues.
+      first: |
+        Live capture streams, harvested from Petal, as a new Rust addon: the continuous,
+        threaded, GPU-texture work where Rust pays most. Then the Windows backend, which is the
+        less finished one. Native.mm's accessibility tree stays Objective-C++ until it needs
+        rework: AX is plain C calls, it works, and a rewrite buys little.
+      cost: "A Rust toolchain on every build machine, a second native build system beside cmake-js until the C++ addons go, and contributors who read Rust."
+
   llms:
     what: "The missing recognizer"
     argument: |
