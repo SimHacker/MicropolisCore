@@ -418,6 +418,8 @@ export interface Micropolis extends ClassHandle {
   makeEarthquake(): void;
   makeFire(): void;
   makeFlood(): void;
+  makeTornado(): void;
+  makeMonster(): void;
   setFire(): void;
   fireBomb(): void;
   sendMessage(_0: number, _1: number, _2: number, _3: boolean, _4: boolean): void;
