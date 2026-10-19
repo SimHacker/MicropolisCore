@@ -12,6 +12,8 @@ the linked documents.
 
 | Area | Next concrete action | Priority |
 |------|----------------------|----------|
+| Album content authoring (design only) | [Page graphs → editions → game objects](designs/family-album-as-storymaker.md#pages-routes-and-generated-objects): specify route manifests, stable GUID mappings, and separate save-instance updates | Future |
+| Editing tools (design only) | [Predictive cursor + God zone editor](designs/predictive-cursor-and-god-zone-editor.md): audit snapshot determinism, zone states/footprints, and population units before implementation | Future |
 | [Playable Micropolis game](#playable-micropolis-game) | Phase A: auto-start sim + HUD bound to `micropolisReactive` | **High** |
 | [Playable Micropolis game](#playable-micropolis-game) | Phase B: `ToolState` + click-to-build + minimal `Toolbar` | **High** |
 | [Playable Micropolis game](#playable-micropolis-game) | Phase B: `CursorLayer` DOM/SVG tool cursor (same clip math as future WebGPU) | **High** |

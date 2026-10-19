@@ -9,7 +9,10 @@
 
 > **Trademark notice.** *Micropolis* is used under license from Micropolis GmbH. *SimCity*, *The Sims*, and *Maxis* are EA Inc. trademarks; references are nominative use only. No affiliation with or endorsement by any listed studio is implied.
 
-> **Scope.** A companion-side extension of the user-authored Sims Family Album. The Sims engine remains the runtime; album pages compile back to documented `.iff` book/album objects. See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent).
+> **Scope.** A proposed companion-side extension of the user-authored Sims Family Album.
+> Native album export and generated `.iff` book/album objects are separate targets;
+> each needs a documented, tested adapter. The Sims engine remains the game runtime.
+> See [soul-city.md → Scope and intent](soul-city.md#scope-and-intent).
 
 > **Lineage.** This design draws on a thread of prior work (HyperLook SimCity, SimCityNet, DreamScape, MediaGraph, iLoci, Bar Karma's StoryMaker, Urban Safari) that is documented elsewhere in the design suite — see the *Lineage* section in [designing-inward-miyamoto-principles.md](designing-inward-miyamoto-principles.md), [maxis-ea-shutdown-hn-2015.md](maxis-ea-shutdown-hn-2015.md) (SFC / Bar Karma / HiveMind), [storymaker/architectural-overview.md](storymaker/architectural-overview.md) (SFC slides + diagram), and the SimCity-to-Bar-Karma chronology referenced from [characters-as-hydrogen.md](characters-as-hydrogen.md). This doc focuses on the design itself; the lineage is not re-litigated here.
 
@@ -26,7 +29,49 @@ The natural next shape is a **branching, merging, geo-tagged graph of scenes**, 
 - Storylines are author-curated paths through the shared scene pool.
 - Characters and lots travel inside scenes as content snippets; when reused, the [Bifrost protocol](moollm-microworld-os.md#the-bifrost-the-bridge-as-a-structured-ontological-transition) handles identity sync and provenance.
 
-The graph lives in git, federates by `git remote`, and round-trips through the [Adventure Compiler](moollm-microworld-os.md#the-adventure-compiler-is-a-coherence-engine-partner-not-a-one-shot-compiler) to a pageable Family Album book IFF object that the EA-published Sims 1 displays normally.
+The proposed graph can be versioned in git. Storage and export adapters must
+preserve node identity and disclose information lost in a linear target.
+The compiler and game-object output described here remain design work,
+not evidence of a working native round trip.
+
+## Pages, routes, and generated objects
+
+A page may contain images, captions, audio, or other media. It may be imported
+from any supported game's album, captured with little game metadata, or
+authored entirely by the user. Use
+[Dublin Core terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/)
+for common metadata and documented extensions for game/build information.
+
+A linear family album, slideshow, playlist, or coffee-table book is a trip
+through the graph from a chosen start for a chosen length. Specify whether
+length counts pages or duration, how branches are chosen, and how cycles
+and dead ends terminate. Publish a resolved list of page IDs and revisions
+so the edition remains reproducible when the graph changes.
+
+Content tools can take that edition as input to a template: slides for a
+projector, recordings for a jukebox, or pages for a book. Store source IDs,
+route and recipe revisions, target format, and allocated game object GUIDs.
+Adding slides or recordings should rebuild the same object using its existing
+GUIDs. A fork is an explicit new identity, not an accidental consequence of
+every build. Multi-object templates retain their complete GUID mapping.
+
+Users can place one or several instances in chosen house saves, manually or
+through an automated placement plan. Definition updates and updates to
+saved instance state are separate operations. Preview affected saves, check
+compatibility, back them up, and report partial failures; do not assume an
+installed asset update migrates every saved copy.
+
+Detailed shared model:
+[media pages and object generation](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUVENIRS.md).
+Related plans: [GUID registry](https://github.com/SimHacker/WillWrightShowForFood/blob/main/catalogs/soul-city/guid-registry.md)
+and [object shops](https://github.com/SimHacker/WillWrightShowForFood/blob/main/catalogs/soul-city/object-shops.md).
+For the earlier scene-graph work, see
+[StoryMaker's architectural overview](storymaker/architectural-overview.md).
+
+Acceptance checks: reproduce a pinned route after shared-page edits; preserve
+unknown metadata; disclose branch loss in linear exports; retain object GUIDs
+on rebuild; distinguish forks; account for every placed instance; validate
+rights before publication. These are requirements, not completed tests.
 
 ---
 

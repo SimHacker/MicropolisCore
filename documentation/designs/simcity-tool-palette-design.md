@@ -8,6 +8,7 @@
 
 | Topic | Document |
 |--------|----------|
+| Future preview and query-centered God editing | [predictive-cursor-and-god-zone-editor.md](predictive-cursor-and-god-zone-editor.md) |
 | Virtual pointer, tile frame cursor, MP | [virtual-pointer-and-pie-cursors.md](virtual-pointer-and-pie-cursors.md) |
 | Nine-slice frame rim = palette border | [ui-frame-nine-slice.md](ui-frame-nine-slice.md) |
 | Gesture space, angle-at-release | [gesture-space-and-pie-menus.md](gesture-space-and-pie-menus.md) |

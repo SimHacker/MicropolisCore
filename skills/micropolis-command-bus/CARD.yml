@@ -171,9 +171,9 @@ see_also:
   - GLANCE.yml
   - README.md
   - "../micropolis/CARD.yml"
-  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/action-queue/CARD.yml"
-  - "/Users/a2deh/GroundUp/Leela/git/moollm/skills/advertisement/CARD.yml"
-  - "/Users/a2deh/GroundUp/Leela/git/moollm/kernel/tool-calling-protocol.md"
+  - "/Users/a2deh/GroundUp/git/moollm/skills/action-queue/CARD.yml"
+  - "/Users/a2deh/GroundUp/git/moollm/skills/advertisement/CARD.yml"
+  - "/Users/a2deh/GroundUp/git/moollm/kernel/tool-calling-protocol.md"
 
 credits:
   inspiration:

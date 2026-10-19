@@ -39,6 +39,7 @@ Read these alongside:
 
 ### Platform and integration
 
+- [Predictive cursor and God zone editor](predictive-cursor-and-god-zone-editor.md) — paired edited/unedited futures; query-derived footprints; population/value configuration pies; shared housing-injection operations (design only).
 - `platform-lineage-index.md` — Platform eras (NeWS, X11, OLPC, OpenLaszlo, Wasm) and where each layer’s docs live; maps **`documentation/`** (reference + archive) to **`documentation/designs/`** (forward-looking specs).
 - `collaborative-microworld-lineage.md` — Engelbart, Kay, Papert, Piaget, SimCityNet, and constructionist multiplayer.
 - `multiplayer-browser-lessons.md` — Lessons from Sail/Muddy and the Hacker News discussion for Soul City.

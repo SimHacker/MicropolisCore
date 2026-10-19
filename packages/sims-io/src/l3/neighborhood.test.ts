@@ -149,7 +149,7 @@ describe('scanForNeighborhoods (synthetic fixture)', () => {
 
 // ─── Real Sims install (skipped unless present) ───────────────────────────────
 
-const REAL_SIMS = '/Users/a2deh/GroundUp/Leela/git/SimObliterator_Suite/dev/tests/test_paths.txt';
+const REAL_SIMS = '/Users/a2deh/GroundUp/git/SimObliterator_Suite/dev/tests/test_paths.txt';
 
 describe.skipIf(!existsSync(REAL_SIMS))('real Sims install (optional)', () => {
 	it('can read test_paths.txt and contains UserData path', () => {
