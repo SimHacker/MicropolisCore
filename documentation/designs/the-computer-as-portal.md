@@ -230,9 +230,9 @@ The mechanism is exactly the same as the Uplifted Computer's screen — SPR2 spr
 
 #### "Play SimCity in the carpet"
 
-This rug is **an even smaller scale version of [SliceCity*](https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources)* — Don's earlier project (in the Maxis-era Sims modding ecosystem) that put a tiny, *live*, SimAntics-running SimCity inside a Sims object. SliceCity ran an actual simulation in the object via BHAVs. The Micropolis Rug-O-Matic is more modest in mechanism (cycling baked snapshots, not a live in-game simulation) but more powerful in *what it depicts*: a real Micropolis city, with all of Micropolis's CA-driven complexity, rendered out of Micropolis City and loaded onto the rug as a sequence of views.
+This rug is an even smaller-scale cousin of **[SliceCity](https://web.archive.org/web/20040317155006/http://www.simslice.com/Slicecity.htm#slicecityanchor1)**, Steve Alvey's SimSlice object from the Maxis-era Sims community, which put a tiny, *live* SimCity, running in SimAntics, inside a Sims object. SliceCity ran an actual simulation in the object via BHAVs. The Micropolis Rug-O-Matic is more modest in mechanism (cycling baked snapshots, not a live in-game simulation) but more powerful in *what it depicts*: a real Micropolis city, with all of Micropolis's CA-driven complexity, rendered out of Micropolis City and loaded onto the rug as a sequence of views.
 
-The user's instinct — *"the floor starts playing, and you can play simcity in the carpet"* — captures the lived experience precisely:
+In Don's words, *"the floor starts playing, and you can play simcity in the carpet"*:
 
 - The Sim walks across the rug. The rug shimmers between day and night views of Haight.
 - The Sim sits on the rug. A popup shows a closer detail: a fire in downtown Haight is visible in the rug's pattern.
