@@ -455,8 +455,7 @@ bool Micropolis::saveFile(const std::string &filename)
          * linear index x * WORLD_H + y. This is column-major relative to city
          * coordinates, and is the same order exposed to JavaScript/WASM tools.
          */
-        save_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f) &&
-        save_short(((short *)&mop[0][0]), WORLD_W * WORLD_H, f);
+        save_short(((short *)&map[0][0]), WORLD_W * WORLD_H, f);
 
     fclose(f);
 
