@@ -420,7 +420,7 @@ The Sims succeeded not because of its simulation quality alone but because of it
 - Behaviors are composable SimAntics trees
 - Users can author, remix, and share objects, skins, animations, houses
 - Transmogrifier, IFFPencil2, Rug-O-Matic, the tombstone server: tools built on the object model
-- SimAntics running a Lilliputian Micropolis inside The Sims
+- SimAntics running a Lilliputian SimCity inside The Sims: Steve Alvey's SliceCity, and Don's SimCity in a Sims computer object
 
 This is what Don Hopkins means when he says The Sims is a **nurturing ecosystem**, not a killer app. Will Wright described the same community in May 2001 as *"like an ecology"* with tool-makers, content artists, mainstream content sites, and news sites about the other sites — all of them filling different niches and interdependent. (See [the-tornado-and-the-archives.md → Contemporary record (May 2001)](the-tornado-and-the-archives.md#contemporary-record-may-2001-will-wright-on-the-scale) for the primary source and Will's other concrete numbers from that interview.)
 
