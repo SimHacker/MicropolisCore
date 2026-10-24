@@ -5,8 +5,9 @@
 > handling events, abstracting platform dependencies, and building higher level widgets on top.
 
 Named **aQuery** in an email to Peter Korn around 2013, and proposed publicly on Hacker News
-eighteen times between 2015 and 2025, gaining something each time. Never built. Renamed
-**Screen Angel** in September 2026.
+eighteen times between 2015 and 2025, gaining something each time. Never built until it was
+renamed **Screen Angel** in September 2026; reading, selectors, the overlay, the protocol, the CLI
+and the MCP server exist now.
 
 **The payoff, in Don's words:** *fix and script and extend and customize existing apps that have
 shitty user interfaces, from outside, without modifying the apps.*

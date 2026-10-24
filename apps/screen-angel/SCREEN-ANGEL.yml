@@ -43,8 +43,10 @@ what_it_is:
     2013, in email to Peter Korn, as aQuery. First public post 2015-07-30 (HN
     9977226).
   never_built: >-
-    No code exists for the layer itself. Eleven years of prose and one working
-    prototype of the shell it would live in.
+    Until September 2026, no code existed for the layer itself: eleven years of
+    prose and one working prototype of the shell it would live in. Now built:
+    read, overlay, selectors, protocol, CLI, MCP and skill (see
+    surface.staging).
   scope_rule: >
     Don's own test for what the name has to cover: it "can help you with
     soulless apps like Microsoft Word as well as soulful games like The Sims."
