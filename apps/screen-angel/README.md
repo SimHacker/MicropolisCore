@@ -114,8 +114,9 @@ to colleagues. So this layer has to satisfy the man who prosecuted the case, and
 i-beam's move: direct manipulation and agency stop competing when the agent is the affordance you
 were already using.
 
-The pun is free, too. Both are bent metal that holds things together — a paperclip holds a stack
-of paper, an I-beam holds up a building. Same job description, comically different load rating.
+The pun is free, and "load bearing" too. Both are bent metal that holds things together — a 
+paperclip holds a stack of paper, an I-beam holds up a building. Same job description, 
+comically different load rating.
 
 Lineage: `moollm/skills/cursor-mirror/docs/I-BEAM.md` and `characters/I-BEAM-CHARACTER.yml`;
 archetype at `moollm/skills/no-ai-overlord/archetypes/i-beam.yml`. The reasoning behind every
@@ -131,8 +132,8 @@ in the server, subclassable, scripted in PostScript — AJAX before AJAX. Then a
 scripted in JavaScript. Same shape, three decades apart.
 
 The difference is that the first two could run code *inside* the window system, and nobody will
-ever ship one of those again. The Screen Angel has to work from outside. That constraint is the
-whole design.
+ever ship one of those again. The Screen Angel has to work from outside and above. That constraint 
+is the whole design.
 
 ## Driving it from an agent
 
