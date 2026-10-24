@@ -1,32 +1,76 @@
-# FONT-RECOGNITION.yml — reading The Sims 1 interface by matching the font it draws with
+# FONT-RECOGNITION.yml — reading The Sims 1 interface by matching the font it
+# draws with
 #
-# Companions: ../../../RECOGNIZER.yml (the reader stack) · ../../../OPTICAL-CHANNEL.yml (codes, of
-# which text is the widest) · src/text/ (the code) · tools/ (importers and exporters) ·
-# assets/interface.fontpack (every face) · assets/interface.anchors (the art it finds the panel by) ·
+# Companions: ../../../RECOGNIZER.yml (the reader stack) ·
+# ../../../OPTICAL-CHANNEL.yml (codes, of which text is the widest) · src/text/
+# (the code) · tools/ (importers and exporters) · assets/interface.fontpack
+# (every face) · assets/interface.anchors (the art it finds the panel by) ·
 # assets/font-provenance.json (what only a person knows)
 
 status:
-  built: [font_pack_format, importers, exporters, canvas_shaped_api, coverage_matcher, line_reader, anchor_matcher, resolution_independent_panel_finder, analysis_layer, tests, fixture_renderer]
-  not_built: [tooltip_and_dialog_regions, live_polling, cjk_faces, verification_against_a_real_frame]
-  fonts_in_use: "The game's own VariableSans_08 for the panel. The 2004 hand-measured capture rides along as the one face that came from a screen rather than from an asset, which makes it the test that the reader works on captured pixels."
-  two_files: "assets/interface.fontpack, 92,044 bytes, twelve faces. assets/interface.anchors, 2,214 bytes, three crops of panel background art. Both committed; the game's own files are not."
+  built: [font_pack_format, importers, exporters, canvas_shaped_api,
+          coverage_matcher, line_reader, anchor_matcher,
+          resolution_independent_panel_finder, analysis_layer, tests,
+          fixture_renderer]
+  not_built: [tooltip_and_dialog_regions, live_polling, cjk_faces,
+              verification_against_a_real_frame]
+  fonts_in_use: >-
+    The game's own VariableSans_08 for the panel. The 2004 hand-measured capture
+    rides along as the one face that came from a screen rather than from an
+    asset, which makes it the test that the reader works on captured pixels.
+  two_files: >-
+    assets/interface.fontpack, 92,044 bytes, twelve faces.
+    assets/interface.anchors, 2,214 bytes, three crops of panel background art.
+    Both committed; the game's own files are not.
 
 the_claim_this_settles:
-  what_the_specs_kept_saying: "That text is the widest carrier on the screen and the easiest thing on it to read. That was an assertion."
-  what_is_true_now: "A line of the game's own anti-aliased interface text reads back exactly, in any colour, over any background, at about 10ms a line — and a misaligned read collapses rather than degrading into plausible text. It is the only carrier in the whole optical channel that is finished."
+  what_the_specs_kept_saying: >-
+    That text is the widest carrier on the screen and the easiest thing on it to
+    read. That was an assertion.
+  what_is_true_now: >-
+    A line of the game's own anti-aliased interface text reads back exactly, in
+    any colour, over any background, at about 10ms a line — and a misaligned
+    read collapses rather than degrading into plausible text. It is the only
+    carrier in the whole optical channel that is finished.
 
 it_is_not_ocr:
-  the_difference: "OCR guesses at letters drawn by an unknown font at an unknown size and pays for that generality everywhere. This has the exact coverage masks the game blits, so a character is not recognised but CONFIRMED: predict what each pixel would be if this letter were here, and see."
-  what_it_costs: "About 10ms for a line of panel text over the English alphabet, 14ms over all 222 glyphs. No model, no training, no network, and the same answer every time."
-  what_it_requires: "Native scale, integer pixel positions, and the font the game draws with. Outside those conditions nothing here works at all, which is a feature — see the_honest_failure."
-  and_therefore: "No vision model belongs in this path. A model asked to read text we already have the masks for would paper over exactly the misalignment the confidence number exists to expose (RECOGNIZER.yml, no_model_in_the_loop)."
+  the_difference: >-
+    OCR guesses at letters drawn by an unknown font at an unknown size and pays
+    for that generality everywhere. This has the exact coverage masks the game
+    blits, so a character is not recognised but CONFIRMED: predict what each
+    pixel would be if this letter were here, and see.
+  what_it_costs: >-
+    About 10ms for a line of panel text over the English alphabet, 14ms over all
+    222 glyphs. No model, no training, no network, and the same answer every
+    time.
+  what_it_requires: >-
+    Native scale, integer pixel positions, and the font the game draws with.
+    Outside those conditions nothing here works at all, which is a feature — see
+    the_honest_failure.
+  and_therefore: >-
+    No vision model belongs in this path. A model asked to read text we already
+    have the masks for would paper over exactly the misalignment the confidence
+    number exists to expose (RECOGNIZER.yml, no_model_in_the_loop).
 
 the_fonts_the_game_ships:
-  where: "UIGraphics/Fonts, eleven sizes: VariableSans_07 through _20, plus _48 for the pause banner."
-  what_each_size_is: "A .bmp atlas and a .fot metrics file. The .fot holds a small header, then 256 records of left/top/right/bottom in the atlas, offsetX, offsetY and the advance, then an alpha ramp."
-  the_face: "Comic Sans MS. The loader in the shipped source sets kVariableSans to it, with an Arial line commented out above — somebody's decision, preserved in the build."
-  the_atlases_are_rle: "BI_RLE8 compressed BMPs in top-down row order, which standard decoders get wrong often enough that packages/optical-codec/src/node/bmp.ts decodes them here."
-  the_pixels_are_not_colour: "They are coverage. See antialiasing below, which is the fact everything else in this file follows from."
+  where: >-
+    UIGraphics/Fonts, eleven sizes: VariableSans_07 through _20, plus _48 for
+    the pause banner.
+  what_each_size_is: >-
+    A .bmp atlas and a .fot metrics file. The .fot holds a small header, then
+    256 records of left/top/right/bottom in the atlas, offsetX, offsetY and the
+    advance, then an alpha ramp.
+  the_face: >-
+    Comic Sans MS. The loader in the shipped source sets kVariableSans to it,
+    with an Arial line commented out above — somebody's decision, preserved in
+    the build.
+  the_atlases_are_rle: >-
+    BI_RLE8 compressed BMPs in top-down row order, which standard decoders get
+    wrong often enough that packages/optical-codec/src/node/bmp.ts decodes them
+    here.
+  the_pixels_are_not_colour: >-
+    They are coverage. See antialiasing below, which is the fact everything else
+    in this file follows from.
 
 antialiasing:
   how_many_values: 16
@@ -35,103 +79,345 @@ antialiasing:
     - "No atlas of any size contains a value above 15."
     - "The .fot alpha table is a ramp stepping by 17, which is 255/15."
     - "The shipped loader asserts originalbpp == 4 on every frame it packs."
-  the_palette_is_a_decoy: "An 8-bit greyscale identity ramp, there because BMP wants a palette. The value is how much of the pixel the letter covers, and colour arrives at blit time — which is why one file serves a white label, a dark tooltip and any custom skin."
-  and_therefore: "The reader fits the blend rather than comparing colours, so it never has to be told the theme."
+  the_palette_is_a_decoy: >-
+    An 8-bit greyscale identity ramp, there because BMP wants a palette. The
+    value is how much of the pixel the letter covers, and colour arrives at blit
+    time — which is why one file serves a white label, a dark tooltip and any
+    custom skin.
+  and_therefore: >-
+    The reader fits the blend rather than comparing colours, so it never has to
+    be told the theme.
 
 our_own_format:
-  why_not_somebody_elses: "This needs one thing no font format offers: the exact coverage the application blitted, with the advances the original layout used, so the same numbers can DRAW text and READ it back. TrueType hands back an outline for somebody else's hinter to rasterise, at which point the pixels are a guess and reading them is guesswork twice. A PNG atlas plus a JSON sidecar keeps the pixels and turns coverage into grey, which means telling the reader what colour the text was — the one thing it must not need to be told."
-  the_container: "packages/optical-codec/src/font-pack.ts. 'FNTP', version, chunk count, then chunks: FACE for a face, META for the provenance JSON. Each chunk names its own codec, so the format can gain chunk types without invalidating a reader."
-  the_face_payload: "coverage-pack.ts: header, name, 256 fixed table entries of advance/offset/size/plane-offset, then one nibble-packed coverage plane with rows padded to a byte. Coverage is four bits, so two pixels fit in a byte and half of it disappears for nothing; the padding keeps addressing arithmetic instead of a bit cursor."
-  the_codec: "Raw deflate, per chunk, whichever is smaller. Not brotli: raw deflate is the one codec Node and every browser both have built in — new DecompressionStream('deflate-raw') — and 11% is not worth shipping a decoder for."
+  why_not_somebody_elses: >-
+    This needs one thing no font format offers: the exact coverage the
+    application blitted, with the advances the original layout used, so the same
+    numbers can DRAW text and READ it back. TrueType hands back an outline for
+    somebody else's hinter to rasterise, at which point the pixels are a guess
+    and reading them is guesswork twice. A PNG atlas plus a JSON sidecar keeps
+    the pixels and turns coverage into grey, which means telling the reader what
+    colour the text was — the one thing it must not need to be told.
+  the_container: >-
+    packages/optical-codec/src/font-pack.ts. 'FNTP', version, chunk count, then
+    chunks: FACE for a face, META for the provenance JSON. Each chunk names its
+    own codec, so the format can gain chunk types without invalidating a reader.
+  the_face_payload: >-
+    coverage-pack.ts: header, name, 256 fixed table entries of
+    advance/offset/size/plane-offset, then one nibble-packed coverage plane with
+    rows padded to a byte. Coverage is four bits, so two pixels fit in a byte
+    and half of it disappears for nothing; the padding keeps addressing
+    arithmetic instead of a bit cursor.
+  the_codec: >-
+    Raw deflate, per chunk, whichever is smaller. Not brotli: raw deflate is the
+    one codec Node and every browser both have built in — new
+    DecompressionStream('deflate-raw') — and 11% is not worth shipping a decoder
+    for.
   measured:  # 12 faces, 2340 glyphs, 169,217 ink pixels
     file_on_disk: 92044
     faces: {packed: 196004, deflated: 90156}
     provenance_json: {raw: 7992, deflated: 1724}
     the_same_faces_as_json: {raw: 1368234, gzip: 242734, brotli: 156741}
-    per_face: "size 8 packs to 9,355 and deflates to 5,197. Size 12: 15,635 and 7,841. Size 48: 13,220 and 3,528. The 2004 capture: 4,658 and 1,815."
-  the_trap: "Sparse x,y,level triples are the intuitive encoding and lose twice: bigger raw, and bigger compressed. Coordinates are entropy; a dense plane's zeroes are positional, and deflate eats them."
-  what_was_tried_and_rejected: "A row delta filter, worse by a fifth: four-bit coverage is noisy edge data, not a gradient. Two-bit quantisation would roughly halve the raw size and cost the matcher precision, so it is not done."
+    per_face: >-
+      size 8 packs to 9,355 and deflates to 5,197. Size 12: 15,635 and 7,841.
+      Size 48: 13,220 and 3,528. The 2004 capture: 4,658 and 1,815.
+  the_trap: >-
+    Sparse x,y,level triples are the intuitive encoding and lose twice: bigger
+    raw, and bigger compressed. Coordinates are entropy; a dense plane's zeroes
+    are positional, and deflate eats them.
+  what_was_tried_and_rejected: >-
+    A row delta filter, worse by a fifth: four-bit coverage is noisy edge data,
+    not a gradient. Two-bit quantisation would roughly halve the raw size and
+    cost the matcher precision, so it is not done.
 
 importers_and_exporters:
-  the_rule: "A binary asset with no exporter is a hostage. Everything in the pack can leave it as PNG and JSON, and come back."
-  import_fonts: "tools/import-fonts.ts --from <UIGraphics/Fonts> reads the game's .bmp atlases and .fot metrics; --from-json reads whatever the exporter wrote. Faces already in the pack are carried forward when their source is not to hand, which is the ordinary case for the 2004 capture."
-  export_fonts: "tools/export-fonts.ts writes, per face, a PNG contact sheet with every glyph's coverage as grey and the baseline drawn dim, plus a JSON of the metrics, plus the provenance. The contact sheet is for eyes: it is how you see that a glyph is one pixel low without writing an assertion about it first."
-  identify: "tools/identify-font.ts works from the pack alone, so the identification below stays reproducible after the sources were deleted."
-  provenance_lives_outside_the_binary: "assets/font-provenance.json, merged into the META chunk at import time. Measured facts are computed and win over it; that file holds what only a person knows. A rebuild cannot quietly lose it, which one did before it existed."
-  what_is_not_committed: "The game's own font files, and the 2004 BMP with its hand-measured tables. Glyph shapes are Comic Sans MS as Maxis rendered it; packing them for this application does not relicense them. Rebuild from your own installation if that matters to you."
+  the_rule: >-
+    A binary asset with no exporter is a hostage. Everything in the pack can
+    leave it as PNG and JSON, and come back.
+  import_fonts: >-
+    tools/import-fonts.ts --from <UIGraphics/Fonts> reads the game's .bmp
+    atlases and .fot metrics; --from-json reads whatever the exporter wrote.
+    Faces already in the pack are carried forward when their source is not to
+    hand, which is the ordinary case for the 2004 capture.
+  export_fonts: >-
+    tools/export-fonts.ts writes, per face, a PNG contact sheet with every
+    glyph's coverage as grey and the baseline drawn dim, plus a JSON of the
+    metrics, plus the provenance. The contact sheet is for eyes: it is how you
+    see that a glyph is one pixel low without writing an assertion about it
+    first.
+  identify: >-
+    tools/identify-font.ts works from the pack alone, so the identification
+    below stays reproducible after the sources were deleted.
+  provenance_lives_outside_the_binary: >-
+    assets/font-provenance.json, merged into the META chunk at import time.
+    Measured facts are computed and win over it; that file holds what only a
+    person knows. A rebuild cannot quietly lose it, which one did before it
+    existed.
+  what_is_not_committed: >-
+    The game's own font files, and the 2004 BMP with its hand-measured tables.
+    Glyph shapes are Comic Sans MS as Maxis rendered it; packing them for this
+    application does not relicense them. Rebuild from your own installation if
+    that matters to you.
 
 the_api_is_canvas_shaped:
-  what: "packages/optical-codec/src/font-context.ts. measureText and fillText in Canvas's own vocabulary — textBaseline, textAlign, a TextMetrics with the same field names — and readText, which is the one Canvas cannot have."
-  why_the_symmetry_is_load_bearing: "Draw and read run off the same coverage and the same advances, so a fixture drawn here is legible here by construction, and a disagreement between them is a bug in one of two functions rather than an open question about a screenshot."
-  the_deliberate_difference: "No mutable graphics state. A context is made with its settings and does not change; .with() returns another. Every failure of a mutable state is of the form 'something else changed it', and code that reads a game's interface has enough of those."
-  the_baseline: "Bitmap faces ship a line height and per-glyph offsets and leave the baseline implied, so it is measured off the capitals and digits — the row below the lowest of them. The game's size 8 and the 2004 capture agree independently: line 16, baseline 13, which is a second confirmation of the identification below."
+  what: >-
+    packages/optical-codec/src/font-context.ts. measureText and fillText in
+    Canvas's own vocabulary — textBaseline, textAlign, a TextMetrics with the
+    same field names — and readText, which is the one Canvas cannot have.
+  why_the_symmetry_is_load_bearing: >-
+    Draw and read run off the same coverage and the same advances, so a fixture
+    drawn here is legible here by construction, and a disagreement between them
+    is a bug in one of two functions rather than an open question about a
+    screenshot.
+  the_deliberate_difference: >-
+    No mutable graphics state. A context is made with its settings and does not
+    change; .with() returns another. Every failure of a mutable state is of the
+    form 'something else changed it', and code that reads a game's interface has
+    enough of those.
+  the_baseline: >-
+    Bitmap faces ship a line height and per-glyph offsets and leave the baseline
+    implied, so it is measured off the capitals and digits — the row below the
+    lowest of them. The game's size 8 and the 2004 capture agree independently:
+    line 16, baseline 13, which is a second confirmation of the identification
+    below.
 
 identifying_the_2004_capture:
-  the_question: "Which size did the Simplifier's hand-measured atlas come from? Nobody wrote it down, and the panel's font size is exactly what the reader needs."
-  the_method: "tools/identify-font.ts compares the capture against every shipped size, by advance width and by glyph shape as intersection over union."
-  the_answer: "VariableSans_08, at 0.877 mean IoU once coverage below 6/15 is thresholded away. Nothing else is close: the next size up reaches 0.462 and size 12 is 0.209."
-  the_second_witness: "Both faces put the baseline 13 rows into a 16-row line box, measured off their capitals with no knowledge of each other."
-  what_that_also_revealed: "The 2004 widths are tight ink widths, not advances — they match the thresholded ink width for 81 of 94 characters and the game's advance for 5. And the capture lost its faintest coverage, which is what a screenshot thresholded by hand does."
-  where_it_disagrees: "K \\ ] ^ ` { } and n, measured in 2004 and not matching now. Small punctuation, most likely mis-measured off a magnified screenshot, and worth a look if any of them ever misreads."
-  the_space_that_had_to_be_chosen: "The 2004 tables measured the space cell's ink, which is one pixel of nothing. An advance of 1 makes word breaks unrecoverable, so that face carries 4 — what the Simplifier's own reader used, against the 3 the game advances. A space is a gap and nothing else, so a face whose space is no wider than its letter spacing has word breaks nobody can read back; the tests say so rather than pretending otherwise."
+  the_question: >-
+    Which size did the Simplifier's hand-measured atlas come from? Nobody wrote
+    it down, and the panel's font size is exactly what the reader needs.
+  the_method: >-
+    tools/identify-font.ts compares the capture against every shipped size, by
+    advance width and by glyph shape as intersection over union.
+  the_answer: >-
+    VariableSans_08, at 0.877 mean IoU once coverage below 6/15 is thresholded
+    away. Nothing else is close: the next size up reaches 0.462 and size 12 is
+    0.209.
+  the_second_witness: >-
+    Both faces put the baseline 13 rows into a 16-row line box, measured off
+    their capitals with no knowledge of each other.
+  what_that_also_revealed: >-
+    The 2004 widths are tight ink widths, not advances — they match the
+    thresholded ink width for 81 of 94 characters and the game's advance for 5.
+    And the capture lost its faintest coverage, which is what a screenshot
+    thresholded by hand does.
+  where_it_disagrees: >-
+    K \ ] ^ ` { } and n, measured in 2004 and not matching now. Small
+    punctuation, most likely mis-measured off a magnified screenshot, and worth
+    a look if any of them ever misreads.
+  the_space_that_had_to_be_chosen: >-
+    The 2004 tables measured the space cell's ink, which is one pixel of
+    nothing. An advance of 1 makes word breaks unrecoverable, so that face
+    carries 4 — what the Simplifier's own reader used, against the 3 the game
+    advances. A space is a gap and nothing else, so a face whose space is no
+    wider than its letter spacing has word breaks nobody can read back; the
+    tests say so rather than pretending otherwise.
 
 finding_the_panel_without_knowing_the_resolution:
-  what_it_replaced: "Four corner pixels at columns measured off an 800x600 screenshot in 2004. That reads one resolution, in a frame that is exactly the window, and refuses everything else — a demo."
-  what_the_game_actually_does:  # read out of the shipped source, not guessed from screenshots
-    the_hud_hangs_off_the_bottom: "SimsApp.cpp: area.top = area.bottom - 150, full width. 150 pixels, never scaled."
-    the_left_column_does_not_move: "WinCPanel.cpp: 220 wide at every resolution. Subpanels start at x 220, are 100 tall, and stretch right."
-    the_witness_in_the_art: "PanelBack.bmp is 804 across, which is 1024 - 220. The asset dimensions confirm the layout arithmetic."
-    it_is_hardcoded: "In C++, not in the .uis files, which are design artefacts the shipped build does not read."
-  and_therefore: "Every rectangle is an offset from a window edge — x from the left, y counted UP from the last row. The same numbers are right at 800x600 and 1024x768. Don's own 2004 code had this correction sketched as gBigScreen and left it commented out, 'currently disabled and not supported'."
-  the_anchors: "Three crops of background art the game blits and no skin replaces: PanelBack, UniversalBack, BackPatch. tools/import-anchors.ts lifts them from UIGraphics/cpanel into assets/interface.anchors, each carrying the offset from the window edges at which it is drawn — so a match yields the window's left edge, its bottom row and its scale, and the layout follows."
-  what_that_buys: "A window that is not the whole frame. A stretched capture, decimated back to native pixels before any text is read. A recoloured skin, since correlation is normalised and greyscale. And a refusal on a frame of something else, which four corner pixels cannot manage honestly."
-  the_colour_path_stays: "As the fallback when there are no anchors to hand. It needs no assets, and it is what the Simplifier did. Every reading reports which of the two answered."
+  what_it_replaced: >-
+    Four corner pixels at columns measured off an 800x600 screenshot in 2004.
+    That reads one resolution, in a frame that is exactly the window, and
+    refuses everything else — a demo.
+  # read out of the shipped source, not guessed from screenshots
+  what_the_game_actually_does:
+    the_hud_hangs_off_the_bottom: >-
+      SimsApp.cpp: area.top = area.bottom - 150, full width. 150 pixels, never
+      scaled.
+    the_left_column_does_not_move: >-
+      WinCPanel.cpp: 220 wide at every resolution. Subpanels start at x 220, are
+      100 tall, and stretch right.
+    the_witness_in_the_art: >-
+      PanelBack.bmp is 804 across, which is 1024 - 220. The asset dimensions
+      confirm the layout arithmetic.
+    it_is_hardcoded: >-
+      In C++, not in the .uis files, which are design artefacts the shipped
+      build does not read.
+  and_therefore: >-
+    Every rectangle is an offset from a window edge — x from the left, y counted
+    UP from the last row. The same numbers are right at 800x600 and 1024x768.
+    Don's own 2004 code had this correction sketched as gBigScreen and left it
+    commented out, 'currently disabled and not supported'.
+  the_anchors: >-
+    Three crops of background art the game blits and no skin replaces:
+    PanelBack, UniversalBack, BackPatch. tools/import-anchors.ts lifts them from
+    UIGraphics/cpanel into assets/interface.anchors, each carrying the offset
+    from the window edges at which it is drawn — so a match yields the window's
+    left edge, its bottom row and its scale, and the layout follows.
+  what_that_buys: >-
+    A window that is not the whole frame. A stretched capture, decimated back to
+    native pixels before any text is read. A recoloured skin, since correlation
+    is normalised and greyscale. And a refusal on a frame of something else,
+    which four corner pixels cannot manage honestly.
+  the_colour_path_stays: >-
+    As the fallback when there are no anchors to hand. It needs no assets, and
+    it is what the Simplifier did. Every reading reports which of the two
+    answered.
 
 matching_art_is_not_the_obvious_loop:
-  where: "packages/optical-codec/src/template.ts, and test/template.test.ts, which fails if any of this is undone."
-  the_score: "Normalised cross-correlation on greyscale. Centred and divided by its own spread, so a dimmed window, a gamma tweak and a re-encode all still match, and a bright flat region cannot win the way it can against a sum of differences."
-  the_mistake_that_looks_efficient: "Stride over the frame — every fourth position — then refine around the winner. Interface art is hard horizontal edges, and a template landing two rows off correlates badly, so the grid never learns the art's real score AT the art. Some unrelated neighbourhood the grid happened to land on squarely out-scores it, and the refinement polishes the wrong answer. Measured, not reasoned: PanelBack sat at y 620 scoring 1.000, and a strided search reported 0.688 at y 618, 29 pixels off."
-  what_is_done_instead: "Visit every position, with a thinned template — every eighth pixel each way by default. Cheaper per position than the strided full template AND correct, because the survey is never asked to score a misalignment it created."
-  the_second_trap: "Keep the top N and they all land on one peak, so the runner-up neighbourhood — which may be the art — is never looked at. Candidates must be spatially separated, and then each neighbourhood searched exhaustively with the WHOLE template. Re-scoring only the survey's own pick fails when the art repeats on the sampling period: the thinned scores tie and scan order breaks the tie, not the art. The stripe fixture in the tests is built to tie on purpose."
-  scale_is_searched_not_assumed: "1 first, then 2, 1.5, 1.25, stopping at an exact hit. Nothing below 1: a capture smaller than the art has thrown away the pixels the reader needs, and finding the panel in it would only license reading text that is no longer there."
+  where: >-
+    packages/optical-codec/src/template.ts, and test/template.test.ts, which
+    fails if any of this is undone.
+  the_score: >-
+    Normalised cross-correlation on greyscale. Centred and divided by its own
+    spread, so a dimmed window, a gamma tweak and a re-encode all still match,
+    and a bright flat region cannot win the way it can against a sum of
+    differences.
+  the_mistake_that_looks_efficient: >-
+    Stride over the frame — every fourth position — then refine around the
+    winner. Interface art is hard horizontal edges, and a template landing two
+    rows off correlates badly, so the grid never learns the art's real score AT
+    the art. Some unrelated neighbourhood the grid happened to land on squarely
+    out-scores it, and the refinement polishes the wrong answer. Measured, not
+    reasoned: PanelBack sat at y 620 scoring 1.000, and a strided search
+    reported 0.688 at y 618, 29 pixels off.
+  what_is_done_instead: >-
+    Visit every position, with a thinned template — every eighth pixel each way
+    by default. Cheaper per position than the strided full template AND correct,
+    because the survey is never asked to score a misalignment it created.
+  the_second_trap: >-
+    Keep the top N and they all land on one peak, so the runner-up neighbourhood
+    — which may be the art — is never looked at. Candidates must be spatially
+    separated, and then each neighbourhood searched exhaustively with the WHOLE
+    template. Re-scoring only the survey's own pick fails when the art repeats
+    on the sampling period: the thinned scores tie and scan order breaks the
+    tie, not the art. The stripe fixture in the tests is built to tie on
+    purpose.
+  scale_is_searched_not_assumed: >-
+    1 first, then 2, 1.5, 1.25, stopping at an exact hit. Nothing below 1: a
+    capture smaller than the art has thrown away the pixels the reader needs,
+    and finding the panel in it would only license reading text that is no
+    longer there.
 
 the_reader_is_a_whole_line_search:
-  what_it_does: "Every column of the strip is accounted for exactly once. A letter costs the squared miss between its coverage and the pixels; a column with no letter on it costs whatever ink sits there unexplained; the cheapest path across the strip wins. Viterbi over pen positions, with each glyph's advance as the step."
-  what_it_replaced: "Choosing the best letter at each position in turn, which is what the 2004 code did and what this did first."
-  why_that_had_to_go:  # both of these are real misreads, from the fixture, not hypotheticals
-    the_backtick: "In 'every hour', a backtick's three pixels land exactly on the ascender of the 'h' one column early. A per-position scan takes it, steps on by the backtick's advance, and the rest of the letter becomes somebody else's problem: 'every` our'."
-    what_fixing_it_locally_cost: "Preferring more ink turns an H into an N. Forgiving ink a glyph did not ask for — the tail of a 'y' crossing the next letter's box — turns 'Wall' into 'M all'. Each rule fixes its case and breaks another, because the mistake is not local."
-    the_resolution: "Leaving half an 'h' on the floor is expensive when the whole line is scored, so the backtick loses on the total even though it won on its own three pixels. No tie-breaking rules remain."
-  what_it_still_needs: "Nothing about the colours. Background is the middle of the strip's brightness distribution and ink is whichever tail lies further from it, so light-on-dark and dark-on-light come out of the same arithmetic."
-  measured: "Exact reads of the fixture's four lines at 93.5% of pixels explained, unchanged under additive noise of 8 and a 5% colour tint. One row of vertical misalignment collapses it."
+  what_it_does: >-
+    Every column of the strip is accounted for exactly once. A letter costs the
+    squared miss between its coverage and the pixels; a column with no letter on
+    it costs whatever ink sits there unexplained; the cheapest path across the
+    strip wins. Viterbi over pen positions, with each glyph's advance as the
+    step.
+  what_it_replaced: >-
+    Choosing the best letter at each position in turn, which is what the 2004
+    code did and what this did first.
+  # both of these are real misreads, from the fixture, not hypotheticals
+  why_that_had_to_go:
+    the_backtick: >-
+      In 'every hour', a backtick's three pixels land exactly on the ascender of
+      the 'h' one column early. A per-position scan takes it, steps on by the
+      backtick's advance, and the rest of the letter becomes somebody else's
+      problem: 'every` our'.
+    what_fixing_it_locally_cost: >-
+      Preferring more ink turns an H into an N. Forgiving ink a glyph did not
+      ask for — the tail of a 'y' crossing the next letter's box — turns 'Wall'
+      into 'M all'. Each rule fixes its case and breaks another, because the
+      mistake is not local.
+    the_resolution: >-
+      Leaving half an 'h' on the floor is expensive when the whole line is
+      scored, so the backtick loses on the total even though it won on its own
+      three pixels. No tie-breaking rules remain.
+  what_it_still_needs: >-
+    Nothing about the colours. Background is the middle of the strip's
+    brightness distribution and ink is whichever tail lies further from it, so
+    light-on-dark and dark-on-light come out of the same arithmetic.
+  measured: >-
+    Exact reads of the fixture's four lines at 93.5% of pixels explained,
+    unchanged under additive noise of 8 and a 5% colour tint. One row of
+    vertical misalignment collapses it.
 
 the_honest_failure:
   the_rule: "Report nothing rather than something wrong."
-  how: "Confidence is how much of the strip's ink the letters explain. Below 0.85 the reader is sampling the wrong rows, and the analysis layer returns null with a sentence naming the check that failed."
-  the_wrong_scale_case: "A capture at any scale but 1 is decimated back to the game's own pixels before a letter is matched, because the masks are exact. A nearest-neighbour stretch comes back exactly; a smooth one comes back blurred and says so in the confidence. That is a report, not a promise that it works."
-  why_this_matters_more_than_accuracy: "Everything above this layer — a job, an Angel, a narrated recording — would act on invented text without knowing. A refusal is recoverable; a confident misread is not."
+  how: >-
+    Confidence is how much of the strip's ink the letters explain. Below 0.85
+    the reader is sampling the wrong rows, and the analysis layer returns null
+    with a sentence naming the check that failed.
+  the_wrong_scale_case: >-
+    A capture at any scale but 1 is decimated back to the game's own pixels
+    before a letter is matched, because the masks are exact. A nearest-neighbour
+    stretch comes back exactly; a smooth one comes back blurred and says so in
+    the confidence. That is a report, not a promise that it works.
+  why_this_matters_more_than_accuracy: >-
+    Everything above this layer — a job, an Angel, a narrated recording — would
+    act on invented text without knowing. A refusal is recoverable; a confident
+    misread is not.
 
 the_layers:
-  assets_interface_fontpack: "Twelve faces in our own format. The one committed asset; the sources are not in the repository."
-  optical_codec_font_pack: "The container, and the Node ends of the codec in node/pack.ts."
-  optical_codec_coverage_font: "The coverage matcher: prepare, read a line, read a block, and draw — drawing being how the tests produce pixels to read."
-  optical_codec_font_context: "Draw, measure and read through one object, in Canvas's vocabulary."
-  src_text_font: "Which face for which job, loaded once, plus the alphabet the reader is offered."
-  optical_codec_template: "Find known art in a frame, and with it the frame's origin and scale."
-  src_text_panel: "The Sims-specific geometry, in edge-relative terms. Anchors first, corner colours as the fallback, one upward scan for the strip's top edge because only the top edge moves, then the description block at its measured offset in the game's own pixels."
-  src_text_analysis: "What the driver offers upward: one frame, one answer, or a reason. Pull, not push — the caller is the one that knows whether anything is happening (RECOGNIZER.yml, when_to_look)."
-  the_bridge: "On attach it reports both halves: how empty the accessibility tree is, and what it read off the pixels anyway. The pairing IS the architecture argument, made by the machine on every attach instead of in a document."
+  assets_interface_fontpack: >-
+    Twelve faces in our own format. The one committed asset; the sources are not
+    in the repository.
+  optical_codec_font_pack: >-
+    The container, and the Node ends of the codec in node/pack.ts.
+  optical_codec_coverage_font: >-
+    The coverage matcher: prepare, read a line, read a block, and draw — drawing
+    being how the tests produce pixels to read.
+  optical_codec_font_context: >-
+    Draw, measure and read through one object, in Canvas's vocabulary.
+  src_text_font: >-
+    Which face for which job, loaded once, plus the alphabet the reader is
+    offered.
+  optical_codec_template: >-
+    Find known art in a frame, and with it the frame's origin and scale.
+  src_text_panel: >-
+    The Sims-specific geometry, in edge-relative terms. Anchors first, corner
+    colours as the fallback, one upward scan for the strip's top edge because
+    only the top edge moves, then the description block at its measured offset
+    in the game's own pixels.
+  src_text_analysis: >-
+    What the driver offers upward: one frame, one answer, or a reason. Pull, not
+    push — the caller is the one that knows whether anything is happening
+    (RECOGNIZER.yml, when_to_look).
+  the_bridge: >-
+    On attach it reports both halves: how empty the accessibility tree is, and
+    what it read off the pixels anyway. The pairing IS the architecture
+    argument, made by the machine on every attach instead of in a document.
 
 how_it_is_tested_without_the_game:
-  the_trick: "The masks came out of the game and are blended the way the game blends them, so drawing a string produces the pixels the game produces. Render, read back, and any disagreement is a bug in one of our own halves rather than a question about a screenshot."
-  the_synthetic_font: "packages/optical-codec/test builds its own awkward five-pixel font — one letter a strict subset of another, one a single stroke that fits inside them all, one with a descender — so the matcher's claims, the container's round trip and the metrics can all be tested by anyone, with no installation and no licence question."
-  what_was_retired: "The colour matcher, the hand-measured tables in source, the JSON font, the BMP and the eleven separate .gzf files. One format, one matcher, one file. The captured face is now coverage like everything else, its screenshot colours divided back out into the coverage they always were."
-  the_fixture: "tools/render-panel-fixture.ts draws the panel we claim to read and reads it back, and writes fixtures/panel.png so a person can see what the machine is matching."
-  the_verifier: "tools/verify-frame.ts takes a PNG the game produced and reports which claims it confirms: both window finders run every time and their agreement is the result worth having, the strip's geometry is printed, the text comes back with the fraction of pixels the glyphs explain, and a stretched capture is named as stretched rather than quietly decimated. fixtures/README.md says exactly which captures to take and what each one proves. Run against the synthetic fixture it correctly reports that the ART finder does not answer — the fixture draws a stand-in strip, not the game's panel background — which is the tool refusing in specifics rather than passing itself."
-  the_resolution_tests: "The same synthetic panel at 800x600 and at 1024x768, inset into a 1280x800 desktop where the corner path correctly finds nothing, and stretched, where the match reports the scale and the reader decimates before reading. Each asserts the text, not just that something was found."
-  what_it_cannot_cover: "Whether the shipped art still matches in the Legacy re-release, and whether the description really is drawn at the offsets measured in 2004. Both need one real frame. Everything above is measured against pixels this repository drew."
+  the_trick: >-
+    The masks came out of the game and are blended the way the game blends them,
+    so drawing a string produces the pixels the game produces. Render, read
+    back, and any disagreement is a bug in one of our own halves rather than a
+    question about a screenshot.
+  the_synthetic_font: >-
+    packages/optical-codec/test builds its own awkward five-pixel font — one
+    letter a strict subset of another, one a single stroke that fits inside them
+    all, one with a descender — so the matcher's claims, the container's round
+    trip and the metrics can all be tested by anyone, with no installation and
+    no licence question.
+  what_was_retired: >-
+    The colour matcher, the hand-measured tables in source, the JSON font, the
+    BMP and the eleven separate .gzf files. One format, one matcher, one file.
+    The captured face is now coverage like everything else, its screenshot
+    colours divided back out into the coverage they always were.
+  the_fixture: >-
+    tools/render-panel-fixture.ts draws the panel we claim to read and reads it
+    back, and writes fixtures/panel.png so a person can see what the machine is
+    matching.
+  the_verifier: >-
+    tools/verify-frame.ts takes a PNG the game produced and reports which claims
+    it confirms: both window finders run every time and their agreement is the
+    result worth having, the strip's geometry is printed, the text comes back
+    with the fraction of pixels the glyphs explain, and a stretched capture is
+    named as stretched rather than quietly decimated. fixtures/README.md says
+    exactly which captures to take and what each one proves. Run against the
+    synthetic fixture it correctly reports that the ART finder does not answer —
+    the fixture draws a stand-in strip, not the game's panel background — which
+    is the tool refusing in specifics rather than passing itself.
+  the_resolution_tests: >-
+    The same synthetic panel at 800x600 and at 1024x768, inset into a 1280x800
+    desktop where the corner path correctly finds nothing, and stretched, where
+    the match reports the scale and the reader decimates before reading. Each
+    asserts the text, not just that something was found.
+  what_it_cannot_cover: >-
+    Whether the shipped art still matches in the Legacy re-release, and whether
+    the description really is drawn at the offsets measured in 2004. Both need
+    one real frame. Everything above is measured against pixels this repository
+    drew.
 
 what_is_worth_building_next:
-  which_size_draws_what: "Size 8 is settled for the description. The title, the tooltips and the Simoleon counter are drawn at some of the other ten, and identifying each is the same comparison run against a real frame."
-  the_other_regions: "Tooltips, the dialog box the 2004 code already knew how to dismiss, the Simoleon counter, the queue. Each is a rectangle and a font; the machinery is done."
-  the_cjk_faces: "Japanese and Chinese builds load different font files, and none of this has been pointed at one."
+  which_size_draws_what: >-
+    Size 8 is settled for the description. The title, the tooltips and the
+    Simoleon counter are drawn at some of the other ten, and identifying each is
+    the same comparison run against a real frame.
+  the_other_regions: >-
+    Tooltips, the dialog box the 2004 code already knew how to dismiss, the
+    Simoleon counter, the queue. Each is a rectangle and a font; the machinery
+    is done.
+  the_cjk_faces: >-
+    Japanese and Chinese builds load different font files, and none of this has
+    been pointed at one.

@@ -38,8 +38,9 @@ sources:
     license_assumption: fan content, non-commercial use
     notes: >
       Skins, heads, and objects cloned from The Sims Online for The Sims 1.
-      Packaged as TSO_Conversions.zip and TSO Heads Collection (Reorganized).zip.
-      High-value TS1 CC for skin/object recovery; not Family Album content.
+      Packaged as TSO_Conversions.zip and TSO Heads Collection
+      (Reorganized).zip. High-value TS1 CC for skin/object recovery; not Family
+      Album content.
 
   - id: persimmon-grove
     name: Persimmon Grove
@@ -53,7 +54,8 @@ sources:
     games:
       - sims1
     author: Koromo
-    license_assumption: fan content, non-commercial use; cloning permitted with acknowledgment
+    license_assumption: >-
+      fan content, non-commercial use; cloning permitted with acknowledgment
     notes: >
       Classic TS1 CC by Koromo — particular styles of house and garden, indoors
       and outdoors. Base-game compatible (no expansion packs required). RAR
@@ -74,7 +76,9 @@ sources:
     games:
       - sims1
     author: Bunny Wuffles
-    license_assumption: fan content, non-commercial use; recolour/retexture/redesign permitted with credit and link
+    license_assumption: >-
+      fan content, non-commercial use; recolour/retexture/redesign permitted
+      with credit and link
     notes: >
       Classic TS1 architectural CC — themed objects, walls, floors, houses, plus
       object-creation tutorials and housekeeping guides. RAR bundle (~176 MB) on
@@ -112,9 +116,10 @@ sources:
       - sims1
     license_assumption: EA/Maxis official content
     notes: >
-      Official Maxis branded/advertising objects: Pepsi machine ($900, base game),
-      McDonald's food kiosk ($4,900), Intel computer ($6,999). Reference for
-      Content Registry and object identification — not a tornado lot-binding target.
+      Official Maxis branded/advertising objects: Pepsi machine ($900, base
+      game), McDonald's food kiosk ($4,900), Intel computer ($6,999). Reference
+      for Content Registry and object identification — not a tornado lot-binding
+      target.
 
   - id: the-sims-jukebox
     name: The Sims Jukebox

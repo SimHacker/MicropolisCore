@@ -2,12 +2,14 @@
 # Generic cross-game "Soul Album"; per-game bridges map native albums onto it
 # (e.g. The Sims Family Album). Keep each game's existing feature names.
 #
-# Object model and metadata design live upstream, in moollm skills/soul-city/SOUVENIRS.md:
-# a card is a self-describing OBJECT whose type is an interpretation of its properties, an album
-# is a graph of reusable pages with linear editions, and metadata uses Dublin Core names where they exist
+# Object model and metadata design live upstream, in moollm
+# skills/soul-city/SOUVENIRS.md: a card is a self-describing OBJECT whose type
+# is an interpretation of its properties, an album is a graph of reusable pages
+# with linear editions, and metadata uses Dublin Core names where they exist
 # Game coordinates and depicted entity references use documented extensions.
-# Preserve unknown fields; do not execute behavior described by untrusted metadata.
-# This file specifies planned behavior; it is not implementation evidence.
+# Preserve unknown fields; do not execute behavior described by untrusted
+# metadata. This file specifies planned behavior; it is not implementation
+# evidence.
 
 meta:
   id: soul-album
@@ -16,29 +18,46 @@ meta:
 
 model:
   album:
-    what: "Graph of reusable media pages; per-game, cross-game, or authored without a game"
-    storage: "Local SQLite + media dir; publish = push to Soul City federation (CARD dirs, git-native)"
+    what: >-
+      Graph of reusable media pages; per-game, cross-game, or authored without a
+      game
+    storage: >-
+      Local SQLite + media dir; publish = push to Soul City federation (CARD
+      dirs, git-native)
   route:
-    selection: "Start page, length with explicit units, branch choices or selection rules, and cycle/dead-end policy"
-    edition: "Resolved ordered page IDs and revisions, timing and layout; pin for reproducible output"
-    graph_preservation: "Linear native exports cannot preserve all branches; retain the graph separately"
+    selection: >-
+      Start page, length with explicit units, branch choices or selection rules,
+      and cycle/dead-end policy
+    edition: >-
+      Resolved ordered page IDs and revisions, timing and layout; pin for
+      reproducible output
+    graph_preservation: >-
+      Linear native exports cannot preserve all branches; retain the graph
+      separately
   card:
     image: "Still from live frame, DVR scrub timestamp, or imported file"
     clip: "Optional video or audio; a selected route determines playback order"
-    caption: "Typed, voice-narrated via STT, or assistant-drafted and human-edited (never auto-published)"
+    caption: >-
+      Typed, voice-narrated via STT, or assistant-drafted and human-edited
+      (never auto-published)
     audio: "Optional narration track per card — radio channel source"
     provenance:
       game: "app id / process fingerprint"
       save: "save file id + mtime when a bridge is available"
       souls: "character ids in frame when the bridge can enumerate them"
       dvr_timestamp: "the moment in the ring buffer this card cites"
-    metadata: "Dublin Core terms plus documented game extensions; capture provenance does not establish publication rights"
+    metadata: >-
+      Dublin Core terms plus documented game extensions; capture provenance does
+      not establish publication rights
 
 editing:
-  operations: [capture, author, caption, narrate, link_pages, select_route, pin_edition, reorder, sequence, split_album, merge_albums, import, export]
+  operations: [capture, author, caption, narrate, link_pages, select_route,
+               pin_edition, reorder, sequence, split_album, merge_albums,
+               import, export]
   time_shifted: |
-    Production happens AFTER play: replay the DVR, narrate calmly, caption with voice, let STT
-    transcribe, edit text by hand. Live capture is one hotkey; storytelling is post.
+    Production happens AFTER play: replay the DVR, narrate calmly, caption with
+    voice, let STT transcribe, edit text by hand. Live capture is one hotkey;
+    storytelling is post.
   voice:
     narrate: "Mic -> narration track per card or per album"
     stt: "Speech-to-text -> caption drafts (later phase; local model preferred)"
@@ -47,21 +66,29 @@ editing:
 # ── GAME ALBUM BRIDGING ───────────────────────────────────────────────────────
 game_albums:
   principle: |
-    For each supported album format, document import and export capabilities separately.
-    Preserve the graph externally when a native linear format cannot carry it.
-    Round-trip support requires fixtures and tests, not just a readable directory.
+    For each supported album format, document import and export capabilities
+    separately. Preserve the graph externally when a native linear format cannot
+    carry it. Round-trip support requires fixtures and tests, not just a
+    readable directory.
   sims1_family_album:
     status: proposed_showcase
     verification_required: |
-      Establish page/caption formats and reopen behavior with fixtures for supported versions.
-      Test whether external edits while running are safe before enabling writes.
-      Album-directory updates, family export, and object/save editing are separate capabilities.
-    exchange: "Verify preservation through family export/import; file detection alone is not round-trip support"
+      Establish page/caption formats and reopen behavior with fixtures for
+      supported versions. Test whether external edits while running are safe
+      before enabling writes. Album-directory updates, family export, and
+      object/save editing are separate capabilities.
+    exchange: >-
+      Verify preservation through family export/import; file detection alone is
+      not round-trip support
     demo: |
-      Launch showcase: freeze a DVR frame, narrate it, and the card lands INSIDE the game's own
-      Family Album. Then export the whole album to Soul City as a magazine story.
-  no_bridge: "Capture where available and permitted; caption and publish with known provenance and rights checks"
-  photo_mode_games: "Inspect formats individually; do not assume export or round-trip support"
+      Launch showcase: freeze a DVR frame, narrate it, and the card lands INSIDE
+      the game's own Family Album. Then export the whole album to Soul City as a
+      magazine story.
+  no_bridge: >-
+    Capture where available and permitted; caption and publish with known
+    provenance and rights checks
+  photo_mode_games: >-
+    Inspect formats individually; do not assume export or round-trip support
 
 outputs:
   - published_album_page   # magazine channel
@@ -71,17 +98,30 @@ outputs:
 
 content_generation:
   status: design
-  inputs: "Pages or resolved routes, target template, build settings, and input revisions"
-  examples: ["slide projector and slides", "jukebox and recordings", "book and pages"]
-  identity: "Persist source IDs and allocated object GUIDs; reuse on updates, allocate new IDs for intentional forks"
-  multi_object_templates: "Retain every allocated GUID and its role within the template"
-  placement: "User-selected or automated instances in chosen house saves; track save/instance IDs separately"
-  update: "Definition rebuild and placed-instance migration are separate, validated operations"
-  safety: "Collision checks, backups, safe retries, explicit partial failures, and rights checks before distribution"
+  inputs: >-
+    Pages or resolved routes, target template, build settings, and input
+    revisions
+  examples: ["slide projector and slides", "jukebox and recordings",
+             "book and pages"]
+  identity: >-
+    Persist source IDs and allocated object GUIDs; reuse on updates, allocate
+    new IDs for intentional forks
+  multi_object_templates: >-
+    Retain every allocated GUID and its role within the template
+  placement: >-
+    User-selected or automated instances in chosen house saves; track
+    save/instance IDs separately
+  update: >-
+    Definition rebuild and placed-instance migration are separate, validated
+    operations
+  safety: >-
+    Collision checks, backups, safe retries, explicit partial failures, and
+    rights checks before distribution
 
 see_also:
   - DVR.yml
   - SOUL-BRIDGE-SDK.yml
   - ARCHITECTURE.yml
   - https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUVENIRS.md
-  - moollm skills/soul-city/SOUL-BRIDGES.md  # who may cross, and what the destination owes them
+    # who may cross, and what the destination owes them
+  - moollm skills/soul-city/SOUL-BRIDGES.md

@@ -1,5 +1,5 @@
-# Playable vertical slice — execution log
-# Update after each playbook step verifies green. See wisdom/executor-conventions.md.
+# Playable vertical slice — execution log Update after each playbook step
+# verifies green. See wisdom/executor-conventions.md.
 
 meta:
   cauldron: playable-pie-publishing-cauldron
@@ -11,8 +11,9 @@ playbooks:
   PB-01-viewport-tile-frame-helper:
     status: complete
     steps:
-      step-1-confirm-mapviewport-api: { status: complete, verified: "2026-06-15" }
-      step-2-create-viewportTileFrame: { status: complete, verified: "2026-06-15" }
+      step-1-confirm-mapviewport-api: {status: complete, verified: "2026-06-15"}
+      step-2-create-viewportTileFrame: {status: complete,
+                                        verified: "2026-06-15"}
       step-3-export-getMapViewport: { status: complete, verified: "2026-06-15" }
       step-4-typecheck: { status: complete, verified: "2026-06-15" }
   PB-02-mount-cursor-layer:

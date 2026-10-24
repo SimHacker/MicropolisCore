@@ -1,163 +1,438 @@
 # RECOGNIZER.yml — finding and reading codes on a screen
 #
-# Two readers, one skeleton. QR is somebody else's solved problem and we import it. The egg is
-# OUR art, which makes its reader easier than a QR reader rather than harder — we chose the
-# target, so there is no perspective solve, no rotation hypothesis, and no error-correcting code.
+# Two readers, one skeleton. QR is somebody else's solved problem and we import
+# it. The egg is OUR art, which makes its reader easier than a QR reader rather
+# than harder — we chose the target, so there is no perspective solve, no
+# rotation hypothesis, and no error-correcting code.
 #
-# Companions: OPTICAL-CHANNEL.yml (what the codes MEAN) · EGGS.yml (what the art IS) ·
-# MOBILE-CAMERA.yml (the hard optical path) · RECORDER.yml (where frames come from)
+# Companions: OPTICAL-CHANNEL.yml (what the codes MEAN) · EGGS.yml (what the art
+# IS) · MOBILE-CAMERA.yml (the hard optical path) · RECORDER.yml (where frames
+# come from)
 
 status:
-  built: [codec_package, qr_path, synthetic_scene_renderer, egg_renderer, egg_reader, band_alphabets, abuse_suite_minus_jpeg, recognize_scan_verb, coverage_font_reader, anchor_matcher]
-  not_built: [frame_source, egg_path_in_the_verb, gpu_prefilter, worker_pool, overlay_debug_view, verification_against_a_real_frame]
+  built: [codec_package, qr_path, synthetic_scene_renderer, egg_renderer,
+          egg_reader, band_alphabets, abuse_suite_minus_jpeg,
+          recognize_scan_verb, coverage_font_reader, anchor_matcher]
+  not_built: [frame_source, egg_path_in_the_verb, gpu_prefilter, worker_pool,
+              overlay_debug_view, verification_against_a_real_frame]
   decided: [zxing_for_qr, local_only_no_remote_model, codec_first_in_node]
-  where: "packages/optical-codec (codec, renderer, fixtures, tests) · src/main/recognize/service.ts (the verb)"
+  where: >-
+    packages/optical-codec (codec, renderer, fixtures, tests) ·
+    src/main/recognize/service.ts (the verb)
 
 # THE DECISION THAT SHAPES EVERYTHING ELSE
 #
-# A screen grab and a phone photo are not the same problem and must not share a hot path.
+# A screen grab and a phone photo are not the same problem and must not share a
+# hot path.
 
 two_paths_one_decoder:
-  screen_capture_is_the_easy_case: "Pixel-exact, no lens, no room light, axis-aligned, integer scale, and we can know the game's zoom level. Almost every expensive stage in a camera pipeline is skippable."
-  the_phone_is_the_hard_case: "Perspective, blur, moire, rolling shutter, glare, white balance drift (MOBILE-CAMERA.yml). Same decoder at the end, far more work in front of it."
-  the_rule: "One decoder, two front ends. The screen path may never pay for the camera path's normalisation, and the camera path may never fork the decoder."
+  screen_capture_is_the_easy_case: >-
+    Pixel-exact, no lens, no room light, axis-aligned, integer scale, and we can
+    know the game's zoom level. Almost every expensive stage in a camera
+    pipeline is skippable.
+  the_phone_is_the_hard_case: >-
+    Perspective, blur, moire, rolling shutter, glare, white balance drift
+    (MOBILE-CAMERA.yml). Same decoder at the end, far more work in front of it.
+  the_rule: >-
+    One decoder, two front ends. The screen path may never pay for the camera
+    path's normalisation, and the camera path may never fork the decoder.
 
 # QR: BUY, DO NOT BUILD
 
 qr_reading:
-  choice: "zxing-wasm — ZXing-C++ compiled to WebAssembly, MIT, reader-only binary about 1 MiB, roughly monthly releases and several million downloads a month. One code path in Node, Electron, and the browser, which is what makes the tests and the runtime the same thing (https://github.com/Sec-ant/zxing-wasm)."
-  write_against_the_standard_api: "Use the barcode-detector ponyfill so our calls are the W3C Barcode Detection API shape backed by zxing-wasm. If a platform's native detector ever becomes worth using, that is a swap rather than a rewrite (https://github.com/Sec-ant/barcode-detector)."
+  choice: >-
+    zxing-wasm — ZXing-C++ compiled to WebAssembly, MIT, reader-only binary
+    about 1 MiB, roughly monthly releases and several million downloads a month.
+    One code path in Node, Electron, and the browser, which is what makes the
+    tests and the runtime the same thing
+    (https://github.com/Sec-ant/zxing-wasm).
+  write_against_the_standard_api: >-
+    Use the barcode-detector ponyfill so our calls are the W3C Barcode Detection
+    API shape backed by zxing-wasm. If a platform's native detector ever becomes
+    worth using, that is a swap rather than a rewrite
+    (https://github.com/Sec-ant/barcode-detector).
   why_not_the_native_detector:
-    the_platform_gap: "Chromium ships BarcodeDetector on macOS, Android and ChromeOS only, because it wraps Apple Vision and ML Kit. It was announced for Windows and Linux in Chrome 98 and then withdrawn, and the Chromium position is that Windows provides no bitmap-level barcode API to implement it with (blink-dev, Intent to Ship: Barcode Detection API)."
-    presence_is_not_support: "'BarcodeDetector' in self can be true while detect() returns nothing, and a ponyfill can shadow the native class. Any probe has to decode a baked-in synthetic code and check the result before trusting it."
-    the_consequence: "A cross-platform Electron app has to ship the WASM path anyway. Adding native as a fast path is an optimisation to measure later, not an architecture."
-  why_not_jsqr: "Pure JavaScript, about 45 KiB, still widely used, and it loads anywhere — but the last real release was 2021 and it is the weakest tier on small, blurry or damaged codes. Worth keeping in mind as a zero-WASM fallback for a constrained web build; not the primary."
-  the_escalation_tier_if_we_ever_need_it: "OpenCV.js QRCodeDetector, or the WeChat super-resolution detector, for codes the fast path misses. Multi-megabyte payloads, so it can only ever be an opt-in package loaded on demand — never in the default bundle."
-  no_model_in_the_loop: "Decided: local and deterministic. A vision model that guesses at a code we authored would paper over exactly the failures the abuse suite exists to find."
+    the_platform_gap: >-
+      Chromium ships BarcodeDetector on macOS, Android and ChromeOS only,
+      because it wraps Apple Vision and ML Kit. It was announced for Windows and
+      Linux in Chrome 98 and then withdrawn, and the Chromium position is that
+      Windows provides no bitmap-level barcode API to implement it with
+      (blink-dev, Intent to Ship: Barcode Detection API).
+    presence_is_not_support: >-
+      'BarcodeDetector' in self can be true while detect() returns nothing, and
+      a ponyfill can shadow the native class. Any probe has to decode a baked-in
+      synthetic code and check the result before trusting it.
+    the_consequence: >-
+      A cross-platform Electron app has to ship the WASM path anyway. Adding
+      native as a fast path is an optimisation to measure later, not an
+      architecture.
+  why_not_jsqr: >-
+    Pure JavaScript, about 45 KiB, still widely used, and it loads anywhere —
+    but the last real release was 2021 and it is the weakest tier on small,
+    blurry or damaged codes. Worth keeping in mind as a zero-WASM fallback for a
+    constrained web build; not the primary.
+  the_escalation_tier_if_we_ever_need_it: >-
+    OpenCV.js QRCodeDetector, or the WeChat super-resolution detector, for codes
+    the fast path misses. Multi-megabyte payloads, so it can only ever be an
+    opt-in package loaded on demand — never in the default bundle.
+  no_model_in_the_loop: >-
+    Decided: local and deterministic. A vision model that guesses at a code we
+    authored would paper over exactly the failures the abuse suite exists to
+    find.
 
 # THE EGG READER: EASIER BY CONSTRUCTION
 
 egg_reading:
   why_it_is_easier_than_qr:
-    we_chose_the_target: "The egg is a solid of revolution with fiducial caps and a fixed palette, drawn by our own compile. Template matching against a known target beats general detection."
-    no_rotation_hypothesis: "Rotationally invariant art means one template per zoom instead of four (EGGS.yml, rotationally_invariant)."
-    one_dimension_not_two: "Bands are sampled along a single axis between two caps. A QR reader solves a homography; this reads a line."
-    self_delimiting: "The caps bound the message, so there is no length field to parse and no terminator to find (EGGS.yml, the_stack_is_self_delimiting)."
-    no_error_correction_needed: "A per-group check band turns a misread into a discarded read. No Reed-Solomon, no bit interleaving, no Galois field."
+    we_chose_the_target: >-
+      The egg is a solid of revolution with fiducial caps and a fixed palette,
+      drawn by our own compile. Template matching against a known target beats
+      general detection.
+    no_rotation_hypothesis: >-
+      Rotationally invariant art means one template per zoom instead of four
+      (EGGS.yml, rotationally_invariant).
+    one_dimension_not_two: >-
+      Bands are sampled along a single axis between two caps. A QR reader solves
+      a homography; this reads a line.
+    self_delimiting: >-
+      The caps bound the message, so there is no length field to parse and no
+      terminator to find (EGGS.yml, the_stack_is_self_delimiting).
+    no_error_correction_needed: >-
+      A per-group check band turns a misread into a discarded read. No
+      Reed-Solomon, no bit interleaving, no Galois field.
   the_stages:
-    zero_find_the_caps: "Search for the fiducial: a white region directly above a black one, at high contrast, in the size range the current zoom allows. That pair is the only thing the reader looks for, and finding it is a cheap local test over a downscaled frame."
-    lighting_is_never_a_signal: "Glow, pulse and levitation are cosmetic — for the player, the way a wired lamp in Factorio is for the player. The reader must work on a still frame of an unlit egg, so no stage may consult illumination. Coupling the decoder to a light effect would mean an artist dimming a glow breaks reads, and bloom already wrecks colour fidelity."
-    one_confirm_the_silhouette: "Match the egg template at the expected size. Where the game's zoom is known, the size is known, and the scale search disappears entirely."
-    two_lock_the_caps: "Find the white-over-black adjacency. It gives the axis, the scale, the extent of the stack, and a black and a white sample for normalisation, all from the same feature."
-    three_sample_the_bands: "Walk the axis, sample each band's centre, normalise against the cap samples so a sunset or a fire does not turn orange into brown."
-    four_classify_and_check: "Nearest palette entry in a perceptually even space, then verify the group's check band. Big-endian order means a truncated read is a legal coarse answer rather than a failure (OPTICAL-CHANNEL.yml, band_codes)."
-    five_read_the_words_if_a_dialog_is_open: "Text is the wide carrier and its templates are known at compile time, so matching beats OCR wherever the string came from a template we emitted (OPTICAL-CHANNEL.yml, text_is_the_wide_carrier). BUILT, for The Sims 1: the game's own coverage masks, fitted rather than compared, so the reader needs to know nothing about the colours — modules/soul-angel/bridges/sims1/FONT-RECOGNITION.yml."
-  the_zoom_oracle: "We author both ends, so the reader can be told the zoom instead of inferring it. The single largest cost in a general detector is the scale search, and we can delete it."
+    zero_find_the_caps: >-
+      Search for the fiducial: a white region directly above a black one, at
+      high contrast, in the size range the current zoom allows. That pair is the
+      only thing the reader looks for, and finding it is a cheap local test over
+      a downscaled frame.
+    lighting_is_never_a_signal: >-
+      Glow, pulse and levitation are cosmetic — for the player, the way a wired
+      lamp in Factorio is for the player. The reader must work on a still frame
+      of an unlit egg, so no stage may consult illumination. Coupling the
+      decoder to a light effect would mean an artist dimming a glow breaks
+      reads, and bloom already wrecks colour fidelity.
+    one_confirm_the_silhouette: >-
+      Match the egg template at the expected size. Where the game's zoom is
+      known, the size is known, and the scale search disappears entirely.
+    two_lock_the_caps: >-
+      Find the white-over-black adjacency. It gives the axis, the scale, the
+      extent of the stack, and a black and a white sample for normalisation, all
+      from the same feature.
+    three_sample_the_bands: >-
+      Walk the axis, sample each band's centre, normalise against the cap
+      samples so a sunset or a fire does not turn orange into brown.
+    four_classify_and_check: >-
+      Nearest palette entry in a perceptually even space, then verify the
+      group's check band. Big-endian order means a truncated read is a legal
+      coarse answer rather than a failure (OPTICAL-CHANNEL.yml, band_codes).
+    five_read_the_words_if_a_dialog_is_open: >-
+      Text is the wide carrier and its templates are known at compile time, so
+      matching beats OCR wherever the string came from a template we emitted
+      (OPTICAL-CHANNEL.yml, text_is_the_wide_carrier). BUILT, for The Sims 1:
+      the game's own coverage masks, fitted rather than compared, so the reader
+      needs to know nothing about the colours —
+      modules/soul-angel/bridges/sims1/FONT-RECOGNITION.yml.
+  the_zoom_oracle: >-
+    We author both ends, so the reader can be told the zoom instead of inferring
+    it. The single largest cost in a general detector is the scale search, and
+    we can delete it.
 
 # WHERE THE CODE LIVES
 
 the_stack:
   layer_0_codec_in_pure_typescript:
-    what: "packages/optical-codec — encode a value to a picture, decode a picture to a value, plus the degradation harness. No DOM, no GPU, no game."
-    why_first: "It runs in Node in CI, it is the definition of correct, and every other layer calls it. It also makes the legibility claims in EGGS.yml falsifiable instead of asserted."
-    the_abuse_suite: "Round-trip through dim, tint, blur, downscale to a dozen pixels, JPEG, additive noise, and colour-blind simulation. Every failure becomes a stored fixture, and every egg the editor saves adds a case (EGGS.yml, the_blip_editor)."
+    what: >-
+      packages/optical-codec — encode a value to a picture, decode a picture to
+      a value, plus the degradation harness. No DOM, no GPU, no game.
+    why_first: >-
+      It runs in Node in CI, it is the definition of correct, and every other
+      layer calls it. It also makes the legibility claims in EGGS.yml
+      falsifiable instead of asserted.
+    the_abuse_suite: >-
+      Round-trip through dim, tint, blur, downscale to a dozen pixels, JPEG,
+      additive noise, and colour-blind simulation. Every failure becomes a
+      stored fixture, and every egg the editor saves adds a case (EGGS.yml,
+      the_blip_editor).
   layer_1_frame_source:
-    what: "One interface over screen capture, a video element, a camera, and a synthetic test source, so the same reader runs against a fixture and a live game."
-    how: "getDisplayMedia into WebCodecs VideoFrame, driven by requestVideoFrameCallback so every frame carries the presentation timestamp the recorder's clock already wants (RECORDER.yml)."
+    what: >-
+      One interface over screen capture, a video element, a camera, and a
+      synthetic test source, so the same reader runs against a fixture and a
+      live game.
+    how: >-
+      getDisplayMedia into WebCodecs VideoFrame, driven by
+      requestVideoFrameCallback so every frame carries the presentation
+      timestamp the recorder's clock already wants (RECORDER.yml).
   layer_2_prefilter_on_the_gpu_when_measured_necessary:
-    what: "Greyscale, mip-chain downsample, separable box blur for an adaptive threshold, and a high-contrast vertical-adjacency test to produce candidate boxes. Geometry and contrast only — never illumination."
-    where: "WebGPU compute, with a WebGL2 fragment-shader pyramid as the fallback. Both are present in Chromium, so Electron gets this for free."
-    the_actual_bottleneck: "Readback, not arithmetic. Copy only the candidate tiles, double-buffer so the CPU never waits on the GPU, and never read a full frame back per frame."
-    honest_ordering: "CPU first. A 640-wide greyscale threshold on a modern machine is cheap, and a GPU stage added before it is proven necessary is a stage that has to be debugged for no reason."
-  layer_3_decode_in_workers: "A small worker pool: zxing-wasm for QR, layer 0 for eggs, SharedArrayBuffer for the handoff where it is available. The UI thread never decodes."
-  layer_4_the_debug_overlay_is_the_feature: "Draw boxes on what was found, with what it read and how sure it is, live in the transparent overlay. That is the development tool and the product's honesty at the same time — automation you can watch is the whole thesis (moollm designs/INTERFACE-TO-AGENCY.md)."
-  the_native_escape_hatch: "Electron's main process can load a Rust addon if WASM ever proves too slow. Only after measurement, and only behind the same interface."
+    what: >-
+      Greyscale, mip-chain downsample, separable box blur for an adaptive
+      threshold, and a high-contrast vertical-adjacency test to produce
+      candidate boxes. Geometry and contrast only — never illumination.
+    where: >-
+      WebGPU compute, with a WebGL2 fragment-shader pyramid as the fallback.
+      Both are present in Chromium, so Electron gets this for free.
+    the_actual_bottleneck: >-
+      Readback, not arithmetic. Copy only the candidate tiles, double-buffer so
+      the CPU never waits on the GPU, and never read a full frame back per
+      frame.
+    honest_ordering: >-
+      CPU first. A 640-wide greyscale threshold on a modern machine is cheap,
+      and a GPU stage added before it is proven necessary is a stage that has to
+      be debugged for no reason.
+  layer_3_decode_in_workers: >-
+    A small worker pool: zxing-wasm for QR, layer 0 for eggs, SharedArrayBuffer
+    for the handoff where it is available. The UI thread never decodes.
+  layer_4_the_debug_overlay_is_the_feature: >-
+    Draw boxes on what was found, with what it read and how sure it is, live in
+    the transparent overlay. That is the development tool and the product's
+    honesty at the same time — automation you can watch is the whole thesis
+    (moollm designs/INTERFACE-TO-AGENCY.md).
+  the_native_escape_hatch: >-
+    Electron's main process can load a Rust addon if WASM ever proves too slow.
+    Only after measurement, and only behind the same interface.
 
 # CADENCE
 #
-# Nothing here needs to run every frame, and pretending otherwise is how a recogniser becomes a
-# space heater.
+# Nothing here needs to run every frame, and pretending otherwise is how a
+# recogniser becomes a space heater.
 
 when_to_look:
-  survey: "A few times a second at low resolution, to answer whether anything changed at all."
-  burst: "Full-rate reads on the candidate boxes for a moment after a change, then back to survey."
-  on_demand: "A dialog opening, a player selecting an egg, or the Angel deciding to act are all reasons to look immediately at one place."
-  idle_is_free: "A still screen costs one downscaled frame difference. The dance-floor case is the interesting stress test, and it is bounded by the candidate count rather than by area (EGGS.yml, matrix_eggs)."
+  survey: >-
+    A few times a second at low resolution, to answer whether anything changed
+    at all.
+  burst: >-
+    Full-rate reads on the candidate boxes for a moment after a change, then
+    back to survey.
+  on_demand: >-
+    A dialog opening, a player selecting an egg, or the Angel deciding to act
+    are all reasons to look immediately at one place.
+  idle_is_free: >-
+    A still screen costs one downscaled frame difference. The dance-floor case
+    is the interesting stress test, and it is bounded by the candidate count
+    rather than by area (EGGS.yml, matrix_eggs).
 
 # WHAT IS ACTUALLY BUILT, AND WHAT IT MEASURED
 #
-# The specification above was written before any of it ran. This section is what happened when it
-# did, and it is allowed to contradict the section above — the numbers win.
+# The specification above was written before any of it ran. This section is what
+# happened when it did, and it is allowed to contradict the section above — the
+# numbers win.
 
 the_text_reader_is_finished_first:
-  what: "Reading the interface font by matching the bitmap the application draws with. Not OCR: the pattern IS the glyph, so a character is confirmed rather than guessed, and a misaligned read collapses into detectable nonsense instead of plausible text."
-  where: "packages/optical-codec/src/coverage-font.ts (the matcher), font-pack.ts (the format), font-context.ts (draw, measure and read in Canvas's vocabulary) · modules/soul-angel/bridges/sims1/src/text/ (The Sims 1 geometry and faces) · FONT-RECOGNITION.yml (the full account)."
-  the_provenance: "Started from Don's Simplifier, 2004 — the accessibility experiment that read The Sims 1 aloud because the game exposes nothing to query — and then went to the source: the game ships its interface font as eleven sizes of coverage atlas, which tools/import-fonts.ts packs into one file and the reader fits."
-  drawing_and_reading_are_the_same_numbers: "One face serves both, so a fixture drawn by this code is legible to this code by construction. That is what makes the reader testable without a screenshot of anything."
-  what_the_2004_capture_turned_out_to_be: "VariableSans_08, thresholded, with tight ink widths where the game has advances. Recovered by comparing it against every size the game ships, which is also how the panel's font size was established — nobody had written it down."
-  the_reader_is_not_greedy: "It scores whole lines rather than choosing the best letter at each position, because per-position choices are wrong in ways that only show up later: a backtick eats an 'h' one column early, and every local rule that fixes that breaks something else. FONT-RECOGNITION.yml has both misreads."
-  why_this_matters_to_the_rest: "The bridges now have pixels: AngelServices.grabFrame returns a decoded, native-scale frame, which is the capability every game-facing reader needs and none of them had."
+  what: >-
+    Reading the interface font by matching the bitmap the application draws
+    with. Not OCR: the pattern IS the glyph, so a character is confirmed rather
+    than guessed, and a misaligned read collapses into detectable nonsense
+    instead of plausible text.
+  where: >-
+    packages/optical-codec/src/coverage-font.ts (the matcher), font-pack.ts (the
+    format), font-context.ts (draw, measure and read in Canvas's vocabulary) ·
+    modules/soul-angel/bridges/sims1/src/text/ (The Sims 1 geometry and faces) ·
+    FONT-RECOGNITION.yml (the full account).
+  the_provenance: >-
+    Started from Don's Simplifier, 2004 — the accessibility experiment that read
+    The Sims 1 aloud because the game exposes nothing to query — and then went
+    to the source: the game ships its interface font as eleven sizes of coverage
+    atlas, which tools/import-fonts.ts packs into one file and the reader fits.
+  drawing_and_reading_are_the_same_numbers: >-
+    One face serves both, so a fixture drawn by this code is legible to this
+    code by construction. That is what makes the reader testable without a
+    screenshot of anything.
+  what_the_2004_capture_turned_out_to_be: >-
+    VariableSans_08, thresholded, with tight ink widths where the game has
+    advances. Recovered by comparing it against every size the game ships, which
+    is also how the panel's font size was established — nobody had written it
+    down.
+  the_reader_is_not_greedy: >-
+    It scores whole lines rather than choosing the best letter at each position,
+    because per-position choices are wrong in ways that only show up later: a
+    backtick eats an 'h' one column early, and every local rule that fixes that
+    breaks something else. FONT-RECOGNITION.yml has both misreads.
+  why_this_matters_to_the_rest: >-
+    The bridges now have pixels: AngelServices.grabFrame returns a decoded,
+    native-scale frame, which is the capability every game-facing reader needs
+    and none of them had.
 
 the_reader_finds_its_own_coordinates:
-  what: "The window is located by correlating the application's own interface art against the frame, which yields its origin and its scale; every rectangle is then measured from a window edge. packages/optical-codec/src/template.ts."
-  why_it_is_not_a_detail: "Coordinates measured once at one resolution are the difference between a demo and a tool. With them, a reader works on one screenshot; without them, it works on a window that is not the whole frame, on a stretched capture, and on the two resolutions the game offers, and it REFUSES a frame of something else rather than reading whatever is at those pixels."
-  the_finding_that_generalises: "Striding over the frame to find art is both slower and wrong. Hard interface edges correlate badly a couple of rows out of position, so a coarse grid scores the art low AT the art and hands the answer to whatever it landed on squarely. Visit every position with a thinned template instead — then search each separated neighbourhood with the whole one. This applies to the egg reader too, which has the same shape of problem."
-  what_it_does_not_solve: "A smooth upscale. The art is found, the scale is reported, the frame is decimated back to native pixels, and blurred masks show up as low confidence. That is a report, not a rescue."
+  what: >-
+    The window is located by correlating the application's own interface art
+    against the frame, which yields its origin and its scale; every rectangle is
+    then measured from a window edge. packages/optical-codec/src/template.ts.
+  why_it_is_not_a_detail: >-
+    Coordinates measured once at one resolution are the difference between a
+    demo and a tool. With them, a reader works on one screenshot; without them,
+    it works on a window that is not the whole frame, on a stretched capture,
+    and on the two resolutions the game offers, and it REFUSES a frame of
+    something else rather than reading whatever is at those pixels.
+  the_finding_that_generalises: >-
+    Striding over the frame to find art is both slower and wrong. Hard interface
+    edges correlate badly a couple of rows out of position, so a coarse grid
+    scores the art low AT the art and hands the answer to whatever it landed on
+    squarely. Visit every position with a thinned template instead — then search
+    each separated neighbourhood with the whole one. This applies to the egg
+    reader too, which has the same shape of problem.
+  what_it_does_not_solve: >-
+    A smooth upscale. The art is found, the scale is reported, the frame is
+    decimated back to native pixels, and blurred masks show up as low
+    confidence. That is a report, not a rescue.
 
 the_verb:
-  recognize_scan: "One capture plus one decode, in the main process, returning payloads and boxes in screen points. One verb rather than two because handing the caller an image would put a decoder in every client and move pixels across a socket to be looked at once (src/common/protocol.ts, src/main/recognize/service.ts)."
-  png_always: "The capture service prefers JPEG for screens and is right to, but a small QR code is what JPEG damages worst — hard edges, tiny features, artifacts landing on the modules. Recognition overrides the default."
-  the_bytes_go_in_encoded: "zxing decodes PNG and JPEG itself, so the captured file goes straight to the wasm module. Decoding it first would mean carrying an image decoder to hand the decoder something it can already read."
-  eggs_field_is_empty_not_absent: "Callers get an empty array today and populated arrays later, so nobody rewrites a call site when the egg reader lands."
+  recognize_scan: >-
+    One capture plus one decode, in the main process, returning payloads and
+    boxes in screen points. One verb rather than two because handing the caller
+    an image would put a decoder in every client and move pixels across a socket
+    to be looked at once (src/common/protocol.ts,
+    src/main/recognize/service.ts).
+  png_always: >-
+    The capture service prefers JPEG for screens and is right to, but a small QR
+    code is what JPEG damages worst — hard edges, tiny features, artifacts
+    landing on the modules. Recognition overrides the default.
+  the_bytes_go_in_encoded: >-
+    zxing decodes PNG and JPEG itself, so the captured file goes straight to the
+    wasm module. Decoding it first would mean carrying an image decoder to hand
+    the decoder something it can already read.
+  eggs_field_is_empty_not_absent: >-
+    Callers get an empty array today and populated arrays later, so nobody
+    rewrites a call site when the egg reader lands.
 
 what_the_library_already_does:
-  the_correction: "The stage list above assumed we would do our own geometry. For QR we do none: zxing-cpp finds the finder patterns, solves the perspective transform from them, samples the module grid through it, and retries rotated, inverted and downscaled. A phone at an angle to a monitor is its ordinary case."
-  so_the_screen_and_camera_split_is_smaller_than_written: "It still holds for the egg reader, which has no such machinery and is why the caps exist. For QR, one call covers both paths and a hand-rolled retry ladder was deleted after the library turned out to do it better."
-  what_no_decoder_fixes: "Moire between the pixel grid and the sensor grid, specular glare, PWM banding, and too few pixels per module. Those are optical, and they are what sets the size floor below."
+  the_correction: >-
+    The stage list above assumed we would do our own geometry. For QR we do
+    none: zxing-cpp finds the finder patterns, solves the perspective transform
+    from them, samples the module grid through it, and retries rotated, inverted
+    and downscaled. A phone at an angle to a monitor is its ordinary case.
+  so_the_screen_and_camera_split_is_smaller_than_written: >-
+    It still holds for the egg reader, which has no such machinery and is why
+    the caps exist. For QR, one call covers both paths and a hand-rolled retry
+    ladder was deleted after the library turned out to do it better.
+  what_no_decoder_fixes: >-
+    Moire between the pixel grid and the sensor grid, specular glare, PWM
+    banding, and too few pixels per module. Those are optical, and they are what
+    sets the size floor below.
 
 measured_legibility:
-  how: "packages/optical-codec/scripts/measure-legibility.ts — a 37-byte payload at ecLevel M in an 800x600 frame, swept across pixels-per-module and degradation."
-  the_number: "FOUR PIXELS PER MODULE survives everything in the suite. One pixel per module reads only on a clean grab."
+  how: >-
+    packages/optical-codec/scripts/measure-legibility.ts — a 37-byte payload at
+    ecLevel M in an 800x600 frame, swept across pixels-per-module and
+    degradation.
+  the_number: >-
+    FOUR PIXELS PER MODULE survives everything in the suite. One pixel per
+    module reads only on a clean grab.
   the_grid:
     clean_screen_grab: "1px and up."
     window_scaled_to_50_percent: "2px and up."
     window_scaled_to_33_percent: "4px and up."
     soft_focus: "3px and up."
-    phone_noise_and_warm_cast: "1px and up — a colour cast and grain barely matter, which is the least intuitive result here."
+    phone_noise_and_warm_cast: >-
+      1px and up — a colour cast and grain barely matter, which is the least
+      intuitive result here.
     phone_tilted: "2px and up."
     phone_tilted_blurred_and_noisy: "4px and up."
-  the_caveat: "Synthetic degradations, not a camera. This is a floor on what will work, not a substitute for pointing a phone at a monitor. The perspective warp is a real homography, the noise is additive rather than sensor-shaped, and lossy encoding is not in the suite at all."
-  what_it_decides: "How big the About dialog draws its code, and what to say to anyone who wants it smaller."
+  the_caveat: >-
+    Synthetic degradations, not a camera. This is a floor on what will work, not
+    a substitute for pointing a phone at a monitor. The perspective warp is a
+    real homography, the noise is additive rather than sensor-shaped, and lossy
+    encoding is not in the suite at all.
+  what_it_decides: >-
+    How big the About dialog draws its code, and what to say to anyone who wants
+    it smaller.
 
 the_eggs_are_drawn_before_the_game_draws_them:
-  what: "packages/optical-codec renders eggs into synthetic frames — caps, bands, segments, levitation, glow — and reports the ground-truth box and digits for each one."
-  why_not_wait_for_screenshots: "There are no eggs in The Sims yet, so there is nothing to photograph. Generating the frame gives the reader targets today and stays useful afterwards: a real capture tells you whether it works, a synthetic frame tells you which pixel broke it."
-  the_test_that_matters: "The bands are pixel-identical lit and dark. The glow draws behind the body, so the cosmetic layer cannot reach the pixels the reader samples — which is the rule above, enforced rather than asserted."
+  what: >-
+    packages/optical-codec renders eggs into synthetic frames — caps, bands,
+    segments, levitation, glow — and reports the ground-truth box and digits for
+    each one.
+  why_not_wait_for_screenshots: >-
+    There are no eggs in The Sims yet, so there is nothing to photograph.
+    Generating the frame gives the reader targets today and stays useful
+    afterwards: a real capture tells you whether it works, a synthetic frame
+    tells you which pixel broke it.
+  the_test_that_matters: >-
+    The bands are pixel-identical lit and dark. The glow draws behind the body,
+    so the cosmetic layer cannot reach the pixels the reader samples — which is
+    the rule above, enforced rather than asserted.
 
 the_egg_reader:
-  where: "packages/optical-codec/src/egg-read.ts, swept by scripts/measure-eggs.ts."
-  how_it_finds_one: "Column by column: the brightest and darkest runs in a column are candidate caps, and a candidate survives only if the distance between their centres divides evenly by a band height that also explains the colour changes between them. Then adjacent columns that agree are grouped, and a group narrower than a band is tall is thrown away."
-  the_caps_do_three_jobs: "They delimit the stack, they set the scale — a cap is exactly one band tall, so the metric comes out of the picture rather than out of a config file — and they are the white and black reference for an affine colour correction. A sunset shifts the bands and the caps by the same amount, and correcting by the caps removes it before a single digit is decided."
-  it_refuses_rather_than_guesses: "Every band reports the distance to the runner-up colour. The smallest of those is the reading's confidence, and a reading below the floor is returned as refused WITH its digits, so a caller can see what was nearly there. A failed check digit is refused the same way."
-  a_short_read_is_an_answer_not_a_failure: "The stack is three groups and each one ends with a check band over everything above it — 2 bands, 6, 9. So a two-band read at the far zoom VERIFIES, and reports the kind with version, id and value as null. This is what one trailing check digit could not do: every partial read was unverifiable, so progressive disclosure came down to trusting whatever the coarse read said (EGGS.yml, the_three_groups_as_built)."
-  the_measured_floor: "SIX PIXELS A BAND reads twelve colours through every degradation in the suite, for the full nine-band stack. Five reads twelve through all but a window at a third scale and a noisy blurred phone grab, where it drops to eight colours. Below four, only a clean or evenly-dimmed grab reads at all."
+  where: >-
+    packages/optical-codec/src/egg-read.ts, swept by scripts/measure-eggs.ts.
+  how_it_finds_one: >-
+    Column by column: the brightest and darkest runs in a column are candidate
+    caps, and a candidate survives only if the distance between their centres
+    divides evenly by a band height that also explains the colour changes
+    between them. Then adjacent columns that agree are grouped, and a group
+    narrower than a band is tall is thrown away.
+  the_caps_do_three_jobs: >-
+    They delimit the stack, they set the scale — a cap is exactly one band tall,
+    so the metric comes out of the picture rather than out of a config file —
+    and they are the white and black reference for an affine colour correction.
+    A sunset shifts the bands and the caps by the same amount, and correcting by
+    the caps removes it before a single digit is decided.
+  it_refuses_rather_than_guesses: >-
+    Every band reports the distance to the runner-up colour. The smallest of
+    those is the reading's confidence, and a reading below the floor is returned
+    as refused WITH its digits, so a caller can see what was nearly there. A
+    failed check digit is refused the same way.
+  a_short_read_is_an_answer_not_a_failure: >-
+    The stack is three groups and each one ends with a check band over
+    everything above it — 2 bands, 6, 9. So a two-band read at the far zoom
+    VERIFIES, and reports the kind with version, id and value as null. This is
+    what one trailing check digit could not do: every partial read was
+    unverifiable, so progressive disclosure came down to trusting whatever the
+    coarse read said (EGGS.yml, the_three_groups_as_built).
+  the_measured_floor: >-
+    SIX PIXELS A BAND reads twelve colours through every degradation in the
+    suite, for the full nine-band stack. Five reads twelve through all but a
+    window at a third scale and a noisy blurred phone grab, where it drops to
+    eight colours. Below four, only a clean or evenly-dimmed grab reads at all.
   the_grid:
     clean_screen_grab: "2px and up, twelve colours."
-    evening_light: "2px and up. A global dim costs nothing, because the caps dim with the bands and the correction is affine."
+    evening_light: >-
+      2px and up. A global dim costs nothing, because the caps dim with the
+      bands and the correction is affine.
     window_at_50_percent: "4px and up."
     window_at_33_percent: "6px and up."
     soft_focus: "5px and up."
-    phone_noise_and_warm_cast: "2px and up, once the frame is median-filtered across the width."
+    phone_noise_and_warm_cast: >-
+      2px and up, once the frame is median-filtered across the width.
     phone_noisy_and_soft: "5px for eight colours, 6px for twelve."
     phone_tilted: "5px and up."
   two_findings_worth_keeping:
-    noise_invents_boundaries: "Finding the band count from colour changes works and then stops working the moment there is grain, because every row becomes a change. A band is one colour all the way across, so a median of five neighbours across the width removes it and cannot move a horizontal boundary. Without that filter every noisy cell in the sweep read nothing at all."
-    a_band_can_be_mistaken_for_a_cap: "The reader looks for the caps as the extremes of a column's range and claims the top and bottom 15% of it, so a dark band inside that claim becomes a black cap and the whole egg vanishes — not misread, not refused, invisible. Seven of sixteen codes were being lost this way. The fix is a bound on the palette, not on the reader: bands live between luma 72 and 188 (src/egg-code.ts)."
-  what_the_alphabet_is_set_to: "Octal, with twelve measured as legible. The headroom is spent on margin rather than on digits: the sweep is synthetic, the game's own rendering is not in it, and an octal band is the same symbol as a dialled compass digit (EGGS.yml, cracking_it_like_a_safe)."
-  still_only_pixels_we_drew: "Same caveat as the QR numbers. tools/verify-frame.ts is the thing that turns this from a floor into a fact, and it needs one real frame."
+    noise_invents_boundaries: >-
+      Finding the band count from colour changes works and then stops working
+      the moment there is grain, because every row becomes a change. A band is
+      one colour all the way across, so a median of five neighbours across the
+      width removes it and cannot move a horizontal boundary. Without that
+      filter every noisy cell in the sweep read nothing at all.
+    a_band_can_be_mistaken_for_a_cap: >-
+      The reader looks for the caps as the extremes of a column's range and
+      claims the top and bottom 15% of it, so a dark band inside that claim
+      becomes a black cap and the whole egg vanishes — not misread, not refused,
+      invisible. Seven of sixteen codes were being lost this way. The fix is a
+      bound on the palette, not on the reader: bands live between luma 72 and
+      188 (src/egg-code.ts).
+  what_the_alphabet_is_set_to: >-
+    Octal, with twelve measured as legible. The headroom is spent on margin
+    rather than on digits: the sweep is synthetic, the game's own rendering is
+    not in it, and an octal band is the same symbol as a dialled compass digit
+    (EGGS.yml, cracking_it_like_a_safe).
+  still_only_pixels_we_drew: >-
+    Same caveat as the QR numbers. tools/verify-frame.ts is the thing that turns
+    this from a floor into a fact, and it needs one real frame.
 
 open_items:
-  packaging_the_wasm: "The Node path finds the wasm inside node_modules by walking up from an exported entry point. A packaged app needs those two files unpacked from the asar and resolved from resources instead."
-  jpeg_in_the_abuse_suite: "Needs a real DCT and quantisation table. Standing in for it with blur plus noise would let us claim a pass we had not earned."
-  the_palette_is_provisional: "The palettes are packed rather than picked — scripts/pick-palettes.ts maximises the smallest gap between colours, under a distance from the caps and a luma window. What is settled is HOW MANY colours a band can hold and how far apart they have to be. Choosing them against the game's own rendered output has not happened, and the sweep cannot do it."
-  the_egg_field_is_still_empty: "The reader exists in the codec and the verb still returns an empty array. Wiring is small; doing it before there is a frame to verify against would mean shipping a path nobody has seen work."
+  packaging_the_wasm: >-
+    The Node path finds the wasm inside node_modules by walking up from an
+    exported entry point. A packaged app needs those two files unpacked from the
+    asar and resolved from resources instead.
+  jpeg_in_the_abuse_suite: >-
+    Needs a real DCT and quantisation table. Standing in for it with blur plus
+    noise would let us claim a pass we had not earned.
+  the_palette_is_provisional: >-
+    The palettes are packed rather than picked — scripts/pick-palettes.ts
+    maximises the smallest gap between colours, under a distance from the caps
+    and a luma window. What is settled is HOW MANY colours a band can hold and
+    how far apart they have to be. Choosing them against the game's own rendered
+    output has not happened, and the sweep cannot do it.
+  the_egg_field_is_still_empty: >-
+    The reader exists in the codec and the verb still returns an empty array.
+    Wiring is small; doing it before there is a frame to verify against would
+    mean shipping a path nobody has seen work.

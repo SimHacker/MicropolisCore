@@ -1,9 +1,10 @@
 # DVR — always-on ring buffer. "If something happens, it's recorded."
 #
-# The machinery moved up. The ring, the chunking, the capture paths, the scrub, the
-# selection, the export and the streaming are all Screen Angel's, because none of them are
-# game-specific — a soulless app counts. What stays here is what Soul Angel adds on top:
-# which moments matter in a game about people, and what a captured moment becomes.
+# The machinery moved up. The ring, the chunking, the capture paths, the scrub,
+# the selection, the export and the streaming are all Screen Angel's, because
+# none of them are game-specific — a soulless app counts. What stays here is
+# what Soul Angel adds on top: which moments matter in a game about people, and
+# what a captured moment becomes.
 
 meta:
   id: dvr
@@ -15,31 +16,46 @@ meta:
     game_lifecycle_and_save_files: ../../APP-CONTROL.yml
     capture_and_images: ../../PROTOCOL.yml
   why_it_moved: |
-    The goal is to stream any video or any game into a video analytics system, and to grab
-    content off any screen. Neither is about souls. Keeping a parallel implementation here
-    would mean two ring buffers, two encoders and two timelines, differing by accident.
+    The goal is to stream any video or any game into a video analytics system,
+    and to grab content off any screen. Neither is about souls. Keeping a
+    parallel implementation here would mean two ring buffers, two encoders and
+    two timelines, differing by accident.
 
 own_vs_piggyback:
   decision: build_own
   why: |
-    Steam Game Recording is Steam-only and opaque. Soul Album cards need frame-exact
-    timestamps, per-game scoping, and Mac parity. Capture is a solved per-OS problem, so
-    owning it costs less than depending on someone else's idea of what a clip is.
-  kept_here: "This decision is Soul Angel's reason for the app-level recorder existing, so it is recorded in both places."
+    Steam Game Recording is Steam-only and opaque. Soul Album cards need
+    frame-exact timestamps, per-game scoping, and Mac parity. Capture is a
+    solved per-OS problem, so owning it costs less than depending on someone
+    else's idea of what a clip is.
+  kept_here: >-
+    This decision is Soul Angel's reason for the app-level recorder existing, so
+    it is recorded in both places.
 
 what_soul_angel_adds:
   cues_that_mean_something: |
-    Screen Angel's timeline takes cues from anyone (STUDIO.yml cues). Soul Angel knows which
-    ones are worth marking in a game about people: a mood crossing a threshold, a
-    relationship changing, a death, a birth, a fire. Generic capture cannot know that a Sim
-    just became enemies with their roommate; the bridge can.
-  attachments: "A card carries the Sim, the lot, the family, the save file — bridge-supplied fields on a Screen Angel selection."
+    Screen Angel's timeline takes cues from anyone (STUDIO.yml cues). Soul Angel
+    knows which ones are worth marking in a game about people: a mood crossing a
+    threshold, a relationship changing, a death, a birth, a fire. Generic
+    capture cannot know that a Sim just became enemies with their roommate; the
+    bridge can.
+  attachments: >-
+    A card carries the Sim, the lot, the family, the save file — bridge-supplied
+    fields on a Screen Angel selection.
   album: "A promoted selection becomes a Soul Album card. See SOUL-ALBUM.yml."
-  narration: "Caption and narrate a frozen frame, which is the flow the album was designed around."
-  replay_to_stream: "Instant replay as a show segment — promote the segment behind a cue and play it into the live stream. Mechanism in RECORDER.yml live_output; the judgment about what is worth replaying is here."
+  narration: >-
+    Caption and narrate a frozen frame, which is the flow the album was designed
+    around.
+  replay_to_stream: >-
+    Instant replay as a show segment — promote the segment behind a cue and play
+    it into the live stream. Mechanism in RECORDER.yml live_output; the judgment
+    about what is worth replaying is here.
 
 privacy:
-  redaction_gate: "Nothing leaves the machine unredacted. Enforced at the app level because it has to cover every sink and every export, but the rules about what is sensitive in a game about people belong to the bridge."
+  redaction_gate: >-
+    Nothing leaves the machine unredacted. Enforced at the app level because it
+    has to cover every sink and every export, but the rules about what is
+    sensitive in a game about people belong to the bridge.
 
 see_also:
   - SOUL-ALBUM.yml

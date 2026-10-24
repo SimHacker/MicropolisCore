@@ -39,7 +39,8 @@ interfaces:
   renderers: "apps/micropolis/src/lib/*TileRenderer.ts"
   renderer_roadmap: "documentation/designs/renderer-plugin-roadmap.md"
   moollm_integration: "documentation/designs/moollm-micropolis-integration.md"
-  sim_ensemble_bridge: "moollm skills/soul-city/ (protocol) + packages/sims-io (this repo)"
+  sim_ensemble_bridge: >-
+    moollm skills/soul-city/ (protocol) + packages/sims-io (this repo)
   vitamoo_typescript: "../../documentation/vitamoo/OBLITERATOR-TYPESCRIPT.md"
   command_bus: "apps/micropolis/cli/bus/index.ts"
 
@@ -49,7 +50,8 @@ delegate_to:
   experiment: "Batch simulation and evaluation loops"
   constructionism: "Educational framing"
   mooco: "Future orchestration, catalog services, and adapter hosting"
-  sim_obliterator: "Sims save/object/character bridge, uplift/download, IFF layers"
+  sim_obliterator: >-
+    Sims save/object/character bridge, uplift/download, IFF layers
   character: "MOOLLM CHARACTER.yml and Sims personality bridge"
   mind_mirror: "Personality modeling beyond The Sims trait surface"
 
@@ -57,8 +59,12 @@ invoke_when:
   - "Working with Micropolis engine or city files"
   - "Using the Micropolis CLI"
   - "Designing save-file, batch simulation, or city-analysis tools"
-  - "Designing renderer plugins, catalog previews, or content-management workflows"
-  - "Connecting Micropolis with The Sims, VitaMoo, sims-io, or MOOLLM characters"
+  - >-
+      Designing renderer plugins, catalog previews, or content-management
+      workflows
+  - >-
+      Connecting Micropolis with The Sims, VitaMoo, sims-io, or MOOLLM
+      characters
   - "Creating AI-accessible city commands"
   - "Factoring Micropolis capabilities into sub-skills"
 

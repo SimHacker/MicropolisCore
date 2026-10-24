@@ -1,26 +1,39 @@
-# EGGS.yml — the egg: an asynchronous task reified as an object in the game world, with a menu tree
-# for its return value and one item that commits.
+# EGGS.yml — the egg: an asynchronous task reified as an object in the game
+# world, with a menu tree for its return value and one item that commits.
 #
-# App level, not Soul Angel, for the same reason the ring and the bus are: a pending thing with a
-# result is not soul-specific. A character out on an errand is the most interesting egg, not the
-# definition of one.
+# App level, not Soul Angel, for the same reason the ring and the bus are: a
+# pending thing with a result is not soul-specific. A character out on an errand
+# is the most interesting egg, not the definition of one.
 
 meta:
   id: eggs
   status: design
   built: [band_code, egg_renderer, egg_reader, measured_band_height]
-  not_built: [egg_object, menu_tree_compile, selection_accumulator, hatch_semantics, resume_point, recall]
-  see_also: [OPTICAL-CHANNEL.yml, ANGEL-EVENT-BUS.yml, RECORDER.yml, modules/soul-angel/OUT-OF-GAME-JOBS.yml, modules/soul-angel/UNIVERSAL-JOBS.yml]
-  upstream: "moollm skills/soul-city/GLOSSARY.md (Egg, Errand) and skills/soul-city/SOUL-BRIDGES.md (The errand)"
+  not_built: [egg_object, menu_tree_compile, selection_accumulator,
+              hatch_semantics, resume_point, recall]
+  see_also: [OPTICAL-CHANNEL.yml, ANGEL-EVENT-BUS.yml, RECORDER.yml,
+             modules/soul-angel/OUT-OF-GAME-JOBS.yml,
+             modules/soul-angel/UNIVERSAL-JOBS.yml]
+  upstream: >-
+    moollm skills/soul-city/GLOSSARY.md (Egg, Errand) and
+    skills/soul-city/SOUL-BRIDGES.md (The errand)
 
 what_an_egg_is:
   one_line: "A promise with a location, a sprite, and a menu."
   the_three_jobs_it_does_at_once:
-    call_in_progress: "Something is outstanding. The egg's presence is that fact, continuously, without a modal anything."
-    return_mailbox: "The result comes back by selecting from the egg's own pie menu."
+    call_in_progress: >-
+      Something is outstanding. The egg's presence is that fact, continuously,
+      without a modal anything.
+    return_mailbox: >-
+      The result comes back by selecting from the egg's own pie menu.
     resume_point: "It remembers where and how to put things back when it opens."
-  why_an_object_and_not_a_notification: "A notification is a moment; an egg is a place. You can walk past it, ignore it for a week, point at it, ask it what it is, and act on it — none of which a toast can do. And an absence cannot be clicked."
-  the_pun_is_useful: "Easter egg: a hidden surprise, and a literal egg that contains something and opens once. Both meanings are accurate, so the name teaches the mechanic."
+  why_an_object_and_not_a_notification: >-
+    A notification is a moment; an egg is a place. You can walk past it, ignore
+    it for a week, point at it, ask it what it is, and act on it — none of which
+    a toast can do. And an absence cannot be clicked.
+  the_pun_is_useful: >-
+    Easter egg: a hidden surprise, and a literal egg that contains something and
+    opens once. Both meanings are accurate, so the name teaches the mechanic.
 
 # TWO CHANNELS INTO A CLOSED GAME
 #
@@ -28,49 +41,120 @@ what_an_egg_is:
 
 two_channels:
   save_file:
-    what: "Read and write the save directly — the gates in moollm skills/soul-city/SOUL-BRIDGES.md."
-    bandwidth: "High. Anything the format holds: every character, every relationship, the whole world."
+    what: >-
+      Read and write the save directly — the gates in moollm
+      skills/soul-city/SOUL-BRIDGES.md.
+    bandwidth: >-
+      High. Anything the format holds: every character, every relationship, the
+      whole world.
     granularity: "Global and structural."
-    cost: "The game must be stopped. Save, quit, edit, relaunch, reload — and everything unsaved since the last write is gone."
-    when: "Between sessions. Bulk moves, migrations, repairs, populating a world, anything touching many records at once."
-    risk: "Total. A malformed write costs the neighbourhood, which is why bridges are non-destructive and keep the original."
+    cost: >-
+      The game must be stopped. Save, quit, edit, relaunch, reload — and
+      everything unsaved since the last write is gone.
+    when: >-
+      Between sessions. Bulk moves, migrations, repairs, populating a world,
+      anything touching many records at once.
+    risk: >-
+      Total. A malformed write costs the neighbourhood, which is why bridges are
+      non-destructive and keep the original.
   egg:
-    what: "Pie menus, dialog trees, codes on screen, text prompts and typed parameters — this file and OPTICAL-CHANNEL.yml."
-    bandwidth: "Low. A selection path through a declared tree, plus whatever text a field accepts."
+    what: >-
+      Pie menus, dialog trees, codes on screen, text prompts and typed
+      parameters — this file and OPTICAL-CHANNEL.yml.
+    bandwidth: >-
+      Low. A selection path through a declared tree, plus whatever text a field
+      accepts.
     granularity: "One character, one outcome, one parameter at a time."
-    cost: "None. It happens during play, in the running game, at the spot where it matters."
-    when: "While playing. Errands, jobs, results coming home, anything a player should witness rather than discover afterwards."
-    risk: "Bounded by construction. Nothing outside the menu tree can be applied, so the worst case is a wrong item selected from a legal list."
-  the_relationship: "Not a fallback ladder — different tools. The save channel moves populations between sessions; the egg channel changes one life during one. The egg channel is the reason routine cross-game play does not require a save-quit-edit-relaunch cycle, and the save channel is the reason the egg channel never has to grow a general-purpose write API."
-  the_shared_discipline: "Both are non-destructive and both report what they did. A hatch writes a line into the album the same way a bridge writes a provenance record."
+    cost: >-
+      None. It happens during play, in the running game, at the spot where it
+      matters.
+    when: >-
+      While playing. Errands, jobs, results coming home, anything a player
+      should witness rather than discover afterwards.
+    risk: >-
+      Bounded by construction. Nothing outside the menu tree can be applied, so
+      the worst case is a wrong item selected from a legal list.
+  the_relationship: >-
+    Not a fallback ladder — different tools. The save channel moves populations
+    between sessions; the egg channel changes one life during one. The egg
+    channel is the reason routine cross-game play does not require a
+    save-quit-edit-relaunch cycle, and the save channel is the reason the egg
+    channel never has to grow a general-purpose write API.
+  the_shared_discipline: >-
+    Both are non-destructive and both report what they did. A hatch writes a
+    line into the album the same way a bridge writes a provenance record.
 
 # THE MENU TREE IS THE TYPE
 #
-# The single most important property. Whatever can come back is exactly what is in the tree, and the
-# tree was compiled from the same source that authored the job.
+# The single most important property. Whatever can come back is exactly what is
+# in the tree, and the tree was compiled from the same source that authored the
+# job.
 
 the_menu_is_the_return_type:
-  flat_outcomes: "Top-level items are the coarse results — the four or five things that can happen at all."
-  nested_by_parameter: "Submenus refine a result into its parameters: which skill, how much, whose relationship, which souvenir came back. A nested tree is a structured value, not a longer enum."
-  multiple_selections: "Selecting is accumulation, not commitment. Pick a result, pick a magnitude, pick a memory to attach, come back tomorrow and pick another — the egg holds the partial value and shows what has been filled in so far."
-  therefore_the_bound: "A job cannot do anything to a character that is not reachable in its own menu tree. The tree is a declared, inspectable, finite space of consequences, which is what makes 'the consequences can be anything' safe to say."
-  and_it_is_readable: "The player can open the tree and see the full space of what this job could possibly do to their character before agreeing to it. Not a permission dialog listing capabilities — the actual outcome list."
+  flat_outcomes: >-
+    Top-level items are the coarse results — the four or five things that can
+    happen at all.
+  nested_by_parameter: >-
+    Submenus refine a result into its parameters: which skill, how much, whose
+    relationship, which souvenir came back. A nested tree is a structured value,
+    not a longer enum.
+  multiple_selections: >-
+    Selecting is accumulation, not commitment. Pick a result, pick a magnitude,
+    pick a memory to attach, come back tomorrow and pick another — the egg holds
+    the partial value and shows what has been filled in so far.
+  therefore_the_bound: >-
+    A job cannot do anything to a character that is not reachable in its own
+    menu tree. The tree is a declared, inspectable, finite space of
+    consequences, which is what makes 'the consequences can be anything' safe to
+    say.
+  and_it_is_readable: >-
+    The player can open the tree and see the full space of what this job could
+    possibly do to their character before agreeing to it. Not a permission
+    dialog listing capabilities — the actual outcome list.
 
 hatch:
   the_item: "Every egg's menu ends with HATCH. It is the commit."
-  semantics: "Hatch applies whatever has been selected, removes the egg, and restores what the egg was holding."
+  semantics: >-
+    Hatch applies whatever has been selected, removes the egg, and restores what
+    the egg was holding.
   hatch_with_nothing_selected:
-    what_it_does: "Returns the character unchanged. No consequences, no effects, nothing recorded but the trip itself."
-    what_it_is: "Cancellation, expressed as the empty return value. There is no separate cancel button, no error path, no failure state to design — the default return is 'nothing happened,' which is always a legal answer."
-    why_that_is_the_right_default: "The one outcome that must never occur is a character who never comes back. Making 'come back with nothing' the zero-effort action means the safe result is also the easiest one to produce, by a player or by a timeout."
-  emergency_recall: "Hatching early is a supported action, not an abort. A fire, a party, a social worker at the door — click the egg, hatch, and the character is back this second. The remote side's answer, if it ever arrives, lands on a call nobody is waiting for and is discarded."
-  timeout: "An unresolved egg hatches on its own at expiry, with the job's declared default — usually 'a normal day at work.' Nobody is left in the placeholder (modules/soul-angel/OUT-OF-GAME-JOBS.yml, expiry)."
+    what_it_does: >-
+      Returns the character unchanged. No consequences, no effects, nothing
+      recorded but the trip itself.
+    what_it_is: >-
+      Cancellation, expressed as the empty return value. There is no separate
+      cancel button, no error path, no failure state to design — the default
+      return is 'nothing happened,' which is always a legal answer.
+    why_that_is_the_right_default: >-
+      The one outcome that must never occur is a character who never comes back.
+      Making 'come back with nothing' the zero-effort action means the safe
+      result is also the easiest one to produce, by a player or by a timeout.
+  emergency_recall: >-
+    Hatching early is a supported action, not an abort. A fire, a party, a
+    social worker at the door — click the egg, hatch, and the character is back
+    this second. The remote side's answer, if it ever arrives, lands on a call
+    nobody is waiting for and is discarded.
+  timeout: >-
+    An unresolved egg hatches on its own at expiry, with the job's declared
+    default — usually 'a normal day at work.' Nobody is left in the placeholder
+    (modules/soul-angel/OUT-OF-GAME-JOBS.yml, expiry).
 
 the_resume_point:
-  what_it_stores: "Where the character was standing, what they were doing, and what they were about to do. The egg is left in that exact spot."
-  the_car_door_case: "A Sim walking to the carpool vanishes at the car door and the egg sits at the car door. Hatch and she is standing there again, mid-errand, as though she had turned around. Continuity is spatial, not just statistical."
-  why_it_belongs_to_the_egg: "A continuation stored anywhere else is a save-game problem. Stored in a visible object at the place it applies, it is legible to the player and repairable by hand."
-  what_if_the_place_is_gone: "House sold, room deleted, lot rebuilt — fall back to the nearest valid spot and say so in the hatch report. Degrade, never drop (moollm skills/robust-first)."
+  what_it_stores: >-
+    Where the character was standing, what they were doing, and what they were
+    about to do. The egg is left in that exact spot.
+  the_car_door_case: >-
+    A Sim walking to the carpool vanishes at the car door and the egg sits at
+    the car door. Hatch and she is standing there again, mid-errand, as though
+    she had turned around. Continuity is spatial, not just statistical.
+  why_it_belongs_to_the_egg: >-
+    A continuation stored anywhere else is a save-game problem. Stored in a
+    visible object at the place it applies, it is legible to the player and
+    repairable by hand.
+  what_if_the_place_is_gone: >-
+    House sold, room deleted, lot rebuilt — fall back to the nearest valid spot
+    and say so in the hatch report. Degrade, never drop (moollm
+    skills/robust-first).
 
 # GENERALIZING PAST CHARACTERS
 #
@@ -78,263 +162,841 @@ the_resume_point:
 
 any_pending_thing_can_be_an_egg:
   examples:
-    - "A character working a job in another program — the case that motivated the mechanic."
-    - "A generation request: a portrait, a story, a piece of music, being made somewhere else."
+    - >-
+        A character working a job in another program — the case that motivated
+        the mechanic.
+    - >-
+        A generation request: a portrait, a story, a piece of music, being made
+        somewhere else.
     - "A long render or export, with the finished artifact as the return value."
     - "A download, a mod install, a content-pack fetch."
-    - "Another player's move, a pending trade, a gift in transit across a federation."
+    - >-
+        Another player's move, a pending trade, a gift in transit across a
+        federation.
     - "A question asked of a person, waiting on a human answer."
-  occupied_versus_empty: "An occupied egg holds a suspended character and must eventually hatch. An empty egg holds only a pending value and may be discarded. Same object, same grammar, different obligation."
-  what_this_buys: "One authored object, one interaction grammar, and one visual language cover every asynchronous thing the system can do. Players learn eggs once."
-  it_is_a_mechanic_not_plumbing: "Reified async tasks are visible, movable, inspectable and playable. Nothing in a normal life sim lets you hold a pending operation in your hand and decide when it resolves."
+  occupied_versus_empty: >-
+    An occupied egg holds a suspended character and must eventually hatch. An
+    empty egg holds only a pending value and may be discarded. Same object, same
+    grammar, different obligation.
+  what_this_buys: >-
+    One authored object, one interaction grammar, and one visual language cover
+    every asynchronous thing the system can do. Players learn eggs once.
+  it_is_a_mechanic_not_plumbing: >-
+    Reified async tasks are visible, movable, inspectable and playable. Nothing
+    in a normal life sim lets you hold a pending operation in your hand and
+    decide when it resolves.
 
 # WHAT IT LOOKS LIKE
 #
-# The art is the protocol, so the art has constraints. All of them are satisfied with DGRP, SPR2 and
-# PALT as they were designed to be used — no engine changes, no overlay tricks, no new resource type.
+# The art is the protocol, so the art has constraints. All of them are satisfied
+# with DGRP, SPR2 and PALT as they were designed to be used — no engine changes,
+# no overlay tricks, no new resource type.
 
 visual_design:
   rotationally_invariant:
-    the_rule: "The egg is a solid of revolution about the vertical axis, so it presents the same silhouette from every camera rotation."
-    what_it_buys_the_art: "One sprite set per zoom instead of one per zoom per rotation. Three drawings, not twelve, and the same three are correct forever."
-    what_it_buys_the_recognizer: "Template matching against a single known target per zoom. No rotation hypothesis, no pose estimation, no per-angle training — the hardest part of recognizing an in-world object is deleted by drawing it symmetrically."
+    the_rule: >-
+      The egg is a solid of revolution about the vertical axis, so it presents
+      the same silhouette from every camera rotation.
+    what_it_buys_the_art: >-
+      One sprite set per zoom instead of one per zoom per rotation. Three
+      drawings, not twelve, and the same three are correct forever.
+    what_it_buys_the_recognizer: >-
+      Template matching against a single known target per zoom. No rotation
+      hypothesis, no pose estimation, no per-angle training — the hardest part
+      of recognizing an in-world object is deleted by drawing it symmetrically.
   bands_are_the_value:
-    the_form: "Horizontal color-coded bands stacked up the body, read like a resistor: position is the digit, color is the value."
-    why_horizontal: "Bands perpendicular to the axis of revolution stay bands from every rotation. A vertical stripe or a badge on one side would not."
-    encoding: "Defined in OPTICAL-CHANNEL.yml, band_codes. This section is only about how the pixels are built."
+    the_form: >-
+      Horizontal color-coded bands stacked up the body, read like a resistor:
+      position is the digit, color is the value.
+    why_horizontal: >-
+      Bands perpendicular to the axis of revolution stay bands from every
+      rotation. A vertical stripe or a badge on one side would not.
+    encoding: >-
+      Defined in OPTICAL-CHANNEL.yml, band_codes. This section is only about how
+      the pixels are built.
   the_caps_are_the_fiducial:
-    what: "Distinctive high-contrast caps at top and bottom — black against white, adjacent, so the boundary is unambiguous at any zoom."
-    what_they_do: "Three things a color code cannot do for itself: mark where the band stack starts and ends, give a scale reference, and provide a black and a white sample for calibration."
-    why_calibration_matters: "Games tint everything — night, fire, aurora, colored lighting, weather. A known black and a known white in the same object let the reader normalize the bands before decoding them, instead of guessing whether that band is orange or brown under a sunset."
-    symmetric_on_purpose: "Both caps carry the same pattern, so the object is unchanged top-to-bottom in appearance terms and there is no 'wrong way round' to detect or author."
+    what: >-
+      Distinctive high-contrast caps at top and bottom — black against white,
+      adjacent, so the boundary is unambiguous at any zoom.
+    what_they_do: >-
+      Three things a color code cannot do for itself: mark where the band stack
+      starts and ends, give a scale reference, and provide a black and a white
+      sample for calibration.
+    why_calibration_matters: >-
+      Games tint everything — night, fire, aurora, colored lighting, weather. A
+      known black and a known white in the same object let the reader normalize
+      the bands before decoding them, instead of guessing whether that band is
+      orange or brown under a sunset.
+    symmetric_on_purpose: >-
+      Both caps carry the same pattern, so the object is unchanged top-to-bottom
+      in appearance terms and there is no 'wrong way round' to detect or author.
   one_implementation_for_every_egg:
-    the_rule: "There is ONE egg implementation: one sprite set, one set of trees, one menu dispatcher. Every egg that has ever existed is that implementation holding different data. Minted eggs get their own object definitions so they can be placed and catalogued, and they inherit the behaviour rather than copying it."
-    why_not_a_family_of_types: "A type per kind of errand means art per type, code per type, and a dependency per type in everyone's Downloads folder. None of that variation is real: the shape is identical, the menu is generated, and the differences are all values."
+    the_rule: >-
+      There is ONE egg implementation: one sprite set, one set of trees, one
+      menu dispatcher. Every egg that has ever existed is that implementation
+      holding different data. Minted eggs get their own object definitions so
+      they can be placed and catalogued, and they inherit the behaviour rather
+      than copying it.
+    why_not_a_family_of_types: >-
+      A type per kind of errand means art per type, code per type, and a
+      dependency per type in everyone's Downloads folder. None of that variation
+      is real: the shape is identical, the menu is generated, and the
+      differences are all values.
     the_sims_already_has_the_mechanism:
-      semi_globals: "The engine scopes behaviour trees by resource id range — primitives 0x0000-0x00FF, globals 0x0100-0x0FFF, locals 0x1000-0x1FFF, semi-globals 0x2000-0x2FFF — and an object's GLOB chunk is a string naming the semi-global file it inherits from, relative to the Global directory. That is how every chair shares chair behaviour and every person shares person behaviour (Ch03-Objects, 3.2.2; ObjectFileFormat, GLOB)."
-      what_we_do_with_it: "An Egg semi-global holds the shared trees: menu dispatch, hatch, the band state machine, the lighting states. A minted egg is a small object whose GLOB names it, so it arrives with behaviour it did not have to carry."
-      inheritance_the_way_it_was_meant: "This is prototype delegation with two levels of ancestry, shipped in 2000 and used exactly as intended. Nothing invented, nothing patched."
-      the_open_question: "Tree scoping across files is documented; ART sharing across files is not the same mechanism, since sprites and draw groups are referenced within a file. Either the shared art also resolves through the semi-global, or each minted egg carries the sprite set — a dozen small sprites, cheap enough that this is a measurement rather than a risk. To be settled against the engine before any of this is built."
+      semi_globals: >-
+        The engine scopes behaviour trees by resource id range — primitives
+        0x0000-0x00FF, globals 0x0100-0x0FFF, locals 0x1000-0x1FFF, semi-globals
+        0x2000-0x2FFF — and an object's GLOB chunk is a string naming the
+        semi-global file it inherits from, relative to the Global directory.
+        That is how every chair shares chair behaviour and every person shares
+        person behaviour (Ch03-Objects, 3.2.2; ObjectFileFormat, GLOB).
+      what_we_do_with_it: >-
+        An Egg semi-global holds the shared trees: menu dispatch, hatch, the
+        band state machine, the lighting states. A minted egg is a small object
+        whose GLOB names it, so it arrives with behaviour it did not have to
+        carry.
+      inheritance_the_way_it_was_meant: >-
+        This is prototype delegation with two levels of ancestry, shipped in
+        2000 and used exactly as intended. Nothing invented, nothing patched.
+      the_open_question: >-
+        Tree scoping across files is documented; ART sharing across files is not
+        the same mechanism, since sprites and draw groups are referenced within
+        a file. Either the shared art also resolves through the semi-global, or
+        each minted egg carries the sprite set — a dozen small sprites, cheap
+        enough that this is a measurement rather than a risk. To be settled
+        against the engine before any of this is built.
     code_below_content_above:
-      the_division: "Code goes in the semi-global. Content goes in the objects. That is the split the file format was built for, and it is also exactly how parameterised user content wants to be minted — heavy on the content, with the behaviour inherited."
-      the_experiment: "Try the semi-global for code first and measure what actually shares. If art turns out not to resolve across files, the fallback is per-egg sprites, which is a dozen small images (the_open_question)."
+      the_division: >-
+        Code goes in the semi-global. Content goes in the objects. That is the
+        split the file format was built for, and it is also exactly how
+        parameterised user content wants to be minted — heavy on the content,
+        with the behaviour inherited.
+      the_experiment: >-
+        Try the semi-global for code first and measure what actually shares. If
+        art turns out not to resolve across files, the fallback is per-egg
+        sprites, which is a dozen small images (the_open_question).
       the_compiler_is_what_makes_it_authorable:
-        what_goes_in: "Conversation trees, advertisements, menus and submenus, in the same YAML source everything else compiles from (compiled_from_one_source)."
-        what_comes_out: "The BHAV trees, tree tables and string resources that manage them. Nobody hand-writes SimAntics to add a branch to a dialogue, which is the difference between a system a modder can extend and one only we can."
-        why_it_is_the_same_compiler: "Menus, advertisements and conversation trees are already the source of truth for what an egg can do and what the Angel may read. Emitting the object code from that source is one more back end, not a second authority."
+        what_goes_in: >-
+          Conversation trees, advertisements, menus and submenus, in the same
+          YAML source everything else compiles from (compiled_from_one_source).
+        what_comes_out: >-
+          The BHAV trees, tree tables and string resources that manage them.
+          Nobody hand-writes SimAntics to add a branch to a dialogue, which is
+          the difference between a system a modder can extend and one only we
+          can.
+        why_it_is_the_same_compiler: >-
+          Menus, advertisements and conversation trees are already the source of
+          truth for what an egg can do and what the Angel may read. Emitting the
+          object code from that source is one more back end, not a second
+          authority.
 
     intrinsics_below_heads_above:
-      the_split: "The semi-global holds the INTRINSICS: cracking, hatching, the menu dispatcher, the band state machine, the lighting states, custody. Everything an egg is. A minted egg inherits all of it and writes only the part that is interesting about itself."
-      an_egg_head_is_local_trees: "An egg that adds its own trees on top of the intrinsics is a SMART EGG — an egg with a head on its shoulders. It can have its own verbs, its own conditions for hatching, its own reactions to being carried around, and it gets everything else for free."
-      why_this_is_the_low_floor_and_no_ceiling: "A data-only egg is a table of colours anyone can mint (the_blip_editor). A smart egg is a program. Same object family, same file format, no migration between them — the beginner's egg and the researcher's egg are the same egg (moollm skills/design-sense/methods/low-floor-no-ceiling.md)."
+      the_split: >-
+        The semi-global holds the INTRINSICS: cracking, hatching, the menu
+        dispatcher, the band state machine, the lighting states, custody.
+        Everything an egg is. A minted egg inherits all of it and writes only
+        the part that is interesting about itself.
+      an_egg_head_is_local_trees: >-
+        An egg that adds its own trees on top of the intrinsics is a SMART EGG —
+        an egg with a head on its shoulders. It can have its own verbs, its own
+        conditions for hatching, its own reactions to being carried around, and
+        it gets everything else for free.
+      why_this_is_the_low_floor_and_no_ceiling: >-
+        A data-only egg is a table of colours anyone can mint (the_blip_editor).
+        A smart egg is a program. Same object family, same file format, no
+        migration between them — the beginner's egg and the researcher's egg are
+        the same egg (moollm
+        skills/design-sense/methods/low-floor-no-ceiling.md).
     two_tiers_and_the_check_is_structural:
-      plain_eggs: "No local trees. Payload, band layout, strings, custody, nothing executable. Safe to accept from a stranger because the worst it can do is lie on its own label, and that is verifiable by parsing: no resources in 0x1000-0x1FFF."
-      smart_eggs: "Local trees, which is code from whoever minted it. Fine from your own machine or a source you trust, and gated like any custom content when it arrives from outside — announced, attributable, refusable. Never silently installed because it looked like an egg."
-      why_say_it_this_way: "The tier is a property of the FILE, readable before anything runs, so the registry sorts incoming eggs without asking anyone to trust a claim (documentation/designs/sims-content-registry.md)."
+      plain_eggs: >-
+        No local trees. Payload, band layout, strings, custody, nothing
+        executable. Safe to accept from a stranger because the worst it can do
+        is lie on its own label, and that is verifiable by parsing: no resources
+        in 0x1000-0x1FFF.
+      smart_eggs: >-
+        Local trees, which is code from whoever minted it. Fine from your own
+        machine or a source you trust, and gated like any custom content when it
+        arrives from outside — announced, attributable, refusable. Never
+        silently installed because it looked like an egg.
+      why_say_it_this_way: >-
+        The tier is a property of the FILE, readable before anything runs, so
+        the registry sorts incoming eggs without asking anyone to trust a claim
+        (documentation/designs/sims-content-registry.md).
     what_travels_is_data_not_code:
-      the_split: "The object is ours, installed once, and its behaviour is the same for everybody. A minted egg is an instance: a band layout, a payload, a menu tree and its custody chain, referencing the universal object by GUID (the_egg_is_its_own_file)."
-      why_that_matters: "Sharing an egg never ships executable behaviour. A stranger's egg is a table of colours and some text, so the worst a malicious one can do is lie in words a player reads — no custom BHAV to audit, no code to trust, and nothing to review beyond what is on the label."
-      and_no_dependency_hell: "One object satisfies every egg forever. No per-type GUID collisions, no missing-object placeholders, no version skew between the egg you downloaded and the game you have (documentation/designs/sims-content-registry.md)."
+      the_split: >-
+        The object is ours, installed once, and its behaviour is the same for
+        everybody. A minted egg is an instance: a band layout, a payload, a menu
+        tree and its custody chain, referencing the universal object by GUID
+        (the_egg_is_its_own_file).
+      why_that_matters: >-
+        Sharing an egg never ships executable behaviour. A stranger's egg is a
+        table of colours and some text, so the worst a malicious one can do is
+        lie in words a player reads — no custom BHAV to audit, no code to trust,
+        and nothing to review beyond what is on the label.
+      and_no_dependency_hell: >-
+        One object satisfies every egg forever. No per-type GUID collisions, no
+        missing-object placeholders, no version skew between the egg you
+        downloaded and the game you have
+        (documentation/designs/sims-content-registry.md).
 
   built_from_draw_groups:
-    the_mechanism: "The one egg object's DGRP entries compose a body sprite plus per-band sprites. Selecting which band sprites to draw, and with which palette, produces any code from a small fixed set of parts."
-    the_payoff: "Combinatorial appearance without combinatorial art. A hundred distinct eggs are a hundred DGRP selections over the same dozen sprites, not a hundred drawings."
-    palettes: "Band color comes from PALT selection where the game allows it, which moves color out of the pixels and into data — the same reason the original content pipeline did it that way."
-    state_changes: "Kind, state and 'has news' are ordinary object graphic-state changes. The game already switches an object's appearance when its state changes; an egg is just an object that does it meaningfully."
-    offsets_are_what_make_the_set_small: "A DGRP entry places each sprite at its own offset, so ONE band drawing instanced at rising offsets is an entire stack. The parts list does not grow with the number of bands, only the entry list does — and since the egg looks the same from every angle, the same entries serve all four rotations."
-    telescoping_eggs: "A heavy egg is a tall egg. Need more payload, add more band entries and the body grows; the sprite set is unchanged. Height becomes an honest advertisement of capacity, readable in silhouette before a single colour is decoded — a big egg is carrying something big."
-    the_stack_is_self_delimiting: "White cap on top, coloured blips between, black cap at the bottom. The polarity gives the reading order and the two caps give the extent, so a variable-length code needs no length field and no terminator — you have found the whole message when you have found both caps."
-    the_zero_blip: "An empty slot is a legal symbol. Blank blips give alignment when a code is shorter than the space it sits in, separate groups the way a resistor's tolerance gap does, and let a fixed-height egg carry a variable payload without changing its silhouette."
-    segmented_rings: "At the closest zoom a ring can be broken into three or four arcs, multiplying what one row of the stack holds. Coarse reads are unaffected because the leading arc carries the row's coarse value and is drawn wide enough to dominate when the row collapses to a couple of pixels — the segments refine a value they never contradict (OPTICAL-CHANNEL.yml, band_codes)."
+    the_mechanism: >-
+      The one egg object's DGRP entries compose a body sprite plus per-band
+      sprites. Selecting which band sprites to draw, and with which palette,
+      produces any code from a small fixed set of parts.
+    the_payoff: >-
+      Combinatorial appearance without combinatorial art. A hundred distinct
+      eggs are a hundred DGRP selections over the same dozen sprites, not a
+      hundred drawings.
+    palettes: >-
+      Band color comes from PALT selection where the game allows it, which moves
+      color out of the pixels and into data — the same reason the original
+      content pipeline did it that way.
+    state_changes: >-
+      Kind, state and 'has news' are ordinary object graphic-state changes. The
+      game already switches an object's appearance when its state changes; an
+      egg is just an object that does it meaningfully.
+    offsets_are_what_make_the_set_small: >-
+      A DGRP entry places each sprite at its own offset, so ONE band drawing
+      instanced at rising offsets is an entire stack. The parts list does not
+      grow with the number of bands, only the entry list does — and since the
+      egg looks the same from every angle, the same entries serve all four
+      rotations.
+    telescoping_eggs: >-
+      A heavy egg is a tall egg. Need more payload, add more band entries and
+      the body grows; the sprite set is unchanged. Height becomes an honest
+      advertisement of capacity, readable in silhouette before a single colour
+      is decoded — a big egg is carrying something big.
+    the_stack_is_self_delimiting: >-
+      White cap on top, coloured blips between, black cap at the bottom. The
+      polarity gives the reading order and the two caps give the extent, so a
+      variable-length code needs no length field and no terminator — you have
+      found the whole message when you have found both caps.
+    the_zero_blip: >-
+      An empty slot is a legal symbol. Blank blips give alignment when a code is
+      shorter than the space it sits in, separate groups the way a resistor's
+      tolerance gap does, and let a fixed-height egg carry a variable payload
+      without changing its silhouette.
+    segmented_rings: >-
+      At the closest zoom a ring can be broken into three or four arcs,
+      multiplying what one row of the stack holds. Coarse reads are unaffected
+      because the leading arc carries the row's coarse value and is drawn wide
+      enough to dominate when the row collapses to a couple of pixels — the
+      segments refine a value they never contradict (OPTICAL-CHANNEL.yml,
+      band_codes).
 
 the_blip_editor:
-  why_it_exists: "Anything with an alphabet needs a tool that shows you the alphabet. Hand-editing offset tables to see whether a code reads at medium zoom is exactly the kind of work that stops people from making eggs at all."
+  why_it_exists: >-
+    Anything with an alphabet needs a tool that shows you the alphabet.
+    Hand-editing offset tables to see whether a code reads at medium zoom is
+    exactly the kind of work that stops people from making eggs at all.
   what_it_does:
-    lay_out_the_stack: "Pick blips, order them, set groups, drop in zeros, split a ring into arcs. The palette and the legal symbol set come from the same registry the compile uses, so an illegal egg cannot be drawn."
-    preview_every_zoom_at_once: "The three zooms side by side, plus a simulated far-out silhouette, because the interesting failures are all failures at ONE distance."
-    round_trip_immediately: "The recognizer runs on the preview and prints what it read. If the editor cannot decode its own picture, the egg is wrong while you are still looking at it."
-    abuse_the_preview: "Night lighting, fire tint, weather, a colour-blind filter, a JPEG pass, and a hand-held-phone blur. The lighting states that will break a palette are enumerable, so enumerate them here rather than discovering them in a stream (MOBILE-CAMERA.yml)."
-    emit_the_source: "Output is the same YAML the compile consumes — bands, offsets, palettes, states, and the symbol registry entries. No exported binary, nothing to keep in sync (compiled_from_one_source)."
-    generate_the_tests: "Every egg the editor saves adds its own decode case to the conformance suite. The tests are a by-product of authoring rather than a separate chore."
+    lay_out_the_stack: >-
+      Pick blips, order them, set groups, drop in zeros, split a ring into arcs.
+      The palette and the legal symbol set come from the same registry the
+      compile uses, so an illegal egg cannot be drawn.
+    preview_every_zoom_at_once: >-
+      The three zooms side by side, plus a simulated far-out silhouette, because
+      the interesting failures are all failures at ONE distance.
+    round_trip_immediately: >-
+      The recognizer runs on the preview and prints what it read. If the editor
+      cannot decode its own picture, the egg is wrong while you are still
+      looking at it.
+    abuse_the_preview: >-
+      Night lighting, fire tint, weather, a colour-blind filter, a JPEG pass,
+      and a hand-held-phone blur. The lighting states that will break a palette
+      are enumerable, so enumerate them here rather than discovering them in a
+      stream (MOBILE-CAMERA.yml).
+    emit_the_source: >-
+      Output is the same YAML the compile consumes — bands, offsets, palettes,
+      states, and the symbol registry entries. No exported binary, nothing to
+      keep in sync (compiled_from_one_source).
+    generate_the_tests: >-
+      Every egg the editor saves adds its own decode case to the conformance
+      suite. The tests are a by-product of authoring rather than a separate
+      chore.
   who_it_is_for:
-    us: "Faster than reasoning about offset tables, and it is the only honest way to check legibility claims."
-    players: "The floor is low on purpose. An egg is a stack of coloured rings — anyone who can pick colours can mint one, and minting writes an .iff they can hand to a friend (the_egg_is_its_own_file). The fidelity of the art is what decides whether that sentence is true, which is the whole masking argument arriving in the tooling (moollm skills/design-sense/lenses/masking.md)."
+    us: >-
+      Faster than reasoning about offset tables, and it is the only honest way
+      to check legibility claims.
+    players: >-
+      The floor is low on purpose. An egg is a stack of coloured rings — anyone
+      who can pick colours can mint one, and minting writes an .iff they can
+      hand to a friend (the_egg_is_its_own_file). The fidelity of the art is
+      what decides whether that sentence is true, which is the whole masking
+      argument arriving in the tooling (moollm
+      skills/design-sense/lenses/masking.md).
   the_badge_above_it:
-    what: "An iconic overlay floating above the egg: a newspaper, an envelope, a suitcase, a camera, a question mark, a tick. It names the KIND and the STATE in one glyph."
-    who_it_is_for: "People, first. A player should not have to learn a colour code to tell the egg awaiting an answer from the egg that has already resolved. Nobody memorises a palette to check on their household."
-    the_reader_may_use_it_too: "LATER, and optional. A distinct high-contrast silhouette is readable, and a badge read would give a coarse KIND that could be cross-checked against the top bands — two dissimilar encodings of one fact. But nothing depends on it today: the bands carry the value and the badge exists for the player, so badge art is under no machine-vision constraint yet."
-    why_above_and_not_on_the_body: "Nothing occludes it, it does not spend a band, and a big simple glyph in clear space outlives the stack as you zoom out. It sits between light and bands on the range ladder: further than colour, nearer than glow."
-    it_is_existing_machinery: "Games already float things over objects — thought balloons, status icons, the diamond over a selected Sim. A badge is that overlay slot pointed at egg state (SCREEN-ANGEL.yml)."
+    what: >-
+      An iconic overlay floating above the egg: a newspaper, an envelope, a
+      suitcase, a camera, a question mark, a tick. It names the KIND and the
+      STATE in one glyph.
+    who_it_is_for: >-
+      People, first. A player should not have to learn a colour code to tell the
+      egg awaiting an answer from the egg that has already resolved. Nobody
+      memorises a palette to check on their household.
+    the_reader_may_use_it_too: >-
+      LATER, and optional. A distinct high-contrast silhouette is readable, and
+      a badge read would give a coarse KIND that could be cross-checked against
+      the top bands — two dissimilar encodings of one fact. But nothing depends
+      on it today: the bands carry the value and the badge exists for the
+      player, so badge art is under no machine-vision constraint yet.
+    why_above_and_not_on_the_body: >-
+      Nothing occludes it, it does not spend a band, and a big simple glyph in
+      clear space outlives the stack as you zoom out. It sits between light and
+      bands on the range ladder: further than colour, nearer than glow.
+    it_is_existing_machinery: >-
+      Games already float things over objects — thought balloons, status icons,
+      the diamond over a selected Sim. A badge is that overlay slot pointed at
+      egg state (SCREEN-ANGEL.yml).
     a_standard_modular_set_todo:
-      todo: "Not specced. For looks first: the player needs to know the mailbox has a new message, and nothing more than that is required of a badge today."
-      the_precedent: "Donna's modular wedding cake toppers, from SimBabes — bride and groom in any combination of gender and skin tone, assembled from parts instead of drawn once per pairing. A handful of pieces covering a space that would otherwise need dozens of drawings. Same collaboration as the SimProv wedding playset (cracking_is_the_constructor)."
-      what_that_suggests: "One standard symbol set with combinable slots — subject, action, urgency — rather than a flat list of finished glyphs. Same combinatorial move as the bands, in a channel meant for people."
-      deliberately_deferred: "How large the set is, what the slots are, and whether the recogniser ever reads it. Decorative and honest beats specified and wrong."
-    custom_badges_are_the_safe_kind_of_content: "A badge is a picture with no authority: it labels, it cannot act. So players and shows can ship their own without anyone auditing anything, which makes it the natural place for personality in a system that is otherwise deliberately uniform (the_blip_editor)."
+      todo: >-
+        Not specced. For looks first: the player needs to know the mailbox has a
+        new message, and nothing more than that is required of a badge today.
+      the_precedent: >-
+        Donna's modular wedding cake toppers, from SimBabes — bride and groom in
+        any combination of gender and skin tone, assembled from parts instead of
+        drawn once per pairing. A handful of pieces covering a space that would
+        otherwise need dozens of drawings. Same collaboration as the SimProv
+        wedding playset (cracking_is_the_constructor).
+      what_that_suggests: >-
+        One standard symbol set with combinable slots — subject, action, urgency
+        — rather than a flat list of finished glyphs. Same combinatorial move as
+        the bands, in a channel meant for people.
+      deliberately_deferred: >-
+        How large the set is, what the slots are, and whether the recogniser
+        ever reads it. Decorative and honest beats specified and wrong.
+    custom_badges_are_the_safe_kind_of_content: >-
+      A badge is a picture with no authority: it labels, it cannot act. So
+      players and shows can ship their own without anyone auditing anything,
+      which makes it the natural place for personality in a system that is
+      otherwise deliberately uniform (the_blip_editor).
 
   zoom_is_the_resolution_dial:
-    the_shape: "Zoomed all the way out the egg says one thing — I am an egg, over here — plus the first band or two. Zoom in and more bands appear. All the way in is the full-resolution egg with the whole stack. Detail on demand, where the demand is the camera."
+    the_shape: >-
+      Zoomed all the way out the egg says one thing — I am an egg, over here —
+      plus the first band or two. Zoom in and more bands appear. All the way in
+      is the full-resolution egg with the whole stack. Detail on demand, where
+      the demand is the camera.
     big_endian:
-      the_rule: "Most significant first, top down. Kind, then version, then identity, then magnitude, then the fine parameters."
-      why_it_is_the_whole_trick: "A truncated read is a valid PREFIX, not a corrupt code. What the far zoom shows is exactly what the near zoom shows first, so nothing has to be re-read when the camera moves in and nothing is wrong when it does not. Same property as an address prefix or an interlaced image: you always have a correct coarse answer and the refinement is additive."
-      the_check_travels_with_each_group: "Every group that can legally be the last visible one ends with its own check band. Otherwise a single trailing check digit would make every partial read unverifiable, which is the failure mode that turns progressive disclosure into guessing."
+      the_rule: >-
+        Most significant first, top down. Kind, then version, then identity,
+        then magnitude, then the fine parameters.
+      why_it_is_the_whole_trick: >-
+        A truncated read is a valid PREFIX, not a corrupt code. What the far
+        zoom shows is exactly what the near zoom shows first, so nothing has to
+        be re-read when the camera moves in and nothing is wrong when it does
+        not. Same property as an address prefix or an interlaced image: you
+        always have a correct coarse answer and the refinement is additive.
+      the_check_travels_with_each_group: >-
+        Every group that can legally be the last visible one ends with its own
+        check band. Otherwise a single trailing check digit would make every
+        partial read unverifiable, which is the failure mode that turns
+        progressive disclosure into guessing.
       the_three_groups_as_built:
-        far: "Kind, then a check band over it. Two bands: what this egg is, verified."
-        mid: "Version and id, then a check over everything above. Six bands: which egg, and which grammar to read it with."
-        near: "Value, then a check over the whole stack. Nine bands: the complete code."
-        version_is_not_in_the_far_group: "It was, when the far group was two unchecked bands. A verified KIND is worth more than an unverified grammar number, because a reader that misreads the kind acts on the wrong egg, while a reader that has not read the version yet simply zooms in. The cost is two extra bands on a full stack, paid once (packages/optical-codec/src/egg-code.ts, GROUPS)."
-        a_stack_that_stops_mid_group: "Authored art never draws one, and a resample certainly produces one. The reader drops back to the last check band and reports what that vouches for; the bands hanging below it are returned in the digits and believed by nobody."
+        far: >-
+          Kind, then a check band over it. Two bands: what this egg is,
+          verified.
+        mid: >-
+          Version and id, then a check over everything above. Six bands: which
+          egg, and which grammar to read it with.
+        near: >-
+          Value, then a check over the whole stack. Nine bands: the complete
+          code.
+        version_is_not_in_the_far_group: >-
+          It was, when the far group was two unchecked bands. A verified KIND is
+          worth more than an unverified grammar number, because a reader that
+          misreads the kind acts on the wrong egg, while a reader that has not
+          read the version yet simply zooms in. The cost is two extra bands on a
+          full stack, paid once (packages/optical-codec/src/egg-code.ts,
+          GROUPS).
+        a_stack_that_stops_mid_group: >-
+          Authored art never draws one, and a resample certainly produces one.
+          The reader drops back to the last check band and reports what that
+          vouches for; the bands hanging below it are returned in the digits and
+          believed by nobody.
     authored_not_merely_downsampled:
-      what: "The far-zoom art draws FEWER bands, taller. It is not the near-zoom art scaled down until the stripes alias into mud."
-      why: "The game already ships a separate sprite per zoom (DGRP), so choosing what a zoom level says costs nothing extra and is decided by the author instead of by resampling. Legibility at the smallest zoom becomes a drawing decision, which is the kind of problem that gets solved."
-      the_reader_knows_which_rung_it_is_on: "Band height relative to the caps says which zoom variant is on screen, so a two-band read is reported as 'complete for this zoom' rather than as a failed six-band read. Absent bands are absent, not unresolved."
-    presence_beats_payload: "At the farthest zoom the only guaranteed message is that an egg exists here and roughly what kind. That is also the most valuable message, because it is the one that makes the player look — and looking is what moves the camera in."
-    all_the_way_in: "Full stack, and the About item for everything the stack does not carry (OPTICAL-CHANNEL.yml, the_about_item)."
+      what: >-
+        The far-zoom art draws FEWER bands, taller. It is not the near-zoom art
+        scaled down until the stripes alias into mud.
+      why: >-
+        The game already ships a separate sprite per zoom (DGRP), so choosing
+        what a zoom level says costs nothing extra and is decided by the author
+        instead of by resampling. Legibility at the smallest zoom becomes a
+        drawing decision, which is the kind of problem that gets solved.
+      the_reader_knows_which_rung_it_is_on: >-
+        Band height relative to the caps says which zoom variant is on screen,
+        so a two-band read is reported as 'complete for this zoom' rather than
+        as a failed six-band read. Absent bands are absent, not unresolved.
+    presence_beats_payload: >-
+      At the farthest zoom the only guaranteed message is that an egg exists
+      here and roughly what kind. That is also the most valuable message,
+      because it is the one that makes the player look — and looking is what
+      moves the camera in.
+    all_the_way_in: >-
+      Full stack, and the About item for everything the stack does not carry
+      (OPTICAL-CHANNEL.yml, the_about_item).
   lit_state_is_the_longest_range_channel:
-    the_reference: "A factory at night in Factorio, where lamps wired to circuit conditions turn the whole base into a status readout you can read while running past it. Ours will not be that beautiful. It can be that legible."
-    what_light_says: "Not data — STATE. Lit means this egg can be acted on right now, its menu has live items and something will happen if you pick one. Dark means waiting, inert, or expired. Illumination IS the affordance."
+    the_reference: >-
+      A factory at night in Factorio, where lamps wired to circuit conditions
+      turn the whole base into a status readout you can read while running past
+      it. Ours will not be that beautiful. It can be that legible.
+    what_light_says: >-
+      Not data — STATE. Lit means this egg can be acted on right now, its menu
+      has live items and something will happen if you pick one. Dark means
+      waiting, inert, or expired. Illumination IS the affordance.
     why_light_and_not_more_bands:
-      it_survives_distance: "A glow is a large, low-frequency, high-contrast signal. It is the last thing still readable when the bands have collapsed into two pixels, which makes it the natural bottom rung of the zoom ladder — further out than kind."
-      it_needs_no_focus: "Peripheral vision detects brightness change before it resolves detail. A room where three eggs are lit and one just went dark is readable without looking at any of them."
+      it_survives_distance: >-
+        A glow is a large, low-frequency, high-contrast signal. It is the last
+        thing still readable when the bands have collapsed into two pixels,
+        which makes it the natural bottom rung of the zoom ladder — further out
+        than kind.
+      it_needs_no_focus: >-
+        Peripheral vision detects brightness change before it resolves detail. A
+        room where three eggs are lit and one just went dark is readable without
+        looking at any of them.
     the_three_states_are_the_whole_vocabulary:
-      dark: "Nothing to do. Disabled, waiting on a schedule, already answered, or expired. An unlit object is out of the conversation."
-      steady: "Actionable NOW. The menu has live items and picking one will do something."
-      breathing: "Working. The call is out, the job is running, nobody has to do anything yet. A slow rise and fall is unmistakably different from steady at any distance, and reads as patience rather than as an alarm."
+      dark: >-
+        Nothing to do. Disabled, waiting on a schedule, already answered, or
+        expired. An unlit object is out of the conversation.
+      steady: >-
+        Actionable NOW. The menu has live items and picking one will do
+        something.
+      breathing: >-
+        Working. The call is out, the job is running, nobody has to do anything
+        yet. A slow rise and fall is unmistakably different from steady at any
+        distance, and reads as patience rather than as an alarm.
     it_solves_finding_before_reading:
-      it_is_cosmetic_and_stays_cosmetic: "For the player only, the way a lamp wired to a circuit condition in Factorio is for the player. The reader never consults it: detection and decoding use the caps, the bands and the segments, and nothing else (RECOGNIZER.yml, lighting_is_never_a_signal)."
-      why_that_boundary_is_worth_keeping: "A decoder that depended on a glow would break when an artist dimmed it, and bloom already damages the colour fidelity the bands need. Keeping light out of the read means the art stays free and the reader stays testable on a still frame."
-      humans_do_the_same_thing: "Attention goes to the bright thing before it goes to the detailed thing, which is why this is worth drawing at all. It is a courtesy to the player, not a channel."
+      it_is_cosmetic_and_stays_cosmetic: >-
+        For the player only, the way a lamp wired to a circuit condition in
+        Factorio is for the player. The reader never consults it: detection and
+        decoding use the caps, the bands and the segments, and nothing else
+        (RECOGNIZER.yml, lighting_is_never_a_signal).
+      why_that_boundary_is_worth_keeping: >-
+        A decoder that depended on a glow would break when an artist dimmed it,
+        and bloom already damages the colour fidelity the bands need. Keeping
+        light out of the read means the art stays free and the reader stays
+        testable on a still frame.
+      humans_do_the_same_thing: >-
+        Attention goes to the bright thing before it goes to the detailed thing,
+        which is why this is worth drawing at all. It is a courtesy to the
+        player, not a channel.
     height_is_the_other_state_channel:
-      levitation: "An active egg rises off the ground. Elevation is a large, slow, unmistakable signal that survives being small on screen, and it reads at a glance in a way a colour never will — a floating thing is doing something."
-      it_leaves_its_base_behind: "The egg lifts off a base that stays on the tile. So the grid keeps its geometry when half the eggs are up, the empty socket says an egg belongs here, and an elevated egg matrix still reads as a matrix instead of as scattered debris (matrix_eggs)."
-      it_costs_nothing: "A z offset in the draw group and a slow animation. The same offsets that stack the bands lift the body (offsets_are_what_make_the_set_small)."
-      it_stacks_with_light: "Light says whether it can be acted on; height says whether it is working. Two glanceable hints for the player at the range where every band has collapsed — and, like light, invisible to the reader."
+      levitation: >-
+        An active egg rises off the ground. Elevation is a large, slow,
+        unmistakable signal that survives being small on screen, and it reads at
+        a glance in a way a colour never will — a floating thing is doing
+        something.
+      it_leaves_its_base_behind: >-
+        The egg lifts off a base that stays on the tile. So the grid keeps its
+        geometry when half the eggs are up, the empty socket says an egg belongs
+        here, and an elevated egg matrix still reads as a matrix instead of as
+        scattered debris (matrix_eggs).
+      it_costs_nothing: >-
+        A z offset in the draw group and a slow animation. The same offsets that
+        stack the bands lift the body (offsets_are_what_make_the_set_small).
+      it_stacks_with_light: >-
+        Light says whether it can be acted on; height says whether it is
+        working. Two glanceable hints for the player at the range where every
+        band has collapsed — and, like light, invisible to the reader.
 
-    one_vocabulary_for_every_object: "This is a house rule, not an egg feature. Anything with pending state uses the same three states — the machine chewing on a job, the mailbox with something in it, the appliance mid-cycle. Learned once, it makes the whole screen a status board, and a recogniser written for eggs already works on all of it."
-    excitement_as_a_dimmer: "Brightness and pulse rate are a continuous channel over an existing effect: brighter and faster for the errand about to resolve, dim and slow for the one with a week to run. Enthusiasm is a value here, not decoration."
-    it_is_existing_machinery: "Objects already emit light, already have lit and unlit graphic states, and already animate. An egg wires those to its state machine instead of to a light switch. Nothing new in the renderer, which is the whole rule for this object."
+    one_vocabulary_for_every_object: >-
+      This is a house rule, not an egg feature. Anything with pending state uses
+      the same three states — the machine chewing on a job, the mailbox with
+      something in it, the appliance mid-cycle. Learned once, it makes the whole
+      screen a status board, and a recogniser written for eggs already works on
+      all of it.
+    excitement_as_a_dimmer: >-
+      Brightness and pulse rate are a continuous channel over an existing
+      effect: brighter and faster for the errand about to resolve, dim and slow
+      for the one with a week to run. Enthusiasm is a value here, not
+      decoration.
+    it_is_existing_machinery: >-
+      Objects already emit light, already have lit and unlit graphic states, and
+      already animate. An egg wires those to its state machine instead of to a
+      light switch. Nothing new in the renderer, which is the whole rule for
+      this object.
     the_reader_gets_a_cooperating_object:
-      the_problem: "Bloom and emissive glow wreck colour fidelity, and glare is the worst failure case for a phone camera (MOBILE-CAMERA.yml, off_a_screen_is_harder)."
-      the_fix: "Light is never the carrier of band data. And while an egg is being read closely it dims itself — an object that cooperates with its own reader, which is available precisely because we author both ends."
-      the_ordering: "Far: is anything lit. Middle: what kind. Near: the bands. Dimmed and closest: the full code. Then the dialog."
+      the_problem: >-
+        Bloom and emissive glow wreck colour fidelity, and glare is the worst
+        failure case for a phone camera (MOBILE-CAMERA.yml,
+        off_a_screen_is_harder).
+      the_fix: >-
+        Light is never the carrier of band data. And while an egg is being read
+        closely it dims itself — an object that cooperates with its own reader,
+        which is available precisely because we author both ends.
+      the_ordering: >-
+        Far: is anything lit. Middle: what kind. Near: the bands. Dimmed and
+        closest: the full code. Then the dialog.
   the_wink:
-    what_it_is: "A blink: the egg brightens for a known number of frames, in a known rhythm, and goes back to its resting state. Light that carries a value in TIME rather than in space."
-    it_is_literally_a_wink: "One eye, one beat, aimed at the camera, meaning attached, and visible to everyone else in the room. That is not an analogy for the gesture — the word already covers this. The fiction's consciousness camera captured winks (modules/soul-angel/UNIVERSAL-JOBS.yml, ubikam); an egg signalling a recorder does the same thing with a lamp and a clock."
-    it_breaks_frame_on_purpose: "A wink is an aside to the audience: the object addresses the one viewer who can read it while the scene continues uninterrupted. Nothing in the simulation has to stop, and no other character has to notice."
+    what_it_is: >-
+      A blink: the egg brightens for a known number of frames, in a known
+      rhythm, and goes back to its resting state. Light that carries a value in
+      TIME rather than in space.
+    it_is_literally_a_wink: >-
+      One eye, one beat, aimed at the camera, meaning attached, and visible to
+      everyone else in the room. That is not an analogy for the gesture — the
+      word already covers this. The fiction's consciousness camera captured
+      winks (modules/soul-angel/UNIVERSAL-JOBS.yml, ubikam); an egg signalling a
+      recorder does the same thing with a lamp and a clock.
+    it_breaks_frame_on_purpose: >-
+      A wink is an aside to the audience: the object addresses the one viewer
+      who can read it while the scene continues uninterrupted. Nothing in the
+      simulation has to stop, and no other character has to notice.
     why_time_is_worth_a_carrier:
-      it_needs_almost_no_area: "A band needs pixels side by side. A blink needs one pixel and a few frames, so a value that will not fit in the art at this zoom fits in the schedule. Space and time trade against each other and the reader can spend whichever it has."
-      the_clock_is_already_frame_accurate: "The recorder timestamps every frame it keeps (../RECORDER.yml). Reading a rhythm costs nothing extra when the ring already knows exactly when each frame arrived."
-      it_survives_the_things_that_kill_detail: "Downscaling, blur, moire and a phone held at arm length all destroy fine spatial structure and leave brightness over time almost untouched (MOBILE-CAMERA.yml, off_a_screen_is_harder)."
-    the_rate_is_bounded: "Slow enough to be pleasant to watch and safe — no photosensitive-trigger frequencies, and never faster than the game's own frame budget can hold steady. A wink is a few bits, deliberately: enough to say which of my fixed signals this is, never enough to smuggle a payload."
-    nothing_transmits_silently: "Every message this channel sends is a visible change in a lit object. The player can always see that the egg said something, and can open it to read what. A covert channel is not merely disallowed here, it is unavailable — the carrier is the same light the player is looking at."
-  legible_to_both_readers: "A player learns 'gold cap band means news' in one session, and the reader decodes the same stripes numerically. One artifact, two audiences, which is the property the whole optical channel rests on (OPTICAL-CHANNEL.yml, the_player_reads_it_too)."
-  authored_once: "Shape, bands, caps, palettes, states and the DGRP table are emitted by the same compile that emits the menu tree and the verb registry (compiled_from_one_source)."
+      it_needs_almost_no_area: >-
+        A band needs pixels side by side. A blink needs one pixel and a few
+        frames, so a value that will not fit in the art at this zoom fits in the
+        schedule. Space and time trade against each other and the reader can
+        spend whichever it has.
+      the_clock_is_already_frame_accurate: >-
+        The recorder timestamps every frame it keeps (../RECORDER.yml). Reading
+        a rhythm costs nothing extra when the ring already knows exactly when
+        each frame arrived.
+      it_survives_the_things_that_kill_detail: >-
+        Downscaling, blur, moire and a phone held at arm length all destroy fine
+        spatial structure and leave brightness over time almost untouched
+        (MOBILE-CAMERA.yml, off_a_screen_is_harder).
+    the_rate_is_bounded: >-
+      Slow enough to be pleasant to watch and safe — no photosensitive-trigger
+      frequencies, and never faster than the game's own frame budget can hold
+      steady. A wink is a few bits, deliberately: enough to say which of my
+      fixed signals this is, never enough to smuggle a payload.
+    nothing_transmits_silently: >-
+      Every message this channel sends is a visible change in a lit object. The
+      player can always see that the egg said something, and can open it to read
+      what. A covert channel is not merely disallowed here, it is unavailable —
+      the carrier is the same light the player is looking at.
+  legible_to_both_readers: >-
+    A player learns 'gold cap band means news' in one session, and the reader
+    decodes the same stripes numerically. One artifact, two audiences, which is
+    the property the whole optical channel rests on (OPTICAL-CHANNEL.yml,
+    the_player_reads_it_too).
+  authored_once: >-
+    Shape, bands, caps, palettes, states and the DGRP table are emitted by the
+    same compile that emits the menu tree and the verb registry
+    (compiled_from_one_source).
 
   the_numbers_are_measured_now:
-    where: "packages/optical-codec — egg-render.ts draws them, egg-read.ts reads them, scripts/measure-eggs.ts sweeps band height against the degradation suite, and ../RECOGNIZER.yml, the_egg_reader has the full grid."
-    a_band_is_six_pixels: "Six device pixels a band reads twelve colours through everything in the suite: a window at a third scale, soft focus, a warm noisy phone grab, a tilted one. Five is enough for all but the smallest window. That is the number the art has to hit at the zoom where a code is meant to be read, and it is a drawing requirement, not a hope."
-    the_caps_earn_their_place: "Everything the section above claimed for them holds up under measurement, and two of the three turned out to be load-bearing in a way that was easy to underrate. A cap is exactly one band tall, so the reader derives the band height from the picture instead of being told it — an egg is self-describing at any zoom or capture scale. And correcting the bands by the sampled cap colours means an evening-light frame reads exactly as well as a clean one, which is the single best cell in the grid."
-    what_the_bands_may_not_be: "A colour whose luma is near either cap's gets read AS a cap, and then the egg is not misread, it is invisible. So the palette is bounded away from both — luma 72 to 188 — and the palettes are packed by a script that maximises the smallest gap under that bound rather than chosen by eye (src/egg-code.ts)."
-    twelve_is_legible_and_eight_is_shipped: "The measurement says twelve colours a band survives the suite. The default is octal anyway: the suite is synthetic and the game's own rendering is not in it, and an octal band is the same symbol as a dialled compass point (cracking_it_like_a_safe). The version band is the second thing on the stack precisely so this can change later."
-    what_is_still_not_known: "Whether any of it survives the game actually drawing an egg. Nothing here has been checked against a frame the game produced, because there is no egg in the game yet."
+    where: >-
+      packages/optical-codec — egg-render.ts draws them, egg-read.ts reads them,
+      scripts/measure-eggs.ts sweeps band height against the degradation suite,
+      and ../RECOGNIZER.yml, the_egg_reader has the full grid.
+    a_band_is_six_pixels: >-
+      Six device pixels a band reads twelve colours through everything in the
+      suite: a window at a third scale, soft focus, a warm noisy phone grab, a
+      tilted one. Five is enough for all but the smallest window. That is the
+      number the art has to hit at the zoom where a code is meant to be read,
+      and it is a drawing requirement, not a hope.
+    the_caps_earn_their_place: >-
+      Everything the section above claimed for them holds up under measurement,
+      and two of the three turned out to be load-bearing in a way that was easy
+      to underrate. A cap is exactly one band tall, so the reader derives the
+      band height from the picture instead of being told it — an egg is
+      self-describing at any zoom or capture scale. And correcting the bands by
+      the sampled cap colours means an evening-light frame reads exactly as well
+      as a clean one, which is the single best cell in the grid.
+    what_the_bands_may_not_be: >-
+      A colour whose luma is near either cap's gets read AS a cap, and then the
+      egg is not misread, it is invisible. So the palette is bounded away from
+      both — luma 72 to 188 — and the palettes are packed by a script that
+      maximises the smallest gap under that bound rather than chosen by eye
+      (src/egg-code.ts).
+    twelve_is_legible_and_eight_is_shipped: >-
+      The measurement says twelve colours a band survives the suite. The default
+      is octal anyway: the suite is synthetic and the game's own rendering is
+      not in it, and an octal band is the same symbol as a dialled compass point
+      (cracking_it_like_a_safe). The version band is the second thing on the
+      stack precisely so this can change later.
+    what_is_still_not_known: >-
+      Whether any of it survives the game actually drawing an egg. Nothing here
+      has been checked against a frame the game produced, because there is no
+      egg in the game yet.
 
 # WHAT AN EGG IS, IN OTHER PEOPLE'S VOCABULARIES
 #
-# Several fields already named this object. Each name is worth having because each one carries an
-# operational consequence the others do not — and the section ends with the discipline, because a
-# pattern that explains everything constrains nothing.
+# Several fields already named this object. Each name is worth having because
+# each one carries an operational consequence the others do not — and the
+# section ends with the discipline, because a pattern that explains everything
+# constrains nothing.
 
 what_it_already_is:
   a_choose_your_own_adventure_page:
-    the_mapping: "The menu tree is the numbered-choice list. 'If you go with her, turn to page 87' is a pie item, and the branch you pick is the page you turn to."
-    what_we_add_to_the_form: "A CYOA book is single-threaded, synchronous and one reader deep. Eggs are that grammar with the single thread removed: many branch points outstanding at once, each belonging to a different character, resolvable in any order, days apart. The bookmark is a place in the world instead of a place in the book."
-    why_it_matters: "The form is already understood by everyone who was eight years old with a paperback. It needs no tutorial, and the multiplicity is the only novel part."
+    the_mapping: >-
+      The menu tree is the numbered-choice list. 'If you go with her, turn to
+      page 87' is a pie item, and the branch you pick is the page you turn to.
+    what_we_add_to_the_form: >-
+      A CYOA book is single-threaded, synchronous and one reader deep. Eggs are
+      that grammar with the single thread removed: many branch points
+      outstanding at once, each belonging to a different character, resolvable
+      in any order, days apart. The bookmark is a place in the world instead of
+      a place in the book.
+    why_it_matters: >-
+      The form is already understood by everyone who was eight years old with a
+      paperback. It needs no tutorial, and the multiplicity is the only novel
+      part.
   a_continuation:
-    the_mapping: "An egg is a reified continuation: the character's story is suspended at a point, and the egg holds what to do with the result when it arrives. Hatching invokes it with a value. Hatching empty invokes it with nothing, which is why cancellation is the cheapest outcome rather than a special case."
-    one_shot: "It hatches once. No multi-shot, no re-entering a resolved egg, no timeline forks — a promise fulfilled twice is a bug in every language that has them."
-    the_part_that_is_actually_new: "Its possible arguments are ENUMERABLE, because the continuation is a declared tree rather than a closure over arbitrary code. That is what makes it safe to hand to an agent: you can read the whole space of what invoking it could do to your character before you invoke it (the_menu_is_the_return_type)."
-    and_it_needs_no_cps_rewrite: "The game is written in direct style and stays that way. Suspension happens at object granularity — a character's queue entry becomes an object — not at stack granularity, so no engine has to be rewritten to gain continuations."
+    the_mapping: >-
+      An egg is a reified continuation: the character's story is suspended at a
+      point, and the egg holds what to do with the result when it arrives.
+      Hatching invokes it with a value. Hatching empty invokes it with nothing,
+      which is why cancellation is the cheapest outcome rather than a special
+      case.
+    one_shot: >-
+      It hatches once. No multi-shot, no re-entering a resolved egg, no timeline
+      forks — a promise fulfilled twice is a bug in every language that has
+      them.
+    the_part_that_is_actually_new: >-
+      Its possible arguments are ENUMERABLE, because the continuation is a
+      declared tree rather than a closure over arbitrary code. That is what
+      makes it safe to hand to an agent: you can read the whole space of what
+      invoking it could do to your character before you invoke it
+      (the_menu_is_the_return_type).
+    and_it_needs_no_cps_rewrite: >-
+      The game is written in direct style and stays that way. Suspension happens
+      at object granularity — a character's queue entry becomes an object — not
+      at stack granularity, so no engine has to be rewritten to gain
+      continuations.
   a_linda_tuple:
-    the_mapping: "Eggs sit in a shared space, addressed by what they ARE rather than by who is waiting for them. Anyone who matches can act. Gelernter's split holds exactly: the eggs coordinate, the games compute."
-    the_three_operations: "Lay is out. Hatch is in — a destructive take. About is rd — read without consuming, which is why introspection is safe for anyone including a stranger's agent."
-    the_upgrade_over_a_tuple_space: "The space is a PLACE. A tuple space is content-addressable and invisible; a game world is spatially addressed and browsable, so you can walk to a tuple, point at it, and see how many there are. Associative matching is still there; discovery stopped requiring documentation."
+    the_mapping: >-
+      Eggs sit in a shared space, addressed by what they ARE rather than by who
+      is waiting for them. Anyone who matches can act. Gelernter's split holds
+      exactly: the eggs coordinate, the games compute.
+    the_three_operations: >-
+      Lay is out. Hatch is in — a destructive take. About is rd — read without
+      consuming, which is why introspection is safe for anyone including a
+      stranger's agent.
+    the_upgrade_over_a_tuple_space: >-
+      The space is a PLACE. A tuple space is content-addressable and invisible;
+      a game world is spatially addressed and browsable, so you can walk to a
+      tuple, point at it, and see how many there are. Associative matching is
+      still there; discovery stopped requiring documentation.
   a_stream_or_an_event_queue:
-    the_mapping: "Eggs accumulating over time are a queue with a clock — the ring's clock (../ANGEL-EVENT-BUS.yml, one_clock_with_the_ring)."
-    visible_backpressure: "This is the real win. Queue depth is furniture: a hallway filling with eggs is congestion you trip over, and nobody has to instrument anything to notice. Nothing is dropped invisibly and nothing is delivered behind your back."
-    ordering: "Spatial and temporal, both legible. Not a hidden FIFO whose order you must trust."
-  an_rpc_and_a_mailbox: "A call outstanding, with a return address that is a location. An actor's mailbox, except you can see the mail."
+    the_mapping: >-
+      Eggs accumulating over time are a queue with a clock — the ring's clock
+      (../ANGEL-EVENT-BUS.yml, one_clock_with_the_ring).
+    visible_backpressure: >-
+      This is the real win. Queue depth is furniture: a hallway filling with
+      eggs is congestion you trip over, and nobody has to instrument anything to
+      notice. Nothing is dropped invisibly and nothing is delivered behind your
+      back.
+    ordering: >-
+      Spatial and temporal, both legible. Not a hidden FIFO whose order you must
+      trust.
+  an_rpc_and_a_mailbox: >-
+    A call outstanding, with a return address that is a location. An actor's
+    mailbox, except you can see the mail.
   the_discipline_that_keeps_this_from_being_a_mood:
-    the_risk: "Continuation, tuple, stream, promise, queue, page — everything is an egg, which means the word is worth nothing unless it excludes something."
-    an_egg_is_only_an_egg_if: ["it has a place in the world", "its return type is a declared finite tree", "exactly one action commits", "it has a resume point it goes back to", "hatching writes a credited line into the record"]
-    the_test: "Drop any one of those and you have a promise with a sprite. Keep all five and you have something a player can find, inspect, ignore for a week, hand to an agent, take back mid-flight, and audit afterwards — which is the only reason to reify a task at all."
+    the_risk: >-
+      Continuation, tuple, stream, promise, queue, page — everything is an egg,
+      which means the word is worth nothing unless it excludes something.
+    an_egg_is_only_an_egg_if:
+      - "it has a place in the world"
+      - "its return type is a declared finite tree"
+      - "exactly one action commits"
+      - "it has a resume point it goes back to"
+      - "hatching writes a credited line into the record"
+    the_test: >-
+      Drop any one of those and you have a promise with a sprite. Keep all five
+      and you have something a player can find, inspect, ignore for a week, hand
+      to an agent, take back mid-flight, and audit afterwards — which is the
+      only reason to reify a task at all.
 
 the_grammar:
-  lay: "An object spawns an egg with a kind, a payload, a menu tree, and a resume point."
-  incubate: "It sits there. Its sprite and bands carry kind and state continuously (OPTICAL-CHANNEL.yml, sprite_codes, band_codes)."
-  ask: "The About item, always north on the pie menu, returns the full payload as text, as a code, and as a link. Unknown eggs are introspectable (OPTICAL-CHANNEL.yml, the_about_item)."
+  lay: >-
+    An object spawns an egg with a kind, a payload, a menu tree, and a resume
+    point.
+  incubate: >-
+    It sits there. Its sprite and bands carry kind and state continuously
+    (OPTICAL-CHANNEL.yml, sprite_codes, band_codes).
+  ask: >-
+    The About item, always north on the pie menu, returns the full payload as
+    text, as a code, and as a link. Unknown eggs are introspectable
+    (OPTICAL-CHANNEL.yml, the_about_item).
   pick: "Selections accumulate down the tree, in any number of sittings."
   hatch: "Commit, restore, remove."
   expire: "Hatch the declared default and report it."
-  events: "Every one of these publishes on the bus under angel.call.* and angel.optical.egg.*, on the ring's clock, so an egg's whole life is a seekable sequence (ANGEL-EVENT-BUS.yml)."
+  events: >-
+    Every one of these publishes on the bus under angel.call.* and
+    angel.optical.egg.*, on the ring's clock, so an egg's whole life is a
+    seekable sequence (ANGEL-EVENT-BUS.yml).
 
 either_hand_drives_it:
-  the_invariant: "The layer clicks the egg's pie items; a person clicks the same pie items. There is no resolution path that only automation can take, and none only a human can take (OPTICAL-CHANNEL.yml, either_hand_can_drive)."
-  consent_modes: "Manual, confirm each, timeout with a named default, auto, yolo — switchable while an egg is outstanding."
-  what_the_player_keeps: "Hatching early, hatching empty, and refusing a selection the layer proposed. Agency over the resolution, always."
+  the_invariant: >-
+    The layer clicks the egg's pie items; a person clicks the same pie items.
+    There is no resolution path that only automation can take, and none only a
+    human can take (OPTICAL-CHANNEL.yml, either_hand_can_drive).
+  consent_modes: >-
+    Manual, confirm each, timeout with a named default, auto, yolo — switchable
+    while an egg is outstanding.
+  what_the_player_keeps: >-
+    Hatching early, hatching empty, and refusing a selection the layer proposed.
+    Agency over the resolution, always.
 
 compiled_from_one_source:
-  why: "The egg's menu tree, its strings, its sprites and bands, the outcome-to-effect mapping, and the destination binding are one declaration compiled into both the game's resources and the layer's tables (OPTICAL-CHANNEL.yml, compiled_from_one_source)."
-  the_failure_it_prevents: "A menu that changed on one side and a layer that clicks the wrong item silently corrupts a character. One source, one grammar version, stamped in the content."
+  why: >-
+    The egg's menu tree, its strings, its sprites and bands, the
+    outcome-to-effect mapping, and the destination binding are one declaration
+    compiled into both the game's resources and the layer's tables
+    (OPTICAL-CHANNEL.yml, compiled_from_one_source).
+  the_failure_it_prevents: >-
+    A menu that changed on one side and a layer that clicks the wrong item
+    silently corrupts a character. One source, one grammar version, stamped in
+    the content.
 
 not:
-  not_a_progress_bar: "It does not promise a completion time and it does not pretend to know one."
-  not_a_message_queue: "One egg, one call, in the world, at a place. Volume is not the point."
-  not_a_way_to_apply_undeclared_effects: "If it is not in the tree, it cannot happen. A job that wants a new consequence recompiles and says so."
+  not_a_progress_bar: >-
+    It does not promise a completion time and it does not pretend to know one.
+  not_a_message_queue: >-
+    One egg, one call, in the world, at a place. Volume is not the point.
+  not_a_way_to_apply_undeclared_effects: >-
+    If it is not in the tree, it cannot happen. A job that wants a new
+    consequence recompiles and says so.
 
 # THE EGG IS A FILE
 #
-# Spore already did the important half of this: a creature card was a PNG with the creature
-# encoded inside it. The picture WAS the file. You could post it anywhere a picture goes, and
-# dragging it back into the game gave you the creature — advertisement and payload in one
-# artifact. An egg inherits that, with a return address added.
+# Spore already did the important half of this: a creature card was a PNG with
+# the creature encoded inside it. The picture WAS the file. You could post it
+# anywhere a picture goes, and dragging it back into the game gave you the
+# creature — advertisement and payload in one artifact. An egg inherits that,
+# with a return address added.
 
 the_egg_is_its_own_file:
   the_prior_art:
-    spore_creature_cards: "Creature data embedded in the exported PNG, shared through the Sporepedia and anywhere else a picture could travel, re-imported by dropping the picture back in. The seed of the creature was inside its portrait, which is why the sharing culture worked at all — nothing to zip, nothing to explain (documentation/designs/federation-peer-games.md, Spore)."
-    what_it_proved: "A container that is ALSO its own thumbnail removes the step where sharing breaks. Every scheme that needs a picture plus a data file loses the data file."
-  our_container_is_iff: "We do not need to invent the trick, because the Sims already has a container that games load, players install and communities have traded for two decades. An egg is minted as an .iff — OBJD, DGRP, SPR2, BHAV, the object as the game expects it — so the same bytes are a placeable object in a lot, a picture of itself, and a message with a payload. No side-car, no new loader, and the Downloads folder is already the inbox (documentation/designs/sims-content-registry.md)."
-  minting_is_a_proposal: "Band layout is generated from the payload, so minting gets the same six verbs as any generator: generate, reroll, edit, revise, reset, clear, with the previous layout still there. Keep the seed (documentation/designs/generative-history-and-proposals.md)."
-  minted_locally: "The compile that emits the egg's shape, bands, states and menu tree can write the .iff on the player's own machine. Nothing has to be online for an egg to exist, be placed, be read or be hatched — the network is for sharing, never for existing (robust-first)."
-  then_published: "Mint local, upload to the server, and it is a link like every other piece of Sims content. Someone downloads it into Downloads and the registry picks it up on the next scan: fresh GUID, hashed, dependency-walked, collision-checked, same path as any custom object (guid-collision, sims-content-registry.md)."
+    spore_creature_cards: >-
+      Creature data embedded in the exported PNG, shared through the Sporepedia
+      and anywhere else a picture could travel, re-imported by dropping the
+      picture back in. The seed of the creature was inside its portrait, which
+      is why the sharing culture worked at all — nothing to zip, nothing to
+      explain (documentation/designs/federation-peer-games.md, Spore).
+    what_it_proved: >-
+      A container that is ALSO its own thumbnail removes the step where sharing
+      breaks. Every scheme that needs a picture plus a data file loses the data
+      file.
+  our_container_is_iff: >-
+    We do not need to invent the trick, because the Sims already has a container
+    that games load, players install and communities have traded for two
+    decades. An egg is minted as an .iff — OBJD, DGRP, SPR2, BHAV, the object as
+    the game expects it — so the same bytes are a placeable object in a lot, a
+    picture of itself, and a message with a payload. No side-car, no new loader,
+    and the Downloads folder is already the inbox
+    (documentation/designs/sims-content-registry.md).
+  minting_is_a_proposal: >-
+    Band layout is generated from the payload, so minting gets the same six
+    verbs as any generator: generate, reroll, edit, revise, reset, clear, with
+    the previous layout still there. Keep the seed
+    (documentation/designs/generative-history-and-proposals.md).
+  minted_locally: >-
+    The compile that emits the egg's shape, bands, states and menu tree can
+    write the .iff on the player's own machine. Nothing has to be online for an
+    egg to exist, be placed, be read or be hatched — the network is for sharing,
+    never for existing (robust-first).
+  then_published: >-
+    Mint local, upload to the server, and it is a link like every other piece of
+    Sims content. Someone downloads it into Downloads and the registry picks it
+    up on the next scan: fresh GUID, hashed, dependency-walked,
+    collision-checked, same path as any custom object (guid-collision,
+    sims-content-registry.md).
   cracking_is_the_constructor:
-    the_verb: "Eggs do not get constructed, they get CRACKED. Instantiation is an interaction a character performs in the world, in a place, at a time, in front of whoever is standing there — not an event in a log."
-    personalise_at_the_crack: "Cracking is where an egg stops being generic: name it, pick its badge, set what it is for, bond it to the character who opened it. The moment of instantiation is the moment of authorship, which is the right place for it and a good one to animate."
-    bonding: "The reference is the Hope Chest from SimProv — Don's unreleased playset collection, built with Donna (SimBabes), Steve Alvey (SimSlice) and Heather Castillo (SimFreaks) — an object you accumulate a relationship with rather than merely own. Never shipped, so there is nothing to go and look at; the design is in WWSFF catalogs/simprov/. A cracked egg carries who cracked it and what they did with it, so a well-travelled egg is an heirloom, and its custody chain IS its sentimental value (moollm skills/soul-city/SOUVENIRS.md)."
+    the_verb: >-
+      Eggs do not get constructed, they get CRACKED. Instantiation is an
+      interaction a character performs in the world, in a place, at a time, in
+      front of whoever is standing there — not an event in a log.
+    personalise_at_the_crack: >-
+      Cracking is where an egg stops being generic: name it, pick its badge, set
+      what it is for, bond it to the character who opened it. The moment of
+      instantiation is the moment of authorship, which is the right place for it
+      and a good one to animate.
+    bonding: >-
+      The reference is the Hope Chest from SimProv — Don's unreleased playset
+      collection, built with Donna (SimBabes), Steve Alvey (SimSlice) and
+      Heather Castillo (SimFreaks) — an object you accumulate a relationship
+      with rather than merely own. Never shipped, so there is nothing to go and
+      look at; the design is in WWSFF catalogs/simprov/. A cracked egg carries
+      who cracked it and what they did with it, so a well-travelled egg is an
+      heirloom, and its custody chain IS its sentimental value (moollm
+      skills/soul-city/SOUVENIRS.md).
     cracking_it_like_a_safe:
-      the_gesture: "The crack menu carries a Dial submenu of eight compass points. Each pick is three bits, and you dial repeatedly to enter a code of any length — the menu stays eight items no matter how long the number (OPTICAL-CHANNEL.yml, dialing_in)."
-      what_you_are_dialling_into: "An identification number for a web object outside the game. Cracking with a combination binds this egg to that external thing, and the same combination dialled into eggs in other lots or other games binds them all to it — every one of them able to send messages up to the same place."
-      why_this_belongs_at_the_crack: "Binding is exactly what cracking is for. The egg goes from generic to specific in one gesture, and the gesture is a safe combination, which tells the player without a tutorial that the number matters."
+      the_gesture: >-
+        The crack menu carries a Dial submenu of eight compass points. Each pick
+        is three bits, and you dial repeatedly to enter a code of any length —
+        the menu stays eight items no matter how long the number
+        (OPTICAL-CHANNEL.yml, dialing_in).
+      what_you_are_dialling_into: >-
+        An identification number for a web object outside the game. Cracking
+        with a combination binds this egg to that external thing, and the same
+        combination dialled into eggs in other lots or other games binds them
+        all to it — every one of them able to send messages up to the same
+        place.
+      why_this_belongs_at_the_crack: >-
+        Binding is exactly what cracking is for. The egg goes from generic to
+        specific in one gesture, and the gesture is a safe combination, which
+        tells the player without a tutorial that the number matters.
 
     more_than_one_pair_of_hands:
-      the_precedent: "Hot tubs and pool tables already hold several Sims in one interaction, with slots and join verbs. An egg can do the same: two or three characters cracking one egg together, joining and leaving while it is open."
-      what_it_changes: "Co-authorship becomes literal. Everyone who joined the crack is credited in the custody chain, and a jointly cracked egg is a shared object rather than one person's with witnesses."
-      why_it_is_worth_it: "It turns an asynchronous mechanism into a social occasion, which is the part of this a player will actually remember."
+      the_precedent: >-
+        Hot tubs and pool tables already hold several Sims in one interaction,
+        with slots and join verbs. An egg can do the same: two or three
+        characters cracking one egg together, joining and leaving while it is
+        open.
+      what_it_changes: >-
+        Co-authorship becomes literal. Everyone who joined the crack is credited
+        in the custody chain, and a jointly cracked egg is a shared object
+        rather than one person's with witnesses.
+      why_it_is_worth_it: >-
+        It turns an asynchronous mechanism into a social occasion, which is the
+        part of this a player will actually remember.
 
   a_sealed_egg_is_giftable:
-    what: "An egg can be shared before it is hatched. The recipient picks from the menu and hatches it themselves, so the gift is a choice rather than a result."
-    the_chain_of_custody: "Who minted it, who held it, who hatched it — appended, never rewritten. A regifted egg carries its whole history, which is the interesting part of a souvenir (moollm skills/soul-city/SOUVENIRS.md)."
-    what_never_travels: "Only what the soul owns. An egg carries its own declared payload and its credits, not the household around it, and not a scrap of anyone who did not agree to be in it (soul_domain, ../modules/soul-angel/ARCHITECTURE.yml)."
-  the_file_and_the_screen_are_the_same_object: "The optical carriers exist for the case where a file cannot cross — a closed game, a stream, a photograph of someone else's monitor (OPTICAL-CHANNEL.yml). When both ends can touch a filesystem, the .iff is the lossless path and the bands are just its portrait. One artifact, two routes, and neither is the fallback for the other."
+    what: >-
+      An egg can be shared before it is hatched. The recipient picks from the
+      menu and hatches it themselves, so the gift is a choice rather than a
+      result.
+    the_chain_of_custody: >-
+      Who minted it, who held it, who hatched it — appended, never rewritten. A
+      regifted egg carries its whole history, which is the interesting part of a
+      souvenir (moollm skills/soul-city/SOUVENIRS.md).
+    what_never_travels: >-
+      Only what the soul owns. An egg carries its own declared payload and its
+      credits, not the household around it, and not a scrap of anyone who did
+      not agree to be in it (soul_domain,
+      ../modules/soul-angel/ARCHITECTURE.yml).
+  the_file_and_the_screen_are_the_same_object: >-
+    The optical carriers exist for the case where a file cannot cross — a closed
+    game, a stream, a photograph of someone else's monitor
+    (OPTICAL-CHANNEL.yml). When both ends can touch a filesystem, the .iff is
+    the lossless path and the bands are just its portrait. One artifact, two
+    routes, and neither is the fallback for the other.
 
 # TODO — THE EGG MATRIX
 #
-# Not designed, just claimed. Multi-tile eggs tiled into a grid, running a rule, on a dance floor.
+# Not designed, just claimed. Multi-tile eggs tiled into a grid, running a rule,
+# on a dance floor.
 
 matrix_eggs:
   todo: true
-  the_idea: "Lay eggs out in a grid instead of stacking bands up one body. Each tile is a blip, so the payload scales with AREA rather than with height — a 2D code that lives in the room permanently, needs no dialog, and can be as large as the floor."
-  it_is_already_a_dance_floor: "The Sims shipped multi-tile floors whose tiles light in patterns. A grid of eggs lighting in patterns IS that object, so the choreography and the payload are the same pixels: the players see a party, the reader sees frames."
-  cellular_automata: "Tiles with a local rule and neighbours are a CA, and a CA display is the cheapest possible animation — no authored frames, just a rule and a seed. Which is Don's own territory twice over: CAM6 (github.com/SimHacker/CAM6) and the Micropolis simulation itself."
-  the_bit_worth_keeping: "A CA is decoration that is also state, evolving from a seed that fits in a few bytes. Store the seed and the whole dance is recoverable (documentation/designs/generative-history-and-proposals.md)."
-  open_questions: "How a grid stays readable at game zooms, whether frames or a still carry the value, master/slave tile arrangement for multi-tile objects, and whether any of this is legible enough to be a channel or is simply beautiful. Unresolved and cheerfully so."
+  the_idea: >-
+    Lay eggs out in a grid instead of stacking bands up one body. Each tile is a
+    blip, so the payload scales with AREA rather than with height — a 2D code
+    that lives in the room permanently, needs no dialog, and can be as large as
+    the floor.
+  it_is_already_a_dance_floor: >-
+    The Sims shipped multi-tile floors whose tiles light in patterns. A grid of
+    eggs lighting in patterns IS that object, so the choreography and the
+    payload are the same pixels: the players see a party, the reader sees
+    frames.
+  cellular_automata: >-
+    Tiles with a local rule and neighbours are a CA, and a CA display is the
+    cheapest possible animation — no authored frames, just a rule and a seed.
+    Which is Don's own territory twice over: CAM6 (github.com/SimHacker/CAM6)
+    and the Micropolis simulation itself.
+  the_bit_worth_keeping: >-
+    A CA is decoration that is also state, evolving from a seed that fits in a
+    few bytes. Store the seed and the whole dance is recoverable
+    (documentation/designs/generative-history-and-proposals.md).
+  open_questions: >-
+    How a grid stays readable at game zooms, whether frames or a still carry the
+    value, master/slave tile arrangement for multi-tile objects, and whether any
+    of this is legible enough to be a channel or is simply beautiful. Unresolved
+    and cheerfully so.
 
