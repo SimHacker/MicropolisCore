@@ -77,6 +77,56 @@ Several are worth supporting, and the interface between the bridge and an emulat
 
 **The other wide channel: a network-mounted disk.** A [FujiNet](https://fujinet.online/) presents a disk image over the network as a SmartPort device, which means the image a game is reading can live on a server the bridge controls, and the write-back does not require reaching into an emulator's memory at all — the same trick as hot-writing the in-memory buffer, but it works on the real machine on someone's desk. In a browser tab, FujiNet is a **sidecar**: the firmware runs server-side as FujiNet-PC and the tab talks to it over a WebSocket, rather than anyone trying to compile firmware into the page. Groundwork here is Thomas Cherryhomes's, and the Apple ][ side of FujiNet plus SPoverSLIP is his and his collaborators' work, not ours.
 
+## The proving function: Little Computer People in, and back out
+
+The Apple ][ emulator and this bridge prove themselves by one round trip: **import a Little Computer
+Person from a real Apple ][ disk into a soul file, and export them back to a disk the game boots,
+still themselves.** That exercises every rung: L0 reads the disk image, L1 the DOS 3.3 catalog,
+L2 the files, L3 the person's record, L4 the crossing, and back down. It runs in the emulator, so it
+can also be watched live, which is the test of the display devices and core links below. When it
+works for LCP, the same path works for the next title with only a new L3 driver.
+
+Mind Mirror is still the easiest first vertical, because its data is already a personality profile;
+LCP is the proof that matters, because it is a person living in a house, the ancestor of every Sim.
+
+## Sub-bridges
+
+The Apple ][ bridge is the platform: disk images, filesystems, file formats, the emulator, live
+memory, display devices. Under it hang **sub-bridges**, one per thing that keeps a soul in its own
+way, each an L3 driver plus its L4 mapping:
+
+| Sub-bridge | Reads and writes | First target |
+|---|---|---|
+| **Little Computer People** | the person's record on its DOS 3.3 disk; live, the same record in RAM | the proving function |
+| **Timothy Leary's Mind Mirror** | the personality profile and session files | the first vertical |
+| **Wizardry** | the UCSD Pascal file system, then the scenario's roster: the party's character records as Pascal records | send a Sim into the dungeon |
+| *operating systems* | DOS 3.3, ProDOS, UCSD Pascal, CP/M on the Z-80 card | shared by the titles above them |
+| *more games and applications* | one driver each, as they come | |
+
+The operating systems are sub-bridges too: a ProDOS sub-bridge serves every ProDOS title, and the
+UCSD Pascal one is what Wizardry stands on. Each sub-bridge is registered like any other bridge
+([GAME-BRIDGES.yml](../../apps/screen-angel/modules/soul-angel/GAME-BRIDGES.yml)) and keeps its game's own vocabulary
+for its fields.
+
+**Wizardry's records** are Pascal records in files of the UCSD p-System. The L1 sub-bridge reads the
+p-System directory and files; the L3 driver decodes the roster's records field by field, in the
+game's own names. Where Wizardry's Pascal source or published record layouts survive, they are the
+specification; where they don't, the fields are found as LCP's were, by changing one thing in the
+game and seeing which bytes move.
+
+## Reading a running game: core links and display devices
+
+The disk is the wide channel, but a running game holds the soul in memory first. With the
+cabinet's [core links](https://github.com/SimHacker/WillWrightShowForFood/blob/main/packages/cabinet/CORE-LINKS.md),
+a read-only link over the Apple's RAM gives the bridge the live record (LCP's person as they eat,
+read and play) without waiting for a save, and a write link, used carefully and only while the game
+waits for input, can change it in place.
+
+The same links feed [display devices](https://github.com/SimHacker/WillWrightShowForFood/blob/main/packages/cabinet/DISPLAY-DEVICES.md):
+plug-ins that turn read-only memory into RGBA, indexed colour, tiles or vectors, configured for size,
+layout and view. The game's own screen is one of them; a view of the person's record beside it,
+changing as the person lives, is another.
+
 ## Driving a game that has no API
 
 The floppy is the wide channel, and it is enough for most of what a bridge wants. Where a title only exposes something through its own interface, the bridge drives the interface:
@@ -93,7 +143,7 @@ Order of preference is unchanged: read the disk if the disk knows; watch memory 
 |---|---|---|---|
 | **Timothy Leary's Mind Mirror** (1986) | DOS 3.3 | Personality profile and session state | Visit the shrink — a Sim comes back with an edited personality ([OUT-OF-GAME-JOBS.yml](../../apps/screen-angel/modules/soul-angel/OUT-OF-GAME-JOBS.yml)) |
 | **Little Computer People** (Apple ][, Dec 1985) | DOS 3.3 | A 256-byte brain block on the C64, seeded by the disk's serial number; the Apple ][ offset still needs finding | Meet the ancestor: read the first computer person off a 1985 disk, live ([federation-peer-games.md](federation-peer-games.md#little-computer-people-activision-1985--the-headwater)) |
-| **Wizardry** (1981) | UCSD Pascal | Scenario and roster records | Send a Sim into the dungeon; non-destructive at the soul file, whatever the dungeon does to the copy |
+| **Wizardry** (1981) | UCSD Pascal | Scenario and roster records: the party's characters as Pascal records | Send a Sim into the dungeon; non-destructive at the soul file, whatever the dungeon does to the copy |
 
 ## Legal posture
 
