@@ -386,8 +386,8 @@ This is the closest Soul City comes to a *love letter to The Sims Online's map*.
 
 The most immediate visible capability is what the MOOLLM designs call **The Uplift**: a two-way bridge between Sims 1 save files and enriched LLM-powered environments where characters can actually speak, reflect on their past, and return home changed.
 
-The full story, pipeline, and literary precedent are documented in the MOOLLM repo:  
-→ **[MOOLLM: skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md)**
+The full story, told step by step with the module that does each step, is in the MOOLLM repo:  
+→ **[The Uplift](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/THE-UPLIFT.md)** (in [skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md))
 
 The key point for MicropolisCore is: **this is now a TypeScript implementation**. The Python parsing layer that existed before lives here as `packages/sims-io`. The LLM enrichment and character bridge live in MOOLLM. The character animation and rendering live in `packages/vitamoo`/`mooshow`. The monorepo holds all of it.
 
@@ -701,7 +701,7 @@ The city simulation engine in this repo is **Micropolis**, based on the SimCity 
 
 | Resource                                                   | Where                                                                                                                                                                |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Full Uplift vision and story arc                           | [MOOLLM: skills/soul-city](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/README.md)                                 |
+| Full Uplift vision and story arc                           | [MOOLLM: skills/soul-city/THE-UPLIFT.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/THE-UPLIFT.md)                                 |
 | Technical field mappings (Sims ↔ MOOLLM)                   | [`packages/sims-io`](../../packages/sims-io)                                         |
 | IFF Semantic Image Pyramid (6 layers)                      | [`packages/vitamoo`](../../packages/vitamoo)                                 |
 | SimAntics psychopomp / B-brain bridge character            | [MOOLLM: SOUL-BRIDGES.md](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/SOUL-BRIDGES.md) |

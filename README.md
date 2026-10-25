@@ -92,6 +92,10 @@ tutors with different views (an economist, an environmentalist, a planner) argue
 act in the same city as the students. The tutors are [MOOLLM](https://github.com/SimHacker/moollm)
 characters, driven by the [micropolis skill](https://github.com/SimHacker/moollm/tree/main/skills/micropolis).
 
+The story that explains it to anyone:
+[The Uplift](https://github.com/SimHacker/moollm/blob/main/skills/soul-city/THE-UPLIFT.md), a Sim
+frozen on a USB stick since 2001 who wakes up in Soul City and goes home changed.
+
 Design: [Soul City](documentation/designs/soul-city.md) ·
 [roadmap](documentation/designs/soul-city-uplift-roadmap.md) ·
 [MOOLLM as a microworld OS](documentation/designs/moollm-microworld-os.md).
