@@ -112,7 +112,10 @@ for its fields.
 p-System directory and files; the L3 driver decodes the roster's records field by field, in the
 game's own names. Where Wizardry's Pascal source or published record layouts survive, they are the
 specification; where they don't, the fields are found as LCP's were, by changing one thing in the
-game and seeing which bytes move.
+game and seeing which bytes move. microM8 already has the tool for that: `@scan.sequence` searches a
+recording for addresses that were written a given series of values (a stat going 5, 4, 3, 2, 1), and
+`@counter.set` counts reads, writes or executes at an address
+([microBASIC functions](https://paleotronic.com/software/microm8/help/functions/)).
 
 ## Reading a running game: core links and display devices
 
