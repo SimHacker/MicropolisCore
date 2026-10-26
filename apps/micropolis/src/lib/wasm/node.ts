@@ -37,18 +37,18 @@ function isBrowserOnlyEngineError(error: unknown): boolean {
 	);
 }
 
-export async function loadMicropolisMainModule(): Promise<MainModule> {
+export async function loadMicropolisMainModule(verbose = false): Promise<MainModule> {
 	assertWasmArtifactsPresent();
-	const wasmBinary = toArrayBuffer(readFileSync(wasmPath));
 	const dataBinary = toArrayBuffer(readFileSync(dataPath));
+	const print = verbose ? (message: string) => console.log(message) : () => {};
+	const printErr = verbose ? (message: string) => console.error(message) : () => {};
 
 	try {
 		return (await initModule({
-			print: () => {},
-			printErr: () => {},
+			print,
+			printErr,
 			setStatus: () => {},
 			locateFile: (filename: string) => path.join(projectLib, filename),
-			wasmBinary,
 			getPreloadedPackage: () => dataBinary
 		})) as MainModule;
 	} catch (nodeError) {
@@ -66,11 +66,10 @@ export async function loadMicropolisMainModule(): Promise<MainModule> {
 		(globalThis as { process?: unknown }).process = undefined;
 
 		return (await initModule({
-			print: () => {},
-			printErr: () => {},
+			print,
+			printErr,
 			setStatus: () => {},
 			locateFile: (filename: string) => path.join(projectLib, filename),
-			wasmBinary,
 			getPreloadedPackage: () => dataBinary
 		})) as MainModule;
 	} finally {

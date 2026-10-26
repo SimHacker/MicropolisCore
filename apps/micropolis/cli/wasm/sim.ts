@@ -10,7 +10,7 @@ import { createNoopJsCallback } from '../../src/lib/wasm/callbacks';
 import { loadMicropolisMainModule } from '../../src/lib/wasm/node';
 import { normalizeStructuredFormat, stringifyStructured } from '../lib/format.js';
 
-type Flags = { city?: string; ticks?: number; format?: string };
+type Flags = { city?: string; ticks?: number; format?: string; verbose?: boolean };
 
 function stringFlag(v: unknown, fallback: string): string {
 	return typeof v === 'string' && v.length > 0 ? v : fallback;
@@ -53,7 +53,7 @@ function summarize(
 async function runSmoke(flags: Flags) {
 	const ticks = numberFlag(flags.ticks, 10);
 	const city = stringFlag(flags.city, '/cities/haight.cty');
-	const engine = await loadMicropolisMainModule();
+	const engine = await loadMicropolisMainModule(flags.verbose ?? false);
 	const micropolis = new engine.Micropolis();
 	const cb = createNoopJsCallback(engine);
 	micropolis.setCallback(cb, {});
@@ -69,7 +69,7 @@ async function runSmoke(flags: Flags) {
 
 async function runInfo(flags: Flags) {
 	const city = stringFlag(flags.city, '/cities/haight.cty');
-	const engine = await loadMicropolisMainModule();
+	const engine = await loadMicropolisMainModule(flags.verbose ?? false);
 	const micropolis = new engine.Micropolis();
 	const cb = createNoopJsCallback(engine);
 	micropolis.setCallback(cb, {});
