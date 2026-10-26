@@ -968,7 +968,7 @@ public:
     /**
      * Callback interface.
      */
-    Callback *callback;
+    Callback *callback = NULL;
 
 
     /**
@@ -1411,8 +1411,8 @@ private:
     /**
      * Memory for map array.
      */
-    unsigned short *mapBase;
-    unsigned short *mopBase;
+    unsigned short *mapBase = NULL;
+    unsigned short *mopBase = NULL;
 
 
     void initMapArrays();
