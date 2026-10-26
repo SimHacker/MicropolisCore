@@ -175,6 +175,7 @@ clean:
 	rm -rf \
 	    $(OBJECTS) \
 		$(OUTPUTFILES) \
+		$(ASAN_BUILD) \
 		build
 
 
@@ -215,3 +216,30 @@ zone.cpp: micropolis.h
 
 
 ########################################################################
+# Address-sanitizer build for hunting memory bugs
+
+
+ASAN_BUILD = build-asan
+ASAN_FLAGS = -fsanitize=address -g
+ASAN_OBJECTS = $(SOURCES:%.cpp=$(ASAN_BUILD)/%.o)
+ASAN_LIBRARY = $(ASAN_BUILD)/micropolisengine
+
+
+asan: $(ASAN_LIBRARY)
+
+$(ASAN_LIBRARY): $(ASAN_OBJECTS)
+	mkdir -p $(ASAN_BUILD)
+	$(EMCC) $(EMLDFLAGS) $(ASAN_FLAGS) -o $(ASAN_LIBRARY).html $^
+
+$(ASAN_BUILD)/%.o: %.cpp $(HEADERS)
+	mkdir -p $(dir $@)
+	$(EMCC) $(EMCXXFLAGS) $(ASAN_FLAGS) -c $< -o $@
+
+install-asan: asan
+	cp $(ASAN_BUILD)/micropolisengine.wasm ../../apps/micropolis/src/lib
+	cp $(ASAN_BUILD)/micropolisengine.data ../../apps/micropolis/src/lib
+	{ printf '%s\n' '// @ts-nocheck'; cat $(ASAN_BUILD)/micropolisengine.js; } > ../../apps/micropolis/src/lib/micropolisengine.js
+
+clean-asan:
+	rm -rf $(ASAN_BUILD)
+
