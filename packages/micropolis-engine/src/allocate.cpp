@@ -120,8 +120,6 @@ void Micropolis::initMapArrays()
 /** Free all map arrays */
 void Micropolis::destroyMapArrays()
 {
-    printf("destroyMapArrays: mapBase: %p\n", mapBase);
-
     if (mapBase != NULL) {
         freePtr(mapBase);
         mapBase = NULL;

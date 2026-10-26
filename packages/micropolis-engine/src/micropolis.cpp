@@ -128,8 +128,6 @@ void Micropolis::setCallback(Callback *callback0, emscripten::val callbackVal0)
 /** Initialize simulator variables to a sane default. */
 void Micropolis::init()
 {
-    printf("init");
-    
     ////////////////////////////////////////////////////////////////////////
     // allocate.cpp
 
