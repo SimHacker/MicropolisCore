@@ -24,4 +24,4 @@ representation:
 
 canonical: https://donhopkins.com
 # authoring source (private repo)
-upstream: ../../../../../../DonHopkins/characters/don-hopkins/
+upstream: moollm://github/SimHacker/DonHopkins/characters/don-hopkins/
