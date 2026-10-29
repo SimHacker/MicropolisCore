@@ -58,7 +58,7 @@ city browser + previewer (thumbnails, search) — own ladle, not scheduled.
 
 ## How to pick up a playbook
 
-Same shape as [central pipeline-optimization playbooks](https://github.com/leela-ai/central/blob/main/skills/gcs/protocols/pipeline-optimization/README.md#how-to-execute-a-playbook):
+Same shape as the pipeline-optimization playbooks in a private sister cauldron:
 
 1. Read **Risk profile** + collect upfront params.
 2. Confirm **Prerequisites** landed.

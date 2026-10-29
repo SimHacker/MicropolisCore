@@ -10,6 +10,7 @@ name: Don Hopkins
 signifier: "👤"
 
 representation:
+  public_figure: true
   # this is Don's own character; he has editorial control
   authored_by: don-hopkins
   # the page publishes material ABOUT the subject, not AS them
@@ -23,5 +24,3 @@ representation:
     Representational page. Factual and friendly, no puffery.
 
 canonical: https://donhopkins.com
-# authoring source (private repo)
-upstream: moollm://github/SimHacker/DonHopkins/characters/don-hopkins/

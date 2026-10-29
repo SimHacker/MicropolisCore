@@ -82,7 +82,7 @@ These mirror the resolution ladder in MOOLLM's MOOPMAP (`GLANCE → CARD → DES
 dirs are the upstream authoring source; the page dirs here are projections of them.
 
 > **`STONE` — the one-page rung — is itself a seed-by-example.** Its prototype lives
-> at `DonHopkins/characters/stone-librande/STONE.md`: a file that *is* a quintessential
+> at MOOLLM `skills/stone/examples/STONE.md`: a file that *is* a quintessential
 > one-page design (about Stone Librande) **and** the prototype every other `STONE.md`
 > clones (`parents:`). The skill is defined by that concrete instance, not an abstract
 > class — see MOOLLM `skills/prototype/`.

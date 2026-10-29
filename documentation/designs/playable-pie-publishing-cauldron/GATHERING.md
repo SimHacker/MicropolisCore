@@ -83,7 +83,7 @@ SimCity → SimCityNet → DreamScape → The Sims Family Album → MediaGraph �
 | Tile renderers | `packages/tile-renderer/` (WebGL/WebGPU/Canvas) | Pillars 1, 2 |
 | Holodeck / compositor | `packages/render-core/` ([../render-core-package.md](../render-core-package.md), [../unified-webgpu-renderer.md](../unified-webgpu-renderer.md)) | Pillars 1, 2 |
 | Content pipeline | `apps/micropolis/website/pages/`, `src/lib/server/markdownContent.js`, `siteStructure.json` | Pillar 3 |
-| Federation sites | `donhopkins.com` (in `DonHopkins/`), `micropolis{web,home,city,dream,federation}.com` | Pillar 3 |
+| Federation sites | `donhopkins.com` (in Don's private archive), `micropolis{web,home,city,dream,federation}.com` | Pillar 3 |
 | Sims/VitaMoo | `packages/vitamoo`, `packages/mooshow`, `apps/vitamoospace` | Pillars 1, 2 (shared substrate) |
 | MOOLLM | `moollm/skills/{cauldron,prototype,stone,card,character}`; content-as-hydrogen | Pillars 2, 3 |
 
@@ -149,7 +149,7 @@ forward — they apply to pies, links, and the graph navigator alike:
   cookie-cut shapes). Discoverability on demand, zero clutter otherwise.
 - **In-world feedback** — look at the city/Sim/graph, not the chrome; the pie/cursor
   feedback happens where your attention already is.
-→ canonical history: `DonHopkins/characters/don-hopkins/sites/PRIOR-ART.md`;
+→ canonical history: `PRIOR-ART.md` (Don's private archive);
 [../piecraft/PIE-MENU-MODEL.md §5](../piecraft/PIE-MENU-MODEL.md) (tracking/feedback),
 [../four-dimensional-navigation-hci.md](../four-dimensional-navigation-hci.md).
 
@@ -275,7 +275,7 @@ two-way-linked graph** — an operating environment, not a widget:
   collaborative outlining what Sheets did for spreadsheets — Don's long-wished-for "Google
   Trees" (lineage: Engelbart's NLS, Winer's MORE / ThinkTank / Frontier / Radio UserLand
   outliners). Outlines embed in maps and grids and vice-versa; the tree is just a graph with
-  a spanning hierarchy. → `DonHopkins/characters/don-hopkins/sites/PRIOR-ART.md`.
+  a spanning hierarchy. → `PRIOR-ART.md` (Don's private archive).
 - **User-editable** at runtime — the **PieCraft / prosumer** path: consumers become
   interface designers; pies are first-class editable objects. **WYSIWYG drag-and-drop
   pie-menu editors already exist as proof:** Simon Schneegans' **Kando** (cross-platform),
@@ -338,7 +338,7 @@ inspectors; **pie menus** for commands; and the **Pseudo Scientific Visualizer**
 **fish-eye** graph view (arbitrarily deep structure in fixed space, typed icons, mouse-sensitive
 zoom targets — the MediaGraph/iLoci ancestor). It even debugged and modified *itself*, live
 (the HyperCard/browse-⇄-edit lesson, §7). → PSIBER write-up + screenshots:
-`DonHopkins/characters/don-hopkins/sites/PRIOR-ART.md`; fish-eye scaling:
+`PRIOR-ART.md` (Don's private archive); fish-eye scaling:
 [../globe-city-navigation.md](../globe-city-navigation.md);
 [../four-dimensional-navigation-hci.md](../four-dimensional-navigation-hci.md).
 
@@ -415,7 +415,7 @@ zoom targets — the MediaGraph/iLoci ancestor). It even debugged and modified *
   LLM-driven editing/construction/programming over the *same* data → **(4)** strip the editors
   for a lean shipped runtime when desired. Authoring power and a small distributable are not in
   tension; they're stages over one canonical data model. → HyperLook/SimCity prior art:
-  `DonHopkins/characters/don-hopkins/sites/PRIOR-ART.md`.
+  `PRIOR-ART.md` (Don's private archive).
 - **A built-in scripting / command language from day one — not optional.** Don's recurring
   thesis (Emacs, HyperCard, NeWS, TCL/Tk, JS all won because they were scriptable): a
   hypermedia/UI system without an extension language inevitably grows "an ad-hoc, bug-ridden,
@@ -457,7 +457,7 @@ zoom targets — the MediaGraph/iLoci ancestor). It even debugged and modified *
 - **Multi-resolution + transclusion:** one canonical fact, projected at GLANCE/CARD/STONE/
   README/full, transcluded into many sites (the "drain Don's content into donhopkins.com,
   transclude a summary back into Micropolis" pattern already begun). STONE one-page tier:
-  `moollm/skills/stone/` and `DonHopkins/characters/stone-librande/STONE.md`.
+  `moollm/skills/stone/` and `moollm/skills/stone/examples/STONE.md`.
 - **Visible, two-way connections + link previews (Xanadu/HyperTIES, realized).** Transclusion
   shows a **visible bridge** to its origin (Ted Nelson's lifelong ask), links are navigable
   both ways (§6), and every link offers a **definition preview** (§5) — read the destination
@@ -465,14 +465,13 @@ zoom targets — the MediaGraph/iLoci ancestor). It even debugged and modified *
   as the graph navigator; the published site is just the graph rendered for readers.
 - **Federation:** one global slug space; sites re-map global slugs onto their own paths;
   two-way links across `donhopkins.com` and `micropolis{web,home,city,dream,federation}.com`.
-  → `DonHopkins/characters/don-hopkins/sites/FEDERATION.md`,
-  `…/PUBLISHING-DESIGN-LANDSCAPE.md`, `…/PRIOR-ART.md`,
+  → `FEDERATION.md`, `PUBLISHING-DESIGN-LANDSCAPE.md`, `PRIOR-ART.md` (Don's private archive),
   [../characters-as-hydrogen.md](../characters-as-hydrogen.md),
   [../soul-city.md](../soul-city.md).
 - **Rendering pipeline:** SvelteKit + mdsvex/remark-rehype; markdown→HTML at prerender;
   embeddable Svelte components / typed fenced blocks (graphs, sims, pies) inside content
   (the powerful "hook into how blocks render" goal). → `apps/micropolis/README.md`
-  (content pipeline), `DonHopkins/…/sites/PRIOR-ART.md`.
+  (content pipeline), `PRIOR-ART.md` (Don's private archive).
 
 ## 10. Shared code & architecture (one substrate, many faces)
 

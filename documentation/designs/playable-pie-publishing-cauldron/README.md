@@ -36,7 +36,7 @@ PRs, parallelizable once the shape is known.
 3. **Publishing system** — the content-plugin + transclusion + federation system that
    underlies `donhopkins.com` and `micropolis{web,home,city,dream,federation}.com`.
    Convention: [../content-plugins-and-autodiscovery.md](../content-plugins-and-autodiscovery.md);
-   federation design: `DonHopkins/characters/don-hopkins/sites/FEDERATION.md`.
+   federation design: Don's private archive.
 
 ## Files in this cauldron
 

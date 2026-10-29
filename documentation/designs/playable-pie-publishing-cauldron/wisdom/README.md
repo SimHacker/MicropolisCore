@@ -14,4 +14,4 @@ Design sources outside this folder:
 - [map-compositing-and-measurement.md §3.2](../../map-compositing-and-measurement.md#32-dom-vs-webgpu-split--cursorlayer-coordinates-both) — CursorLayer policy
 - [virtual-cursor-layer.md §7.1](../../virtual-cursor-layer.md) — coordinator role
 
-Style reference (sister cauldron): [central pipeline-optimization playbooks](https://github.com/leela-ai/central/tree/main/skills/gcs/protocols/pipeline-optimization/playbooks).
+Style reference (sister cauldron): pipeline-optimization playbooks (private).

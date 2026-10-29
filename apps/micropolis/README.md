@@ -126,8 +126,8 @@ model.)
   `website/pages/<slug>.md` is still supported as a fallback.)
 - **Convention + future auto-discovery** are specified in
   `documentation/designs/content-plugins-and-autodiscovery.md`. This is the shared
-  federation content convention (slug → directory/README.md); see also
-  `DonHopkins/characters/don-hopkins/sites/FEDERATION.md`.
+  federation content convention (slug → directory/README.md); the federation
+  design itself lives in Don's private archive.
 
 ### Navigation Structure
 

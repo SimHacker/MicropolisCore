@@ -13,4 +13,4 @@ Matches **`origin`** on the open tower checkout: `git@github.com:YootTowerManage
 
 ## Workspace mount (optional)
 
-If you use Cursor multi-root or local checkouts, clone **`YootTowerManagement/YootTower`** beside MicropolisCore and link or submodule as you prefer. **Archival / licensing workflow** lives in the separate org repo [github.com/YootTowerManagement/YootTowerManagement](https://github.com/YootTowerManagement/YootTowerManagement) (`origin` on that checkout); invite-only when kept private.
+If you use Cursor multi-root or local checkouts, clone **`YootTowerManagement/YootTower`** beside MicropolisCore and link or submodule as you prefer. **Archival / licensing workflow** lives in a separate private org repo; invite-only.

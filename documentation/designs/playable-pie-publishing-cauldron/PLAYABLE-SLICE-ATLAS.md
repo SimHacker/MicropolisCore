@@ -69,7 +69,7 @@ Pie substrate + publishing stay in [GATHERING.md](GATHERING.md) (STIR).
 
 ## Operational discipline (Micropolis)
 
-Adapted from [central pipeline-optimization playbooks](https://github.com/leela-ai/central/tree/main/skills/gcs/protocols/pipeline-optimization/playbooks):
+Adapted from the pipeline-optimization playbooks in a private sister cauldron:
 
 | Convention | Micropolis rule |
 |------------|-----------------|
