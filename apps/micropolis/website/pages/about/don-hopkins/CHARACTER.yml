@@ -10,9 +10,8 @@ name: Don Hopkins
 signifier: "👤"
 
 representation:
-  kind: self               # self | representational
   # this is Don's own character; he has editorial control
-  consent: self-sovereign
+  authored_by: don-hopkins
   # the page publishes material ABOUT the subject, not AS them
   speaks_as: false
   may:
