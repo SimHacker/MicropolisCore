@@ -77,6 +77,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 
+#include <new>
+
 #include "micropolis.h"
 #include "text.h"
 
@@ -112,6 +114,8 @@ SimSprite *Micropolis::newSprite(const std::string &name, int type, int x, int y
         freeSprites = sprite->next;
     } else {
         sprite = (SimSprite *)newPtr(sizeof (SimSprite));
+        // newPtr is malloc, so construct the object in place.
+        new (sprite) SimSprite();
     }
 
     sprite->name = name;
