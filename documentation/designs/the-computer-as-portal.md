@@ -292,8 +292,10 @@ sculpt in weight-space by dragging the wig. Tom would be thrilled to discuss it 
 public, funny, shippable demo of the Interval idea brought forward (Faceball / morph-target
 faces are the sibling application). Full lineage + Syntertainment 2013 multitarget-head pitch
 (already disclosed Tom's prior art): see WillWrightShowForFood
-`characters/don-hopkins/tom-ngo-embedded-constraint-graphics-at-interval.md` and the pair show
-`repo-shows/tom-and-golan-ecg-mouther/`.
+[`characters/don-hopkins/tom-ngo-embedded-constraint-graphics-at-interval.md`](https://github.com/SimHacker/WillWrightShowForFood/blob/main/characters/don-hopkins/tom-ngo-embedded-constraint-graphics-at-interval.md)
+and the pair show [`repo-shows/tom-and-golan-ecg-mouther/`](https://github.com/SimHacker/WillWrightShowForFood/tree/main/repo-shows/tom-and-golan-ecg-mouther).
+The reimplementation is [`packages/ecg/`](https://github.com/SimHacker/WillWrightShowForFood/tree/main/packages/ecg)
+(design stage, no solver yet).
 
 #### Player loop
 
