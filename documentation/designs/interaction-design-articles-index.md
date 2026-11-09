@@ -31,6 +31,7 @@ Each article is *standalone*. None of them ask you to read another file first. T
 | 14 | [`automotive-touch-ui-vs-pie-menus.md`](automotive-touch-ui-vs-pie-menus.md) | Car multitouch finger-count UI vs **self-revealing pies**; ConnectedTV; iLoci; 7→8 wedges; TomTom; dual-mode driving | …you're arguing against blind gestures or designing eyes-free + config modes |
 | 15 | [`macos-pie-menu-app-hn-2024.md`](macos-pie-menu-app-hn-2024.md) | Hauken **pie-menu.com** (Aug 2024); Don’s demo links, CHI’88, rehearsal, patent FUD, PIXIE; Micropolis Svelte roadmap | …you're comparing OS shortcut pies to in-game holodeck pies |
 | 16 | [`brad-myers-visual-programming-hn.md`](brad-myers-visual-programming-hn.md) | **Brad Myers** — Garnet/GLASS, *All the Widgets*, VPL taxonomy, spreadsheets-as-VPL, C32, SimAntics, Garnet↔Laszlo constraints; CMU 05-640 archive | …a VPL/spreadsheet/Garnet thread needs Brad’s taxonomy + Don’s HN catalog |
+| 17 | [Declarative Dragging and direct manipulation](https://github.com/SimHacker/WillWrightShowForFood/blob/main/characters/don-hopkins/declarative-dragging-and-direct-manipulation.md) (WWSFF) | D2 (Horowitz, Blinn, Heer 2026) read against Shneiderman's definition; its listed limitations (velocity, multitouch, coinciding targets, enumerating states) against ARK, ECG, pie menus and programming by demonstration | …someone equates direct manipulation with drag and drop |
 
 **PieCraft subdocs:** [PIECRAFT.md](piecraft/PIECRAFT.md) · [PIE-MENU-MODEL.md](piecraft/PIE-MENU-MODEL.md) · [RELATED-PROJECTS.md](piecraft/RELATED-PROJECTS.md)
 
