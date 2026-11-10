@@ -16,6 +16,9 @@ card:
     introspection. The browser renderer/content workflow uses high-level render
     descriptions, client-side previews, and intentional uploads.
 
+inherits:
+  - moollm://github/SimHacker/moollm/skills/micropolis/
+
 evidence:
   cli_entry: "../../apps/micropolis/cli/entry.ts"
   cli_modules: "../../apps/micropolis/cli"

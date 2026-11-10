@@ -50,7 +50,7 @@ model:
 
 # INTERFACE
 
-commands:
+methods:
   info:
     args: []
     what: >-
@@ -217,8 +217,13 @@ python:
 # MOOLLM
 
 moollm_compatible: true
-respects: [yaml-jazz, postel, sniffable-python, path]
-composes_with: [cursor-mirror, sister-script, play-learn-lift]
+inherits:
+  - moollm://github/SimHacker/moollm/skills/sister-script/
+  - moollm://github/SimHacker/moollm/skills/postel/
+  - moollm://github/SimHacker/moollm/skills/sniffable-python/
+  - moollm://github/SimHacker/moollm/skills/card/
+respects: [yaml-jazz, path]
+composes_with: [cursor-mirror, play-learn-lift]
 standalone: |
   Nothing here requires MOOLLM. SKILL.md carries the full protocol in its body,
   the CLI is stdlib Python, and the only real dependency is a running Screen

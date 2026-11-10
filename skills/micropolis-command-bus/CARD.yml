@@ -18,6 +18,11 @@ card:
     named command objects with context. LLMs use preview/propose/approve flow
     for reversible, destructive, or external actions.
 
+inherits:
+  - moollm://github/SimHacker/moollm/skills/advertisement/
+  - moollm://github/SimHacker/moollm/skills/action-queue/
+  - moollm://github/SimHacker/moollm/skills/micropolis/
+
 files:
   docs:
     - GLANCE.yml
@@ -62,20 +67,20 @@ invoke_when:
 advertisements:
   ROUTE-ACTION:
     score: 95
-    condition: >-
+    score_if: >-
       A UI, LLM, chat, or MCP surface wants to perform a Micropolis action
     effect: "Dispatch or propose through CommandBus"
 
   LLM-PROPOSE:
     score: 100
-    condition: >-
+    score_if: >-
       An LLM wants to mutate simulator, workspace, GitHub, or persistent state
     effect: "Preview and create proposal instead of silent mutation"
     methods: [PREVIEW, PROPOSE]
 
   EXPORT-MCP:
     score: 90
-    condition: >-
+    score_if: >-
       Need MCP tools for listing, previewing, proposing, approving, rejecting,
       or dispatching commands
     effect: "Use CommandMcpService descriptors and dispatcher"
@@ -83,7 +88,7 @@ advertisements:
 
   BUILD-PIE-MENU:
     score: 85
-    condition: "Need command-backed pie menu slices"
+    score_if: "Need command-backed pie menu slices"
     effect: "Use command metadata and advertisements to build menu items"
     delegate:
       skill: advertisement
@@ -91,7 +96,7 @@ advertisements:
 
   SNIFF-DIRECT-MUTATIONS:
     score: 80
-    condition: "Need to find simulator/view/window changes bypassing the bus"
+    score_if: "Need to find simulator/view/window changes bypassing the bus"
     delegate:
       skill: skill-snitch
       reason: "Audit declared command policies against actual code behavior"
